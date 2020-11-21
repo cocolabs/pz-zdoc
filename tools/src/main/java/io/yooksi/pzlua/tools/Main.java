@@ -53,7 +53,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        Files.walk(Paths.get("../lua")).filter(Files::isRegularFile)
+        Files.walk(Paths.get("src/lua")).filter(Files::isRegularFile)
                 .forEach(Main::documentLuaFile);
     }
 }
