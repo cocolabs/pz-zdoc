@@ -1,0 +1,25 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+}
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    jcenter()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
+
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
+}
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'io.yooksi.pzlua.tools.Main'
+}
