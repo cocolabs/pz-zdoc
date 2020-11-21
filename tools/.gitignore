@@ -1,0 +1,26 @@
+### IntelliJ ###
+
+# Compiler output
+out/
+
+### Gradle ###
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+### Java ###
+
+# Compiled class file
+*.class
+
+# Package Files #
+*.jar
+*.zip
+*.rar
+
+# Log files
+logs/
+*.log
