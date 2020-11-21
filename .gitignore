@@ -1,0 +1,13 @@
+### Java ###
+
+# Compiled class file
+*.class
+
+# Package Files #
+*.jar
+*.zip
+*.rar
+
+# Log files
+logs/
+*.log
