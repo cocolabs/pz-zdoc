@@ -26,6 +26,6 @@ public class Logger {
 	}
 
 	public void print(String log) throws IOException {
-		FileUtils.write(LOG_FILE, log, Charset.defaultCharset(), true);
+		FileUtils.write(LOG_FILE, log + System.lineSeparator(), Charset.defaultCharset(), true);
 	}
 }
