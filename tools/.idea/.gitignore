@@ -5,4 +5,7 @@ discord.xml
 encodings.xml
 jarRepositories.xml
 gradle.xml
+libraries
+modules
+modules.xml
 misc.xml
