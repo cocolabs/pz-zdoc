@@ -38,6 +38,35 @@ public class LuaParserTest {
         Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), linesList.get(5));
     }
 
+    @Test
+    public void shouldNotThrowExceptionWhenParsingTopLineLuaFile(@TempDir Path dir) throws IOException {
+
+        File sample = createTempFile(dir, "sampleLua.lua");
+        String[] lines = { "sampleLua = luaClass:derive()" };
+        FileUtils.writeLines(sample, Arrays.asList(lines));
+
+        // IndexOutOfBoundsException
+        Assertions.assertDoesNotThrow(() -> LuaParser.documentLuaFile(sample));
+    }
+
+    @Test
+    public void shouldOverwriteExistingLuaAnnotation(@TempDir Path dir) throws IOException {
+
+        File sample = createTempFile(dir, "sampleLua.lua");
+        String[] write = {
+                "--- This is a sample comment",
+                "---@class otherSampleLua",
+                "sampleLua = luaClass:derive()"
+        };
+        FileUtils.writeLines(sample, Arrays.asList(write));
+
+        LuaParser.documentLuaFile(sample);
+
+        List<String> read = FileUtils.readLines(sample, Charset.defaultCharset());
+        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(1));
+
+    }
+
     private static File createTempFile(Path dir, String name) throws IOException {
 
         File temp = dir.resolve(name).toFile();

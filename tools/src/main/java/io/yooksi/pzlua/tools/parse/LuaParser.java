@@ -1,6 +1,7 @@
 package io.yooksi.pzlua.tools.parse;
 
 import io.yooksi.pzlua.tools.Main;
+import io.yooksi.pzlua.tools.lang.EmmyLuaAnnotation;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -20,14 +21,22 @@ public class LuaParser {
 		boolean hasFileChanged = false;
 
 		List<String> linesToWrite = new ArrayList<>();
-		for (String line : FileUtils.readLines(file, Charset.defaultCharset()))
+		List<String> linesToRead = FileUtils.readLines(file, Charset.defaultCharset());
+		for (int i = 0; i < linesToRead.size(); i++)
 		{
+			String line = linesToRead.get(i);
 			Pattern pattern = Pattern.compile("^\\s*" + filename + "\\s+=");
 			Matcher matcher = pattern.matcher(line);
 			if (matcher.find())
 			{
+				if (i > 0) { // make sure we are not on the first line
+					String prevLine = linesToRead.get(i - 1);
+					if (EmmyLuaAnnotation.CLASS.isAnnotation(prevLine)) {
+						linesToWrite.remove(i - 1);
+					}
+				}
+				linesToWrite.add(EmmyLuaAnnotation.CLASS.create(filename));
 				hasFileChanged = true;
-				linesToWrite.add("---@class " + filename);
 			}
 			linesToWrite.add(line);
 		}
