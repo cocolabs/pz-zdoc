@@ -5,111 +5,98 @@ import io.yooksi.pzlua.tools.parse.LuaParser;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public class LuaParserTest {
+public class LuaParserTest extends TestWorkspace {
 
-    private static final String TEMP_FILENAME = "sampleLua.lua";
+    LuaParserTest() throws IOException {
+        super("sampleLua.lua");
+    }
 
     @Test
-    void shouldDocumentSampleLuaFile(@TempDir Path dir) throws IOException {
+    void shouldDocumentSampleLuaFile() throws IOException {
 
-        File sample = createTempFile(dir);
         String[] lines = {
                 "",
                 "--*******************",
                 "-- this is a comment",
                 "--*******************",
                 "",
-                "sampleLua = luaClass:derive()"
+                "sampleLua = luaClass:new()"
         };
-        FileUtils.writeLines(sample, Arrays.asList(lines));
-        Assertions.assertEquals(6, FileUtils.readLines(sample, Charset.defaultCharset()).size());
+        FileUtils.writeLines(file, Arrays.asList(lines));
+        Assertions.assertEquals(6, FileUtils.readLines(file, Charset.defaultCharset()).size());
 
-        LuaParser.documentLuaFile(sample);
+        LuaParser.documentLuaFile(file);
 
-        List<String> linesList = FileUtils.readLines(sample, Charset.defaultCharset());
+        List<String> linesList = FileUtils.readLines(file, Charset.defaultCharset());
         Assertions.assertEquals(7, linesList.size());
         Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), linesList.get(5));
     }
 
     @Test
-    void shouldNotThrowExceptionWhenParsingTopLineLuaFile(@TempDir Path dir) throws IOException {
+    void shouldNotThrowExceptionWhenParsingTopLineLuaFile() throws IOException {
 
-        File sample = createTempFile(dir);
         String[] lines = { "sampleLua = luaClass:derive()" };
-        FileUtils.writeLines(sample, Arrays.asList(lines));
+        FileUtils.writeLines(file, Arrays.asList(lines));
 
         // IndexOutOfBoundsException
-        Assertions.assertDoesNotThrow(() -> LuaParser.documentLuaFile(sample));
+        Assertions.assertDoesNotThrow(() -> LuaParser.documentLuaFile(file));
     }
 
     @Test
-    void shouldOverwriteExistingLuaAnnotation(@TempDir Path dir) throws IOException {
+    void shouldOverwriteExistingLuaAnnotation() throws IOException {
 
-        File sample = createTempFile(dir);
         String[] write = {
                 "--- This is a sample comment",
                 "---@class otherSampleLua",
-                "sampleLua = luaClass:derive()"
+                "sampleLua = luaClass:new()"
         };
-        FileUtils.writeLines(sample, Arrays.asList(write));
-        LuaParser.documentLuaFile(sample);
+        FileUtils.writeLines(file, Arrays.asList(write));
+        LuaParser.documentLuaFile(file);
 
-        List<String> read = FileUtils.readLines(sample, Charset.defaultCharset());
+        List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
         Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(1));
 
     }
 
     @Test
-    void shouldReadAnnotationsWithWhitespaces(@TempDir Path dir) throws IOException {
+    void shouldReadAnnotationsWithWhitespaces() throws IOException {
 
-        File sample = createTempFile(dir);
         String[] write = {
                 "---  @class otherSampleLua",
-                "sampleLua = luaClass:derive()"
+                "sampleLua = luaClass:new()"
         };
-        FileUtils.writeLines(sample, Arrays.asList(write));
-        LuaParser.documentLuaFile(sample);
+        FileUtils.writeLines(file, Arrays.asList(write));
+        LuaParser.documentLuaFile(file);
 
-        List<String> read = FileUtils.readLines(sample, Charset.defaultCharset());
+        List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
         Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(0));
     }
 
     @Test
-    void shouldParseAnnotationIncludeParentType(@TempDir Path dir) throws IOException {
+    void shouldParseAnnotationIncludeParentType() throws IOException {
 
-        File sample = createTempFile(dir);
         String[] write = {
                 "---@class sampleLua",
                 "sampleLua = luaClass:new()"
         };
-        FileUtils.writeLines(sample, Arrays.asList(write));
-        LuaParser.documentLuaFile(sample);
+        FileUtils.writeLines(file, Arrays.asList(write));
+        LuaParser.documentLuaFile(file);
 
-        List<String> read = FileUtils.readLines(sample, Charset.defaultCharset());
+        List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
         Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(0));
 
         write[1] = "sampleLua = luaClass:derive()";
-        FileUtils.writeLines(sample, Arrays.asList(write), false);
-        LuaParser.documentLuaFile(sample);
+        FileUtils.writeLines(file, Arrays.asList(write), false);
+        LuaParser.documentLuaFile(file);
 
-        read = FileUtils.readLines(sample, Charset.defaultCharset());
+        read = FileUtils.readLines(file, Charset.defaultCharset());
         Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua", "luaClass"), read.get(0));
     }
 
-    private static File createTempFile(Path dir) throws IOException {
-
-        File temp = dir.resolve(TEMP_FILENAME).toFile();
-        Assertions.assertTrue(temp.createNewFile());
-        Assertions.assertTrue(temp.exists());
-        return temp;
-    }
 }
