@@ -1,5 +1,7 @@
 package io.yooksi.pzlua.tools;
 
+import io.yooksi.pzlua.tools.lang.EmmyLuaAnnotation;
+import io.yooksi.pzlua.tools.parse.LuaParser;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,23 +19,23 @@ public class LuaParserTest {
     @Test
     public void shouldDocumentSampleLuaFile(@TempDir Path dir) throws IOException {
 
-        File temp = createTempFile(dir, "sampleLua.lua");
+        File sample = createTempFile(dir, "sampleLua.lua");
         String[] lines = {
                 "",
-                "--**************",
-                "-- this is some text",
-                "--**************",
+                "--*******************",
+                "-- this is a comment",
+                "--*******************",
                 "",
-                "temp = abcd"
+                "sampleLua = luaClass:derive()"
         };
-        FileUtils.writeLines(temp, Arrays.asList(lines));
-        Assertions.assertEquals(6, FileUtils.readLines(temp, Charset.defaultCharset()).size());
+        FileUtils.writeLines(sample, Arrays.asList(lines));
+        Assertions.assertEquals(6, FileUtils.readLines(sample, Charset.defaultCharset()).size());
 
-        io.yooksi.pzlua.tools.parse.LuaParser.documentLuaFile(temp);
+        LuaParser.documentLuaFile(sample);
 
-        List<String> linesList = FileUtils.readLines(temp, Charset.defaultCharset());
+        List<String> linesList = FileUtils.readLines(sample, Charset.defaultCharset());
         Assertions.assertEquals(7, linesList.size());
-        Assertions.assertEquals("---@class temp", linesList.get(5));
+        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), linesList.get(5));
     }
 
     private static File createTempFile(Path dir, String name) throws IOException {
