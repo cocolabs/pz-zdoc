@@ -16,10 +16,12 @@ import java.util.List;
 
 public class LuaParserTest {
 
-    @Test
-    public void shouldDocumentSampleLuaFile(@TempDir Path dir) throws IOException {
+    private static final String TEMP_FILENAME = "sampleLua.lua";
 
-        File sample = createTempFile(dir, "sampleLua.lua");
+    @Test
+    void shouldDocumentSampleLuaFile(@TempDir Path dir) throws IOException {
+
+        File sample = createTempFile(dir);
         String[] lines = {
                 "",
                 "--*******************",
@@ -39,9 +41,9 @@ public class LuaParserTest {
     }
 
     @Test
-    public void shouldNotThrowExceptionWhenParsingTopLineLuaFile(@TempDir Path dir) throws IOException {
+    void shouldNotThrowExceptionWhenParsingTopLineLuaFile(@TempDir Path dir) throws IOException {
 
-        File sample = createTempFile(dir, "sampleLua.lua");
+        File sample = createTempFile(dir);
         String[] lines = { "sampleLua = luaClass:derive()" };
         FileUtils.writeLines(sample, Arrays.asList(lines));
 
@@ -50,9 +52,9 @@ public class LuaParserTest {
     }
 
     @Test
-    public void shouldOverwriteExistingLuaAnnotation(@TempDir Path dir) throws IOException {
+    void shouldOverwriteExistingLuaAnnotation(@TempDir Path dir) throws IOException {
 
-        File sample = createTempFile(dir, "sampleLua.lua");
+        File sample = createTempFile(dir);
         String[] write = {
                 "--- This is a sample comment",
                 "---@class otherSampleLua",
@@ -67,9 +69,9 @@ public class LuaParserTest {
     }
 
     @Test
-    public void shouldReadAnnotationsWithWhitespaces(@TempDir Path dir) throws IOException {
+    void shouldReadAnnotationsWithWhitespaces(@TempDir Path dir) throws IOException {
 
-        File sample = createTempFile(dir, "sampleLua.lua");
+        File sample = createTempFile(dir);
         String[] write = {
                 "---  @class otherSampleLua",
                 "sampleLua = luaClass:derive()"
@@ -81,9 +83,9 @@ public class LuaParserTest {
         Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(0));
     }
 
-    private static File createTempFile(Path dir, String name) throws IOException {
+    private static File createTempFile(Path dir) throws IOException {
 
-        File temp = dir.resolve(name).toFile();
+        File temp = dir.resolve(TEMP_FILENAME).toFile();
         Assertions.assertTrue(temp.createNewFile());
         Assertions.assertTrue(temp.exists());
         return temp;
