@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 
 public class LuaParser {
 
+	private static final Pattern DERIVED_CLASS = Pattern.compile("=\\s*(\\w+):derive\\(");
+
 	public static boolean documentLuaFile(File file) throws IOException {
 
 		String filename = FilenameUtils.getBaseName(file.getName());
@@ -26,8 +28,7 @@ public class LuaParser {
 		{
 			String line = linesToRead.get(i);
 			Pattern pattern = Pattern.compile("^\\s*" + filename + "\\s+=");
-			Matcher matcher = pattern.matcher(line);
-			if (matcher.find())
+			if (pattern.matcher(line).find())
 			{
 				if (i > 0) { // make sure we are not on the first line
 					String prevLine = linesToRead.get(i - 1);
@@ -35,7 +36,12 @@ public class LuaParser {
 						linesToWrite.remove(i - 1);
 					}
 				}
-				linesToWrite.add(EmmyLuaAnnotation.CLASS.create(filename));
+				String annotation = EmmyLuaAnnotation.CLASS.create(filename);
+				Matcher matcher = DERIVED_CLASS.matcher(line);
+				if (matcher.find()) {
+					annotation += " : " + matcher.group(1);
+				}
+				linesToWrite.add(annotation);
 				hasFileChanged = true;
 			}
 			linesToWrite.add(line);

@@ -7,7 +7,12 @@ public enum EmmyLuaAnnotation {
 	CLASS("class") {
 		@Override
 		public String create(String name, String...params) {
-			return getBase() + ' ' + name;
+
+			String annotation = getBase() + ' ' + name;
+			if (params.length > 0 && !params[0].isEmpty()) {
+				annotation += " : " + params[0];
+			}
+			return annotation;
 		}
 	};
 

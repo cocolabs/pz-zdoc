@@ -83,6 +83,28 @@ public class LuaParserTest {
         Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(0));
     }
 
+    @Test
+    void shouldParseAnnotationIncludeParentType(@TempDir Path dir) throws IOException {
+
+        File sample = createTempFile(dir);
+        String[] write = {
+                "---@class sampleLua",
+                "sampleLua = luaClass:new()"
+        };
+        FileUtils.writeLines(sample, Arrays.asList(write));
+        LuaParser.documentLuaFile(sample);
+
+        List<String> read = FileUtils.readLines(sample, Charset.defaultCharset());
+        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(0));
+
+        write[1] = "sampleLua = luaClass:derive()";
+        FileUtils.writeLines(sample, Arrays.asList(write), false);
+        LuaParser.documentLuaFile(sample);
+
+        read = FileUtils.readLines(sample, Charset.defaultCharset());
+        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua", "luaClass"), read.get(0));
+    }
+
     private static File createTempFile(Path dir) throws IOException {
 
         File temp = dir.resolve(TEMP_FILENAME).toFile();
