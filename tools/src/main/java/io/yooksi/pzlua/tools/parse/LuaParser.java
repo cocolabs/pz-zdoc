@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class LuaParser {
 
-	public static void documentLuaFile(File file) throws IOException {
+	public static boolean documentLuaFile(File file) throws IOException {
 
 		String filename = FilenameUtils.getBaseName(file.getName());
 		boolean hasFileChanged = false;
@@ -35,5 +35,6 @@ public class LuaParser {
 			FileUtils.writeLines(file, linesToWrite, false);
 		}
 		Main.logger.print((hasFileChanged ? "Changed" : "Unchanged") + ": " + file.getPath());
+		return hasFileChanged;
 	}
 }
