@@ -7,7 +7,7 @@ public enum EmmyLuaAnnotation {
 	CLASS("class") {
 		@Override
 		public String create(String name, String...params) {
-			return getBase() + name;
+			return getBase() + ' ' + name;
 		}
 	};
 
