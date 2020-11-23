@@ -22,7 +22,7 @@ public enum EmmyLuaAnnotation {
 
 	public boolean isAnnotation(String text) {
 
-		Pattern regex = Pattern.compile(getBase());
+		Pattern regex = Pattern.compile("---\\s*@");
 		return regex.matcher(text).find();
 	}
 

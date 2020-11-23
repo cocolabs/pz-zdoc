@@ -59,12 +59,26 @@ public class LuaParserTest {
                 "sampleLua = luaClass:derive()"
         };
         FileUtils.writeLines(sample, Arrays.asList(write));
-
         LuaParser.documentLuaFile(sample);
 
         List<String> read = FileUtils.readLines(sample, Charset.defaultCharset());
         Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(1));
 
+    }
+
+    @Test
+    public void shouldReadAnnotationsWithWhitespaces(@TempDir Path dir) throws IOException {
+
+        File sample = createTempFile(dir, "sampleLua.lua");
+        String[] write = {
+                "---  @class otherSampleLua",
+                "sampleLua = luaClass:derive()"
+        };
+        FileUtils.writeLines(sample, Arrays.asList(write));
+        LuaParser.documentLuaFile(sample);
+
+        List<String> read = FileUtils.readLines(sample, Charset.defaultCharset());
+        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(0));
     }
 
     private static File createTempFile(Path dir, String name) throws IOException {
