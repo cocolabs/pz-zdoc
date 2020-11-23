@@ -1,5 +1,6 @@
 package io.yooksi.pzlua.tools;
 
+import io.yooksi.pzlua.tools.parse.LuaParser;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainTest {
+public class LuaParserTest {
 
     @Test
     public void shouldDocumentSampleLuaFile(@TempDir Path dir) throws IOException {
@@ -31,7 +32,7 @@ public class MainTest {
         FileUtils.writeLines(temp, Arrays.asList(lines));
         Assertions.assertEquals(6, FileUtils.readLines(temp, Charset.defaultCharset()).size());
 
-        Main.documentLuaFile(temp);
+        io.yooksi.pzlua.tools.parse.LuaParser.documentLuaFile(temp);
 
         List<String> linesList = FileUtils.readLines(temp, Charset.defaultCharset());
         Assertions.assertEquals(7, linesList.size());
