@@ -17,6 +17,20 @@ public class JavaMethod extends Method {
 		super(modifier, returnType, name, params);
 	}
 
+	@Override
+	public String toString() {
+
+		String sParams = "";
+		if (this.params.length > 0)
+		{
+			final StringBuilder sb = new StringBuilder();
+			Arrays.stream(params).forEach(p -> sb.append(p.getUnqualified().toString()).append(", "));
+			sParams = sb.substring(0, sb.length() - 2).trim();
+		}
+		return String.format("%s%s%s %s(%s)", modifier,
+				(modifier.length() > 0 ? ' ' : ""), returnType, name, sParams);
+	}
+
 	public static class Parser implements ElementParser<JavaMethod> {
 
 		@Override
@@ -26,7 +40,8 @@ public class JavaMethod extends Method {
 			{
 				java.util.List<Parameter> paramList = new ArrayList<>();
 				String paramsMatched = matcher.group(4);
-				if (paramsMatched != null) {
+				if (paramsMatched != null)
+				{
 					for (String param : paramsMatched.trim().split(",(?:\\s+)?"))
 					{
 						String[] params = param.split("\\s+");
@@ -40,19 +55,5 @@ public class JavaMethod extends Method {
 			}
 			else return null;
 		}
-	}
-
-	@Override
-	public String toString() {
-
-		String sParams = "";
-		if (this.params.length > 0)
-		{
-			final StringBuilder sb = new StringBuilder();
-			Arrays.stream(params).forEach(p -> sb.append(p.getUnqualified().toString()).append(", "));
-			sParams = sb.substring(0, sb.length() - 2).trim();
-		}
-		return String.format("%s%s%s %s(%s)", modifier,
-				(modifier.length() > 0 ? ' ' : ""), returnType, name, sParams);
 	}
 }

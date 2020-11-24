@@ -12,15 +12,18 @@ public class Logger {
 	private final File LOG_FILE;
 
 	public Logger() {
-		try {
+		try
+		{
 			File logDir = new File("logs");
-			if (!logDir.exists() && !logDir.mkdir()) {
+			if (!logDir.exists() && !logDir.mkdir())
+			{
 				throw new IOException("Unable to create log directory.");
 			}
 			LOG_FILE = Paths.get(logDir.getPath(), "main.log").toFile();
 			FileUtils.write(LOG_FILE, "", Charset.defaultCharset(), false);
 		}
-		catch (IOException e) {
+		catch (IOException e)
+		{
 			throw new RuntimeException(e);
 		}
 	}

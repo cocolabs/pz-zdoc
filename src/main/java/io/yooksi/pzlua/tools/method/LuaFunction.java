@@ -18,22 +18,11 @@ public class LuaFunction extends Method {
 		super("", returnType, name, params);
 	}
 
-	public static class Parser implements ElementParser<LuaFunction> {
-
-		@Override
-		public @Nullable LuaFunction parse(String text) {
-
-			JavaMethod jMethod = JavaDocParser.JAVA_METHOD_PARSER.parse(text);
-
-			Parameter[] lParams = Parameter.getUnqualified(jMethod.params);
-			return new LuaFunction(jMethod.returnType, jMethod.name, lParams);
-		}
-	}
-
 	public List<String> generateLuaDoc() {
 
 		luaDoc.clear();
-		for (Parameter param : getParams()) {
+		for (Parameter param : getParams())
+		{
 			luaDoc.add(EmmyLua.PARAM.create(param.getName(false), param.getType(false)));
 		}
 		luaDoc.add(EmmyLua.RETURN.create(getReturnType(false)));
@@ -59,5 +48,17 @@ public class LuaFunction extends Method {
 			sb.delete(sb.length() - 2, sb.length());
 		}
 		return sb.append(')').toString();
+	}
+
+	public static class Parser implements ElementParser<LuaFunction> {
+
+		@Override
+		public @Nullable LuaFunction parse(String text) {
+
+			JavaMethod jMethod = JavaDocParser.JAVA_METHOD_PARSER.parse(text);
+
+			Parameter[] lParams = Parameter.getUnqualified(jMethod.params);
+			return new LuaFunction(jMethod.returnType, jMethod.name, lParams);
+		}
 	}
 }

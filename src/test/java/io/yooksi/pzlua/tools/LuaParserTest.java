@@ -13,7 +13,7 @@ import java.util.List;
 
 public class LuaParserTest extends TestWorkspace {
 
-    LuaParserTest() throws IOException {
+    LuaParserTest()  {
         super("sampleLua.lua");
     }
 
@@ -61,7 +61,6 @@ public class LuaParserTest extends TestWorkspace {
 
         List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
         Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), read.get(1));
-
     }
 
     @Test

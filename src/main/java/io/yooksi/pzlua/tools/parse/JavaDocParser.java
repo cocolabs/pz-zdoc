@@ -40,6 +40,10 @@ public class JavaDocParser {
 		return new JavaDocParser(Jsoup.parse(new File(path), Charset.defaultCharset().name()));
 	}
 
+	public static String removeElementQualifier(String element) {
+		return element.replaceAll(".\\w+\\.", "");
+	}
+
 	public List<Method> parseMethods(ElementParser<? extends Method> parser) {
 
 		Elements tables = document.select("table");
@@ -81,9 +85,5 @@ public class JavaDocParser {
 		}
 		lines.remove(lines.size() - 1);
 		FileUtils.writeLines(outputPath.toFile(), lines, false);
-	}
-
-	public static String removeElementQualifier(String element) {
-		return element.replaceAll(".\\w+\\.", "");
 	}
 }

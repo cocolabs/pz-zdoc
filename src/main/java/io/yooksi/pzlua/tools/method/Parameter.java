@@ -11,7 +11,19 @@ public class Parameter {
 	private final String name;
 
 	public Parameter(String type, String name) {
-		this.type = type; this.name = name;
+		this.type = type;
+		this.name = name;
+	}
+
+	public static Parameter[] getUnqualified(Parameter[] params) {
+
+		Parameter[] result = new Parameter[params.length];
+		for (int i = 0; i < params.length; i++)
+		{
+			result[i] = new Parameter(params[i].getType(false),
+					params[i].getName(false));
+		}
+		return result;
 	}
 
 	@Override
@@ -29,20 +41,6 @@ public class Parameter {
 
 	public Parameter getUnqualified() {
 		return new Parameter(getType(false), getName(false));
-	}
-
-	public static Parameter[] getUnqualified(Parameter[] params) {
-
-		Parameter[] result = new Parameter[params.length];
-		for (int i = 0; i < params.length; i++) {
-			result[i] = new Parameter(params[i].getType(false),
-					params[i].getName(false));
-		}
-		return result;
-	}
-
-	public Parameter getWithoutType(boolean qualified) {
-		return new Parameter("", getName(qualified));
 	}
 
 	public Parameter copy() {

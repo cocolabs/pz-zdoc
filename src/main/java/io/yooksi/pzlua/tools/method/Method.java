@@ -1,7 +1,7 @@
 package io.yooksi.pzlua.tools.method;
 
-import io.yooksi.pzlua.tools.parse.JavaDocParser;
 import io.yooksi.pzlua.tools.lang.ParseResult;
+import io.yooksi.pzlua.tools.parse.JavaDocParser;
 
 public abstract class Method implements ParseResult {
 
@@ -34,7 +34,8 @@ public abstract class Method implements ParseResult {
 	public Parameter[] getParams() {
 
 		Parameter[] result = new Parameter[params.length];
-		for (int i = 0; i < params.length; i++) {
+		for (int i = 0; i < params.length; i++)
+		{
 			result[i] = params[i].copy();
 		}
 		return result;

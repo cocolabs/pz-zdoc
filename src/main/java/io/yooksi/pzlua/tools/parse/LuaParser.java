@@ -30,15 +30,18 @@ public class LuaParser {
 			Pattern pattern = Pattern.compile("^\\s*" + filename + "\\s+=");
 			if (pattern.matcher(line).find())
 			{
-				if (i > 0) { // make sure we are not on the first line
+				if (i > 0)
+				{ // make sure we are not on the first line
 					String prevLine = linesToRead.get(i - 1);
-					if (EmmyLua.CLASS.isAnnotation(prevLine)) {
+					if (EmmyLua.CLASS.isAnnotation(prevLine))
+					{
 						linesToWrite.remove(i - 1);
 					}
 				}
 				String annotation = EmmyLua.CLASS.create(filename);
 				Matcher matcher = DERIVED_CLASS.matcher(line);
-				if (matcher.find()) {
+				if (matcher.find())
+				{
 					annotation += " : " + matcher.group(1);
 				}
 				linesToWrite.add(annotation);
@@ -46,7 +49,8 @@ public class LuaParser {
 			}
 			linesToWrite.add(line);
 		}
-		if (hasFileChanged) {
+		if (hasFileChanged)
+		{
 			FileUtils.writeLines(file, linesToWrite, false);
 		}
 		Main.logger.print((hasFileChanged ? "Changed" : "Unchanged") + ": " + file.getPath());
