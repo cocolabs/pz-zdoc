@@ -79,6 +79,7 @@ public class JavaDocParser {
 			lines.add(luaMethod.toString());
 			lines.add("");
 		}
+		lines.remove(lines.size() - 1);
 		FileUtils.writeLines(outputPath.toFile(), lines, false);
 	}
 
