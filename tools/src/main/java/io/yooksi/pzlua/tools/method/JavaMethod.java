@@ -45,11 +45,14 @@ public class JavaMethod extends Method {
 	@Override
 	public String toString() {
 
-		StringBuilder sb = new StringBuilder();
-		Arrays.stream(params).forEach(p -> sb.append(p.getUnqualified().toString()).append(", "));
-		String params = sb.substring(0, sb.length() - 2).trim();
-
+		String sParams = "";
+		if (this.params.length > 0)
+		{
+			final StringBuilder sb = new StringBuilder();
+			Arrays.stream(params).forEach(p -> sb.append(p.getUnqualified().toString()).append(", "));
+			sParams = sb.substring(0, sb.length() - 2).trim();
+		}
 		return String.format("%s%s%s %s(%s)", modifier,
-				(modifier.length() > 0 ? ' ' : ""), returnType, name, params);
+				(modifier.length() > 0 ? ' ' : ""), returnType, name, sParams);
 	}
 }
