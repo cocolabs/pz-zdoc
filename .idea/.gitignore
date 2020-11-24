@@ -1,11 +1,13 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-/discord.xml
-/encodings.xml
-/jarRepositories.xml
-/gradle.xml
+
+# Other files
 /libraries/
 /modules/
 /modules.xml
+/gradle.xml
+/discord.xml
+/encodings.xml
+/jarRepositories.xml
 /misc.xml
