@@ -8,6 +8,8 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -16,9 +18,20 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+    	if (args.length == 0) {
+    		throw new IllegalArgumentException("No application argument supplied");
+		}
+		Pattern argRegex = Pattern.compile("\\s*+-(\\w+)\\s*");
         for (int i = 0; i < args.length; i++)
         {
-            if (args[i].equals("-lua"))
+        	String rawOpArg = args[i];
+        	Matcher matcher = argRegex.matcher(rawOpArg);
+
+        	if (!matcher.find()) {
+				throw new IllegalArgumentException("Malformed application argument: " + rawOpArg);
+			}
+        	String opArg = matcher.group(1);
+        	if (opArg.equals("-lua"))
             {
                 Path path; java.util.List<Path> paths;
                 try {
@@ -27,10 +40,10 @@ public class Main {
                             .collect(Collectors.toCollection(ArrayList::new));
                 }
                 catch(InvalidPathException e) {
-                    throw new RuntimeException("Invalid lua file path", e);
+                    throw new RuntimeException("Invalid file path: " + args[i + 1], e);
                 }
                 catch(IndexOutOfBoundsException e) {
-                    throw new RuntimeException("No lua file path supplied", e);
+                    throw new RuntimeException("No file path supplied", e);
                 }
                 int docsWritten = 0;
                 for (Path docPath : paths) {
@@ -40,6 +53,7 @@ public class Main {
                 }
                 System.out.printf("Documented %d classes in %s%n", docsWritten, path.toString());
             }
+            else throw new IllegalArgumentException("Unknown application argument: " + opArg);
         }
     }
 }
