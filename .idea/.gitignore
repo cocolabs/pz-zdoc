@@ -5,6 +5,7 @@
 # Other files
 /libraries/
 /modules/
+/logs/
 /modules.xml
 /gradle.xml
 /discord.xml
