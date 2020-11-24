@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -31,12 +32,12 @@ public class JavaDocParser {
 		document = doc;
 	}
 
-	public static JavaDocParser create(String url) throws IOException {
+	public static JavaDocParser loadURL(String url) throws IOException {
 		return new JavaDocParser(Jsoup.connect(url).get());
 	}
 
-	public static JavaDocParser create(Path path) throws IOException {
-		return new JavaDocParser(Jsoup.parse(path.toFile(), Charset.defaultCharset().name()));
+	public static JavaDocParser loadFile(String path) throws IOException {
+		return new JavaDocParser(Jsoup.parse(new File(path), Charset.defaultCharset().name()));
 	}
 
 	public List<Method> parseMethods(ElementParser<? extends Method> parser) {

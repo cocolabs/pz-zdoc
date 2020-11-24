@@ -26,8 +26,8 @@ public class JavaDocParserTest extends TestWorkspace {
 	@BeforeAll
 	static void initializeStaticParsers() throws IOException {
 
-		PcxJavaDocParser = JavaDocParser.create(Paths.get("src/test/resources/Pcx.html"));
-		PauseJavaDocParser = JavaDocParser.create(Paths.get("src/test/resources/Pause.html"));
+		PcxJavaDocParser = JavaDocParser.loadFile("src/test/resources/Pcx.html");
+		PauseJavaDocParser = JavaDocParser.loadURL("src/test/resources/Pause.html");
 	}
 
 	@Test
