@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class JavaDocParser {
 
 	public static final String PZ_API_URL = "https://projectzomboid.com/modding/";
-	public static final String PZ_API_GLOBAL_URL = "Lua/LuaManager.GlobalObject.html";
+	public static final String PZ_API_GLOBAL_URL = PZ_API_URL + "Lua/LuaManager.GlobalObject.html";
 
 	public static final ElementParser<JavaMethod> JAVA_METHOD_PARSER = new JavaMethod.Parser();
 	public static final ElementParser<LuaFunction> LUA_METHOD_PARSER = new LuaFunction.Parser();

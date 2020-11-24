@@ -1,7 +1,15 @@
 package io.yooksi.pzlua.tools;
 
+import io.yooksi.pzlua.tools.lang.EmmyLua;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.NoSuchFileException;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainTest extends TestWorkspace {
 
@@ -29,26 +37,55 @@ public class MainTest extends TestWorkspace {
 	}
 
 	@Test
+	void shouldThrowExceptionWhenApplicationRunWithMalformedPathArg() {
+
+		// Invalid file path or URL
+		String[][] invalidPathArgs = {
+				new String[]{ "-lua", "C:/fi*e" },
+				new String[]{ "-java", "C:/fi*e" },
+		};
+		for (String[] args : invalidPathArgs) {
+			Assertions.assertThrows(IllegalArgumentException.class, () -> Main.main(args));
+		}
+	}
+
+	@Test
 	void shouldThrowExceptionWhenApplicationRunWithInvalidPathArg() {
 
-		// Invalid file path
-		String[] invalidPathArg = { "-lua #@%", "-java invalid/path" };
-		for (String arg : invalidPathArg) {
-			Assertions.assertThrows(IllegalArgumentException.class,
-					() -> Main.main(new String[]{ arg }));
-		}
+		Assertions.assertThrows(NoSuchFileException.class,
+				()-> Main.main(new String[]{ "-lua", "invalid/path" }));
+
+		Assertions.assertThrows(NoSuchFileException.class,
+				()-> Main.main(new String[]{ "-java", "invalid/path" }));
 	}
 
 	@Test
 	void shouldThrowExceptionWhenApplicationRunWithNoPathArg() {
 
 		// IndexOutOfBoundsException
-		Assertions.assertThrows(IllegalArgumentException.class,
+		Assertions.assertThrows(RuntimeException.class,
 				() -> Main.main(new String[]{ "-lua" }));
 	}
 
 	@Test
-	void whenApplicationRunShouldDocumentLuaClasses() {
+	void whenApplicationRunShouldDocumentLuaClasses() throws IOException {
+
+		String[] write = {
+				"--- This is a sample comment",
+				"---@class otherSampleLua",
+				"sampleLua = luaClass:new()"
+		};
+		FileUtils.writeLines(file, Arrays.asList(write));
+
+		Main.main(new String[]{ "-lua", dir.getPath() });
+
+		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
+		Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), read.get(1));
+	}
+
+	@Test
+	void whenApplicationRunShouldConvertJavaToLuaDoc() throws IOException {
+
 
 	}
 }
