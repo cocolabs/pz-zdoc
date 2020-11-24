@@ -34,8 +34,7 @@ public abstract class Method implements ParseResult {
 	public Parameter[] getParams() {
 
 		Parameter[] result = new Parameter[params.length];
-		for (int i = 0; i < params.length; i++)
-		{
+		for (int i = 0; i < params.length; i++) {
 			result[i] = params[i].copy();
 		}
 		return result;

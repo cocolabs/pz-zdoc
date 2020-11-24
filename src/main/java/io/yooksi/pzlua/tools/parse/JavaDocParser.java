@@ -1,15 +1,5 @@
 package io.yooksi.pzlua.tools.parse;
 
-import io.yooksi.pzlua.tools.lang.ElementParser;
-import io.yooksi.pzlua.tools.method.JavaMethod;
-import io.yooksi.pzlua.tools.method.LuaFunction;
-import io.yooksi.pzlua.tools.method.Method;
-import org.apache.commons.io.FileUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -17,6 +7,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import io.yooksi.pzlua.tools.lang.ElementParser;
+import io.yooksi.pzlua.tools.method.JavaMethod;
+import io.yooksi.pzlua.tools.method.LuaFunction;
+import io.yooksi.pzlua.tools.method.Method;
 
 public class JavaDocParser {
 

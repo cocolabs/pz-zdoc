@@ -1,8 +1,5 @@
 package io.yooksi.pzlua.tools;
 
-import io.yooksi.pzlua.tools.parse.JavaDocParser;
-import io.yooksi.pzlua.tools.parse.LuaParser;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,6 +8,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import io.yooksi.pzlua.tools.parse.JavaDocParser;
+import io.yooksi.pzlua.tools.parse.LuaParser;
 
 public class Main {
 
@@ -24,8 +24,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException {
 
-		if (args.length == 0)
-		{
+		if (args.length == 0) {
 			throw new IllegalArgumentException("No application argument supplied");
 		}
 		Pattern argRegex = Pattern.compile("^\\s*+-(\\w+)\\s*$");
@@ -33,8 +32,7 @@ public class Main {
 		String rawOpArg = args[0];
 		Matcher matcher = argRegex.matcher(rawOpArg);
 
-		if (!matcher.find())
-		{
+		if (!matcher.find()) {
 			throw new IllegalArgumentException("Malformed application argument: " + rawOpArg);
 		}
 		String opArg = matcher.group(1);
@@ -42,14 +40,12 @@ public class Main {
 		{
 			Path path;
 			java.util.List<Path> paths;
-			try
-			{
+			try {
 				path = Paths.get(args[1]);
 				paths = Files.walk(Paths.get(path.toString())).filter(Files::isRegularFile)
 						.collect(Collectors.toCollection(ArrayList::new));
 			}
-			catch (IndexOutOfBoundsException e)
-			{
+			catch (IndexOutOfBoundsException e) {
 				throw new RuntimeException("No file path supplied", e);
 			}
 			int docsWritten = 0;
@@ -67,25 +63,19 @@ public class Main {
 		else if (opArg.equals("java"))
 		{
 			Path path;
-			try
-			{
+			try {
 				path = Paths.get(args[1]);
-				if (!path.toFile().exists())
-				{
+				if (!path.toFile().exists()) {
 					throw new NoSuchFileException(path.toString(), null, "Output file not found");
 				}
-			}
-			catch (IndexOutOfBoundsException e)
-			{
+			} catch (IndexOutOfBoundsException e) {
 				throw new RuntimeException("No output file path supplied", e);
 			}
 			String source = args.length >= 3 ? args[2] : JavaDocParser.PZ_API_GLOBAL_URL;
-			if (isValidUrl(source))
-			{
+			if (isValidUrl(source)) {
 				JavaDocParser.loadURL(source).convertJavaToLuaDoc(path);
 			}
-			else if (isValidPath(source))
-			{
+			else if (isValidPath(source)) {
 				JavaDocParser.loadFile(source).convertJavaToLuaDoc(path);
 			}
 			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
@@ -96,8 +86,7 @@ public class Main {
 	public static boolean isValidUrl(String url) {
 
 		try { new URL(url); }
-		catch (MalformedURLException e)
-		{
+		catch (MalformedURLException e) {
 			return false;
 		}
 		return true;
@@ -106,8 +95,7 @@ public class Main {
 	public static boolean isValidPath(String path) {
 
 		try { Paths.get(path); }
-		catch (InvalidPathException e)
-		{
+		catch (InvalidPathException e) {
 			return false;
 		}
 		return true;

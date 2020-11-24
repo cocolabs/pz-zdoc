@@ -1,17 +1,18 @@
 package io.yooksi.pzlua.tools;
 
-import io.yooksi.pzlua.tools.method.LuaFunction;
-import io.yooksi.pzlua.tools.method.Method;
-import io.yooksi.pzlua.tools.method.Parameter;
-import io.yooksi.pzlua.tools.parse.JavaDocParser;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.List;
+import io.yooksi.pzlua.tools.method.LuaFunction;
+import io.yooksi.pzlua.tools.method.Method;
+import io.yooksi.pzlua.tools.method.Parameter;
+import io.yooksi.pzlua.tools.parse.JavaDocParser;
 
 public class JavaDocParserTest extends TestWorkspace {
 

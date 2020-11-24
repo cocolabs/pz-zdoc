@@ -1,15 +1,16 @@
 package io.yooksi.pzlua.tools;
 
-import io.yooksi.pzlua.tools.lang.EmmyLua;
-import io.yooksi.pzlua.tools.parse.LuaParser;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.yooksi.pzlua.tools.lang.EmmyLua;
+import io.yooksi.pzlua.tools.parse.LuaParser;
 
 public class LuaParserTest extends TestWorkspace {
 

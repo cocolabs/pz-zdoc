@@ -12,8 +12,7 @@ public enum EmmyLua {
 					String annotation = getBase() + ' ' + name;
 					String parentType = params.length > 0 ? params[0] : "";
 
-					if (!parentType.isEmpty())
-					{
+					if (!parentType.isEmpty()) {
 						annotation += " : " + parentType.trim();
 					}
 					return annotation;
@@ -27,8 +26,7 @@ public enum EmmyLua {
 					String annotation = getBase() + ' ' + name;
 					String otherType = params.length > 0 ? params[0] : "";
 
-					if (!otherType.isEmpty())
-					{
+					if (!otherType.isEmpty()) {
 						annotation += ' ' + otherType.trim();
 					}
 					return annotation;
@@ -42,8 +40,7 @@ public enum EmmyLua {
 					String annotation = getBase() + ' ' + name;
 					String type = params.length > 0 ? params[0] : "";
 
-					if (!type.isEmpty())
-					{
+					if (!type.isEmpty()) {
 						annotation += ' ' + type.trim();
 					}
 					return annotation;

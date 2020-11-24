@@ -1,14 +1,15 @@
 package io.yooksi.pzlua.tools.method;
 
-import io.yooksi.pzlua.tools.lang.ElementParser;
-import io.yooksi.pzlua.tools.lang.EmmyLua;
-import io.yooksi.pzlua.tools.parse.JavaDocParser;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
+import io.yooksi.pzlua.tools.lang.ElementParser;
+import io.yooksi.pzlua.tools.lang.EmmyLua;
+import io.yooksi.pzlua.tools.parse.JavaDocParser;
 
 public class LuaFunction extends Method {
 
@@ -21,8 +22,7 @@ public class LuaFunction extends Method {
 	public List<String> generateLuaDoc() {
 
 		luaDoc.clear();
-		for (Parameter param : getParams())
-		{
+		for (Parameter param : getParams()) {
 			luaDoc.add(EmmyLua.PARAM.create(param.getName(false), param.getType(false)));
 		}
 		luaDoc.add(EmmyLua.RETURN.create(getReturnType(false)));
