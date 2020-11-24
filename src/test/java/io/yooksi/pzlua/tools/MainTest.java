@@ -86,6 +86,28 @@ public class MainTest extends TestWorkspace {
 	@Test
 	void whenApplicationRunShouldConvertJavaToLuaDoc() throws IOException {
 
-
+		Main.main(new String[]{ "-java", file.getPath(), "src/test/resources/Pause.html" });
+		String[] expected = {
+				"---@return void",
+				"function begin()",
+				"",
+				"---@return boolean",
+				"function DoesInstantly()",
+				"",
+				"---@param object String",
+				"---@param params String[]",
+				"---@return void",
+				"function init(object, params)",
+				"",
+				"---@return boolean",
+				"function IsFinished()",
+				"",
+				"---@return void",
+				"function update()",
+		};
+		List<String> actual = FileUtils.readLines(file, Charset.defaultCharset());
+		for (int i = 0; i < actual.size(); i++) {
+			Assertions.assertEquals(expected[i], actual.get(i));
+		}
 	}
 }
