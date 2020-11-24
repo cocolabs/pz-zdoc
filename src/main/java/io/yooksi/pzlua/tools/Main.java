@@ -74,7 +74,7 @@ public class Main {
 				JavaDocParser.loadURL(source).convertJavaToLuaDoc(path);
 			}
 			else if (isValidPath(source)) {
-				JavaDocParser.loadURL(source).convertJavaToLuaDoc(path);
+				JavaDocParser.loadFile(source).convertJavaToLuaDoc(path);
 			}
 			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
 

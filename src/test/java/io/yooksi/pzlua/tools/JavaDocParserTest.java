@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class JavaDocParserTest extends TestWorkspace {
@@ -27,7 +26,7 @@ public class JavaDocParserTest extends TestWorkspace {
 	static void initializeStaticParsers() throws IOException {
 
 		PcxJavaDocParser = JavaDocParser.loadFile("src/test/resources/Pcx.html");
-		PauseJavaDocParser = JavaDocParser.loadURL("src/test/resources/Pause.html");
+		PauseJavaDocParser = JavaDocParser.loadFile("src/test/resources/Pause.html");
 	}
 
 	@Test
