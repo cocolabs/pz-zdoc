@@ -2,5 +2,10 @@
 /shelf/
 /workspace.xml
 discord.xml
-gradle.xml
+encodings.xml
 jarRepositories.xml
+gradle.xml
+libraries
+modules
+modules.xml
+misc.xml
