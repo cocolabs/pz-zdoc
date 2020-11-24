@@ -1,4 +1,4 @@
-package io.yooksi.pzlua.tools.method;
+package io.yooksi.pz.luadoc.method;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import io.yooksi.pzlua.tools.lang.ElementParser;
-import io.yooksi.pzlua.tools.lang.EmmyLua;
-import io.yooksi.pzlua.tools.parse.JavaDocParser;
+import io.yooksi.pz.luadoc.lang.ElementParser;
+import io.yooksi.pz.luadoc.lang.EmmyLua;
+import io.yooksi.pz.luadoc.parse.JavaDocParser;
 
 public class LuaFunction extends Method {
 

@@ -1,4 +1,4 @@
-package io.yooksi.pzlua.tools.lang;
+package io.yooksi.pz.luadoc.lang;
 
 import java.util.regex.Pattern;
 

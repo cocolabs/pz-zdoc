@@ -1,4 +1,4 @@
-package io.yooksi.pzlua.tools.parse;
+package io.yooksi.pz.luadoc.parse;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import io.yooksi.pzlua.tools.Main;
-import io.yooksi.pzlua.tools.lang.EmmyLua;
+import io.yooksi.pz.luadoc.Main;
+import io.yooksi.pz.luadoc.lang.EmmyLua;
 
 public class LuaParser {
 

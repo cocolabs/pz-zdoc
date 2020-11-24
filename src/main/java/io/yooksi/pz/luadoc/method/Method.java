@@ -1,7 +1,7 @@
-package io.yooksi.pzlua.tools.method;
+package io.yooksi.pz.luadoc.method;
 
-import io.yooksi.pzlua.tools.lang.ParseResult;
-import io.yooksi.pzlua.tools.parse.JavaDocParser;
+import io.yooksi.pz.luadoc.lang.ParseResult;
+import io.yooksi.pz.luadoc.parse.JavaDocParser;
 
 public abstract class Method implements ParseResult {
 

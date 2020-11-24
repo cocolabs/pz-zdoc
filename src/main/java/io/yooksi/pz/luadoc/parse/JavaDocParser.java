@@ -1,4 +1,4 @@
-package io.yooksi.pzlua.tools.parse;
+package io.yooksi.pz.luadoc.parse;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,10 +14,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import io.yooksi.pzlua.tools.lang.ElementParser;
-import io.yooksi.pzlua.tools.method.JavaMethod;
-import io.yooksi.pzlua.tools.method.LuaFunction;
-import io.yooksi.pzlua.tools.method.Method;
+import io.yooksi.pz.luadoc.lang.ElementParser;
+import io.yooksi.pz.luadoc.method.JavaMethod;
+import io.yooksi.pz.luadoc.method.LuaFunction;
+import io.yooksi.pz.luadoc.method.Method;
 
 public class JavaDocParser {
 

@@ -1,6 +1,6 @@
-package io.yooksi.pzlua.tools.method;
+package io.yooksi.pz.luadoc.method;
 
-import io.yooksi.pzlua.tools.parse.JavaDocParser;
+import io.yooksi.pz.luadoc.parse.JavaDocParser;
 
 /**
  * Textual representation of method parameter.

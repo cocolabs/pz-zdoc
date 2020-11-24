@@ -1,4 +1,4 @@
-package io.yooksi.pzlua.tools.method;
+package io.yooksi.pz.luadoc.method;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,8 +6,8 @@ import java.util.regex.Matcher;
 
 import org.jetbrains.annotations.Nullable;
 
-import io.yooksi.pzlua.tools.lang.ElementParser;
-import io.yooksi.pzlua.tools.lang.ParseRegex;
+import io.yooksi.pz.luadoc.lang.ElementParser;
+import io.yooksi.pz.luadoc.lang.ParseRegex;
 
 /**
  * Textual representation of Java method.

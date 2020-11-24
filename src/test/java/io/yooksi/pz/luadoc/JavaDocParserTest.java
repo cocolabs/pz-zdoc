@@ -1,4 +1,4 @@
-package io.yooksi.pzlua.tools;
+package io.yooksi.pz.luadoc;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pzlua.tools.method.LuaFunction;
-import io.yooksi.pzlua.tools.method.Method;
-import io.yooksi.pzlua.tools.method.Parameter;
-import io.yooksi.pzlua.tools.parse.JavaDocParser;
+import io.yooksi.pz.luadoc.method.LuaFunction;
+import io.yooksi.pz.luadoc.method.Method;
+import io.yooksi.pz.luadoc.method.Parameter;
+import io.yooksi.pz.luadoc.parse.JavaDocParser;
 
 public class JavaDocParserTest extends TestWorkspace {
 

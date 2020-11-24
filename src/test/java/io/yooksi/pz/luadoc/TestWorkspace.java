@@ -1,4 +1,4 @@
-package io.yooksi.pzlua.tools;
+package io.yooksi.pz.luadoc;
 
 import java.io.File;
 import java.io.IOException;

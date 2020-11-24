@@ -1,4 +1,4 @@
-package io.yooksi.pzlua.tools;
+package io.yooksi.pz.luadoc;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -10,7 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pzlua.tools.lang.EmmyLua;
+import io.yooksi.pz.luadoc.lang.EmmyLua;
 
 public class MainTest extends TestWorkspace {
 

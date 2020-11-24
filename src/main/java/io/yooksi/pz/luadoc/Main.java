@@ -1,4 +1,4 @@
-package io.yooksi.pzlua.tools;
+package io.yooksi.pz.luadoc;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -9,8 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import io.yooksi.pzlua.tools.parse.JavaDocParser;
-import io.yooksi.pzlua.tools.parse.LuaParser;
+import io.yooksi.pz.luadoc.parse.JavaDocParser;
+import io.yooksi.pz.luadoc.parse.LuaParser;
 
 public class Main {
 

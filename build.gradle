@@ -58,5 +58,5 @@ test {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'io.yooksi.pzlua.Main'
+    mainClassName = 'io.yooksi.pz.luadoc.Main'
 }
