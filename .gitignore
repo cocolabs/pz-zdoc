@@ -11,6 +11,11 @@ out/
 # Ignore Gradle build output directory
 build
 
+# Project file-based format
+*.ipr
+*.iws
+*.iml
+
 ### Java ###
 
 # Compiled class file
