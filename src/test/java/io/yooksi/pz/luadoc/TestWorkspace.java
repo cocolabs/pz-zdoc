@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 
-abstract class TestWorkspace {
+public abstract class TestWorkspace {
 
-	final String filename;
-	File dir, file;
+	protected final String filename;
+	protected File dir, file;
 
-	TestWorkspace(String filename) {
+	public TestWorkspace(String filename) {
 		this.filename = filename;
 	}
 

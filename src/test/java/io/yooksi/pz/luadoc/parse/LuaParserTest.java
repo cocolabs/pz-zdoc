@@ -1,10 +1,11 @@
-package io.yooksi.pz.luadoc;
+package io.yooksi.pz.luadoc.parse;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
+import io.yooksi.pz.luadoc.TestWorkspace;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
