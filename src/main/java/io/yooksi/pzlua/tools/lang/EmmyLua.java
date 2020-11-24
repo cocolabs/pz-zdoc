@@ -9,8 +9,36 @@ public enum EmmyLua {
 		public String create(String name, String...params) {
 
 			String annotation = getBase() + ' ' + name;
-			if (params.length > 0 && !params[0].isEmpty()) {
-				annotation += " : " + params[0];
+			String parentType = params.length > 0 ? params[0] : "";
+
+			if (!parentType.isEmpty()) {
+				annotation += " : " + parentType.trim();
+			}
+			return annotation;
+		}
+	},
+	PARAM("param") {
+		@Override
+		public String create(String name, String... params) {
+
+			String annotation = getBase() + ' ' + name;
+			String otherType = params.length > 0 ? params[0] : "";
+
+			if (!otherType.isEmpty()) {
+				annotation += ' ' + otherType.trim();
+			}
+			return annotation;
+		}
+	},
+	RETURN("return") {
+		@Override
+		public String create(String name, String... params) {
+
+			String annotation = getBase() + ' ' + name;
+			String type = params.length > 0 ? params[0] : "";
+
+			if (!type.isEmpty()) {
+				annotation += ' ' + type.trim();
 			}
 			return annotation;
 		}

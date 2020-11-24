@@ -1,6 +1,7 @@
 package io.yooksi.pzlua.tools.method;
 
 import io.yooksi.pzlua.tools.lang.ElementParser;
+import io.yooksi.pzlua.tools.lang.EmmyLua;
 import io.yooksi.pzlua.tools.parse.JavaDocParser;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,10 +34,9 @@ public class LuaFunction extends Method {
 
 		luaDoc.clear();
 		for (Parameter param : getParams()) {
-			luaDoc.add(String.format("---@param %s %s",
-					param.getName(false), param.getType(false)));
+			luaDoc.add(EmmyLua.PARAM.create(param.getName(false), param.getType(false)));
 		}
-		luaDoc.add("---@return " + getReturnType(false));
+		luaDoc.add(EmmyLua.RETURN.create(getReturnType(false)));
 		return getLuaDoc();
 	}
 
