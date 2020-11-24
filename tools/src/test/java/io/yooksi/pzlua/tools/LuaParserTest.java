@@ -1,6 +1,6 @@
 package io.yooksi.pzlua.tools;
 
-import io.yooksi.pzlua.tools.lang.EmmyLuaAnnotation;
+import io.yooksi.pzlua.tools.lang.EmmyLua;
 import io.yooksi.pzlua.tools.parse.LuaParser;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +35,7 @@ public class LuaParserTest extends TestWorkspace {
 
         List<String> linesList = FileUtils.readLines(file, Charset.defaultCharset());
         Assertions.assertEquals(7, linesList.size());
-        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), linesList.get(5));
+        Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), linesList.get(5));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class LuaParserTest extends TestWorkspace {
         LuaParser.documentLuaFile(file);
 
         List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
-        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(1));
+        Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), read.get(1));
 
     }
 
@@ -75,7 +75,7 @@ public class LuaParserTest extends TestWorkspace {
         LuaParser.documentLuaFile(file);
 
         List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
-        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(0));
+        Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), read.get(0));
     }
 
     @Test
@@ -89,14 +89,14 @@ public class LuaParserTest extends TestWorkspace {
         LuaParser.documentLuaFile(file);
 
         List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
-        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua"), read.get(0));
+        Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), read.get(0));
 
         write[1] = "sampleLua = luaClass:derive()";
         FileUtils.writeLines(file, Arrays.asList(write), false);
         LuaParser.documentLuaFile(file);
 
         read = FileUtils.readLines(file, Charset.defaultCharset());
-        Assertions.assertEquals(EmmyLuaAnnotation.CLASS.create("sampleLua", "luaClass"), read.get(0));
+        Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua", "luaClass"), read.get(0));
     }
 
 }

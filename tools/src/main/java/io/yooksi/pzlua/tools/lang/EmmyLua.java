@@ -2,7 +2,7 @@ package io.yooksi.pzlua.tools.lang;
 
 import java.util.regex.Pattern;
 
-public enum EmmyLuaAnnotation {
+public enum EmmyLua {
 
 	CLASS("class") {
 		@Override
@@ -17,7 +17,7 @@ public enum EmmyLuaAnnotation {
 	};
 
 	private final String keyword;
-	EmmyLuaAnnotation(String keyword) {
+	EmmyLua(String keyword) {
 		this.keyword = keyword;
 	}
 

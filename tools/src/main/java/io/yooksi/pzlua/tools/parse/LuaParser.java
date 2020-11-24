@@ -1,7 +1,7 @@
 package io.yooksi.pzlua.tools.parse;
 
 import io.yooksi.pzlua.tools.Main;
-import io.yooksi.pzlua.tools.lang.EmmyLuaAnnotation;
+import io.yooksi.pzlua.tools.lang.EmmyLua;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -32,11 +32,11 @@ public class LuaParser {
 			{
 				if (i > 0) { // make sure we are not on the first line
 					String prevLine = linesToRead.get(i - 1);
-					if (EmmyLuaAnnotation.CLASS.isAnnotation(prevLine)) {
+					if (EmmyLua.CLASS.isAnnotation(prevLine)) {
 						linesToWrite.remove(i - 1);
 					}
 				}
-				String annotation = EmmyLuaAnnotation.CLASS.create(filename);
+				String annotation = EmmyLua.CLASS.create(filename);
 				Matcher matcher = DERIVED_CLASS.matcher(line);
 				if (matcher.find()) {
 					annotation += " : " + matcher.group(1);
