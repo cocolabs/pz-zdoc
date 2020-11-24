@@ -62,8 +62,7 @@ public class JavaDocParserTest extends TestWorkspace {
 		List<Method> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
 
 		Parameter[] params = methods.get(0).getParams();
-		Assertions.assertEquals(1, params.length);
-		Assertions.assertTrue(params[0].toString().isEmpty());
+		Assertions.assertEquals(0, params.length);
 	}
 
 	@Test
