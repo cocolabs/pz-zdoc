@@ -27,5 +27,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'io.yooksi.pzlua.tools.Main'
+    mainClassName = 'io.yooksi.pzlua.Main'
 }
