@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import io.yooksi.pz.luadoc.parse.JavaDocParser;
-import io.yooksi.pz.luadoc.parse.LuaParser;
+import io.yooksi.pz.luadoc.parse.LuaDocParser;
 
 public class Main {
 
@@ -49,7 +49,7 @@ public class Main {
 			int docsWritten = 0;
 			for (Path path : paths)
 			{
-				if (Utils.isLuaFile(path) && LuaParser.documentLuaFile(docPath, path.toFile(), outputDir))
+				if (Utils.isLuaFile(path) && LuaDocParser.documentLuaFile(docPath, path.toFile(), outputDir))
 				{
 					System.out.println("- Documented lua file " + path);
 					docsWritten += 1;

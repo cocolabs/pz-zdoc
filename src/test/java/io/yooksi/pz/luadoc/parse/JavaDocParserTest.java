@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import io.yooksi.pz.luadoc.method.JavaMethod;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.luadoc.TestWorkspace;
-import io.yooksi.pz.luadoc.method.LuaFunction;
-import io.yooksi.pz.luadoc.method.Method;
+import io.yooksi.pz.luadoc.method.LuaMethod;
 import io.yooksi.pz.luadoc.method.Parameter;
 
 public class JavaDocParserTest extends TestWorkspace {
@@ -34,7 +34,7 @@ public class JavaDocParserTest extends TestWorkspace {
 	void shouldCorrectlyParseSingleJavaMethod() {
 
 		JavaDocParser parser = PcxJavaDocParser;
-		List<Method> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
+		List<JavaMethod> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
 
 		Assertions.assertEquals(1, methods.size());
 		Assertions.assertEquals("java.awt.Image getImage()", methods.get(0).toString());
@@ -44,7 +44,7 @@ public class JavaDocParserTest extends TestWorkspace {
 	void shouldCorrectlyParseMultipleJavaMethod() {
 
 		JavaDocParser parser = PauseJavaDocParser;
-		List<Method> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
+		List<JavaMethod> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
 
 		String[] methodName = {
 				"begin", "DoesInstantly", "init", "IsFinished", "update"
@@ -59,7 +59,7 @@ public class JavaDocParserTest extends TestWorkspace {
 	void shouldCorrectlyParseEmptyMethodParams() {
 
 		JavaDocParser parser = PcxJavaDocParser;
-		List<Method> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
+		List<JavaMethod> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
 
 		Parameter[] params = methods.get(0).getParams();
 		Assertions.assertEquals(0, params.length);
@@ -69,7 +69,7 @@ public class JavaDocParserTest extends TestWorkspace {
 	void shouldCorrectlyParseSingleLuaMethod() {
 
 		JavaDocParser parser = PcxJavaDocParser;
-		List<Method> methods = parser.parseMethods(JavaDocParser.LUA_METHOD_PARSER);
+		List<LuaMethod> methods = parser.parseMethods(JavaDocParser.LUA_METHOD_PARSER);
 
 		Assertions.assertEquals(1, methods.size());
 		Assertions.assertEquals("function getImage()", methods.get(0).toString());
@@ -79,8 +79,8 @@ public class JavaDocParserTest extends TestWorkspace {
 	void shouldGenerateValidLuaMethodDocumentation() {
 
 		JavaDocParser parser = PauseJavaDocParser;
-		List<Method> methods = parser.parseMethods(JavaDocParser.LUA_METHOD_PARSER);
-		List<String> luaDoc = ((LuaFunction) methods.get(2)).generateLuaDoc();
+		List<LuaMethod> methods = parser.parseMethods(JavaDocParser.LUA_METHOD_PARSER);
+		List<String> luaDoc = methods.get(2).generateLuaDoc();
 
 		String[] expectedDoc = {
 				"---@param object String",

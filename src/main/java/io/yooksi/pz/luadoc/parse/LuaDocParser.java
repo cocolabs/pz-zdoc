@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import io.yooksi.pz.luadoc.Main;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
 
-public class LuaParser {
+public class LuaDocParser {
 
 	private static final Pattern DERIVED_CLASS = Pattern.compile("=\\s*(\\w+):derive\\(");
 

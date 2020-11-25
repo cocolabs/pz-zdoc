@@ -11,11 +11,11 @@ import io.yooksi.pz.luadoc.lang.ElementParser;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
 import io.yooksi.pz.luadoc.parse.JavaDocParser;
 
-public class LuaFunction extends Method {
+public class LuaMethod extends Method {
 
 	private final List<String> luaDoc = new ArrayList<>();
 
-	public LuaFunction(String returnType, String name, Parameter[] params) {
+	public LuaMethod(String returnType, String name, Parameter[] params) {
 		super("", returnType, name, params);
 	}
 
@@ -50,15 +50,15 @@ public class LuaFunction extends Method {
 		return sb.append(')').toString();
 	}
 
-	public static class Parser implements ElementParser<LuaFunction> {
+	public static class Parser implements ElementParser<LuaMethod> {
 
 		@Override
-		public @Nullable LuaFunction parse(String text) {
+		public @Nullable LuaMethod parse(String text) {
 
 			JavaMethod jMethod = JavaDocParser.JAVA_METHOD_PARSER.parse(text);
 
 			Parameter[] lParams = Parameter.getUnqualified(jMethod.params);
-			return new LuaFunction(jMethod.returnType, jMethod.name, lParams);
+			return new LuaMethod(jMethod.returnType, jMethod.name, lParams);
 		}
 	}
 }

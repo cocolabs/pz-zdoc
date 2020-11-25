@@ -16,7 +16,7 @@ import org.jsoup.select.Elements;
 
 import io.yooksi.pz.luadoc.lang.ElementParser;
 import io.yooksi.pz.luadoc.method.JavaMethod;
-import io.yooksi.pz.luadoc.method.LuaFunction;
+import io.yooksi.pz.luadoc.method.LuaMethod;
 import io.yooksi.pz.luadoc.method.Method;
 
 public class JavaDocParser {
@@ -25,7 +25,7 @@ public class JavaDocParser {
 	public static final String PZ_API_GLOBAL_URL = PZ_API_URL + "Lua/LuaManager.GlobalObject.html";
 
 	public static final ElementParser<JavaMethod> JAVA_METHOD_PARSER = new JavaMethod.Parser();
-	public static final ElementParser<LuaFunction> LUA_METHOD_PARSER = new LuaFunction.Parser();
+	public static final ElementParser<LuaMethod> LUA_METHOD_PARSER = new LuaMethod.Parser();
 
 	private final Document document;
 
@@ -45,7 +45,7 @@ public class JavaDocParser {
 		return element.replaceAll(".\\w+\\.", "");
 	}
 
-	public List<Method> parseMethods(ElementParser<? extends Method> parser) {
+	public <T extends Method> List<T> parseMethods(ElementParser<T> parser) {
 
 		Elements tables = document.select("table");
 		java.util.Set<Element> summaryTables = tables.stream()
@@ -61,7 +61,7 @@ public class JavaDocParser {
 		// remove table header
 		tableRows.remove(0);
 
-		List<Method> methods = new ArrayList<>();
+		List<T> methods = new ArrayList<>();
 		for (Element element : tableRows)
 		{
 			Elements columns = element.getElementsByTag("td");
@@ -77,7 +77,7 @@ public class JavaDocParser {
 		List<String> lines = new java.util.ArrayList<>();
 		for (Method method : parseMethods(JavaDocParser.LUA_METHOD_PARSER))
 		{
-			LuaFunction luaMethod = (LuaFunction) method;
+			LuaMethod luaMethod = (LuaMethod) method;
 			luaMethod.generateLuaDoc();
 
 			lines.add(luaMethod.toString());
