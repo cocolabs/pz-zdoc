@@ -4,49 +4,49 @@ import java.util.regex.Pattern;
 
 public enum EmmyLua {
 
+	// @formatter:off
 	CLASS("class")
-			{
-				@Override
-				public String create(String name, String... params) {
+	{
+		@Override
+		public String create(String name, String... params) {
 
-					String annotation = getBase() + ' ' + name;
-					String parentType = params.length > 0 ? params[0] : "";
+			String annotation = getBase() + ' ' + name;
+			String parentType = params.length > 0 ? params[0] : "";
 
-					if (!parentType.isEmpty()) {
-						annotation += " : " + parentType.trim();
-					}
-					return annotation;
-				}
-			},
+			if (!parentType.isEmpty()) {
+				annotation += " : " + parentType.trim();
+			}
+			return annotation;
+		}
+	},
 	PARAM("param")
-			{
-				@Override
-				public String create(String name, String... params) {
+	{
+		@Override
+		public String create(String name, String... params) {
 
-					String annotation = getBase() + ' ' + name;
-					String otherType = params.length > 0 ? params[0] : "";
+			String annotation = getBase() + ' ' + name;
+			String otherType = params.length > 0 ? params[0] : "";
 
-					if (!otherType.isEmpty()) {
-						annotation += ' ' + otherType.trim();
-					}
-					return annotation;
-				}
-			},
+			if (!otherType.isEmpty()) {
+				annotation += ' ' + otherType.trim();
+			}
+			return annotation;
+		}
+	},
 	RETURN("return")
-			{
-				@Override
-				public String create(String name, String... params) {
+	{
+		@Override
+		public String create(String name, String... params) {
 
-					String annotation = getBase() + ' ' + name;
-					String type = params.length > 0 ? params[0] : "";
+			String annotation = getBase() + ' ' + name;
+			String type = params.length > 0 ? params[0] : "";
 
-					if (!type.isEmpty()) {
-						annotation += ' ' + type.trim();
-					}
-					return annotation;
-				}
-			};
-
+			if (!type.isEmpty()) {
+				annotation += ' ' + type.trim();
+			}
+			return annotation;
+		}
+	}; // @formatter:on
 	private final String keyword;
 
 	EmmyLua(String keyword) {

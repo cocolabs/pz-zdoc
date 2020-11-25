@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import io.yooksi.pz.luadoc.method.JavaMethod;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.luadoc.TestWorkspace;
+import io.yooksi.pz.luadoc.method.JavaMethod;
 import io.yooksi.pz.luadoc.method.LuaMethod;
 import io.yooksi.pz.luadoc.method.Parameter;
 
