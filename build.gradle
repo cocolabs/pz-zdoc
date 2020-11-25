@@ -14,6 +14,12 @@ plugins {
 
 apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotless.gradle"
 
+idea {
+    module {
+        inheritOutputDirs = true
+    }
+}
+
 repositories {
     // Use jcenter for resolving dependencies.
     jcenter()
