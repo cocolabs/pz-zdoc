@@ -17,6 +17,7 @@ apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotles
 idea {
     module {
         inheritOutputDirs = true
+        excludeDirs += [file("media"), file("logs"), file("build")]
     }
 }
 
