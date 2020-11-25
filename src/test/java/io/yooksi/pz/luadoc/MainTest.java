@@ -54,10 +54,10 @@ public class MainTest extends TestWorkspace {
 	void shouldThrowExceptionWhenApplicationRunWithInvalidPathArg() {
 
 		Assertions.assertThrows(NoSuchFileException.class,
-				()-> Main.main(new String[]{ "-lua", "invalid/path" }));
+				() -> Main.main(new String[]{ "-lua", "invalid/path" }));
 
 		Assertions.assertThrows(NoSuchFileException.class,
-				()-> Main.main(new String[]{ "-java", "invalid/path" }));
+				() -> Main.main(new String[]{ "-java", "invalid/path" }));
 	}
 
 	@Test

@@ -74,9 +74,8 @@ public class JavaDocParser {
 
 	public void convertJavaToLuaDoc(Path outputPath) throws IOException {
 
-		List<Method> methods = parseMethods(JavaDocParser.LUA_METHOD_PARSER);
 		List<String> lines = new java.util.ArrayList<>();
-		for (Method method : methods)
+		for (Method method : parseMethods(JavaDocParser.LUA_METHOD_PARSER))
 		{
 			LuaFunction luaMethod = (LuaFunction) method;
 			luaMethod.generateLuaDoc();

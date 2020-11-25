@@ -1,12 +1,12 @@
 package io.yooksi.pz.luadoc;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import org.apache.commons.io.FilenameUtils;
 
 public class Utils {
 
@@ -19,6 +19,7 @@ public class Utils {
 
 	/**
 	 * @return {@code true} if file denoted by given path is a lua file
+	 *
 	 * @throws NullPointerException if given path has no elements
 	 */
 	public static boolean isLuaFile(Path path) {
@@ -30,7 +31,8 @@ public class Utils {
 		try { new URL(url); }
 		catch (MalformedURLException e) {
 			return false;
-		} return true;
+		}
+		return true;
 	}
 
 	public static boolean isValidPath(String path) {
@@ -38,6 +40,7 @@ public class Utils {
 		try { Paths.get(path); }
 		catch (InvalidPathException e) {
 			return false;
-		} return true;
+		}
+		return true;
 	}
 }

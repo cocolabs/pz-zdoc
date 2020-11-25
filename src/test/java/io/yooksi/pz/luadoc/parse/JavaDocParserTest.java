@@ -4,16 +4,15 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import io.yooksi.pz.luadoc.TestWorkspace;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import io.yooksi.pz.luadoc.TestWorkspace;
 import io.yooksi.pz.luadoc.method.LuaFunction;
 import io.yooksi.pz.luadoc.method.Method;
 import io.yooksi.pz.luadoc.method.Parameter;
-import io.yooksi.pz.luadoc.parse.JavaDocParser;
 
 public class JavaDocParserTest extends TestWorkspace {
 
@@ -38,7 +37,7 @@ public class JavaDocParserTest extends TestWorkspace {
 		List<Method> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
 
 		Assertions.assertEquals(1, methods.size());
-		Assertions.assertEquals("java.awt.Image getImage()",methods.get(0).toString());
+		Assertions.assertEquals("java.awt.Image getImage()", methods.get(0).toString());
 	}
 
 	@Test
@@ -73,7 +72,7 @@ public class JavaDocParserTest extends TestWorkspace {
 		List<Method> methods = parser.parseMethods(JavaDocParser.LUA_METHOD_PARSER);
 
 		Assertions.assertEquals(1, methods.size());
-		Assertions.assertEquals("function getImage()",methods.get(0).toString());
+		Assertions.assertEquals("function getImage()", methods.get(0).toString());
 	}
 
 	@Test
@@ -100,7 +99,7 @@ public class JavaDocParserTest extends TestWorkspace {
 		parser.convertJavaToLuaDoc(file.toPath());
 
 		List<String> output = FileUtils.readLines(file, Charset.defaultCharset());
-		String[] actual = output.toArray(new String[] {});
+		String[] actual = output.toArray(new String[]{});
 
 		String[] expected = {
 				"---@return void",

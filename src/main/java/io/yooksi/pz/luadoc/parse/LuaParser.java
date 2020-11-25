@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.Nullable;
 
 import io.yooksi.pz.luadoc.Main;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
-import org.jetbrains.annotations.Nullable;
 
 public class LuaParser {
 
@@ -31,7 +31,8 @@ public class LuaParser {
 		}
 		Path relativePath = root.relativize(file.toPath());
 		File outputFile;
-		if (outputDir != null) {
+		if (outputDir != null)
+		{
 			if (!outputDir.exists() && !outputDir.mkdir()) {
 				throw new IOException("Unable to create output directory: " + outputDir.getPath());
 			}
@@ -70,7 +71,8 @@ public class LuaParser {
 		}
 		if (hasFileChanged)
 		{
-			if (!outputFile.exists()) {
+			if (!outputFile.exists())
+			{
 				File parentFile = outputFile.getParentFile();
 				if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
 					throw new IOException("Unable to create specified output file: " + outputFile.getPath());
