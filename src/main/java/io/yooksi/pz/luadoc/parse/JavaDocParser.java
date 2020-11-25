@@ -77,7 +77,8 @@ public class JavaDocParser {
 		List<String> lines = new java.util.ArrayList<>();
 		for (LuaMethod method : parseMethods(JavaDocParser.LUA_METHOD_PARSER))
 		{
-			lines.add(method.generateLuaDoc().toString());
+			method.generateLuaDoc();
+			lines.add(method.toString());
 			lines.add("");
 		}
 		lines.remove(lines.size() - 1);
