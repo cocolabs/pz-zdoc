@@ -1,8 +1,6 @@
 package io.yooksi.pz.luadoc;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -72,32 +70,14 @@ public class Main {
 				throw new RuntimeException("No output file path supplied", e);
 			}
 			String source = args.length >= 3 ? args[2] : JavaDocParser.PZ_API_GLOBAL_URL;
-			if (isValidUrl(source)) {
+			if (Utils.isValidUrl(source)) {
 				JavaDocParser.loadURL(source).convertJavaToLuaDoc(path);
 			}
-			else if (isValidPath(source)) {
+			else if (Utils.isValidPath(source)) {
 				JavaDocParser.loadFile(source).convertJavaToLuaDoc(path);
 			}
 			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
 		}
 		else throw new IllegalArgumentException("Unknown application argument: " + opArg);
-	}
-
-	public static boolean isValidUrl(String url) {
-
-		try { new URL(url); }
-		catch (MalformedURLException e) {
-			return false;
-		}
-		return true;
-	}
-
-	public static boolean isValidPath(String path) {
-
-		try { Paths.get(path); }
-		catch (InvalidPathException e) {
-			return false;
-		}
-		return true;
 	}
 }
