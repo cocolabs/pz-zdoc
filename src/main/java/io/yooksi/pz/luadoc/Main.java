@@ -35,26 +35,27 @@ public class Main {
 		String opArg = matcher.group(1);
 		if (opArg.equals("lua"))
 		{
-			Path path;
+			Path docPath, outputDir;
 			java.util.List<Path> paths;
 			try {
-				path = Paths.get(args[1]);
-				paths = Files.walk(Paths.get(path.toString())).filter(Files::isRegularFile)
+				docPath = Paths.get(args[1]);
+				outputDir = args.length >= 3 ? Paths.get(args[2]) : null;
+				paths = Files.walk(Paths.get(docPath.toString())).filter(Files::isRegularFile)
 						.collect(Collectors.toCollection(ArrayList::new));
 			}
 			catch (IndexOutOfBoundsException e) {
 				throw new RuntimeException("No file path supplied", e);
 			}
 			int docsWritten = 0;
-			for (Path docPath : paths)
+			for (Path path : paths)
 			{
-				if (LuaParser.documentLuaFile(docPath.toFile()))
+				if (LuaParser.documentLuaFile(path.toFile(), outputDir))
 				{
-					System.out.println("- Documented lua file " + docPath);
+					System.out.println("- Documented lua file " + path);
 					docsWritten += 1;
 				}
 			}
-			System.out.printf("Documented %d classes in %s%n", docsWritten, path.toString());
+			System.out.printf("Documented %d classes in %s%n", docsWritten, docPath.toString());
 		}
 		// document java to lua
 		else if (opArg.equals("java"))

@@ -1,5 +1,6 @@
 package io.yooksi.pz.luadoc.parse;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.luadoc.lang.EmmyLua;
-import io.yooksi.pz.luadoc.parse.LuaParser;
 
 public class LuaParserTest extends TestWorkspace {
 
@@ -20,19 +20,26 @@ public class LuaParserTest extends TestWorkspace {
     }
 
     @Test
-    void shouldDocumentSampleLuaFile() throws IOException {
+    void shouldDocumentLuaFileWithSpecifiedExistingOutputDir() throws IOException {
 
-        String[] lines = {
-                "",
-                "--*******************",
-                "-- this is a comment",
-                "--*******************",
-                "",
-                "sampleLua = luaClass:new()"
-        };
-        FileUtils.writeLines(file, Arrays.asList(lines));
-        Assertions.assertEquals(6, FileUtils.readLines(file, Charset.defaultCharset()).size());
+        createSampleLuaFile();
+        File outputDir = dir.toPath().resolve("output").toFile();
+        Assertions.assertTrue(outputDir.mkdir());
+        Assertions.assertDoesNotThrow(() -> LuaParser.documentLuaFile(file, outputDir));
+    }
 
+    @Test
+    void shouldDocumentLuaFileWithSpecifiedNonExistingOutputDir() throws IOException {
+
+        createSampleLuaFile();
+        File outputDir = dir.toPath().resolve("output").toFile();
+        Assertions.assertDoesNotThrow(() -> LuaParser.documentLuaFile(file, outputDir));
+    }
+
+    @Test
+    void shouldCorrectlyDocumentSampleLuaFile() throws IOException {
+
+        createSampleLuaFile();
         LuaParser.documentLuaFile(file);
 
         List<String> linesList = FileUtils.readLines(file, Charset.defaultCharset());
@@ -100,4 +107,17 @@ public class LuaParserTest extends TestWorkspace {
         Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua", "luaClass"), read.get(0));
     }
 
+    private void createSampleLuaFile() throws IOException {
+
+        String[] lines = {
+                "",
+                "--*******************",
+                "-- this is a comment",
+                "--*******************",
+                "",
+                "sampleLua = luaClass:new()"
+        };
+        FileUtils.writeLines(file, Arrays.asList(lines));
+        Assertions.assertEquals(6, FileUtils.readLines(file, Charset.defaultCharset()).size());
+    }
 }
