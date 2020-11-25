@@ -32,10 +32,8 @@ public class LuaParser {
 				throw new IOException("Unable to create output directory: " + outputDir.getPath());
 			}
 			outputFile = outputDir.toPath().resolve(file.getName()).toFile();
-			if (!outputFile.exists() && !outputFile.createNewFile()) {
-				throw new IOException("Unable to create specified output file: " + outputFile.getPath());
-			}
-		} // overwrite file when unspecified output directory
+		}
+		// overwrite file when unspecified output directory
 		else outputFile = file;
 
 		String filename = FilenameUtils.getBaseName(file.getName());
@@ -67,6 +65,9 @@ public class LuaParser {
 			linesToWrite.add(line);
 		}
 		if (hasFileChanged) {
+			if (!outputFile.exists() && !outputFile.createNewFile()) {
+				throw new IOException("Unable to create specified output file: " + outputFile.getPath());
+			}
 			FileUtils.writeLines(outputFile, linesToWrite, false);
 		}
 		Main.logger.print((hasFileChanged ? "Changed" : "Unchanged") + ": " + file.getPath());

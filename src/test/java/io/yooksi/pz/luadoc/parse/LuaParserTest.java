@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.yooksi.pz.luadoc.TestWorkspace;
@@ -55,6 +56,18 @@ public class LuaParserTest extends TestWorkspace {
 
         // IndexOutOfBoundsException
         Assertions.assertDoesNotThrow(() -> LuaParser.documentLuaFile(file));
+    }
+
+    @Test
+    void shouldNotWriteToFileIfNoDocElementsFound() throws IOException {
+
+        String expected = "--- No doc elements";
+        FileUtils.writeLines(file, Collections.singletonList(expected));
+
+        LuaParser.documentLuaFile(file);
+
+        String actual = FileUtils.readLines(file, Charset.defaultCharset()).get(0);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
