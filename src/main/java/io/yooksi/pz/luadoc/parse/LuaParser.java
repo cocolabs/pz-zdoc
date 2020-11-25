@@ -21,17 +21,21 @@ public class LuaParser {
 
 	private static final Pattern DERIVED_CLASS = Pattern.compile("=\\s*(\\w+):derive\\(");
 
-	public static boolean documentLuaFile(File file, @Nullable File outputDir) throws IOException {
+	public static boolean documentLuaFile(Path root, File file, @Nullable File outputDir) throws IOException {
 
-		if (!file.exists()) {
+		if (!root.toFile().exists()) {
+			throw new FileNotFoundException(root.toString());
+		}
+		else if (!file.exists()) {
 			throw new FileNotFoundException(file.getPath());
 		}
+		Path relativePath = root.relativize(file.toPath());
 		File outputFile;
 		if (outputDir != null) {
 			if (!outputDir.exists() && !outputDir.mkdir()) {
 				throw new IOException("Unable to create output directory: " + outputDir.getPath());
 			}
-			outputFile = outputDir.toPath().resolve(file.getName()).toFile();
+			outputFile = outputDir.toPath().resolve(relativePath).toFile();
 		}
 		// overwrite file when unspecified output directory
 		else outputFile = file;
@@ -64,9 +68,13 @@ public class LuaParser {
 			}
 			linesToWrite.add(line);
 		}
-		if (hasFileChanged) {
-			if (!outputFile.exists() && !outputFile.createNewFile()) {
-				throw new IOException("Unable to create specified output file: " + outputFile.getPath());
+		if (hasFileChanged)
+		{
+			if (!outputFile.exists()) {
+				File parentFile = outputFile.getParentFile();
+				if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
+					throw new IOException("Unable to create specified output file: " + outputFile.getPath());
+				}
 			}
 			FileUtils.writeLines(outputFile, linesToWrite, false);
 		}
@@ -74,11 +82,15 @@ public class LuaParser {
 		return hasFileChanged;
 	}
 
-	public static boolean documentLuaFile(File file, @Nullable Path output) throws IOException {
-		return documentLuaFile(file, output != null ? output.toFile() : null);
+	public static boolean documentLuaFile(Path root, File file, @Nullable Path output) throws IOException {
+		return documentLuaFile(root, file, output != null ? output.toFile() : null);
+	}
+
+	public static boolean documentLuaFile(File file, @Nullable File output) throws IOException {
+		return documentLuaFile(file.getParentFile().toPath(), file, output);
 	}
 
 	public static boolean documentLuaFile(File file) throws IOException {
-		return documentLuaFile(file, (Path) null);
+		return documentLuaFile(file.getParentFile().toPath(), file, (Path) null);
 	}
 }

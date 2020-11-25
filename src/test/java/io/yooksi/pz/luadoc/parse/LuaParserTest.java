@@ -1,8 +1,11 @@
 package io.yooksi.pz.luadoc.parse;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +21,17 @@ public class LuaParserTest extends TestWorkspace {
 
     LuaParserTest()  {
         super("sampleLua.lua");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDocumentingLuaWithNonExistingFiles() {
+
+        File output = new File("output");
+        Assertions.assertThrows(FileNotFoundException.class,
+                () -> LuaParser.documentLuaFile(Paths.get("none"), file, output));
+
+        Assertions.assertThrows(FileNotFoundException.class,
+                () -> LuaParser.documentLuaFile(file.toPath(), new File("none"), output));
     }
 
     @Test
@@ -43,9 +57,32 @@ public class LuaParserTest extends TestWorkspace {
         createSampleLuaFile();
         LuaParser.documentLuaFile(file);
 
-        List<String> linesList = FileUtils.readLines(file, Charset.defaultCharset());
-        Assertions.assertEquals(7, linesList.size());
-        Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), linesList.get(5));
+        List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
+        Assertions.assertEquals(7, lines.size());
+        Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), lines.get(5));
+    }
+
+    @Test
+    void shouldKeepDirectoryHierarchyWhenDocumentingLuaFile() throws IOException {
+
+        Path rootPath = dir.toPath();
+        Path outputDir = rootPath.resolve("output");
+        File sampleDir = rootPath.resolve("sample").toFile();
+        Assertions.assertTrue(sampleDir.mkdir());
+
+        createSampleLuaFile();
+        FileUtils.moveFileToDirectory(file, sampleDir, false);
+        File sampleFile = sampleDir.toPath().resolve(file.getName()).toFile();
+        Assertions.assertTrue(sampleFile.exists());
+
+        LuaParser.documentLuaFile(rootPath, sampleFile, outputDir);
+
+        File outputFile = outputDir.resolve("sample").resolve(file.getName()).toFile();
+        Assertions.assertTrue(outputFile.exists());
+
+        List<String> lines = FileUtils.readLines(outputFile, Charset.defaultCharset());
+        Assertions.assertEquals(7, lines.size());
+        Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), lines.get(5));
     }
 
     @Test

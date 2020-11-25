@@ -49,7 +49,7 @@ public class Main {
 			int docsWritten = 0;
 			for (Path path : paths)
 			{
-				if (Utils.isLuaFile(path) && LuaParser.documentLuaFile(path.toFile(), outputDir))
+				if (Utils.isLuaFile(path) && LuaParser.documentLuaFile(docPath, path.toFile(), outputDir))
 				{
 					System.out.println("- Documented lua file " + path);
 					docsWritten += 1;
