@@ -22,10 +22,14 @@ public class LuaMethod extends Method {
 	public List<String> generateLuaDoc() {
 
 		luaDoc.clear();
-		for (Parameter param : getParams()) {
-			luaDoc.add(EmmyLua.PARAM.create(param.getName(false), param.getType(false)));
+		for (Parameter param : getParams())
+		{
+			luaDoc.add(EmmyLua.PARAM.create(new String[]{
+					param.getName(false),
+					param.getType(false)
+			}));
 		}
-		luaDoc.add(EmmyLua.RETURN.create(getReturnType(false)));
+		luaDoc.add(EmmyLua.RETURN.create(new String[]{ getReturnType(false) }));
 		return getLuaDoc();
 	}
 

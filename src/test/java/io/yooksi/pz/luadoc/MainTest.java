@@ -81,7 +81,7 @@ public class MainTest extends TestWorkspace {
 		Main.main(new String[]{ "-lua", dir.getPath() });
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
-		Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), read.get(1));
+		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(1));
 	}
 
 	@Test

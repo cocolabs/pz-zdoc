@@ -59,7 +59,7 @@ public class LuaDocParserTest extends TestWorkspace {
 
 		List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(7, lines.size());
-		Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), lines.get(5));
+		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), lines.get(5));
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class LuaDocParserTest extends TestWorkspace {
 
 		List<String> lines = FileUtils.readLines(outputFile, Charset.defaultCharset());
 		Assertions.assertEquals(7, lines.size());
-		Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), lines.get(5));
+		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), lines.get(5));
 	}
 
 	@Test
@@ -119,7 +119,7 @@ public class LuaDocParserTest extends TestWorkspace {
 		LuaDocParser.documentLuaFile(file);
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
-		Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), read.get(1));
+		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(1));
 	}
 
 	@Test
@@ -133,7 +133,7 @@ public class LuaDocParserTest extends TestWorkspace {
 		LuaDocParser.documentLuaFile(file);
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
-		Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), read.get(0));
+		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(0));
 	}
 
 	@Test
@@ -147,14 +147,14 @@ public class LuaDocParserTest extends TestWorkspace {
 		LuaDocParser.documentLuaFile(file);
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
-		Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua"), read.get(0));
+		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(0));
 
 		write[1] = "sampleLua = luaClass:derive()";
 		FileUtils.writeLines(file, Arrays.asList(write), false);
 		LuaDocParser.documentLuaFile(file);
 
 		read = FileUtils.readLines(file, Charset.defaultCharset());
-		Assertions.assertEquals(EmmyLua.CLASS.create("sampleLua", "luaClass"), read.get(0));
+		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua", "luaClass" }), read.get(0));
 	}
 
 	private void createSampleLuaFile() throws IOException {

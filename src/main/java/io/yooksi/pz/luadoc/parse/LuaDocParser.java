@@ -59,7 +59,7 @@ public class LuaDocParser {
 						linesToWrite.remove(i - 1);
 					}
 				}
-				String annotation = EmmyLua.CLASS.create(filename);
+				String annotation = EmmyLua.CLASS.create(new String[]{ filename });
 				Matcher matcher = DERIVED_CLASS.matcher(line);
 				if (matcher.find()) {
 					annotation += " : " + matcher.group(1);
