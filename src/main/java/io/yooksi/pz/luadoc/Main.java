@@ -12,7 +12,6 @@ import io.yooksi.pz.luadoc.parse.LuaParser;
 
 public class Main {
 
-	public static final Path PROJECT_DIR = Paths.get(System.getProperty("user.dir"));
 	public static final Logger logger = new Logger();
 
 	/**
@@ -51,7 +50,7 @@ public class Main {
 			{
 				if (LuaParser.documentLuaFile(docPath.toFile()))
 				{
-					System.out.println("- Documented lua file " + docPath.relativize(PROJECT_DIR));
+					System.out.println("- Documented lua file " + docPath);
 					docsWritten += 1;
 				}
 			}
