@@ -13,12 +13,12 @@ public enum EmmyLua {
 	/**
 	 * <code>---@param param_name TYPE[|other_type] [@comment]</code>
 	 */
-	PARAM("class", "---@param [%s] [%s][|%s] [@%s]"),
+	PARAM("param", "---@param [%s] [%s][|%s] [@%s]"),
 
 	/**
 	 * <code>---@return TYPE[|OTHER_TYPE] [@comment]</code>
 	 */
-	RETURN("class", "---@return [%s][|%s] [@%s]");
+	RETURN("return", "---@return [%s][|%s] [@%s]");
 
 	private static final Pattern FORMAT_REGEX = Pattern.compile("\\[.*?%s.*?]");
 
