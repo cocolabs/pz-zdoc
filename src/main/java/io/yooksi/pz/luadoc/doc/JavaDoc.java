@@ -1,87 +1,95 @@
-package io.yooksi.pz.luadoc.parse;
+package io.yooksi.pz.luadoc.doc;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import io.yooksi.pz.luadoc.lang.ElementParser;
+import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.method.JavaMethod;
 import io.yooksi.pz.luadoc.method.LuaMethod;
+import io.yooksi.pz.luadoc.method.MemberClass;
 import io.yooksi.pz.luadoc.method.Method;
 
-public class JavaDocParser {
+public class JavaDoc extends CodeDoc<JavaMethod> {
 
 	public static final String PZ_API_URL = "https://projectzomboid.com/modding/";
 	public static final String PZ_API_GLOBAL_URL = PZ_API_URL + "Lua/LuaManager.GlobalObject.html";
 
-	public static final ElementParser<JavaMethod> JAVA_METHOD_PARSER = new JavaMethod.Parser();
-	public static final ElementParser<LuaMethod> LUA_METHOD_PARSER = new LuaMethod.Parser();
-
-	private final Document document;
-
-	private JavaDocParser(Document doc) {
-		document = doc;
+	public JavaDoc(List<String> content, List<MemberClass> members, List<JavaMethod> methods) {
+		super(content, members, methods);
 	}
 
-	public static JavaDocParser loadURL(String url) throws IOException {
-		return new JavaDocParser(Jsoup.connect(url).get());
-	}
-
-	public static JavaDocParser loadFile(String path) throws IOException {
-		return new JavaDocParser(Jsoup.parse(new File(path), Charset.defaultCharset().name()));
-	}
-
-	public static String removeElementQualifier(String element) {
-		return element.replaceAll(".\\w+\\.", "");
-	}
-
-	public <T extends Method> List<T> parseMethods(ElementParser<T> parser) {
-
-		Elements tables = document.select("table");
-		java.util.Set<Element> summaryTables = tables.stream()
-				.filter(t -> t.className().equals("memberSummary"))
-				.collect(Collectors.toSet());
-
-		Element methodTable = summaryTables.stream()
-				.filter(t -> t.attr("summary").startsWith("Method Summary"))
-				.collect(Collectors.toSet()).toArray(new Element[]{})[0];
-
-		Elements tableRows = methodTable.getElementsByTag("tr");
-
-		// remove table header
-		tableRows.remove(0);
-
-		List<T> methods = new ArrayList<>();
-		for (Element element : tableRows)
-		{
-			Elements columns = element.getElementsByTag("td");
-			String methodText = columns.first().text() + " " + columns.last().text();
-
-			methods.add(parser.parse(methodText));
-		}
-		return methods;
-	}
-
-	public void convertJavaToLuaDoc(Path outputPath) throws IOException {
+	public LuaDoc convertToLuaDoc(boolean annotate) {
 
 		List<String> lines = new java.util.ArrayList<>();
-		for (LuaMethod method : parseMethods(JavaDocParser.LUA_METHOD_PARSER))
+		List<LuaMethod> luaMethods = new java.util.ArrayList<>();
+
+		List<JavaMethod> javaMethods = getMethods();
+		for (JavaMethod method : javaMethods)
 		{
-			method.generateLuaDoc();
-			lines.add(method.toString());
+			LuaMethod luaMethod = Method.LUA_PARSER.input(method).parse();
+			if (annotate) {
+				luaMethod.annotate();
+			}
+			luaMethods.add(luaMethod);
+			lines.add(luaMethod.toString());
 			lines.add("");
 		}
 		lines.remove(lines.size() - 1);
-		FileUtils.writeLines(outputPath.toFile(), lines, false);
+		return new LuaDoc(lines, new ArrayList<>(), luaMethods);
+	}
+
+	public static class Parser extends DataParser<JavaDoc, Document> {
+
+		public static String removeElementQualifier(String element) {
+			return element.replaceAll(".\\w+\\.", "");
+		}
+
+		public Parser loadURL(String url) throws IOException {
+			return (Parser) input(Jsoup.connect(url).get());
+		}
+
+		public Parser loadFile(String path) throws IOException {
+			return (Parser) input(Jsoup.parse(new File(path), Charset.defaultCharset().name()));
+		}
+
+		@Override
+		public JavaDoc parse() {
+
+			if (data == null) {
+				throw new RuntimeException("Tried to parse null data");
+			}
+			Elements tables = data.select("table");
+			java.util.Set<Element> summaryTables = tables.stream()
+					.filter(t -> t.className().equals("memberSummary"))
+					.collect(Collectors.toSet());
+
+			Element methodTable = summaryTables.stream()
+					.filter(t -> t.attr("summary").startsWith("Method Summary"))
+					.collect(Collectors.toSet()).toArray(new Element[]{})[0];
+
+			Elements tableRows = methodTable.getElementsByTag("tr");
+
+			// remove table header
+			tableRows.remove(0);
+
+			List<JavaMethod> methods = new ArrayList<>();
+			for (Element element : tableRows)
+			{
+				Elements columns = element.getElementsByTag("td");
+				String methodText = columns.first().text() + " " + columns.last().text();
+
+				methods.add(Method.JAVA_PARSER.input(methodText).parse());
+			}
+			return new JavaDoc(null, new ArrayList<>(), methods);
+		}
 	}
 }

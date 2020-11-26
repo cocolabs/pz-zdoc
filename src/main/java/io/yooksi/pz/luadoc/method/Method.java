@@ -1,9 +1,13 @@
 package io.yooksi.pz.luadoc.method;
 
+import io.yooksi.pz.luadoc.doc.JavaDoc;
+import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.ParseResult;
-import io.yooksi.pz.luadoc.parse.JavaDocParser;
 
 public abstract class Method implements ParseResult {
+
+	public static final DataParser<JavaMethod, String> JAVA_PARSER = new JavaMethod.Parser();
+	public static final DataParser<LuaMethod, Object> LUA_PARSER = new LuaMethod.Parser();
 
 	final String modifier;
 	final String returnType;
@@ -24,7 +28,7 @@ public abstract class Method implements ParseResult {
 	}
 
 	public String getReturnType(boolean qualified) {
-		return qualified ? returnType : JavaDocParser.removeElementQualifier(returnType);
+		return qualified ? returnType : JavaDoc.Parser.removeElementQualifier(returnType);
 	}
 
 	public String getName() {
