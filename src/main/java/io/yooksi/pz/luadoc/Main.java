@@ -51,11 +51,9 @@ public class Main {
 			{
 				if (Utils.isLuaFile(path) && LuaDocParser.documentLuaFile(docPath, path.toFile(), outputDir))
 				{
-					System.out.println("- Documented lua file " + path);
 					docsWritten += 1;
 				}
 			}
-			System.out.printf("Documented %d classes in %s%n", docsWritten, docPath.toString());
 		}
 		// document java to lua
 		else if (opArg.equals("java"))
