@@ -1,4 +1,4 @@
-package io.yooksi.pz.luadoc.method;
+package io.yooksi.pz.luadoc.element;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -10,10 +10,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.luadoc.TestWorkspace;
-import io.yooksi.pz.luadoc.method.JavaMethod;
-import io.yooksi.pz.luadoc.method.LuaMethod;
-import io.yooksi.pz.luadoc.method.Method;
-import io.yooksi.pz.luadoc.method.Parameter;
+import io.yooksi.pz.luadoc.element.JavaMethod;
+import io.yooksi.pz.luadoc.element.LuaMethod;
+import io.yooksi.pz.luadoc.element.Method;
+import io.yooksi.pz.luadoc.element.Parameter;
 
 public class JavaDocTest extends TestWorkspace {
 

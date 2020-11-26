@@ -1,4 +1,4 @@
-package io.yooksi.pz.luadoc.method;
+package io.yooksi.pz.luadoc.element;
 
 import io.yooksi.pz.luadoc.doc.JavaDoc;
 import io.yooksi.pz.luadoc.lang.DataParser;

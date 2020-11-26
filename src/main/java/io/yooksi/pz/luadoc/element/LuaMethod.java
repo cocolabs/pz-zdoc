@@ -1,4 +1,4 @@
-package io.yooksi.pz.luadoc.method;
+package io.yooksi.pz.luadoc.element;
 
 import java.util.ArrayList;
 import java.util.Arrays;

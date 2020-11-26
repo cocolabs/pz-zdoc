@@ -14,8 +14,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
-import io.yooksi.pz.luadoc.method.LuaMethod;
-import io.yooksi.pz.luadoc.method.MemberClass;
+import io.yooksi.pz.luadoc.element.LuaMethod;
+import io.yooksi.pz.luadoc.element.MemberClass;
 
 public class LuaDoc extends CodeDoc<LuaMethod> {
 

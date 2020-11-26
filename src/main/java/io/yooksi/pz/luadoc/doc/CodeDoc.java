@@ -8,8 +8,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import io.yooksi.pz.luadoc.lang.ParseResult;
-import io.yooksi.pz.luadoc.method.MemberClass;
-import io.yooksi.pz.luadoc.method.Method;
+import io.yooksi.pz.luadoc.element.MemberClass;
+import io.yooksi.pz.luadoc.element.Method;
 
 public abstract class CodeDoc<M extends Method> implements ParseResult {
 
