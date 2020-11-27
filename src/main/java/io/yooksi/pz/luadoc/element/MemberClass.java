@@ -1,33 +1,18 @@
 package io.yooksi.pz.luadoc.element;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import io.yooksi.pz.luadoc.lang.ParseResult;
 
-/**
- * This class represents parsed non-java native class references.
- */
-public class MemberClass implements ParseResult {
+public abstract class MemberClass implements ParseResult {
 
-	private final String name;
-	private final @Nullable String type;
-
-	public MemberClass(String name, @NotNull String type) {
-		this.name = name;
-		this.type = type;
-	}
+	protected final String name;
 
 	public MemberClass(String name) {
 		this.name = name;
-		this.type = null;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public @Nullable String getType() {
-		return type;
-	}
+	public abstract String toString();
 }

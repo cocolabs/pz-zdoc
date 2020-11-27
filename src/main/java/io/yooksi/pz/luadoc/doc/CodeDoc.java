@@ -2,8 +2,7 @@ package io.yooksi.pz.luadoc.doc;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.io.FileUtils;
 
@@ -27,24 +26,25 @@ public abstract class CodeDoc<M extends Method> implements ParseResult {
 	private final List<String> content;
 
 	/**
-	 * Textual representation of non-java native class references used by this document.
-	 * These could be class fields or function parameters.
+	 * Textual representation of class fields or function parameters.
 	 */
-	private final List<MemberClass> members;
+	private final Map<String, MemberClass> members;
 
-	public CodeDoc(List<String> content, List<MemberClass> members, List<M> methods) {
+	public CodeDoc(List<String> content, Set<? extends MemberClass> members, List<M> methods) {
 
 		this.content = content;
 		this.methods = methods;
-		this.members = members;
+
+		this.members = new HashMap<>();
+		members.forEach(m -> this.members.put(m.getName(), m));
 	}
 
 	public List<String> readContent() {
 		return Collections.unmodifiableList(content);
 	}
 
-	public List<MemberClass> getMembers() {
-		return Collections.unmodifiableList(members);
+	public Map<String, ? extends MemberClass> getMembers() {
+		return Collections.unmodifiableMap(members);
 	}
 
 	public List<M> getMethods() {

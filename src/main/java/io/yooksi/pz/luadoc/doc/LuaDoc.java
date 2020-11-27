@@ -6,14 +6,15 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
+import io.yooksi.pz.luadoc.element.LuaClass;
 import io.yooksi.pz.luadoc.element.LuaMethod;
-import io.yooksi.pz.luadoc.element.MemberClass;
 import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
 
@@ -22,7 +23,7 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 	/** Matches a class initialized through {@code class:derive(..)} */
 	private static final Pattern DERIVED_CLASS = Pattern.compile("=\\s*(\\w+):derive\\(");
 
-	public LuaDoc(List<String> content, List<MemberClass> members, List<LuaMethod> methods) {
+	public LuaDoc(List<String> content, Set<LuaClass> members, List<LuaMethod> methods) {
 		super(content, members, methods);
 	}
 
@@ -39,7 +40,7 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 			String filename = FilenameUtils.getBaseName(data.getName());
 
 			List<String> content = new ArrayList<>();
-			List<MemberClass> members = new ArrayList<>();
+			Set<LuaClass> members = new java.util.HashSet<>();
 
 			List<String> input = FileUtils.readLines(data, Charset.defaultCharset());
 			for (int i = 0; i < input.size(); i++)
@@ -60,10 +61,10 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 					if (matcher.find())
 					{
 						String type = matcher.group(1);
-						members.add(new MemberClass(filename, type));
+						members.add(new LuaClass(filename, type));
 						annotation += " : " + type;
 					}
-					else members.add(new MemberClass(filename));
+					else members.add(new LuaClass(filename));
 					content.add(annotation);
 				}
 				content.add(line);

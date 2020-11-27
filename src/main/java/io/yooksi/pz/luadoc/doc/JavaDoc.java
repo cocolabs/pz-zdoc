@@ -3,8 +3,7 @@ package io.yooksi.pz.luadoc.doc;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.jsoup.Jsoup;
@@ -12,9 +11,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import io.yooksi.pz.luadoc.element.JavaClass;
 import io.yooksi.pz.luadoc.element.JavaMethod;
 import io.yooksi.pz.luadoc.element.LuaMethod;
-import io.yooksi.pz.luadoc.element.MemberClass;
 import io.yooksi.pz.luadoc.element.Method;
 import io.yooksi.pz.luadoc.lang.DataParser;
 
@@ -26,8 +25,8 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 	public static final String PZ_API_URL = "https://projectzomboid.com/modding/";
 	public static final String PZ_API_GLOBAL_URL = PZ_API_URL + "Lua/LuaManager.GlobalObject.html";
 
-	public JavaDoc(List<String> content, List<MemberClass> members, List<JavaMethod> methods) {
-		super(content, members, methods);
+	public JavaDoc(Set<JavaClass> members, List<JavaMethod> methods) {
+		super(new ArrayList<>(), members, methods);
 	}
 
 	public LuaDoc convertToLuaDoc(boolean annotate) {
@@ -47,7 +46,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 			lines.add("");
 		}
 		lines.remove(lines.size() - 1);
-		return new LuaDoc(lines, new ArrayList<>(), luaMethods);
+		return new LuaDoc(lines, new java.util.HashSet<>(), luaMethods);
 	}
 
 	public static class Parser extends DataParser<JavaDoc, Document> {
