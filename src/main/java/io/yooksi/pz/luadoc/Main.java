@@ -9,10 +9,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import io.yooksi.pz.luadoc.doc.JavaDoc;
 import io.yooksi.pz.luadoc.doc.LuaDoc;
 
 public class Main {
+
+	public static final Logger LOGGER = LogManager.getLogger(Main.class);
 
 	/**
 	 * <p>Application main entry point method.</p>
