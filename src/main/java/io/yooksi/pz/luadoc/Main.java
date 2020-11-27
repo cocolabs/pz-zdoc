@@ -3,6 +3,7 @@ package io.yooksi.pz.luadoc;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -140,14 +141,17 @@ public class Main {
 			}
 			/* when source path is unspecified use API url */
 			String source = args.length >= 3 ? args[2] : JavaDoc.PZ_API_GLOBAL_URL;
-			JavaDoc javaDoc;
+
+			JavaDoc.Parser<?> parser;
 			if (Utils.isValidUrl(source)) {
-				javaDoc = new JavaDoc.Parser().loadURL(source).parse();
+				parser = new JavaDoc.WebParser().input(new URL(source));
 			}
 			else if (Utils.isValidPath(source)) {
-				javaDoc = new JavaDoc.Parser().loadFile(source).parse();
+				parser = new JavaDoc.FileParser().input(Paths.get(source));
 			}
 			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
+
+			JavaDoc javaDoc = parser.parse();
 			javaDoc.convertToLuaDoc(true).writeToFile(output);
 		}
 		else throw new IllegalArgumentException("Unknown application argument: " + opArg);

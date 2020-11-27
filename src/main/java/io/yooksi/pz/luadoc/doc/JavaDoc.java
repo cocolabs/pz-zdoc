@@ -3,8 +3,10 @@ package io.yooksi.pz.luadoc.doc;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,50 +54,32 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 		return new LuaDoc(lines, new java.util.HashSet<>(), luaMethods);
 	}
 
-	public static class Parser extends DataParser<JavaDoc, Document> {
+	public static abstract class Parser<T> extends DataParser<JavaDoc, T> {
 
-		/** {@code true} if the document is being parsed from local disc. */
-		private boolean isLocalDoc;
+		protected Document document;
 
 		public static String removeElementQualifier(String element) {
 			return element.replaceAll(".\\w+\\.", "");
 		}
 
-		public Parser loadURL(String url) throws IOException {
-			return (Parser) input(Jsoup.connect(url).get());
-		}
+		protected Element getMethodSummary() throws NoSuchElementException {
 
-		public Parser loadFile(String path) throws IOException {
-
-			isLocalDoc = true;
-			return (Parser) input(Jsoup.parse(new File(path), Charset.defaultCharset().name()));
-		}
-
-		private Element getMethodSummary() throws NoSuchElementException {
-
-			return Objects.requireNonNull(data).select("table").stream()
+			return Objects.requireNonNull(document).select("table").stream()
 					.filter(t -> t.className().equals("memberSummary") &&
-							t.attr("summary").startsWith("Method Summary"))
-					.findFirst().orElseThrow(() -> new NoSuchElementException("Unable to find method " +
-							"summary" +
-							"."));
+							t.attr("summary").startsWith("Method Summary")).findFirst()
+					.orElseThrow(() -> new NoSuchElementException("Unable to find method summary."));
 		}
 
-		private Element getMethodDetails() {
+		protected Element getMethodDetails() {
 
-			return Objects.requireNonNull(data).select("a").stream()
+			return Objects.requireNonNull(document).select("a").stream()
 					.filter(e -> e.attr("name").equals("method.details"))
 					.collect(Collectors.toSet()).toArray(new Element[]{})[0];
 		}
 
-		@Override
-		public JavaDoc parse() {
+		protected List<JavaMethod> parseMethods(Element methodSummary) {
 
-			if (data == null) {
-				throw new RuntimeException("Tried to parse null data");
-			}
-			Element summaryTable = getMethodSummary();
-			Elements tableRows = summaryTable.getElementsByTag("tr");
+			Elements tableRows = methodSummary.getElementsByTag("tr");
 
 			// remove table header
 			tableRows.remove(0);
@@ -108,19 +92,84 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 
 				methods.add(Method.JAVA_PARSER.input(methodText).parse());
 			}
-			Set<JavaClass<?>> members = new java.util.HashSet<>();
-			List<Element> memberLinks = summaryTable.getElementsByTag("a").stream()
+			return methods;
+		}
+
+		protected List<Element> parseMemberHyperlinks(Element methodSummary) {
+
+			return methodSummary.getElementsByTag("a").stream()
 					.filter(e -> e.attr("title").startsWith("class in"))
 					.collect(Collectors.toList());
+		}
+	}
 
-			for (Element member : memberLinks)
+	public static class WebParser extends Parser<URL> {
+
+		@Override
+		public WebParser input(URL data) {
+			try {
+				document = Jsoup.connect(data.toString()).get();
+				return (WebParser) super.input(data);
+			}
+			catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		@Override
+		public JavaDoc parse() {
+
+			if (data == null) {
+				throw new RuntimeException("Tried to parse null data");
+			}
+			Element summaryTable = getMethodSummary();
+			List<JavaMethod> methods = parseMethods(summaryTable);
+
+			Set<JavaClass<?>> members = new java.util.HashSet<>();
+			for (Element member : parseMemberHyperlinks(summaryTable))
 			{
 				try {
-					members.add(new JavaClass<>(member.text(), !isLocalDoc ?
-							new java.net.URL(member.attr("abs:href")) :
-							Paths.get(member.attr("title").substring(9))));
+					URL url = new java.net.URL(member.attr("abs:href"));
+					members.add(new JavaClass<>(member.text(), url));
 				}
-				catch (MalformedURLException | InvalidPathException e) {
+				catch (MalformedURLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			return new JavaDoc(members, methods);
+		}
+	}
+
+	public static class FileParser extends Parser<Path> {
+
+		@Override
+		public FileParser input(Path data) {
+			try {
+				document = Jsoup.parse(new File(data.toString()), Charset.defaultCharset().name());
+				return (FileParser) super.input(data);
+			}
+			catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		@Override
+		public JavaDoc parse() {
+
+			if (data == null) {
+				throw new RuntimeException("Tried to parse null data");
+			}
+			Element summaryTable = getMethodSummary();
+			List<JavaMethod> methods = parseMethods(summaryTable);
+
+			Set<JavaClass<?>> members = new java.util.HashSet<>();
+			for (Element member : parseMemberHyperlinks(summaryTable))
+			{
+				try {
+					Path path = Paths.get(member.attr("title").substring(9));
+					members.add(new JavaClass<>(member.text(), path));
+				}
+				catch (InvalidPathException e) {
 					throw new RuntimeException(e);
 				}
 			}

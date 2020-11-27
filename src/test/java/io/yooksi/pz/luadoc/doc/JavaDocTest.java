@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,18 +23,18 @@ public class JavaDocTest extends TestWorkspace {
 
 	private static final Logger logger = LogManager.getLogger(JavaDocTest.class);
 
-	private static JavaDoc.Parser pauseJavaDocParser;
-	private static JavaDoc.Parser pcxJavaDocParser;
+	private static JavaDoc.Parser<Path> pauseJavaDocParser;
+	private static JavaDoc.Parser<Path> pcxJavaDocParser;
 
 	JavaDocTest() {
 		super("outputLua.lua");
 	}
 
 	@BeforeAll
-	static void initializeStaticParsers() throws IOException {
+	static void initializeStaticParsers() {
 
-		pcxJavaDocParser = new JavaDoc.Parser().loadFile("src/test/resources/Pcx.html");
-		pauseJavaDocParser = new JavaDoc.Parser().loadFile("src/test/resources/Pause.html");
+		pcxJavaDocParser = new JavaDoc.FileParser().input(Paths.get("src/test/resources/Pcx.html"));
+		pauseJavaDocParser = new JavaDoc.FileParser().input(Paths.get("src/test/resources/Pause.html"));
 	}
 
 	@Test
@@ -127,11 +128,13 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyParseJavaDocMemberClasses() throws IOException {
 
-		Map<JavaDoc.Parser, Class<?>> dataMap = new HashMap<>();
-		dataMap.put(new JavaDoc.Parser().loadURL(JavaDoc.PZ_API_GLOBAL_URL), URL.class);
-		dataMap.put(new JavaDoc.Parser().loadFile("src/test/resources/GlobalObject.html"), Path.class);
+		Map<JavaDoc.Parser<?>, Class<?>> dataMap = new HashMap<>();
+		dataMap.put(new JavaDoc.WebParser().input(
+				new URL(JavaDoc.PZ_API_GLOBAL_URL)), URL.class);
+		dataMap.put(new JavaDoc.FileParser().input(
+				Paths.get("src/test/resources/GlobalObject.html")), Path.class);
 
-		for (Map.Entry<JavaDoc.Parser, Class<?>> entry1 : dataMap.entrySet())
+		for (Map.Entry<JavaDoc.Parser<?>, Class<?>> entry1 : dataMap.entrySet())
 		{
 			Map<String, ? extends MemberClass> map = entry1.getKey().parse().getMembers();
 			for (Map.Entry<String, ? extends MemberClass> entry2 : map.entrySet())
