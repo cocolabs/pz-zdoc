@@ -114,13 +114,15 @@ public class Main {
 			}
 			/* when source path is unspecified use API url */
 			String source = args.length >= 3 ? args[2] : JavaDoc.PZ_API_GLOBAL_URL;
+			JavaDoc javaDoc;
 			if (Utils.isValidUrl(source)) {
-				new JavaDoc.Parser().loadURL(source).parse().convertToLuaDoc(true).writeToFile(output);
+				javaDoc = new JavaDoc.Parser().loadURL(source).parse();
 			}
 			else if (Utils.isValidPath(source)) {
-				new JavaDoc.Parser().loadFile(source).parse().convertToLuaDoc(true).writeToFile(output);
+				javaDoc = new JavaDoc.Parser().loadFile(source).parse();
 			}
 			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
+			javaDoc.convertToLuaDoc(true).writeToFile(output);
 		}
 		else throw new IllegalArgumentException("Unknown application argument: " + opArg);
 	}
