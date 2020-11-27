@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -39,6 +40,9 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException {
 
+		LOGGER.debug(String.format("Started application with %d args: %s",
+				args.length, Arrays.toString(args)));
+
 		if (args.length == 0) {
 			throw new IllegalArgumentException("No application argument supplied");
 		}
@@ -56,6 +60,7 @@ public class Main {
 		// parse and document LUA files
 		if (opArg.equals("lua"))
 		{
+			LOGGER.debug("Preparing to parse and document lua files...");
 			Path rootPath, outputDir;
 			java.util.List<Path> paths;
 			try {
@@ -67,11 +72,20 @@ public class Main {
 			catch (IndexOutOfBoundsException e) {
 				throw new RuntimeException("No file path supplied", e);
 			}
+			if (paths.size() > 1) {
+				LOGGER.info("Parsing and documenting lua files found in " + rootPath);
+			}
+			else if (paths.isEmpty()) {
+				LOGGER.warn("No files found under path " + rootPath);
+			}
 			// process every file found under given root path
 			for (Path path : paths)
 			{
 				if (Utils.isLuaFile(path))
 				{
+					LOGGER.debug(String.format("Found lua file \"%s\"", path.getFileName()));
+					Path outputFilePath;
+
 					if (!rootPath.toFile().exists()) {
 						throw new FileNotFoundException(rootPath.toString());
 					}
@@ -90,9 +104,13 @@ public class Main {
 						}
 						else outputFilePath = outputDir.resolve(rootPath.relativize(path));
 					}
-					else outputFilePath = path;
-
 					/* overwrite file when unspecified output directory */
+					else
+					{
+						outputFilePath = path;
+						LOGGER.warn("Unspecified output directory, overwriting files");
+					}
+					/* make sure output file exists before we try to write to it */
 					File outputFile = outputFilePath.toFile();
 					if (!outputFile.exists())
 					{
@@ -108,13 +126,16 @@ public class Main {
 		// parse JAVA docs and document LUA files
 		else if (opArg.equals("java"))
 		{
+			LOGGER.debug("Preparing to parse java doc...");
 			Path output;
 			try {
 				output = Paths.get(args[1]);
 				if (!output.toFile().exists()) {
 					throw new NoSuchFileException(output.toString(), null, "Output file not found");
 				}
-			} catch (IndexOutOfBoundsException e) {
+				else LOGGER.debug("Designated output path: " + output);
+			}
+			catch (IndexOutOfBoundsException e) {
 				throw new RuntimeException("No output file path supplied", e);
 			}
 			/* when source path is unspecified use API url */
@@ -130,5 +151,6 @@ public class Main {
 			javaDoc.convertToLuaDoc(true).writeToFile(output);
 		}
 		else throw new IllegalArgumentException("Unknown application argument: " + opArg);
+		LOGGER.debug("Finished processing command");
 	}
 }
