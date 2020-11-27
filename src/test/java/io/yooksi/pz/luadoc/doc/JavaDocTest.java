@@ -1,21 +1,26 @@
 package io.yooksi.pz.luadoc.doc;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.luadoc.TestWorkspace;
-import io.yooksi.pz.luadoc.element.JavaMethod;
-import io.yooksi.pz.luadoc.element.LuaMethod;
-import io.yooksi.pz.luadoc.element.Method;
-import io.yooksi.pz.luadoc.element.Parameter;
+import io.yooksi.pz.luadoc.element.*;
 
 public class JavaDocTest extends TestWorkspace {
+
+	private static final Logger logger = LogManager.getLogger(JavaDocTest.class);
 
 	private static JavaDoc.Parser pauseJavaDocParser;
 	private static JavaDoc.Parser pcxJavaDocParser;
@@ -116,6 +121,30 @@ public class JavaDocTest extends TestWorkspace {
 		};
 		for (int i = 0; i < expected.length; i++) {
 			Assertions.assertEquals(expected[i], actual[i]);
+		}
+	}
+
+	@Test
+	void shouldCorrectlyParseJavaDocMemberClasses() throws IOException {
+
+		Map<JavaDoc.Parser, Class<?>> dataMap = new HashMap<>();
+		dataMap.put(new JavaDoc.Parser().loadURL(JavaDoc.PZ_API_GLOBAL_URL), URL.class);
+		dataMap.put(new JavaDoc.Parser().loadFile("src/test/resources/GlobalObject.html"), Path.class);
+
+		for (Map.Entry<JavaDoc.Parser, Class<?>> entry1 : dataMap.entrySet())
+		{
+			Map<String, ? extends MemberClass> map = entry1.getKey().parse().getMembers();
+			for (Map.Entry<String, ? extends MemberClass> entry2 : map.entrySet())
+			{
+				Assertions.assertFalse(entry2.getKey().isEmpty());
+
+				MemberClass member = entry2.getValue();
+				Assertions.assertTrue(member instanceof JavaClass);
+
+				Object location = ((JavaClass<?>)member).getLocation();
+				Assertions.assertTrue(entry1.getValue().isInstance(location));
+				Assertions.assertFalse(location.toString().isEmpty());
+			}
 		}
 	}
 }
