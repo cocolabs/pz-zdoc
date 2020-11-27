@@ -25,7 +25,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 	public static final String PZ_API_URL = "https://projectzomboid.com/modding/";
 	public static final String PZ_API_GLOBAL_URL = PZ_API_URL + "zombie/Lua/LuaManager.GlobalObject.html";
 
-	public JavaDoc(Set<JavaClass> members, List<JavaMethod> methods) {
+	public JavaDoc(Set<JavaClass<?>> members, List<JavaMethod> methods) {
 		super(new ArrayList<>(), members, methods);
 	}
 

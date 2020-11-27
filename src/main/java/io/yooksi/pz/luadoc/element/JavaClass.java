@@ -3,21 +3,21 @@ package io.yooksi.pz.luadoc.element;
 /**
  * This class represents a parsed non-java-native class reference.
  */
-public class JavaClass extends MemberClass {
+public class JavaClass<L> extends MemberClass {
 
-	private final String path;
+	private final L location;
 
-	public JavaClass(String name, String path) {
+	public JavaClass(String name, L location) {
 		super(name);
-		this.path = path;
+		this.location = location;
 	}
 
-	public String getPath() {
-		return path;
+	public L getLocation() {
+		return location;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s (%s)", name, path);
+		return String.format("%s (%s)", name, location.toString());
 	}
 }
