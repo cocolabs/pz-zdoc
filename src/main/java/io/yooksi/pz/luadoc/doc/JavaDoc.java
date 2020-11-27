@@ -2,7 +2,10 @@ package io.yooksi.pz.luadoc.doc;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.charset.Charset;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,6 +54,9 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 
 	public static class Parser extends DataParser<JavaDoc, Document> {
 
+		/** {@code true} if the document is being parsed from local disc. */
+		private boolean isLocalDoc;
+
 		public static String removeElementQualifier(String element) {
 			return element.replaceAll(".\\w+\\.", "");
 		}
@@ -60,7 +66,26 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 		}
 
 		public Parser loadFile(String path) throws IOException {
+
+			isLocalDoc = true;
 			return (Parser) input(Jsoup.parse(new File(path), Charset.defaultCharset().name()));
+		}
+
+		private Element getMethodSummary() throws NoSuchElementException {
+
+			return Objects.requireNonNull(data).select("table").stream()
+					.filter(t -> t.className().equals("memberSummary") &&
+							t.attr("summary").startsWith("Method Summary"))
+					.findFirst().orElseThrow(() -> new NoSuchElementException("Unable to find method " +
+							"summary" +
+							"."));
+		}
+
+		private Element getMethodDetails() {
+
+			return Objects.requireNonNull(data).select("a").stream()
+					.filter(e -> e.attr("name").equals("method.details"))
+					.collect(Collectors.toSet()).toArray(new Element[]{})[0];
 		}
 
 		@Override
@@ -69,16 +94,8 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 			if (data == null) {
 				throw new RuntimeException("Tried to parse null data");
 			}
-			Elements tables = data.select("table");
-			java.util.Set<Element> summaryTables = tables.stream()
-					.filter(t -> t.className().equals("memberSummary"))
-					.collect(Collectors.toSet());
-
-			Element methodTable = summaryTables.stream()
-					.filter(t -> t.attr("summary").startsWith("Method Summary"))
-					.collect(Collectors.toSet()).toArray(new Element[]{})[0];
-
-			Elements tableRows = methodTable.getElementsByTag("tr");
+			Element summaryTable = getMethodSummary();
+			Elements tableRows = summaryTable.getElementsByTag("tr");
 
 			// remove table header
 			tableRows.remove(0);
@@ -91,7 +108,23 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 
 				methods.add(Method.JAVA_PARSER.input(methodText).parse());
 			}
-			return new JavaDoc(null, new ArrayList<>(), methods);
+			Set<JavaClass<?>> members = new java.util.HashSet<>();
+			List<Element> memberLinks = summaryTable.getElementsByTag("a").stream()
+					.filter(e -> e.attr("title").startsWith("class in"))
+					.collect(Collectors.toList());
+
+			for (Element member : memberLinks)
+			{
+				try {
+					members.add(new JavaClass<>(member.text(), !isLocalDoc ?
+							new java.net.URL(member.attr("abs:href")) :
+							Paths.get(member.attr("title").substring(9))));
+				}
+				catch (MalformedURLException | InvalidPathException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			return new JavaDoc(members, methods);
 		}
 	}
 }
