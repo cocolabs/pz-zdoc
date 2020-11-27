@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import io.yooksi.pz.luadoc.lang.DataParser;
-import io.yooksi.pz.luadoc.lang.EmmyLua;
 import io.yooksi.pz.luadoc.element.LuaMethod;
 import io.yooksi.pz.luadoc.element.MemberClass;
+import io.yooksi.pz.luadoc.lang.DataParser;
+import io.yooksi.pz.luadoc.lang.EmmyLua;
 
 public class LuaDoc extends CodeDoc<LuaMethod> {
 

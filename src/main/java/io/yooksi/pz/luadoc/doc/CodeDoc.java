@@ -7,10 +7,11 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import io.yooksi.pz.luadoc.lang.ParseResult;
 import io.yooksi.pz.luadoc.element.MemberClass;
 import io.yooksi.pz.luadoc.element.Method;
+import io.yooksi.pz.luadoc.lang.ParseResult;
 
+@SuppressWarnings("unused")
 public abstract class CodeDoc<M extends Method> implements ParseResult {
 
 	protected final List<M> methods;

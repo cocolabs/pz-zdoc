@@ -12,11 +12,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.element.JavaMethod;
 import io.yooksi.pz.luadoc.element.LuaMethod;
 import io.yooksi.pz.luadoc.element.MemberClass;
 import io.yooksi.pz.luadoc.element.Method;
+import io.yooksi.pz.luadoc.lang.DataParser;
 
 public class JavaDoc extends CodeDoc<JavaMethod> {
 
