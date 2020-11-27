@@ -56,6 +56,14 @@ public class LuaMethod extends Method {
 
 	public static class Parser extends DataParser<LuaMethod, Object> {
 
+		private Parser(Object data) {
+			super(data);
+		}
+
+		public static Parser create(Object data) {
+			return new Parser(data);
+		}
+
 		@Override
 		public LuaMethod parse() {
 
@@ -64,7 +72,7 @@ public class LuaMethod extends Method {
 			}
 			if (data instanceof String)
 			{
-				JavaMethod jMethod = Method.JAVA_PARSER.input((String) data).parse();
+				JavaMethod jMethod = JavaMethod.Parser.create((String) data).parse();
 
 				Parameter[] lParams = Parameter.getUnqualified(jMethod.params);
 				return new LuaMethod(jMethod.returnType, jMethod.name, lParams);

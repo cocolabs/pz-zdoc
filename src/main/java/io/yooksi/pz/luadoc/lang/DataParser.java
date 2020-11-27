@@ -1,7 +1,5 @@
 package io.yooksi.pz.luadoc.lang;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * This class represents an object that has data parsing functionality.
  * In particular an object that produces {@link ParseResult} objects.
@@ -12,18 +10,10 @@ import org.jetbrains.annotations.Nullable;
 public abstract class DataParser<T extends ParseResult, I> {
 
 	/** Data to be parsed by the parser. */
-	public @Nullable I data;
+	public final I data;
 
-	/**
-	 * Set data to be parsed by this parser.
-	 *
-	 * @param data data to be parsed.
-	 * @return this parser instance.
-	 */
-	public DataParser<T, I> input(I data) {
-
+	protected DataParser(I data) {
 		this.data = data;
-		return this;
 	}
 
 	/**

@@ -34,6 +34,14 @@ public class JavaMethod extends Method {
 
 	public static class Parser extends DataParser<JavaMethod, String> {
 
+		private Parser(String data) {
+			super(data);
+		}
+
+		public static Parser create(String data) {
+			return new Parser(data);
+		}
+
 		@Override
 		public @Nullable JavaMethod parse() {
 

@@ -1,6 +1,5 @@
 package io.yooksi.pz.luadoc.doc;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,7 +18,6 @@ import org.jsoup.select.Elements;
 import io.yooksi.pz.luadoc.element.JavaClass;
 import io.yooksi.pz.luadoc.element.JavaMethod;
 import io.yooksi.pz.luadoc.element.LuaMethod;
-import io.yooksi.pz.luadoc.element.Method;
 import io.yooksi.pz.luadoc.lang.DataParser;
 
 /**
@@ -42,7 +40,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 		List<JavaMethod> javaMethods = getMethods();
 		for (JavaMethod method : javaMethods)
 		{
-			LuaMethod luaMethod = Method.LUA_PARSER.input(method).parse();
+			LuaMethod luaMethod = LuaMethod.Parser.create(method).parse();
 			if (annotate) {
 				luaMethod.annotate();
 			}
@@ -56,7 +54,11 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 
 	public static abstract class Parser<T> extends DataParser<JavaDoc, T> {
 
-		protected Document document;
+		protected final Document document;
+
+		protected Parser(T data, Document document) {
+			super(data); this.document = document;
+		}
 
 		public static String removeElementQualifier(String element) {
 			return element.replaceAll(".\\w+\\.", "");
@@ -90,7 +92,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 				Elements columns = element.getElementsByTag("td");
 				String methodText = columns.first().text() + " " + columns.last().text();
 
-				methods.add(Method.JAVA_PARSER.input(methodText).parse());
+				methods.add(JavaMethod.Parser.create(methodText).parse());
 			}
 			return methods;
 		}
@@ -105,15 +107,16 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 
 	public static class WebParser extends Parser<URL> {
 
-		@Override
-		public WebParser input(URL data) {
-			try {
-				document = Jsoup.connect(data.toString()).get();
-				return (WebParser) super.input(data);
-			}
-			catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+		private WebParser(URL data) throws IOException {
+			super(data, Jsoup.connect(data.toString()).get());
+		}
+
+		/**
+		 * @throws IOException if Jsoup failed connecting to or parsing document.
+		 * @throws MalformedURLException if url string cannot be converted to URL object.
+		 */
+		public static WebParser create(String url) throws IOException {
+			return new WebParser(new URL(url));
 		}
 
 		@Override
@@ -142,15 +145,16 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 
 	public static class FileParser extends Parser<Path> {
 
-		@Override
-		public FileParser input(Path data) {
-			try {
-				document = Jsoup.parse(new File(data.toString()), Charset.defaultCharset().name());
-				return (FileParser) super.input(data);
-			}
-			catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+		private FileParser(Path data) throws IOException {
+			super(data, Jsoup.parse(data.toFile(), Charset.defaultCharset().name()));
+		}
+
+		/**
+		 * @throws IOException if the file could not be found or read.
+		 * @throws InvalidPathException if the path string cannot be converted to a {@code Path}.
+		 */
+		public static FileParser create(String path) throws IOException {
+			return new FileParser(Paths.get(path));
 		}
 
 		@Override

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +30,10 @@ public class JavaDocTest extends TestWorkspace {
 	}
 
 	@BeforeAll
-	static void initializeStaticParsers() {
+	static void initializeStaticParsers() throws IOException {
 
-		pcxJavaDocParser = new JavaDoc.FileParser().input(Paths.get("src/test/resources/Pcx.html"));
-		pauseJavaDocParser = new JavaDoc.FileParser().input(Paths.get("src/test/resources/Pause.html"));
+		pcxJavaDocParser = JavaDoc.FileParser.create("src/test/resources/Pcx.html");
+		pauseJavaDocParser = JavaDoc.FileParser.create("src/test/resources/Pause.html");
 	}
 
 	@Test
@@ -82,7 +81,7 @@ public class JavaDocTest extends TestWorkspace {
 	void shouldGenerateValidLuaMethodDocumentation() {
 
 		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
-		List<String> luaDoc = Method.LUA_PARSER.input(methods.get(2)).parse().annotate();
+		List<String> luaDoc = LuaMethod.Parser.create(methods.get(2)).parse().annotate();
 
 		String[] expectedDoc = {
 				"---@param object String",
@@ -129,10 +128,8 @@ public class JavaDocTest extends TestWorkspace {
 	void shouldCorrectlyParseJavaDocMemberClasses() throws IOException {
 
 		Map<JavaDoc.Parser<?>, Class<?>> dataMap = new HashMap<>();
-		dataMap.put(new JavaDoc.WebParser().input(
-				new URL(JavaDoc.PZ_API_GLOBAL_URL)), URL.class);
-		dataMap.put(new JavaDoc.FileParser().input(
-				Paths.get("src/test/resources/GlobalObject.html")), Path.class);
+		dataMap.put(JavaDoc.WebParser.create(JavaDoc.PZ_API_GLOBAL_URL), URL.class);
+		dataMap.put(JavaDoc.FileParser.create("src/test/resources/GlobalObject.html"), Path.class);
 
 		for (Map.Entry<JavaDoc.Parser<?>, Class<?>> entry1 : dataMap.entrySet())
 		{

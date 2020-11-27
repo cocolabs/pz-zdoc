@@ -23,7 +23,7 @@ public class LuaDocTest extends TestWorkspace {
 	void shouldCorrectlyDocumentSampleLuaFile() throws IOException {
 
 		createSampleLuaFile();
-		new LuaDoc.Parser().input(file).parse().writeToFile(file.toPath());
+		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
 
 		List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(7, lines.size());
@@ -38,7 +38,7 @@ public class LuaDocTest extends TestWorkspace {
 
 		// IndexOutOfBoundsException
 		Assertions.assertDoesNotThrow(() ->
-				new LuaDoc.Parser().input(file).parse().writeToFile(file.toPath()));
+				LuaDoc.Parser.create(file).parse().writeToFile(file.toPath()));
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class LuaDocTest extends TestWorkspace {
 		String expected = "--- No doc elements";
 		FileUtils.writeLines(file, Collections.singletonList(expected));
 
-		new LuaDoc.Parser().input(file).parse().writeToFile(file.toPath());
+		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
 
 		String actual = FileUtils.readLines(file, Charset.defaultCharset()).get(0);
 		Assertions.assertEquals(expected, actual);
@@ -62,7 +62,7 @@ public class LuaDocTest extends TestWorkspace {
 				"sampleLua = luaClass:new()"
 		};
 		FileUtils.writeLines(file, Arrays.asList(write));
-		new LuaDoc.Parser().input(file).parse().writeToFile(file.toPath());
+		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(1));
@@ -76,7 +76,7 @@ public class LuaDocTest extends TestWorkspace {
 				"sampleLua = luaClass:new()"
 		};
 		FileUtils.writeLines(file, Arrays.asList(write));
-		new LuaDoc.Parser().input(file).parse().writeToFile(file.toPath());
+		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(0));
@@ -90,14 +90,14 @@ public class LuaDocTest extends TestWorkspace {
 				"sampleLua = luaClass:new()"
 		};
 		FileUtils.writeLines(file, Arrays.asList(write));
-		new LuaDoc.Parser().input(file).parse().writeToFile(file.toPath());
+		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(0));
 
 		write[1] = "sampleLua = luaClass:derive()";
 		FileUtils.writeLines(file, Arrays.asList(write), false);
-		new LuaDoc.Parser().input(file).parse().writeToFile(file.toPath());
+		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
 
 		read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua", "luaClass" }), read.get(0));

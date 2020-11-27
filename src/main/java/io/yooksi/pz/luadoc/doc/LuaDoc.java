@@ -29,20 +29,35 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 
 	public static class Parser extends DataParser<LuaDoc, File> {
 
-		private LuaDoc parseInternal() throws IOException {
+		private Parser(File data) {
+			super(data);
+		}
+
+		public static Parser create(File data) {
+			return new Parser(data);
+		}
+
+		@Override
+		public LuaDoc parse() {
 
 			if (data == null) {
 				throw new RuntimeException("Tried to parse null data");
 			}
 			else if (!data.exists()) {
-				throw new FileNotFoundException(data.getPath());
+				throw new RuntimeException(new FileNotFoundException(data.getPath()));
 			}
 			String filename = FilenameUtils.getBaseName(data.getName());
 
 			List<String> content = new ArrayList<>();
 			Set<LuaClass> members = new java.util.HashSet<>();
 
-			List<String> input = FileUtils.readLines(data, Charset.defaultCharset());
+			List<String> input;
+			try {
+				input = FileUtils.readLines(data, Charset.defaultCharset());
+			}
+			catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 			for (int i = 0; i < input.size(); i++)
 			{
 				String line = input.get(i);
@@ -70,17 +85,6 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 				content.add(line);
 			}
 			return new LuaDoc(content, members, new ArrayList<>());
-		}
-
-		@Override
-		public LuaDoc parse() {
-
-			try {
-				return parseInternal();
-			}
-			catch (IOException e) {
-				throw new RuntimeException(e);
-			}
 		}
 	}
 }

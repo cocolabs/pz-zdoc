@@ -3,7 +3,6 @@ package io.yooksi.pz.luadoc;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -120,7 +119,7 @@ public class Main {
 							throw new IOException("Unable to create specified output file: " + outputFilePath);
 						}
 					}
-					new LuaDoc.Parser().input(path.toFile()).parse().writeToFile(outputFilePath);
+					LuaDoc.Parser.create(path.toFile()).parse().writeToFile(outputFilePath);
 				}
 			}
 		}
@@ -144,10 +143,10 @@ public class Main {
 
 			JavaDoc.Parser<?> parser;
 			if (Utils.isValidUrl(source)) {
-				parser = new JavaDoc.WebParser().input(new URL(source));
+				parser = JavaDoc.WebParser.create(source);
 			}
 			else if (Utils.isValidPath(source)) {
-				parser = new JavaDoc.FileParser().input(Paths.get(source));
+				parser = JavaDoc.FileParser.create(source);
 			}
 			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
 
