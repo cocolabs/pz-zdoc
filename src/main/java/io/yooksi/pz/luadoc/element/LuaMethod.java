@@ -8,6 +8,9 @@ import java.util.List;
 import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
 
+/**
+ * This class represents a parsed Lua method.
+ */
 public class LuaMethod extends Method {
 
 	private final List<String> luaDoc = new ArrayList<>();

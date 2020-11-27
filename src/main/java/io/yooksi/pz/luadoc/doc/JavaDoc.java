@@ -18,6 +18,9 @@ import io.yooksi.pz.luadoc.element.MemberClass;
 import io.yooksi.pz.luadoc.element.Method;
 import io.yooksi.pz.luadoc.lang.DataParser;
 
+/**
+ * This class represents a parsed JavaDoc document.
+ */
 public class JavaDoc extends CodeDoc<JavaMethod> {
 
 	public static final String PZ_API_URL = "https://projectzomboid.com/modding/";

@@ -3,7 +3,7 @@ package io.yooksi.pz.luadoc.element;
 import io.yooksi.pz.luadoc.doc.JavaDoc;
 
 /**
- * Textual representation of method parameter.
+ * This class represents parsed method parameter.
  */
 public class Parameter {
 

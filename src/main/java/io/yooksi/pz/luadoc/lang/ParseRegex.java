@@ -4,7 +4,9 @@ import java.util.regex.Pattern;
 
 public class ParseRegex {
 
-	/** Regex pattern used to parse java method from text */
+	/**
+	 * Regex pattern used to parse java method from text
+	 */
 	public static final Pattern JAVA_METHOD_REGEX = Pattern.compile("^((?:final|static|abstract|" +
 			"transient|synchronized|volatile)\\s+)?([^\\s]+)\\s+([^\\s]+)\\((.+)?\\)$");
 

@@ -19,6 +19,7 @@ import io.yooksi.pz.luadoc.lang.EmmyLua;
 
 public class LuaDoc extends CodeDoc<LuaMethod> {
 
+	/** Matches a class initialized through {@code class:derive(..)} */
 	private static final Pattern DERIVED_CLASS = Pattern.compile("=\\s*(\\w+):derive\\(");
 
 	public LuaDoc(List<String> content, List<MemberClass> members, List<LuaMethod> methods) {

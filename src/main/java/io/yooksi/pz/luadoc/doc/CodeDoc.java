@@ -11,11 +11,25 @@ import io.yooksi.pz.luadoc.element.MemberClass;
 import io.yooksi.pz.luadoc.element.Method;
 import io.yooksi.pz.luadoc.lang.ParseResult;
 
+/**
+ * This class represents a parsed code based document.
+ *
+ * @param <M> method type used by this document.
+ */
 @SuppressWarnings("unused")
 public abstract class CodeDoc<M extends Method> implements ParseResult {
 
 	protected final List<M> methods;
+
+	/**
+	 * Textual representation of this document ready for output.
+	 */
 	private final List<String> content;
+
+	/**
+	 * Textual representation of non-java native class references used by this document.
+	 * These could be class fields or function parameters.
+	 */
 	private final List<MemberClass> members;
 
 	public CodeDoc(List<String> content, List<MemberClass> members, List<M> methods) {

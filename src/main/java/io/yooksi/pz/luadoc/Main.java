@@ -15,6 +15,19 @@ import io.yooksi.pz.luadoc.doc.LuaDoc;
 public class Main {
 
 	/**
+	 * <p>Application main entry point method.</p>
+	 * <p>Supports the following command forms:</p>
+	 * <ul>
+	 *     <li>
+	 *         <i>Annotate existing lua files under given path:</i>
+	 *         <pre>{@code -lua <path_to_files> <output_dir_path>}</pre>
+	 *     </li>
+	 *     <li>
+	 *         <i>Parse java doc under given <i>path/url</i> and convert to lua file:</i>
+	 *         <pre>{@code -java <path_to_files> <output_dir_path>}</pre>
+	 *     </li>
+	 * </ul>
+	 *
 	 * @throws InvalidPathException if malformed path passed as argument
 	 * @throws NoSuchFileException if unable to find file under argument path
 	 * @throws IndexOutOfBoundsException if no path argument supplied
@@ -24,15 +37,18 @@ public class Main {
 		if (args.length == 0) {
 			throw new IllegalArgumentException("No application argument supplied");
 		}
-		Pattern argRegex = Pattern.compile("^\\s*+-(\\w+)\\s*$");
-
 		String rawOpArg = args[0];
-		Matcher matcher = argRegex.matcher(rawOpArg);
-
+		/*
+		 * validate application argument format
+		 */
+		Matcher matcher = Pattern.compile("^\\s*+-(\\w+)\\s*$").matcher(rawOpArg);
 		if (!matcher.find()) {
 			throw new IllegalArgumentException("Malformed application argument: " + rawOpArg);
 		}
+		// application operation argument
 		String opArg = matcher.group(1);
+
+		// parse and document LUA files
 		if (opArg.equals("lua"))
 		{
 			Path rootPath, outputDir;
@@ -46,6 +62,7 @@ public class Main {
 			catch (IndexOutOfBoundsException e) {
 				throw new RuntimeException("No file path supplied", e);
 			}
+			// process every file found under given root path
 			for (Path path : paths)
 			{
 				if (Utils.isLuaFile(path))
@@ -53,22 +70,24 @@ public class Main {
 					if (!rootPath.toFile().exists()) {
 						throw new FileNotFoundException(rootPath.toString());
 					}
-					Path outputFilePath;
-					if (outputDir != null)
+					/* user did not specify output dir path */
+					else if (outputDir != null)
 					{
 						File outputDirFile = outputDir.toFile();
 						if (!outputDirFile.exists() && !outputDirFile.mkdir()) {
 							throw new IOException("Unable to create output directory: " + outputDir);
 						}
-						// paths are equal
+						/* root path matches current path so there are no
+						 * subdirectories, just resolve the filename against root path
+						 */
 						if (rootPath.compareTo(path) == 0) {
 							outputFilePath = outputDir.resolve(path.getFileName());
 						}
 						else outputFilePath = outputDir.resolve(rootPath.relativize(path));
 					}
-					// overwrite file when unspecified output directory
 					else outputFilePath = path;
 
+					/* overwrite file when unspecified output directory */
 					File outputFile = outputFilePath.toFile();
 					if (!outputFile.exists())
 					{
@@ -81,7 +100,7 @@ public class Main {
 				}
 			}
 		}
-		// document java to lua
+		// parse JAVA docs and document LUA files
 		else if (opArg.equals("java"))
 		{
 			Path output;
@@ -93,6 +112,7 @@ public class Main {
 			} catch (IndexOutOfBoundsException e) {
 				throw new RuntimeException("No output file path supplied", e);
 			}
+			/* when source path is unspecified use API url */
 			String source = args.length >= 3 ? args[2] : JavaDoc.PZ_API_GLOBAL_URL;
 			if (Utils.isValidUrl(source)) {
 				new JavaDoc.Parser().loadURL(source).parse().convertToLuaDoc(true).writeToFile(output);

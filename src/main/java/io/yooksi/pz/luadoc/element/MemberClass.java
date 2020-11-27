@@ -5,6 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 import io.yooksi.pz.luadoc.lang.ParseResult;
 
+/**
+ * This class represents parsed non-java native class references.
+ */
 public class MemberClass implements ParseResult {
 
 	private final String name;

@@ -10,7 +10,7 @@ import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.ParseRegex;
 
 /**
- * Textual representation of Java method.
+ * This class represents a parsed Java method.
  */
 public class JavaMethod extends Method {
 

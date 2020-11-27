@@ -3,6 +3,11 @@ package io.yooksi.pz.luadoc.lang;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class represents an EmmyLua annotation
+ *
+ * @see <a href="https://emmylua.github.io/">EmmyLua for IntelliJ IDEA</a>
+ */
 public enum EmmyLua {
 
 	/**
@@ -31,10 +36,20 @@ public enum EmmyLua {
 		this.format = format;
 	}
 
+	/**
+	 * @return {@code true} if the given text matches this annotation.
+	 */
 	public boolean isAnnotation(String text) {
 		return keyRegex.matcher(text).find();
 	}
 
+	/**
+	 * Create an EmmyLua annotation with the given parameters.
+	 *
+	 * @param params array of parameters to use as replacements when formatting.
+	 * 		Read the format used by annotations to know how parameters are formatted.
+	 * @return a textual representation of this annotation with the given parameters.
+	 */
 	public String create(String[] params) {
 
 		StringBuffer result = new StringBuffer();
