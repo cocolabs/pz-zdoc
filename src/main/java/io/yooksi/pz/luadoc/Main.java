@@ -1,5 +1,7 @@
 package io.yooksi.pz.luadoc;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -7,12 +9,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import io.yooksi.pz.luadoc.parse.JavaDocParser;
-import io.yooksi.pz.luadoc.parse.LuaDocParser;
+import io.yooksi.pz.luadoc.doc.JavaDoc;
+import io.yooksi.pz.luadoc.doc.LuaDoc;
 
 public class Main {
-
-	public static final Logger logger = new Logger();
 
 	/**
 	 * @throws InvalidPathException if malformed path passed as argument
@@ -35,46 +35,70 @@ public class Main {
 		String opArg = matcher.group(1);
 		if (opArg.equals("lua"))
 		{
-			Path docPath, outputDir;
+			Path rootPath, outputDir;
 			java.util.List<Path> paths;
 			try {
-				docPath = Paths.get(args[1]);
+				rootPath = Paths.get(args[1]);
 				outputDir = args.length >= 3 ? Paths.get(args[2]) : null;
-				paths = Files.walk(Paths.get(docPath.toString())).filter(Files::isRegularFile)
+				paths = Files.walk(Paths.get(rootPath.toString())).filter(Files::isRegularFile)
 						.collect(Collectors.toCollection(ArrayList::new));
 			}
 			catch (IndexOutOfBoundsException e) {
 				throw new RuntimeException("No file path supplied", e);
 			}
-			int docsWritten = 0;
 			for (Path path : paths)
 			{
-				if (Utils.isLuaFile(path) && LuaDocParser.documentLuaFile(docPath, path.toFile(), outputDir))
+				if (Utils.isLuaFile(path))
 				{
-					System.out.println("- Documented lua file " + path);
-					docsWritten += 1;
+					if (!rootPath.toFile().exists()) {
+						throw new FileNotFoundException(rootPath.toString());
+					}
+					Path outputFilePath;
+					if (outputDir != null)
+					{
+						File outputDirFile = outputDir.toFile();
+						if (!outputDirFile.exists() && !outputDirFile.mkdir()) {
+							throw new IOException("Unable to create output directory: " + outputDir);
+						}
+						// paths are equal
+						if (rootPath.compareTo(path) == 0) {
+							outputFilePath = outputDir.resolve(path.getFileName());
+						}
+						else outputFilePath = outputDir.resolve(rootPath.relativize(path));
+					}
+					// overwrite file when unspecified output directory
+					else outputFilePath = path;
+
+					File outputFile = outputFilePath.toFile();
+					if (!outputFile.exists())
+					{
+						File parentFile = outputFile.getParentFile();
+						if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
+							throw new IOException("Unable to create specified output file: " + outputFilePath);
+						}
+					}
+					new LuaDoc.Parser().input(path.toFile()).parse().writeToFile(outputFilePath);
 				}
 			}
-			System.out.printf("Documented %d classes in %s%n", docsWritten, docPath.toString());
 		}
 		// document java to lua
 		else if (opArg.equals("java"))
 		{
-			Path path;
+			Path output;
 			try {
-				path = Paths.get(args[1]);
-				if (!path.toFile().exists()) {
-					throw new NoSuchFileException(path.toString(), null, "Output file not found");
+				output = Paths.get(args[1]);
+				if (!output.toFile().exists()) {
+					throw new NoSuchFileException(output.toString(), null, "Output file not found");
 				}
 			} catch (IndexOutOfBoundsException e) {
 				throw new RuntimeException("No output file path supplied", e);
 			}
-			String source = args.length >= 3 ? args[2] : JavaDocParser.PZ_API_GLOBAL_URL;
+			String source = args.length >= 3 ? args[2] : JavaDoc.PZ_API_GLOBAL_URL;
 			if (Utils.isValidUrl(source)) {
-				JavaDocParser.loadURL(source).convertJavaToLuaDoc(path);
+				new JavaDoc.Parser().loadURL(source).parse().convertToLuaDoc(true).writeToFile(output);
 			}
 			else if (Utils.isValidPath(source)) {
-				JavaDocParser.loadFile(source).convertJavaToLuaDoc(path);
+				new JavaDoc.Parser().loadFile(source).parse().convertToLuaDoc(true).writeToFile(output);
 			}
 			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
 		}

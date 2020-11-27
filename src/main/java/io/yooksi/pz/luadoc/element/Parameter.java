@@ -1,6 +1,6 @@
-package io.yooksi.pz.luadoc.method;
+package io.yooksi.pz.luadoc.element;
 
-import io.yooksi.pz.luadoc.parse.JavaDocParser;
+import io.yooksi.pz.luadoc.doc.JavaDoc;
 
 /**
  * Textual representation of method parameter.
@@ -31,11 +31,11 @@ public class Parameter {
 	}
 
 	public String getType(boolean qualified) {
-		return qualified ? type : JavaDocParser.removeElementQualifier(type);
+		return qualified ? type : JavaDoc.Parser.removeElementQualifier(type);
 	}
 
 	public String getName(boolean qualified) {
-		return qualified ? name : JavaDocParser.removeElementQualifier(name);
+		return qualified ? name : JavaDoc.Parser.removeElementQualifier(name);
 	}
 
 	public Parameter getUnqualified() {

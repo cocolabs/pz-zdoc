@@ -1,4 +1,4 @@
-package io.yooksi.pz.luadoc.parse;
+package io.yooksi.pz.luadoc.doc;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -10,31 +10,31 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.luadoc.TestWorkspace;
-import io.yooksi.pz.luadoc.method.JavaMethod;
-import io.yooksi.pz.luadoc.method.LuaMethod;
-import io.yooksi.pz.luadoc.method.Parameter;
+import io.yooksi.pz.luadoc.element.JavaMethod;
+import io.yooksi.pz.luadoc.element.LuaMethod;
+import io.yooksi.pz.luadoc.element.Method;
+import io.yooksi.pz.luadoc.element.Parameter;
 
-public class JavaDocParserTest extends TestWorkspace {
+public class JavaDocTest extends TestWorkspace {
 
-	private static JavaDocParser PauseJavaDocParser;
-	private static JavaDocParser PcxJavaDocParser;
+	private static JavaDoc.Parser pauseJavaDocParser;
+	private static JavaDoc.Parser pcxJavaDocParser;
 
-	JavaDocParserTest() {
+	JavaDocTest() {
 		super("outputLua.lua");
 	}
 
 	@BeforeAll
 	static void initializeStaticParsers() throws IOException {
 
-		PcxJavaDocParser = JavaDocParser.loadFile("src/test/resources/Pcx.html");
-		PauseJavaDocParser = JavaDocParser.loadFile("src/test/resources/Pause.html");
+		pcxJavaDocParser = new JavaDoc.Parser().loadFile("src/test/resources/Pcx.html");
+		pauseJavaDocParser = new JavaDoc.Parser().loadFile("src/test/resources/Pause.html");
 	}
 
 	@Test
 	void shouldCorrectlyParseSingleJavaMethod() {
 
-		JavaDocParser parser = PcxJavaDocParser;
-		List<JavaMethod> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
+		List<JavaMethod> methods = pcxJavaDocParser.parse().getMethods();
 
 		Assertions.assertEquals(1, methods.size());
 		Assertions.assertEquals("java.awt.Image getImage()", methods.get(0).toString());
@@ -43,13 +43,12 @@ public class JavaDocParserTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyParseMultipleJavaMethod() {
 
-		JavaDocParser parser = PauseJavaDocParser;
-		List<JavaMethod> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
+		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
+		Assertions.assertEquals(5, methods.size());
 
 		String[] methodName = {
 				"begin", "DoesInstantly", "init", "IsFinished", "update"
 		};
-		Assertions.assertEquals(5, methods.size());
 		for (int i = 0; i < methods.size(); i++) {
 			Assertions.assertEquals(methodName[i], methods.get(i).getName());
 		}
@@ -58,8 +57,7 @@ public class JavaDocParserTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyParseEmptyMethodParams() {
 
-		JavaDocParser parser = PcxJavaDocParser;
-		List<JavaMethod> methods = parser.parseMethods(JavaDocParser.JAVA_METHOD_PARSER);
+		List<JavaMethod> methods = pcxJavaDocParser.parse().getMethods();
 
 		Parameter[] params = methods.get(0).getParams();
 		Assertions.assertEquals(0, params.length);
@@ -68,8 +66,7 @@ public class JavaDocParserTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyParseSingleLuaMethod() {
 
-		JavaDocParser parser = PcxJavaDocParser;
-		List<LuaMethod> methods = parser.parseMethods(JavaDocParser.LUA_METHOD_PARSER);
+		List<LuaMethod> methods = pcxJavaDocParser.parse().convertToLuaDoc(false).getMethods();
 
 		Assertions.assertEquals(1, methods.size());
 		Assertions.assertEquals("function getImage()", methods.get(0).toString());
@@ -78,9 +75,8 @@ public class JavaDocParserTest extends TestWorkspace {
 	@Test
 	void shouldGenerateValidLuaMethodDocumentation() {
 
-		JavaDocParser parser = PauseJavaDocParser;
-		List<LuaMethod> methods = parser.parseMethods(JavaDocParser.LUA_METHOD_PARSER);
-		List<String> luaDoc = methods.get(2).generateLuaDoc();
+		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
+		List<String> luaDoc = Method.LUA_PARSER.input(methods.get(2)).parse().annotate();
 
 		String[] expectedDoc = {
 				"---@param object String",
@@ -95,8 +91,7 @@ public class JavaDocParserTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyConvertJavaToLuaDocumentation() throws IOException {
 
-		JavaDocParser parser = PauseJavaDocParser;
-		parser.convertJavaToLuaDoc(file.toPath());
+		pauseJavaDocParser.parse().convertToLuaDoc(true).writeToFile(file.toPath());
 
 		List<String> output = FileUtils.readLines(file, Charset.defaultCharset());
 		String[] actual = output.toArray(new String[]{});

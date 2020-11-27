@@ -1,8 +1,10 @@
 package io.yooksi.pz.luadoc;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -69,6 +71,25 @@ public class MainTest extends TestWorkspace {
 	}
 
 	@Test
+	void shouldDocumentLuaFileWithSpecifiedExistingOutputDir() throws IOException {
+
+		createSampleLuaFile();
+		File outputDir = dir.toPath().resolve("output").toFile();
+		Assertions.assertTrue(outputDir.mkdir());
+		Assertions.assertDoesNotThrow(() -> Main.main(new String[]{
+				"-lua", file.getPath(), outputDir.getPath() }));
+	}
+
+	@Test
+	void shouldDocumentLuaFileWithSpecifiedNonExistingOutputDir() throws IOException {
+
+		createSampleLuaFile();
+		File outputDir = dir.toPath().resolve("output").toFile();
+		Assertions.assertDoesNotThrow(() -> Main.main(new String[]{
+				"-lua", file.getPath(), outputDir.getPath() }));
+	}
+
+	@Test
 	void whenApplicationRunShouldDocumentLuaClasses() throws IOException {
 
 		String[] write = {
@@ -82,6 +103,29 @@ public class MainTest extends TestWorkspace {
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(1));
+	}
+
+	@Test
+	void shouldKeepDirectoryHierarchyWhenDocumentingLuaFile() throws IOException {
+
+		Path rootPath = dir.toPath();
+		Path outputDir = rootPath.resolve("output");
+		File sampleDir = rootPath.resolve("sample").toFile();
+		Assertions.assertTrue(sampleDir.mkdir());
+
+		createSampleLuaFile();
+		FileUtils.moveFileToDirectory(file, sampleDir, false);
+		File sampleFile = sampleDir.toPath().resolve(file.getName()).toFile();
+		Assertions.assertTrue(sampleFile.exists());
+
+		Main.main(new String[]{ "-lua", rootPath.toString(), outputDir.toString() });
+
+		File outputFile = outputDir.resolve("sample").resolve(file.getName()).toFile();
+		Assertions.assertTrue(outputFile.exists());
+
+		List<String> lines = FileUtils.readLines(outputFile, Charset.defaultCharset());
+		Assertions.assertEquals(7, lines.size());
+		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), lines.get(5));
 	}
 
 	@Test

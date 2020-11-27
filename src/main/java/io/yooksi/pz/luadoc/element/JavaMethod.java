@@ -1,4 +1,4 @@
-package io.yooksi.pz.luadoc.method;
+package io.yooksi.pz.luadoc.element;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 
 import org.jetbrains.annotations.Nullable;
 
-import io.yooksi.pz.luadoc.lang.ElementParser;
+import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.ParseRegex;
 
 /**
@@ -32,11 +32,15 @@ public class JavaMethod extends Method {
 				(modifier.length() > 0 ? ' ' : ""), returnType, name, sParams);
 	}
 
-	public static class Parser implements ElementParser<JavaMethod> {
+	public static class Parser extends DataParser<JavaMethod, String> {
 
 		@Override
-		public @Nullable JavaMethod parse(String text) {
-			Matcher matcher = ParseRegex.JAVA_METHOD_REGEX.matcher(text);
+		public @Nullable JavaMethod parse() {
+
+			if (data == null) {
+				throw new RuntimeException("Tried to parse null data");
+			}
+			Matcher matcher = ParseRegex.JAVA_METHOD_REGEX.matcher(data);
 			if (matcher.find())
 			{
 				java.util.List<Parameter> paramList = new ArrayList<>();
