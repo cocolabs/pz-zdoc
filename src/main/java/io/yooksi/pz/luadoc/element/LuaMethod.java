@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
 
@@ -54,14 +56,20 @@ public class LuaMethod extends Method {
 		return sb.append(')').toString();
 	}
 
-	public static class Parser extends DataParser<LuaMethod, Object> {
+	public static class Parser extends DataParser<LuaMethod, JavaMethod> {
 
-		private Parser(Object data) {
+		private Parser(JavaMethod data) {
 			super(data);
 		}
 
-		public static Parser create(Object data) {
-			return new Parser(data);
+		public static Parser create(JavaMethod javaMethod) {
+			return new Parser(javaMethod);
+		}
+
+		public static @Nullable Parser create(String data) {
+
+			JavaMethod method = JavaMethod.Parser.create(data).parse();
+			return method != null ? create(method) : null;
 		}
 
 		@Override
@@ -70,21 +78,7 @@ public class LuaMethod extends Method {
 			if (data == null) {
 				throw new RuntimeException("Tried to parse null data");
 			}
-			if (data instanceof String)
-			{
-				JavaMethod jMethod = JavaMethod.Parser.create((String) data).parse();
-
-				Parameter[] lParams = Parameter.getUnqualified(jMethod.params);
-				return new LuaMethod(jMethod.returnType, jMethod.name, lParams);
-			}
-			else if (data instanceof JavaMethod)
-			{
-				JavaMethod javaMethod = (JavaMethod) data;
-				return new LuaMethod(javaMethod.getReturnType(false),
-						javaMethod.getName(), javaMethod.getParams());
-			}
-			else throw new UnsupportedOperationException("Cannot parse unknown " +
-						"data type: " + data.getClass().getName());
+			return new LuaMethod(data.getReturnType(false), data.getName(), data.getParams());
 		}
 	}
 }
