@@ -22,8 +22,9 @@ public class JavaDocTest extends TestWorkspace {
 
 	private static final Logger logger = LogManager.getLogger(JavaDocTest.class);
 
-	private static JavaDoc.Parser<Path> pauseJavaDocParser;
-	private static JavaDoc.Parser<Path> pcxJavaDocParser;
+	private static JavaDoc.WebParser globalJavaDocParser;
+	private static JavaDoc.FileParser pauseJavaDocParser;
+	private static JavaDoc.FileParser pcxJavaDocParser;
 
 	JavaDocTest() {
 		super("outputLua.lua");

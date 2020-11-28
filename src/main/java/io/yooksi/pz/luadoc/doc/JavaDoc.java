@@ -23,13 +23,19 @@ import io.yooksi.pz.luadoc.lang.DataParser;
 /**
  * This class represents a parsed JavaDoc document.
  */
-public class JavaDoc extends CodeDoc<JavaMethod> {
+public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
 	public static final String PZ_API_URL = "https://projectzomboid.com/modding/";
 	public static final String PZ_API_GLOBAL_URL = PZ_API_URL + "zombie/Lua/LuaManager.GlobalObject.html";
 
-	public JavaDoc(Set<JavaClass<?>> members, List<JavaMethod> methods) {
+	public JavaDoc(Set<JavaClass<L>> members, List<JavaMethod> methods) {
 		super(new ArrayList<>(), members, methods);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Map<String, JavaClass<L>> getMembers() {
+		return (Map<String, JavaClass<L>>) super.getMembers();
 	}
 
 	public LuaDoc convertToLuaDoc(boolean annotate) {
@@ -52,7 +58,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 		return new LuaDoc(lines, new java.util.HashSet<>(), luaMethods);
 	}
 
-	public static abstract class Parser<T> extends DataParser<JavaDoc, T> {
+	public static abstract class Parser<T> extends DataParser<JavaDoc<T>, T> {
 
 		protected final Document document;
 
@@ -120,7 +126,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 		}
 
 		@Override
-		public JavaDoc parse() {
+		public JavaDoc<URL> parse() {
 
 			if (data == null) {
 				throw new RuntimeException("Tried to parse null data");
@@ -128,7 +134,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 			Element summaryTable = getMethodSummary();
 			List<JavaMethod> methods = parseMethods(summaryTable);
 
-			Set<JavaClass<?>> members = new java.util.HashSet<>();
+			Set<JavaClass<URL>> members = new java.util.HashSet<>();
 			for (Element member : parseMemberHyperlinks(summaryTable))
 			{
 				try {
@@ -139,7 +145,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 					throw new RuntimeException(e);
 				}
 			}
-			return new JavaDoc(members, methods);
+			return new JavaDoc<>(members, methods);
 		}
 	}
 
@@ -158,7 +164,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 		}
 
 		@Override
-		public JavaDoc parse() {
+		public JavaDoc<Path> parse() {
 
 			if (data == null) {
 				throw new RuntimeException("Tried to parse null data");
@@ -166,7 +172,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 			Element summaryTable = getMethodSummary();
 			List<JavaMethod> methods = parseMethods(summaryTable);
 
-			Set<JavaClass<?>> members = new java.util.HashSet<>();
+			Set<JavaClass<Path>> members = new java.util.HashSet<>();
 			for (Element member : parseMemberHyperlinks(summaryTable))
 			{
 				try {
@@ -177,7 +183,7 @@ public class JavaDoc extends CodeDoc<JavaMethod> {
 					throw new RuntimeException(e);
 				}
 			}
-			return new JavaDoc(members, methods);
+			return new JavaDoc<>(members, methods);
 		}
 	}
 }
