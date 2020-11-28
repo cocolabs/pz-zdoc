@@ -15,8 +15,8 @@ import io.yooksi.pz.luadoc.lang.ParseRegex;
  */
 public class JavaMethod extends Method {
 
-	public JavaMethod(String modifier, String returnType, String name, Parameter[] params) {
-		super(modifier, returnType, name, params);
+	public JavaMethod(String modifier, String returnType, String name, Parameter[] params, String comment) {
+		super(modifier, returnType, name, params, comment);
 	}
 
 	@Override
@@ -29,8 +29,8 @@ public class JavaMethod extends Method {
 			Arrays.stream(params).forEach(p -> sb.append(p.getUnqualified().toString()).append(", "));
 			sParams = sb.substring(0, sb.length() - 2).trim();
 		}
-		return String.format("%s%s%s %s(%s)", modifier,
-				(modifier.length() > 0 ? ' ' : ""), returnType, name, sParams);
+		return String.format("%s%s%s%s %s(%s)", !hasComment() ? "" : "\\\\" + getComment() +
+				'\n', modifier, (modifier.length() > 0 ? ' ' : ""), returnType, name, sParams);
 	}
 
 	public static class Parser extends DataParser<JavaMethod, String> {
@@ -65,7 +65,8 @@ public class JavaMethod extends Method {
 				return new JavaMethod(ParseRegex.getMatchedGroup(matcher, 1),
 						ParseRegex.getMatchedGroup(matcher, 2),
 						ParseRegex.getMatchedGroup(matcher, 3),
-						paramList.toArray(new Parameter[]{}));
+						paramList.toArray(new Parameter[]{}),
+						ParseRegex.getMatchedGroup(matcher, 5));
 			}
 			else {
 				Main.LOGGER.warn("Unable to parse method data: " + data);

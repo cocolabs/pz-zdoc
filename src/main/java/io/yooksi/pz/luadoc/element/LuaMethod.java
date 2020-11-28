@@ -17,13 +17,20 @@ public class LuaMethod extends Method {
 
 	private final List<String> luaDoc = new ArrayList<>();
 
+	public LuaMethod(String returnType, String name, Parameter[] params, String comment) {
+		super("", returnType, name, params, comment);
+	}
+
 	public LuaMethod(String returnType, String name, Parameter[] params) {
-		super("", returnType, name, params);
+		super(returnType, name, params);
 	}
 
 	public List<String> annotate() {
 
 		luaDoc.clear();
+		if (hasComment()) {
+			luaDoc.add(EmmyLua.comment(getComment()));
+		}
 		for (Parameter param : getParams())
 		{
 			luaDoc.add(EmmyLua.PARAM.create(new String[]{
@@ -78,7 +85,8 @@ public class LuaMethod extends Method {
 			if (data == null) {
 				throw new RuntimeException("Tried to parse null data");
 			}
-			return new LuaMethod(data.getReturnType(false), data.getName(), data.getParams());
+			return new LuaMethod(data.getReturnType(false),
+					data.getName(), data.getParams(), data.getComment());
 		}
 	}
 }

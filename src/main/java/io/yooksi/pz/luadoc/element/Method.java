@@ -13,13 +13,23 @@ public abstract class Method implements ParseResult {
 	final String name;
 
 	final Parameter[] params;
+	final String comment;
 
-	public Method(String modifier, String returnType, String name, Parameter[] params) {
+	public Method(String modifier, String returnType, String name, Parameter[] params, String comment) {
 
 		this.modifier = modifier;
 		this.returnType = returnType;
 		this.name = name;
 		this.params = params;
+		this.comment = comment;
+	}
+
+	public Method(String modifier, String returnType, String name, Parameter[] params) {
+		this(modifier, returnType, name, params, "");
+	}
+
+	public Method(String returnType, String name, Parameter[] params) {
+		this("", returnType, name, params, "");
 	}
 
 	public String getModifier() {
@@ -41,6 +51,14 @@ public abstract class Method implements ParseResult {
 			result[i] = params[i].copy();
 		}
 		return result;
+	}
+
+	public boolean hasComment() {
+		return !comment.isEmpty();
+	}
+
+	public String getComment() {
+		return comment;
 	}
 
 	public abstract String toString();

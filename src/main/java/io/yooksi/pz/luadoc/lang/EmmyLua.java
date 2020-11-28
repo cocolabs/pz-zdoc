@@ -36,6 +36,10 @@ public enum EmmyLua {
 		this.format = format;
 	}
 
+	public static String comment(String text) {
+		return "--- " + text;
+	}
+
 	/**
 	 * @return {@code true} if the given text matches this annotation.
 	 */
