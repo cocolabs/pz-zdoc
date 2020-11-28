@@ -168,7 +168,7 @@ public class Main {
 				JavaDoc.WebParser parser = JavaDoc.WebParser.create(source);
 				JavaDoc<URL> javaDoc = parser.parse();
 
-				Path output = userOutput.resolve(parser.getOutputFilePath(".lua"));
+				Path output = userOutput.resolve(parser.getOutputFilePath("lua"));
 				javaDoc.convertToLuaDoc(true).writeToFile(output);
 
 				for (Map.Entry<String, JavaClass<URL>> entry : javaDoc.getMembers().entrySet())
@@ -176,7 +176,7 @@ public class Main {
 					String memberUrl = entry.getValue().getLocation().toString();
 					JavaDoc.WebParser memberParser = JavaDoc.WebParser.create(memberUrl);
 
-					output = userOutput.resolve(memberParser.getOutputFilePath(".lua"));
+					output = userOutput.resolve(memberParser.getOutputFilePath("lua"));
 					memberParser.parse().convertToLuaDoc(true).writeToFile(output);
 				}
 			}
