@@ -20,6 +20,9 @@ public class Main {
 
 	public static final Logger LOGGER = LogManager.getLogger(Main.class);
 
+	private static final Pattern OP_ARG_REGEX = Pattern.compile("^\\s*-(\\w+)\\s*$");
+	private static final Pattern API_SWITCH_REGEX = Pattern.compile("^\\s*--api\\s*$");
+
 	/**
 	 * <p>Application main entry point method.</p>
 	 * <p>Supports the following command forms:</p>
@@ -50,7 +53,7 @@ public class Main {
 		/*
 		 * validate application argument format
 		 */
-		Matcher matcher = Pattern.compile("^\\s*+-(\\w+)\\s*$").matcher(rawOpArg);
+		Matcher matcher = OP_ARG_REGEX.matcher(rawOpArg);
 		if (!matcher.find()) {
 			throw new IllegalArgumentException("Malformed application argument: " + rawOpArg);
 		}

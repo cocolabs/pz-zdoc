@@ -25,8 +25,8 @@ import io.yooksi.pz.luadoc.lang.DataParser;
  */
 public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
-	public static final String PZ_API_URL = "https://projectzomboid.com/modding/";
-	public static final String PZ_API_GLOBAL_URL = PZ_API_URL + "zombie/Lua/LuaManager.GlobalObject.html";
+	public static final String PZ_API_GLOBAL_URL =
+			"https://projectzomboid.com/modding/zombie/Lua/LuaManager.GlobalObject.html";
 
 	public JavaDoc(Set<JavaClass<L>> members, List<JavaMethod> methods) {
 		super(new ArrayList<>(), members, methods);
@@ -63,7 +63,8 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		protected final Document document;
 
 		protected Parser(T data, Document document) {
-			super(data); this.document = document;
+			super(data);
+			this.document = document;
 		}
 
 		public static String removeElementQualifier(String element) {
