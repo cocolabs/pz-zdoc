@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -147,6 +148,16 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 				}
 			}
 			return new JavaDoc<>(members, methods);
+		}
+
+		public Path getRelativeFilePath() {
+			return Paths.get("/modding/").relativize(Paths.get(data.getPath()));
+		}
+
+		public Path getOutputFilePath(String fileExtension) {
+			Path pRelative = getRelativeFilePath();
+			String baseFilename = FilenameUtils.getBaseName(pRelative.getFileName().toString());
+			return pRelative.getParent().resolve(baseFilename + '.' + fileExtension);
 		}
 	}
 

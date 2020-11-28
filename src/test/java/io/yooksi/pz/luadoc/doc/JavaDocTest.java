@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class JavaDocTest extends TestWorkspace {
 
 		pcxJavaDocParser = JavaDoc.FileParser.create("src/test/resources/Pcx.html");
 		pauseJavaDocParser = JavaDoc.FileParser.create("src/test/resources/Pause.html");
+		globalJavaDocParser = JavaDoc.WebParser.create(JavaDoc.PZ_API_GLOBAL_URL);
 	}
 
 	@Test
@@ -145,7 +147,18 @@ public class JavaDocTest extends TestWorkspace {
 				Object location = ((JavaClass<?>)member).getLocation();
 				Assertions.assertTrue(entry1.getValue().isInstance(location));
 				Assertions.assertFalse(location.toString().isEmpty());
+
+				logger.info(member.toString());
 			}
 		}
+	}
+
+	@Test
+	void shouldGetCorrectOutputPathFromWebParser()  {
+
+		Path expected = Paths.get("zombie/Lua/LuaManager.GlobalObject.lua");
+		Path actual = globalJavaDocParser.getOutputFilePath("lua");
+
+		Assertions.assertEquals(expected.toString(), actual.toString());
 	}
 }

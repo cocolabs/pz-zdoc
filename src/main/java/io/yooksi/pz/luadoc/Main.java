@@ -3,9 +3,11 @@ package io.yooksi.pz.luadoc;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -15,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import io.yooksi.pz.luadoc.doc.JavaDoc;
 import io.yooksi.pz.luadoc.doc.LuaDoc;
+import io.yooksi.pz.luadoc.element.JavaClass;
 
 public class Main {
 
@@ -33,7 +36,7 @@ public class Main {
 	 *     </li>
 	 *     <li>
 	 *         <i>Parse java doc under given <i>path/url</i> and convert to lua file:</i>
-	 *         <pre>{@code -java <path_to_files> <output_dir_path>}</pre>
+	 *         <pre>{@code -java [--api|<java_doc_location>] <output_dir_path>}</pre>
 	 *     </li>
 	 * </ul>
 	 *
@@ -64,17 +67,15 @@ public class Main {
 		if (opArg.equals("lua"))
 		{
 			LOGGER.debug("Preparing to parse and document lua files...");
-			Path rootPath, outputDir;
-			java.util.List<Path> paths;
-			try {
-				rootPath = Paths.get(args[1]);
-				outputDir = args.length >= 3 ? Paths.get(args[2]) : null;
-				paths = Files.walk(Paths.get(rootPath.toString())).filter(Files::isRegularFile)
-						.collect(Collectors.toCollection(ArrayList::new));
+
+			if (args.length < 2) {
+				throw new IllegalArgumentException("No file path supplied");
 			}
-			catch (IndexOutOfBoundsException e) {
-				throw new RuntimeException("No file path supplied", e);
-			}
+			Path rootPath = Paths.get(args[1]);
+			Path outputDir = args.length >= 3 ? Paths.get(args[2]) : null;
+			java.util.List<Path> paths = Files.walk(Paths.get(rootPath.toString()))
+					.filter(Files::isRegularFile).collect(Collectors.toCollection(ArrayList::new));
+
 			if (paths.size() > 1) {
 				LOGGER.info("Parsing and documenting lua files found in " + rootPath);
 			}
@@ -130,31 +131,62 @@ public class Main {
 		else if (opArg.equals("java"))
 		{
 			LOGGER.debug("Preparing to parse java doc...");
-			Path output;
-			try {
-				output = Paths.get(args[1]);
-				if (!output.toFile().exists()) {
-					throw new NoSuchFileException(output.toString(), null, "Output file not found");
-				}
-				else LOGGER.debug("Designated output path: " + output);
-			}
-			catch (IndexOutOfBoundsException e) {
-				throw new RuntimeException("No output file path supplied", e);
-			}
-			/* when source path is unspecified use API url */
-			String source = args.length >= 3 ? args[2] : JavaDoc.PZ_API_GLOBAL_URL;
 
-			JavaDoc.Parser<?> parser;
-			if (Utils.isValidUrl(source)) {
-				parser = JavaDoc.WebParser.create(source);
+			if (args.length < 2) {
+				throw new IllegalArgumentException("Java doc location not specified");
 			}
-			else if (Utils.isValidPath(source)) {
-				parser = JavaDoc.FileParser.create(source);
+			else if (args.length < 3) {
+				throw new IllegalArgumentException("No output file path supplied");
+			}
+			String source;
+			/* when source path is unspecified use API url */
+			Matcher match = API_SWITCH_REGEX.matcher(args[1]);
+			if (match.find())
+			{
+				source = JavaDoc.PZ_API_GLOBAL_URL;
+				LOGGER.debug("API argument switch detected");
+			}
+			else source = args[1];
+			LOGGER.debug("Reading from source " + source);
+
+			Path userOutput = Paths.get(args[2]);
+			LOGGER.debug("Output directory set to " + args[2]);
+
+			File outputDir = userOutput.toFile();
+			if (!outputDir.exists())
+			{
+				if (!outputDir.mkdirs()) {
+					throw new IOException("Unable to create output directory");
+				}
+			} else if (!outputDir.isDirectory()) {
+				throw new IllegalArgumentException("Output path does not point to a directory");
+			}
+			else LOGGER.debug("Designated output path: " + userOutput);
+
+			if (Utils.isValidUrl(source))
+			{
+				JavaDoc.WebParser parser = JavaDoc.WebParser.create(source);
+				JavaDoc<URL> javaDoc = parser.parse();
+
+				Path output = userOutput.resolve(parser.getOutputFilePath(".lua"));
+				javaDoc.convertToLuaDoc(true).writeToFile(output);
+
+				for (Map.Entry<String, JavaClass<URL>> entry : javaDoc.getMembers().entrySet())
+				{
+					String memberUrl = entry.getValue().getLocation().toString();
+					JavaDoc.WebParser memberParser = JavaDoc.WebParser.create(memberUrl);
+
+					output = userOutput.resolve(memberParser.getOutputFilePath(".lua"));
+					memberParser.parse().convertToLuaDoc(true).writeToFile(output);
+				}
+			}
+			else if (Utils.isValidPath(source))
+			{
+				JavaDoc.FileParser parser = JavaDoc.FileParser.create(source);
+				Path output = userOutput.resolve(Paths.get(source).getFileName());
+				parser.parse().convertToLuaDoc(true).writeToFile(output);
 			}
 			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
-
-			JavaDoc javaDoc = parser.parse();
-			javaDoc.convertToLuaDoc(true).writeToFile(output);
 		}
 		else throw new IllegalArgumentException("Unknown application argument: " + opArg);
 		LOGGER.debug("Finished processing command");

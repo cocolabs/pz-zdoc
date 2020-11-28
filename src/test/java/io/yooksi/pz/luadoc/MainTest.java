@@ -21,11 +21,23 @@ public class MainTest extends TestWorkspace {
 	}
 
 	@Test
-	void shouldThrowExceptionWhenApplicationRunWithNoAppArg() {
+	void shouldThrowExceptionWhenApplicationRunWithMissingAppArgs() {
 
 		// No application argument supplied
 		Assertions.assertThrows(IllegalArgumentException.class,
 				() -> Main.main(new String[]{}));
+
+		// No file path supplied
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Main.main(new String[]{ "-lua" }));
+
+		// Java doc location not specified
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Main.main(new String[]{ "-java" }));
+
+		// No output file path supplied
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Main.main(new String[]{ "-java", "location" }));
 	}
 
 	@Test
@@ -58,8 +70,8 @@ public class MainTest extends TestWorkspace {
 		Assertions.assertThrows(NoSuchFileException.class,
 				() -> Main.main(new String[]{ "-lua", "invalid/path" }));
 
-		Assertions.assertThrows(NoSuchFileException.class,
-				() -> Main.main(new String[]{ "-java", "invalid/path" }));
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Main.main(new String[]{ "-java", "invalid/path.text" }));
 	}
 
 	@Test
@@ -68,6 +80,16 @@ public class MainTest extends TestWorkspace {
 		// IndexOutOfBoundsException
 		Assertions.assertThrows(RuntimeException.class,
 				() -> Main.main(new String[]{ "-lua" }));
+	}
+
+	@Test
+	void shouldThrowExceptionWhenApplicationRunWithNonDirectoryOutput() throws IOException {
+
+		File notDirFile = dir.toPath().resolve("not_dir.file").toFile();
+		Assertions.assertTrue(notDirFile.createNewFile());
+
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Main.main(new String[]{ "-java", "--api", notDirFile.getPath() }));
 	}
 
 	@Test
@@ -131,7 +153,10 @@ public class MainTest extends TestWorkspace {
 	@Test
 	void whenApplicationRunShouldConvertJavaToLuaDoc() throws IOException {
 
-		Main.main(new String[]{ "-java", file.getPath(), "src/test/resources/Pause.html" });
+		File outputDir = dir.toPath().resolve("output").toFile();
+		Assertions.assertTrue(outputDir.mkdir());
+
+		Main.main(new String[]{ "-java", "src/test/resources/Pause.html", outputDir.getPath() });
 		String[] expected = {
 				"---@return void",
 				"function begin()",
