@@ -100,7 +100,11 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 				Elements columns = element.getElementsByTag("td");
 				String methodText = columns.first().text() + " " + columns.last().text();
 
-				methods.add(JavaMethod.Parser.create(methodText).parse());
+				JavaMethod javaMethod = JavaMethod.Parser.create(methodText).parse();
+				/* Do not add methods which were not parsed */
+				if (javaMethod != null) {
+					methods.add(javaMethod);
+				}
 			}
 			return methods;
 		}

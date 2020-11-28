@@ -2,8 +2,14 @@ package io.yooksi.pz.luadoc.doc;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.io.FileUtils;
 
 import io.yooksi.pz.luadoc.element.MemberClass;
@@ -33,9 +39,9 @@ public abstract class CodeDoc<M extends Method> implements ParseResult {
 	public CodeDoc(List<String> content, Set<? extends MemberClass> members, List<M> methods) {
 
 		this.content = content;
-		this.methods = methods;
+		this.methods = ListUtils.predicatedList(methods, PredicateUtils.notNullPredicate());
 
-		this.members = new HashMap<>();
+		this.members = new ConcurrentHashMap<>();
 		members.forEach(m -> this.members.put(m.getName(), m));
 	}
 

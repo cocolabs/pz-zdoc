@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 
 import org.jetbrains.annotations.Nullable;
 
+import io.yooksi.pz.luadoc.Main;
 import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.ParseRegex;
 
@@ -66,7 +67,10 @@ public class JavaMethod extends Method {
 						ParseRegex.getMatchedGroup(matcher, 3),
 						paramList.toArray(new Parameter[]{}));
 			}
-			else return null;
+			else {
+				Main.LOGGER.warn("Unable to parse method data: " + data);
+				return null;
+			}
 		}
 	}
 }
