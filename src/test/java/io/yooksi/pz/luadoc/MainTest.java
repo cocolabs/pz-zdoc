@@ -156,7 +156,7 @@ public class MainTest extends TestWorkspace {
 		File outputDir = dir.toPath().resolve("output").toFile();
 		Assertions.assertTrue(outputDir.mkdir());
 
-		Main.main(new String[]{ "-java", "src/test/resources/Pause.html", outputDir.getPath() });
+		Main.main(new String[]{ "-java", "src/test/resources/Sample.html", outputDir.getPath() });
 		String[] expected = {
 				"---@return void",
 				"function begin()",

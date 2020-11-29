@@ -24,8 +24,7 @@ public class JavaDocTest extends TestWorkspace {
 	private static final Logger logger = LogManager.getLogger(JavaDocTest.class);
 
 	private static JavaDoc.WebParser globalJavaDocParser;
-	private static JavaDoc.FileParser pauseJavaDocParser;
-	private static JavaDoc.FileParser pcxJavaDocParser;
+	private static JavaDoc.FileParser sampleJavaDocParser;
 
 	JavaDocTest() {
 		super("outputLua.lua");
@@ -34,15 +33,14 @@ public class JavaDocTest extends TestWorkspace {
 	@BeforeAll
 	static void initializeStaticParsers() throws IOException {
 
-		pcxJavaDocParser = JavaDoc.FileParser.create("src/test/resources/Pcx.html");
-		pauseJavaDocParser = JavaDoc.FileParser.create("src/test/resources/Pause.html");
+		sampleJavaDocParser = JavaDoc.FileParser.create("src/test/resources/Sample.html");
 		globalJavaDocParser = JavaDoc.WebParser.create(JavaDoc.PZ_API_GLOBAL_URL);
 	}
 
 	@Test
 	void shouldCorrectlyParseJavaDocMethod() {
 
-		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
+		List<JavaMethod> methods = sampleJavaDocParser.parse().getMethods();
 		Assertions.assertEquals(4, methods.size());
 
 		String[] methodName = {
@@ -56,7 +54,7 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyParseEmptyMethodParams() {
 
-		List<JavaMethod> methods = pcxJavaDocParser.parse().getMethods();
+		List<JavaMethod> methods = sampleJavaDocParser.parse().getMethods();
 
 		Parameter[] params = methods.get(0).getParams();
 		Assertions.assertEquals(0, params.length);
@@ -65,7 +63,7 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldGenerateValidLuaMethodDocumentation() {
 
-		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
+		List<JavaMethod> methods = sampleJavaDocParser.parse().getMethods();
 		List<String> luaDoc = LuaMethod.Parser.create(methods.get(1)).parse().annotate();
 
 		String[] expectedDoc = {
@@ -81,7 +79,7 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyConvertJavaToLuaDocumentation() throws IOException {
 
-		pauseJavaDocParser.parse().convertToLuaDoc(true).writeToFile(file.toPath());
+		sampleJavaDocParser.parse().convertToLuaDoc(true).writeToFile(file.toPath());
 
 		List<String> output = FileUtils.readLines(file, Charset.defaultCharset());
 		String[] actual = output.toArray(new String[]{});
@@ -144,7 +142,7 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldNotParsePrivateMethodsFromJavaDocs() {
 
-		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
+		List<JavaMethod> methods = sampleJavaDocParser.parse().getMethods();
 		Assertions.assertEquals(4, methods.size());
 		Assertions.assertEquals("init", methods.get(1).getName());
 	}
