@@ -136,13 +136,12 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 				Element element = tableRows.get(i);
 
 				Elements columns = element.getElementsByTag("td");
-				Element colFirst = columns.first();
-				Element colLast = columns.last();
+				Element[] column = { columns.first(), columns.last() };
 
-				String methodName = colLast.getElementsByClass("memberNameLink").text();
+				String methodName = column[1].getElementsByClass("memberNameLink").text();
 				if (parseMethodAccessModifier(methodName, i).equals("public"))
 				{
-					String methodText = colFirst.text() + " " + colLast.text();
+					String methodText = column[0].text() + " " + column[1].text();
 
 					JavaMethod javaMethod = JavaMethod.Parser.create(methodText).parse();
 					/* Do not add methods which were not parsed */
