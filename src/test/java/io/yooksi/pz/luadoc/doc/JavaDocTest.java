@@ -121,7 +121,7 @@ public class JavaDocTest extends TestWorkspace {
 				MemberClass member = entry2.getValue();
 				Assertions.assertTrue(member instanceof JavaClass);
 
-				Object location = ((JavaClass<?>)member).getLocation();
+				Object location = ((JavaClass<?>) member).getLocation();
 				Assertions.assertTrue(entry1.getValue().isInstance(location));
 				Assertions.assertFalse(location.toString().isEmpty());
 
@@ -131,7 +131,7 @@ public class JavaDocTest extends TestWorkspace {
 	}
 
 	@Test
-	void shouldGetCorrectOutputPathFromWebParser()  {
+	void shouldGetCorrectOutputPathFromWebParser() {
 
 		Path expected = Paths.get("zombie/Lua/LuaManager.GlobalObject.lua");
 		Path actual = globalJavaDocParser.getOutputFilePath("lua");
