@@ -29,6 +29,7 @@ public class LuaClass extends MemberClass {
 					new String[]{ name } : new String[]{ name, type }));
 		}
 		content.add(name + " = {}");
+		content.add("");
 		return content;
 	}
 
