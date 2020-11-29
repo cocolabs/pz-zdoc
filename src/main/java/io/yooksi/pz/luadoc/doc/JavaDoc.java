@@ -20,6 +20,7 @@ import org.jsoup.select.Elements;
 import io.yooksi.pz.luadoc.Main;
 import io.yooksi.pz.luadoc.element.JavaClass;
 import io.yooksi.pz.luadoc.element.JavaMethod;
+import io.yooksi.pz.luadoc.element.LuaClass;
 import io.yooksi.pz.luadoc.element.LuaMethod;
 import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.ParseRegex;
@@ -44,9 +45,12 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
 	public LuaDoc convertToLuaDoc(boolean annotate, boolean qualify) {
 
-		List<String> lines = new java.util.ArrayList<>();
+		List<String> content = new java.util.ArrayList<>();
 		List<LuaMethod> luaMethods = new java.util.ArrayList<>();
 
+		if (qualify) {
+			new LuaClass(getName()).writeTo(content, annotate);
+		}
 		List<JavaMethod> javaMethods = getMethods();
 		for (JavaMethod method : javaMethods)
 		{
@@ -57,11 +61,11 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 				luaMethod.annotate();
 			}
 			luaMethods.add(luaMethod);
-			lines.add(luaMethod.toString());
-			lines.add("");
+			content.add(luaMethod.toString());
+			content.add("");
 		}
-		lines.remove(lines.size() - 1);
-		return new LuaDoc(getName(), lines, new java.util.HashSet<>(), luaMethods);
+		content.remove(content.size() - 1);
+		return new LuaDoc(getName(), content, new java.util.HashSet<>(), luaMethods);
 	}
 
 	public static abstract class Parser<T> extends DataParser<JavaDoc<T>, T> {

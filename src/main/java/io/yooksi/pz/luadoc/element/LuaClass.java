@@ -1,26 +1,38 @@
 package io.yooksi.pz.luadoc.element;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import java.util.Collection;
+
+import io.yooksi.pz.luadoc.lang.EmmyLua;
 
 /**
  * This class represents a parsed lua class reference.
  */
 public class LuaClass extends MemberClass {
 
-	private final @Nullable String type;
+	private final String type;
 
-	public LuaClass(String name, @NotNull String type) {
+	public LuaClass(String name, String type) {
 		super(name);
 		this.type = type;
 	}
 
 	public LuaClass(String name) {
 		super(name);
-		this.type = null;
+		this.type = "";
 	}
 
-	public @Nullable String getType() {
+	public Collection<String> writeTo(Collection<String> content, boolean annotate) {
+
+		if (annotate)
+		{
+			content.add(EmmyLua.CLASS.create(type.isEmpty() ?
+					new String[]{ name } : new String[]{ name, type }));
+		}
+		content.add(name + " = {}");
+		return content;
+	}
+
+	public String getType() {
 		return type;
 	}
 
