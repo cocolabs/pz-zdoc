@@ -23,8 +23,8 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 	/** Matches a class initialized through {@code class:derive(..)} */
 	private static final Pattern DERIVED_CLASS = Pattern.compile("=\\s*(\\w+):derive\\(");
 
-	public LuaDoc(List<String> content, Set<LuaClass> members, List<LuaMethod> methods) {
-		super(content, members, methods);
+	public LuaDoc(String name, List<String> content, Set<LuaClass> members, List<LuaMethod> methods) {
+		super(name, content, members, methods);
 	}
 
 	public static class Parser extends DataParser<LuaDoc, File> {
@@ -84,7 +84,7 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 				}
 				content.add(line);
 			}
-			return new LuaDoc(content, members, new ArrayList<>());
+			return new LuaDoc(data.getName(), content, members, new ArrayList<>());
 		}
 	}
 }

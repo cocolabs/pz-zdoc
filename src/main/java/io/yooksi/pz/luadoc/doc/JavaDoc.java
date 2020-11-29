@@ -32,8 +32,8 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 	public static final String PZ_API_GLOBAL_URL =
 			"https://projectzomboid.com/modding/zombie/Lua/LuaManager.GlobalObject.html";
 
-	public JavaDoc(Set<JavaClass<L>> members, List<JavaMethod> methods) {
-		super(new ArrayList<>(), members, methods);
+	public JavaDoc(String name, Set<JavaClass<L>> members, List<JavaMethod> methods) {
+		super(name, new ArrayList<>(), members, methods);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		return (Map<String, JavaClass<L>>) super.getMembers();
 	}
 
-	public LuaDoc convertToLuaDoc(boolean annotate) {
+	public LuaDoc convertToLuaDoc(boolean annotate, boolean qualify) {
 
 		List<String> lines = new java.util.ArrayList<>();
 		List<LuaMethod> luaMethods = new java.util.ArrayList<>();
@@ -50,7 +50,9 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		List<JavaMethod> javaMethods = getMethods();
 		for (JavaMethod method : javaMethods)
 		{
-			LuaMethod luaMethod = LuaMethod.Parser.create(method).parse();
+			LuaMethod luaMethod = !qualify ? LuaMethod.Parser.create(method).parse()
+					: LuaMethod.Parser.create(method, getName()).parse();
+
 			if (annotate) {
 				luaMethod.annotate();
 			}
@@ -59,7 +61,7 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 			lines.add("");
 		}
 		lines.remove(lines.size() - 1);
-		return new LuaDoc(lines, new java.util.HashSet<>(), luaMethods);
+		return new LuaDoc(getName(), lines, new java.util.HashSet<>(), luaMethods);
 	}
 
 	public static abstract class Parser<T> extends DataParser<JavaDoc<T>, T> {
@@ -191,7 +193,8 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 					throw new RuntimeException(e);
 				}
 			}
-			return new JavaDoc<>(members, methods);
+			String filename = Paths.get(data.getPath()).getFileName().toString();
+			return new JavaDoc<>(FilenameUtils.getBaseName(filename), members, methods);
 		}
 
 		public Path getRelativeFilePath() {
@@ -199,6 +202,7 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		}
 
 		public Path getOutputFilePath(String fileExtension) {
+
 			Path pRelative = getRelativeFilePath();
 			String baseFilename = FilenameUtils.getBaseName(pRelative.getFileName().toString());
 			return pRelative.getParent().resolve(baseFilename + '.' + fileExtension);
@@ -239,7 +243,7 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 					throw new RuntimeException(e);
 				}
 			}
-			return new JavaDoc<>(members, methods);
+			return new JavaDoc<>(data.getFileName().toString(), members, methods);
 		}
 	}
 }

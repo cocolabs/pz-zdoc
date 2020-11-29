@@ -13,14 +13,22 @@ import io.yooksi.pz.luadoc.lang.EmmyLua;
  */
 public class LuaMethod extends Method {
 
+	private final String qualifier;
 	private final List<String> luaDoc = new ArrayList<>();
+
+	public LuaMethod(String qualifier, String returnType, String name, Parameter[] params, String comment) {
+		super("", returnType, name, params, comment);
+		this.qualifier = qualifier;
+	}
 
 	public LuaMethod(String returnType, String name, Parameter[] params, String comment) {
 		super("", returnType, name, params, comment);
+		this.qualifier = "";
 	}
 
 	public LuaMethod(String returnType, String name, Parameter[] params) {
 		super(returnType, name, params);
+		this.qualifier = "";
 	}
 
 	public List<String> annotate() {
@@ -50,7 +58,12 @@ public class LuaMethod extends Method {
 		final StringBuilder sb = new StringBuilder();
 
 		luaDoc.forEach(l -> sb.append(l).append("\n"));
-		sb.append("function ").append(name).append('(');
+		sb.append("function ");
+
+		if (!qualifier.isEmpty()) {
+			sb.append(qualifier).append('.');
+		}
+		sb.append(name).append('(');
 
 		if (this.params.length > 0)
 		{
@@ -63,12 +76,19 @@ public class LuaMethod extends Method {
 
 	public static class Parser extends DataParser<LuaMethod, JavaMethod> {
 
-		private Parser(JavaMethod data) {
+		private final String qualifier;
+
+		private Parser(JavaMethod data, String qualifier) {
 			super(data);
+			this.qualifier = qualifier;
 		}
 
 		public static Parser create(JavaMethod javaMethod) {
-			return new Parser(javaMethod);
+			return new Parser(javaMethod, "");
+		}
+
+		public static Parser create(JavaMethod javaMethod, String qualifier) {
+			return new Parser(javaMethod, qualifier);
 		}
 
 		@Override
@@ -77,7 +97,7 @@ public class LuaMethod extends Method {
 			if (data == null) {
 				throw new RuntimeException("Tried to parse null data");
 			}
-			return new LuaMethod(data.getReturnType(false),
+			return new LuaMethod(qualifier, data.getReturnType(false),
 					data.getName(), data.getParams(), data.getComment());
 		}
 	}

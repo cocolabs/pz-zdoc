@@ -169,7 +169,7 @@ public class Main {
 				JavaDoc<URL> javaDoc = parser.parse();
 
 				Path output = userOutput.resolve(parser.getOutputFilePath("lua"));
-				javaDoc.convertToLuaDoc(true).writeToFile(output);
+				javaDoc.convertToLuaDoc(true, false).writeToFile(output);
 
 				for (Map.Entry<String, JavaClass<URL>> entry : javaDoc.getMembers().entrySet())
 				{
@@ -177,14 +177,14 @@ public class Main {
 					JavaDoc.WebParser memberParser = JavaDoc.WebParser.create(memberUrl);
 
 					output = userOutput.resolve(memberParser.getOutputFilePath("lua"));
-					memberParser.parse().convertToLuaDoc(true).writeToFile(output);
+					memberParser.parse().convertToLuaDoc(true, true).writeToFile(output);
 				}
 			}
 			else if (Utils.isValidPath(source))
 			{
 				JavaDoc.FileParser parser = JavaDoc.FileParser.create(source);
 				Path output = userOutput.resolve(Paths.get(source).getFileName());
-				parser.parse().convertToLuaDoc(true).writeToFile(output);
+				parser.parse().convertToLuaDoc(true, false).writeToFile(output);
 			}
 			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
 		}

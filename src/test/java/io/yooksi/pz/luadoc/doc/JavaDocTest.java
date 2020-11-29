@@ -79,7 +79,7 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyConvertJavaToLuaDocumentation() throws IOException {
 
-		sampleJavaDocParser.parse().convertToLuaDoc(true).writeToFile(file.toPath());
+		sampleJavaDocParser.parse().convertToLuaDoc(true, false).writeToFile(file.toPath());
 
 		List<String> output = FileUtils.readLines(file, Charset.defaultCharset());
 		String[] actual = output.toArray(new String[]{});
@@ -145,5 +145,14 @@ public class JavaDocTest extends TestWorkspace {
 		List<JavaMethod> methods = sampleJavaDocParser.parse().getMethods();
 		Assertions.assertEquals(4, methods.size());
 		Assertions.assertEquals("init", methods.get(1).getName());
+	}
+
+	@Test
+	void shouldQualifyMethodsWhenConvertingToLuaDoc() {
+
+		LuaDoc luaDoc = sampleJavaDocParser.parse().convertToLuaDoc(false, true);
+		for (LuaMethod method : luaDoc.getMethods()) {
+			Assertions.assertTrue(method.toString().startsWith("function Sample."));
+		}
 	}
 }

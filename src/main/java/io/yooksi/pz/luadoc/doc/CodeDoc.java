@@ -24,7 +24,9 @@ import io.yooksi.pz.luadoc.lang.ParseResult;
 @SuppressWarnings("unused")
 public abstract class CodeDoc<M extends Method> implements ParseResult {
 
-	protected final List<M> methods;
+	private final String name;
+
+	private final List<M> methods;
 
 	/**
 	 * Textual representation of this document ready for output.
@@ -36,13 +38,18 @@ public abstract class CodeDoc<M extends Method> implements ParseResult {
 	 */
 	private final Map<String, MemberClass> members;
 
-	public CodeDoc(List<String> content, Set<? extends MemberClass> members, List<M> methods) {
+	public CodeDoc(String name, List<String> content, Set<? extends MemberClass> members, List<M> methods) {
 
+		this.name = name;
 		this.content = content;
 		this.methods = ListUtils.predicatedList(methods, PredicateUtils.notNullPredicate());
 
 		this.members = new ConcurrentHashMap<>();
 		members.forEach(m -> this.members.put(m.getName(), m));
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public List<String> readContent() {
