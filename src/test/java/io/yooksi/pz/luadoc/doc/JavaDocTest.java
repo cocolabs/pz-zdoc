@@ -40,16 +40,7 @@ public class JavaDocTest extends TestWorkspace {
 	}
 
 	@Test
-	void shouldCorrectlyParseSingleJavaMethod() {
-
-		List<JavaMethod> methods = pcxJavaDocParser.parse().getMethods();
-
-		Assertions.assertEquals(1, methods.size());
-		Assertions.assertEquals("java.awt.Image getImage()", methods.get(0).toString());
-	}
-
-	@Test
-	void shouldCorrectlyParseMultipleJavaMethod() {
+	void shouldCorrectlyParseJavaDocMethod() {
 
 		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
 		Assertions.assertEquals(4, methods.size());
@@ -69,15 +60,6 @@ public class JavaDocTest extends TestWorkspace {
 
 		Parameter[] params = methods.get(0).getParams();
 		Assertions.assertEquals(0, params.length);
-	}
-
-	@Test
-	void shouldCorrectlyParseSingleLuaMethod() {
-
-		List<LuaMethod> methods = pcxJavaDocParser.parse().convertToLuaDoc(false).getMethods();
-
-		Assertions.assertEquals(1, methods.size());
-		Assertions.assertEquals("function getImage()", methods.get(0).toString());
 	}
 
 	@Test
