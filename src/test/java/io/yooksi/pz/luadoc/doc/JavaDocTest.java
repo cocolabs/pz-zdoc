@@ -41,10 +41,10 @@ public class JavaDocTest extends TestWorkspace {
 	void shouldCorrectlyParseJavaDocMethod() {
 
 		List<JavaMethod> methods = sampleJavaDocParser.parse().getMethods();
-		Assertions.assertEquals(4, methods.size());
+		Assertions.assertEquals(5, methods.size());
 
 		String[] methodName = {
-				"begin", "init", "IsFinished", "update"
+				"begin", "init", "IsFinished", "update", "getActivatedMods"
 		};
 		for (int i = 0; i < methods.size(); i++) {
 			Assertions.assertEquals(methodName[i], methods.get(i).getName());
@@ -143,7 +143,7 @@ public class JavaDocTest extends TestWorkspace {
 	void shouldNotParsePrivateMethodsFromJavaDocs() {
 
 		List<JavaMethod> methods = sampleJavaDocParser.parse().getMethods();
-		Assertions.assertEquals(4, methods.size());
+		Assertions.assertEquals(5, methods.size());
 		Assertions.assertEquals("init", methods.get(1).getName());
 	}
 
@@ -153,6 +153,21 @@ public class JavaDocTest extends TestWorkspace {
 		LuaDoc luaDoc = sampleJavaDocParser.parse().convertToLuaDoc(false, true);
 		for (LuaMethod method : luaDoc.getMethods()) {
 			Assertions.assertTrue(method.toString().startsWith("function Sample."));
+		}
+	}
+
+	@Test
+	void shouldCorrectlyParseObjectType() throws IOException {
+
+		LuaDoc luaDoc = sampleJavaDocParser.parse().convertToLuaDoc(true, false);
+		LuaMethod method = luaDoc.getMethods().get(4);
+		String[] expected = {
+				"---@return ArrayList<String>",
+				"function getActivatedMods() end"
+		};
+		String[] methodContent = method.toString().split("\n");
+		for (int i = 0; i < methodContent.length; i++) {
+			Assertions.assertEquals(expected[i], methodContent[i]);
 		}
 	}
 }

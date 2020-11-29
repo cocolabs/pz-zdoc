@@ -78,7 +78,7 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		}
 
 		public static String removeElementQualifier(String element) {
-			return element.replaceAll(".\\w+\\.", "");
+			return element.replaceAll("[^<>]+\\w+\\.", "");
 		}
 
 		protected Element getMethodSummary() throws NoSuchElementException {
