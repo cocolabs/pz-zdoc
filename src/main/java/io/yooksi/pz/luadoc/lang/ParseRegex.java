@@ -10,6 +10,8 @@ public class ParseRegex {
 	public static final Pattern JAVA_METHOD_REGEX = Pattern.compile("^((?:final|static|abstract|" +
 			"transient|synchronized|volatile)\\s+)?([^\\s]+)\\s+([^\\s]+)\\((.+)?\\)(?:\\s*(.*)*?)*?$");
 
+	public static final Pattern FIRST_WORD_REGEX = Pattern.compile("^(\\w+).*");
+
 	/**
 	 * @param matcher process that contains regex groups
 	 * @param i index of group to retrieve

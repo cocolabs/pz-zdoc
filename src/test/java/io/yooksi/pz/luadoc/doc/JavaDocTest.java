@@ -161,4 +161,12 @@ public class JavaDocTest extends TestWorkspace {
 
 		Assertions.assertEquals(expected.toString(), actual.toString());
 	}
+
+	@Test
+	void shouldNotParsePrivateMethodsFromJavaDocs() {
+
+		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
+		Assertions.assertEquals(4, methods.size());
+		Assertions.assertEquals("init", methods.get(1).getName());
+	}
 }
