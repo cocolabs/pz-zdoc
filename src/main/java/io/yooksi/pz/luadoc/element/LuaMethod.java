@@ -71,7 +71,7 @@ public class LuaMethod extends Method {
 					p -> sb.append(p.getName(false)).append(", "));
 			sb.delete(sb.length() - 2, sb.length());
 		}
-		return sb.append(')').toString();
+		return sb.append(')').append(" end").toString();
 	}
 
 	public static class Parser extends DataParser<LuaMethod, JavaMethod> {

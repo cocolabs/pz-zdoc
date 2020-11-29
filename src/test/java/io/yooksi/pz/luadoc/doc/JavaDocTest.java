@@ -86,18 +86,18 @@ public class JavaDocTest extends TestWorkspace {
 
 		String[] expected = {
 				"---@return void",
-				"function begin()",
+				"function begin() end",
 				"",
 				"---@param object String",
 				"---@param params String[]",
 				"---@return void",
-				"function init(object, params)",
+				"function init(object, params) end",
 				"",
 				"---@return boolean",
-				"function IsFinished()",
+				"function IsFinished() end",
 				"",
 				"---@return void",
-				"function update()",
+				"function update() end",
 		};
 		for (int i = 0; i < expected.length; i++) {
 			Assertions.assertEquals(expected[i], actual[i]);
