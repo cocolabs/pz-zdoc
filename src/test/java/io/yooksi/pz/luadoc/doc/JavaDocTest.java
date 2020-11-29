@@ -52,10 +52,10 @@ public class JavaDocTest extends TestWorkspace {
 	void shouldCorrectlyParseMultipleJavaMethod() {
 
 		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
-		Assertions.assertEquals(5, methods.size());
+		Assertions.assertEquals(4, methods.size());
 
 		String[] methodName = {
-				"begin", "DoesInstantly", "init", "IsFinished", "update"
+				"begin", "init", "IsFinished", "update"
 		};
 		for (int i = 0; i < methods.size(); i++) {
 			Assertions.assertEquals(methodName[i], methods.get(i).getName());
@@ -84,7 +84,7 @@ public class JavaDocTest extends TestWorkspace {
 	void shouldGenerateValidLuaMethodDocumentation() {
 
 		List<JavaMethod> methods = pauseJavaDocParser.parse().getMethods();
-		List<String> luaDoc = LuaMethod.Parser.create(methods.get(2)).parse().annotate();
+		List<String> luaDoc = LuaMethod.Parser.create(methods.get(1)).parse().annotate();
 
 		String[] expectedDoc = {
 				"---@param object String",
@@ -107,9 +107,6 @@ public class JavaDocTest extends TestWorkspace {
 		String[] expected = {
 				"---@return void",
 				"function begin()",
-				"",
-				"---@return boolean",
-				"function DoesInstantly()",
 				"",
 				"---@param object String",
 				"---@param params String[]",
