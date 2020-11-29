@@ -73,12 +73,6 @@ public class LuaMethod extends Method {
 			return new Parser(javaMethod);
 		}
 
-		public static @Nullable Parser create(String data) {
-
-			JavaMethod method = JavaMethod.Parser.create(data).parse();
-			return method != null ? create(method) : null;
-		}
-
 		@Override
 		public LuaMethod parse() {
 

@@ -6,6 +6,7 @@ import io.yooksi.pz.luadoc.lang.ParseResult;
 /**
  * This class represents a parsed code method.
  */
+@SuppressWarnings("unused")
 public abstract class Method implements ParseResult {
 
 	final String modifier;

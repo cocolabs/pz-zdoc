@@ -15,16 +15,6 @@ public class Parameter {
 		this.name = name;
 	}
 
-	public static Parameter[] getUnqualified(Parameter[] params) {
-
-		Parameter[] result = new Parameter[params.length];
-		for (int i = 0; i < params.length; i++) {
-			result[i] = new Parameter(params[i].getType(false),
-					params[i].getName(false));
-		}
-		return result;
-	}
-
 	@Override
 	public String toString() {
 		return (type + ' ' + name).trim();
