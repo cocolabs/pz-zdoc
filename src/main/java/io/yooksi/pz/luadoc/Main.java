@@ -5,19 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import io.yooksi.pz.luadoc.doc.JavaDoc;
 import io.yooksi.pz.luadoc.doc.LuaDoc;
 import io.yooksi.pz.luadoc.element.JavaClass;
+import io.yooksi.pz.luadoc.element.LuaClass;
+import io.yooksi.pz.luadoc.element.Method;
 
 public class Main {
 
@@ -136,11 +137,16 @@ public class Main {
 
 			if (Utils.isValidUrl(source))
 			{
+				Set<String> exclude = new HashSet<>();
 				JavaDoc.WebParser parser = JavaDoc.WebParser.create(source);
 				JavaDoc<URL> javaDoc = parser.parse();
 
 				Path output = userOutput.resolve(parser.getOutputFilePath("lua"));
-				javaDoc.convertToLuaDoc(true, false).writeToFile(output);
+				LuaDoc luaDoc = javaDoc.convertToLuaDoc(true, false);
+				exclude.add(luaDoc.getName());
+
+				List<Method> methods = new ArrayList<>(luaDoc.getMethods());
+				luaDoc.writeToFile(output);
 
 				for (Map.Entry<String, JavaClass<URL>> entry : javaDoc.getMembers().entrySet())
 				{
@@ -148,8 +154,18 @@ public class Main {
 					JavaDoc.WebParser memberParser = JavaDoc.WebParser.create(memberUrl);
 
 					output = userOutput.resolve(memberParser.getOutputFilePath("lua"));
-					memberParser.parse().convertToLuaDoc(true, true).writeToFile(output);
+					luaDoc = memberParser.parse().convertToLuaDoc(true, true);
+					exclude.add(luaDoc.getName());
+
+					methods.addAll(luaDoc.getMethods());
+					luaDoc.writeToFile(output);
 				}
+				File membersFile = userOutput.resolve("Members.lua").toFile();
+				if (!membersFile.exists() && !membersFile.createNewFile()) {
+					throw new IOException("Unable to create Members.lua");
+				}
+				List<String> memberDoc = LuaClass.documentMembers(methods, exclude);
+				FileUtils.writeLines(membersFile, memberDoc, false);
 			}
 			else if (Utils.isValidPath(source))
 			{

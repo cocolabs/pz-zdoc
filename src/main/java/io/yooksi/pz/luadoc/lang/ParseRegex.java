@@ -16,6 +16,8 @@ public class ParseRegex {
 	);
 	public static final Pattern FIRST_WORD_REGEX = Pattern.compile("^(\\w+).*");
 
+	public static final Pattern OBJECT_TYPE_REGEX = Pattern.compile("([^><]+)[><]");
+
 	/**
 	 * @param matcher process that contains regex groups
 	 * @param i index of group to retrieve
