@@ -18,11 +18,11 @@ public abstract class Method implements ParseResult {
 
 	public Method(String modifier, String returnType, String name, Parameter[] params, String comment) {
 
-		this.modifier = modifier;
-		this.returnType = returnType;
-		this.name = name;
+		this.modifier = modifier.trim();
+		this.returnType = returnType.trim();
+		this.name = name.trim();
 		this.params = params;
-		this.comment = comment;
+		this.comment = comment.trim();
 	}
 
 	public Method(String modifier, String returnType, String name, Parameter[] params) {

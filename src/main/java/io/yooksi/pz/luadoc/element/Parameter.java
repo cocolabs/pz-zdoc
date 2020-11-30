@@ -11,8 +11,8 @@ public class Parameter {
 	private final String name;
 
 	public Parameter(String type, String name) {
-		this.type = type;
-		this.name = name;
+		this.type = type.trim();
+		this.name = name.trim();
 	}
 
 	@Override
