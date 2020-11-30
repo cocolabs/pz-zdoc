@@ -67,8 +67,8 @@ public class JavaDocTest extends TestWorkspace {
 		List<String> luaDoc = LuaMethod.Parser.create(methods.get(1)).parse().annotate();
 
 		String[] expectedDoc = {
-				"---@param object String",
-				"---@param params String[]",
+				"---@param object string",
+				"---@param params string[]",
 				"---@return void"
 		};
 		for (int i = 0; i < luaDoc.size(); i++) {
@@ -88,8 +88,8 @@ public class JavaDocTest extends TestWorkspace {
 				"---@return void",
 				"function begin() end",
 				"",
-				"---@param object String",
-				"---@param params String[]",
+				"---@param object string",
+				"---@param params string[]",
 				"---@return void",
 				"function init(object, params) end",
 				"",
