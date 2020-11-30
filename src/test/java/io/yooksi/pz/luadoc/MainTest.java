@@ -23,21 +23,21 @@ public class MainTest extends TestWorkspace {
 	@Test
 	void shouldThrowExceptionWhenApplicationRunWithMissingAppArgs() {
 
-		// No application argument supplied
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> Main.main(new String[]{}));
+		Arrays.stream(new String[][]{
+						// No application argument supplied
+						new String[]{},
 
-		// No file path supplied
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> Main.main(new String[]{ "-lua" }));
+						// No file path supplied
+						new String[]{ "-lua" },
 
-		// Java doc location not specified
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> Main.main(new String[]{ "-java" }));
+						// Java doc location not specified
+						new String[]{ "-java" },
 
-		// No output file path supplied
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> Main.main(new String[]{ "-java", "location" }));
+						// No output file path supplied
+						new String[]{ "-java", "location" }
+				}
+		).forEach(a -> Assertions.assertThrows(
+				IllegalArgumentException.class, () -> Main.main(a)));
 	}
 
 	@Test

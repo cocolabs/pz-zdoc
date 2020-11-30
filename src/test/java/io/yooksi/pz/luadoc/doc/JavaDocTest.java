@@ -157,7 +157,7 @@ public class JavaDocTest extends TestWorkspace {
 	}
 
 	@Test
-	void shouldCorrectlyParseObjectType() throws IOException {
+	void shouldCorrectlyParseObjectType() {
 
 		LuaDoc luaDoc = sampleJavaDocParser.parse().convertToLuaDoc(true, false);
 		LuaMethod method = luaDoc.getMethods().get(4);

@@ -3,7 +3,6 @@ package io.yooksi.pz.luadoc.doc;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -44,41 +43,30 @@ public class LuaDocTest extends TestWorkspace {
 	@Test
 	void shouldNotWriteToFileIfNoDocElementsFound() throws IOException {
 
-		String expected = "--- No doc elements";
-		FileUtils.writeLines(file, Collections.singletonList(expected));
+		String[] expected = new String[]{ "--- No doc elements" };
+		String actual = writeParseAndReadLua(expected).get(0);
 
-		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
-
-		String actual = FileUtils.readLines(file, Charset.defaultCharset()).get(0);
-		Assertions.assertEquals(expected, actual);
+		Assertions.assertEquals(expected[0], actual);
 	}
 
 	@Test
 	void shouldOverwriteExistingLuaAnnotation() throws IOException {
 
-		String[] write = {
+		List<String> read = writeParseAndReadLua(new String[]{
 				"--- This is a sample comment",
 				"---@class otherSampleLua",
 				"sampleLua = luaClass:new()"
-		};
-		FileUtils.writeLines(file, Arrays.asList(write));
-		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
-
-		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
+		});
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(1));
 	}
 
 	@Test
 	void shouldReadAnnotationsWithWhitespaces() throws IOException {
 
-		String[] write = {
+		List<String> read = writeParseAndReadLua(new String[]{
 				"---  @class otherSampleLua",
 				"sampleLua = luaClass:new()"
-		};
-		FileUtils.writeLines(file, Arrays.asList(write));
-		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
-
-		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
+		});
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(0));
 	}
 
@@ -89,53 +77,52 @@ public class LuaDocTest extends TestWorkspace {
 				"---@class sampleLua",
 				"sampleLua = luaClass:new()"
 		};
-		FileUtils.writeLines(file, Arrays.asList(write));
-		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
-
-		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
+		List<String> read = writeParseAndReadLua(write);
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(0));
 
 		write[1] = "sampleLua = luaClass:derive()";
-		FileUtils.writeLines(file, Arrays.asList(write), false);
-		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
-
-		read = FileUtils.readLines(file, Charset.defaultCharset());
+		read = writeParseAndReadLua(write);
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua", "luaClass" }), read.get(0));
 	}
 
 	@Test
-	void shouldNotCreateDuplicateClassAnnotations() throws IOException {
+	void shouldNotCreateDuplicateClassAnnotations() {
 
-		String[] write = {
+		List<String> read = writeParseAndReadLua(new String[]{
 				"sampleLua = {}",
 				"",
 				"local function testFun",
 				"	sampleLua = {}",
 				"end"
-		};
-		FileUtils.writeLines(file, Arrays.asList(write));
-		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
-
-		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
-		Assertions.assertEquals(1, read.stream().filter(l -> l.contains("---@class")).count());
+		});
+		Assertions.assertEquals(1, read.stream()
+				.filter(l -> l.contains("---@class")).count());
 	}
 
 	@Test
-	void shouldRespectLineIndentationWhenCreatingAnnotation() throws IOException {
+	void shouldRespectLineIndentationWhenCreatingAnnotation() {
 
-		String[] write = {
+		List<String> read = writeParseAndReadLua(new String[]{
 				"local function testFun",
 				"	sampleLua = {}",
 				"	if condition then",
 				"		otherLua = {}",
 				"	end",
 				"end"
-		};
-		FileUtils.writeLines(file, Arrays.asList(write));
-		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
-
-		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
+		});
 		Assertions.assertEquals("\t---@class sampleLua", read.get(1));
 		Assertions.assertEquals("\t\t---@class otherLua", read.get(4));
+	}
+
+	private List<String> writeParseAndReadLua(String[] text) {
+
+		try {
+			FileUtils.writeLines(file, Arrays.asList(text));
+			LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
+			return FileUtils.readLines(file, Charset.defaultCharset());
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
