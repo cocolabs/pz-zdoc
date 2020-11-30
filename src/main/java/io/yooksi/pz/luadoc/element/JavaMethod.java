@@ -56,7 +56,7 @@ public class JavaMethod extends Method {
 				String paramsMatched = matcher.group(4);
 				if (paramsMatched != null)
 				{
-					for (String param : paramsMatched.trim().split(",(?:\\s+)?"))
+					for (String param : paramsMatched.trim().split(",(?:\\s+)"))
 					{
 						String[] params = param.split("\\s+");
 						paramList.add(new Parameter(params[0], params.length < 2 ? "" : params[1]));
