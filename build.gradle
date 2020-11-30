@@ -24,6 +24,10 @@ idea {
     }
 }
 
+sourceSets {
+     media { java { srcDirs 'media/lua' } }
+}
+
 repositories {
     // Use jcenter for resolving dependencies.
     jcenter()
