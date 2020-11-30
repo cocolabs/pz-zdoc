@@ -102,4 +102,21 @@ public class LuaDocTest extends TestWorkspace {
 		read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua", "luaClass" }), read.get(0));
 	}
+
+	@Test
+	void shouldNotCreateDuplicateClassAnnotations() throws IOException {
+
+		String[] write = {
+				"sampleLua = {}",
+				"",
+				"local function testFun",
+				"	sampleLua = {}",
+				"end"
+		};
+		FileUtils.writeLines(file, Arrays.asList(write));
+		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
+
+		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
+		Assertions.assertEquals(1, read.stream().filter(l -> l.contains("---@class")).count());
+	}
 }

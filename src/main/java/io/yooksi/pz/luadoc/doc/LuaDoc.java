@@ -4,20 +4,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.Nullable;
 
 import io.yooksi.pz.luadoc.element.LuaClass;
 import io.yooksi.pz.luadoc.element.LuaMethod;
 import io.yooksi.pz.luadoc.lang.DataParser;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
+import io.yooksi.pz.luadoc.lang.ParseRegex;
 
 public class LuaDoc extends CodeDoc<LuaMethod> {
 
@@ -36,12 +34,19 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 
 	public static class Parser extends DataParser<LuaDoc, File> {
 
-		private Parser(File data) {
+		private final Set<String> excludedMembers;
+
+		private Parser(File data, Set<String> excludedMembers) {
 			super(data);
+			this.excludedMembers = excludedMembers;
 		}
 
 		public static Parser create(File data) {
-			return new Parser(data);
+			return new Parser(data, new HashSet<>());
+		}
+
+		public static Parser create(File data, Set<String> excludedMembers) {
+			return new Parser(data, excludedMembers);
 		}
 
 		@Override
@@ -53,8 +58,6 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 			else if (!data.exists()) {
 				throw new RuntimeException(new FileNotFoundException(data.getPath()));
 			}
-			String filename = FilenameUtils.getBaseName(data.getName());
-
 			List<String> content = new ArrayList<>();
 			Set<LuaClass> members = new java.util.HashSet<>();
 
@@ -68,9 +71,11 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 			for (int i = 0; i < input.size(); i++)
 			{
 				String line = input.get(i);
-				Pattern pattern = Pattern.compile("^\\s*" + filename + "\\s+=");
-				if (pattern.matcher(line).find())
+				Matcher match = ParseRegex.LUA_TABLE_DECLARATION_REGEX.matcher(line);
+				if (match.find())
 				{
+					String tableName = match.group(2);
+
 					if (i > 0)
 					{ // make sure we are not on the first line
 						String prevLine = input.get(i - 1);
@@ -78,16 +83,24 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 							content.remove(i - 1);
 						}
 					}
-					String annotation = EmmyLua.CLASS.create(new String[]{ filename });
-					Matcher matcher = DERIVED_CLASS.matcher(line);
-					if (matcher.find())
+					if (!excludedMembers.contains(tableName))
 					{
-						String type = matcher.group(1);
-						members.add(new LuaClass(filename, type));
-						annotation += " : " + type;
+						LuaClass addedMember;
+						String annotation = EmmyLua.CLASS.create(new String[]{ tableName });
+
+						Matcher matcher = DERIVED_CLASS.matcher(line);
+						if (matcher.find())
+						{
+							String type = matcher.group(1);
+							addedMember = new LuaClass(tableName, type);
+							annotation += " : " + type;
+						}
+						else addedMember = new LuaClass(tableName);
+						excludedMembers.add(addedMember.getName());
+
+						members.add(addedMember);
+						content.add(annotation);
 					}
-					else members.add(new LuaClass(filename));
-					content.add(annotation);
 				}
 				content.add(line);
 			}

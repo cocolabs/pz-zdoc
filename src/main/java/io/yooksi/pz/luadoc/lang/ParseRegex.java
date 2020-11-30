@@ -7,9 +7,13 @@ public class ParseRegex {
 	/**
 	 * Regex pattern used to parse java method from text
 	 */
-	public static final Pattern JAVA_METHOD_REGEX = Pattern.compile("^((?:final|static|abstract|transient" +
-			"|synchronized|volatile)\\s+)?([^\\s]+)\\s+([^\\s]+)\\(([^)]+)?\\)(.*)?");
-
+	public static final Pattern JAVA_METHOD_REGEX = Pattern.compile(
+			"^((?:final|static|abstract|transient|synchronized|volatile)" +
+					"\\s+)?([^\\s]+)\\s+([^\\s]+)\\(([^)]+)?\\)(.*)?"
+	);
+	public static final Pattern LUA_TABLE_DECLARATION_REGEX = Pattern.compile(
+			"^(\\s*)(\\w+)\\s+=(?:\\s+\\{\\s*}|.*:new\\(|.*:derive\\().*$"
+	);
 	public static final Pattern FIRST_WORD_REGEX = Pattern.compile("^(\\w+).*");
 
 	/**

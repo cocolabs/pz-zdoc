@@ -83,6 +83,7 @@ public class Main {
 				LOGGER.warn("No files found under path " + rootPath);
 			}
 			// process every file found under given root path
+			Set<String> excludedMembers = new java.util.HashSet<>();
 			for (Path path : paths)
 			{
 				if (Utils.isLuaFile(path))
@@ -123,7 +124,10 @@ public class Main {
 							throw new IOException("Unable to create specified output file: " + outputFilePath);
 						}
 					}
-					LuaDoc.Parser.create(path.toFile()).parse().writeToFile(outputFilePath);
+					LuaDoc doc = LuaDoc.Parser.create(path.toFile(), excludedMembers).parse();
+					if (!doc.getMembers().isEmpty()) {
+						doc.writeToFile(outputFilePath);
+					}
 				}
 			}
 		}
