@@ -51,7 +51,9 @@ public enum EmmyLua {
 
 	public static boolean isBuiltInType(String type) {
 
-		type = JavaDoc.Parser.removeElementQualifier(type).toLowerCase();
+		String unqualifiedType = JavaDoc.Parser.removeElementQualifier(type);
+		type = unqualifiedType.replaceAll("\\[\\s*]", "").toLowerCase();
+
 		for (String builtInType : BUILT_IN_TYPES)
 		{
 			if (type.equals(builtInType)) {
