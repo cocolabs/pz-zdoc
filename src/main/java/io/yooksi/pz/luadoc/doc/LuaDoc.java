@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +26,12 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 
 	public LuaDoc(String name, List<String> content, Set<LuaClass> members, List<LuaMethod> methods) {
 		super(name, content, members, methods);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Map<String, LuaClass> getMembers() {
+		return (Map<String, LuaClass>) super.getMembers();
 	}
 
 	public static class Parser extends DataParser<LuaDoc, File> {

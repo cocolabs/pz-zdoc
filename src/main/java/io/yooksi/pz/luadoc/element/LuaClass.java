@@ -33,6 +33,10 @@ public class LuaClass extends MemberClass {
 		return content;
 	}
 
+	public Collection<String> writeTo(Collection<String> content) {
+		return writeTo(content, true);
+	}
+
 	public String getType() {
 		return type;
 	}
