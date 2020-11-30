@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Java to Lua Doc" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.luadoc.Main" />
+    <module name="pz-luadoc.main" />
+    <option name="PROGRAM_PARAMETERS" value="-java --api media/lua/shared/Library" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
