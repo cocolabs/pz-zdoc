@@ -59,7 +59,11 @@ public class JavaMethod extends Method {
 					for (String param : paramsMatched.trim().split(",(?:\\s+)"))
 					{
 						String[] params = param.split("\\s+");
-						paramList.add(new Parameter(params[0], params.length < 2 ? "" : params[1]));
+
+						// parse vararg expression as array
+						String type = params[0].replaceFirst("\\.\\.\\.", "[]");
+
+						paramList.add(new Parameter(type, params.length < 2 ? "" : params[1]));
 					}
 				}
 				return new JavaMethod(ParseRegex.getMatchedGroup(matcher, 1),
