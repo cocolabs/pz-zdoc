@@ -74,6 +74,7 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 				Matcher match = ParseRegex.LUA_TABLE_DECLARATION_REGEX.matcher(line);
 				if (match.find())
 				{
+					@Nullable String indentation = match.group(1);
 					String tableName = match.group(2);
 
 					if (i > 0)
@@ -86,7 +87,8 @@ public class LuaDoc extends CodeDoc<LuaMethod> {
 					if (!excludedMembers.contains(tableName))
 					{
 						LuaClass addedMember;
-						String annotation = EmmyLua.CLASS.create(new String[]{ tableName });
+						String annotation = (indentation != null ? indentation : "") +
+								EmmyLua.CLASS.create(new String[]{ tableName });
 
 						Matcher matcher = DERIVED_CLASS.matcher(line);
 						if (matcher.find())

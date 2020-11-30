@@ -119,4 +119,23 @@ public class LuaDocTest extends TestWorkspace {
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(1, read.stream().filter(l -> l.contains("---@class")).count());
 	}
+
+	@Test
+	void shouldRespectLineIndentationWhenCreatingAnnotation() throws IOException {
+
+		String[] write = {
+				"local function testFun",
+				"	sampleLua = {}",
+				"	if condition then",
+				"		otherLua = {}",
+				"	end",
+				"end"
+		};
+		FileUtils.writeLines(file, Arrays.asList(write));
+		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
+
+		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
+		Assertions.assertEquals("\t---@class sampleLua", read.get(1));
+		Assertions.assertEquals("\t\t---@class otherLua", read.get(4));
+	}
 }
