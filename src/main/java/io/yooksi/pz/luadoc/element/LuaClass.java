@@ -13,7 +13,9 @@ public class LuaClass extends MemberClass {
 
 	public LuaClass(String name, String type) {
 		super(name);
-		this.type = type;
+
+		// ensure built-in types are lower-cased
+		this.type = EmmyLua.getSafeType(type);
 	}
 
 	public LuaClass(String name) {

@@ -1,6 +1,7 @@
 package io.yooksi.pz.luadoc.element;
 
 import io.yooksi.pz.luadoc.doc.JavaDoc;
+import io.yooksi.pz.luadoc.lang.EmmyLua;
 
 /**
  * This class represents parsed method parameter.
@@ -11,8 +12,14 @@ public class Parameter {
 	private final String name;
 
 	public Parameter(String type, String name) {
-		this.type = type.trim();
-		this.name = name.trim();
+
+		type = type.trim();
+		// ensure built-in types are lower-cased
+		this.type = EmmyLua.getSafeType(type);
+
+		name = name.trim();
+		// ensure parameter name is not a reserved lua keyword
+		this.name = EmmyLua.isReservedKeyword(name) ? "var_" + name : name;
 	}
 
 	@Override

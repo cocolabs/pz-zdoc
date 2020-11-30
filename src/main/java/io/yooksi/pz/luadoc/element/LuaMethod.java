@@ -97,7 +97,8 @@ public class LuaMethod extends Method {
 			if (data == null) {
 				throw new RuntimeException("Tried to parse null data");
 			}
-			return new LuaMethod(qualifier, data.getReturnType(false),
+			String returnType = data.getReturnType(false);
+			return new LuaMethod(qualifier, EmmyLua.getSafeType(returnType),
 					data.getName(), data.getParams(), data.getComment());
 		}
 	}

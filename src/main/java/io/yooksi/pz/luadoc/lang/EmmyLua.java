@@ -3,6 +3,8 @@ package io.yooksi.pz.luadoc.lang;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.yooksi.pz.luadoc.doc.JavaDoc;
+
 /**
  * This class represents an EmmyLua annotation
  *
@@ -25,6 +27,17 @@ public enum EmmyLua {
 	 */
 	RETURN("return", "---@return [%s][|%s] [@%s]");
 
+	public static final String[] BUILT_IN_TYPES = {
+			"boolean", "string", "number", "userdata",
+			"thread", "table", "any", "void", "self"
+	};
+	public static final String[] RESERVED_KEYWORDS = {
+			"and", "break", "do", "else", "elseif", "end",
+			"false", "for", "function", "goto", "if", "in",
+			"local", "nil", "not", "or", "repeat", "return",
+			"then", "true", "until", "while"
+	};
+
 	private static final Pattern FORMAT_REGEX = Pattern.compile("\\[.*?%s.*?]");
 
 	private final Pattern keyRegex;
@@ -34,6 +47,38 @@ public enum EmmyLua {
 
 		this.keyRegex = Pattern.compile("---\\s*@" + keyword);
 		this.format = format;
+	}
+
+	public static boolean isBuiltInType(String type) {
+
+		type = JavaDoc.Parser.removeElementQualifier(type).toLowerCase();
+		for (String builtInType : BUILT_IN_TYPES)
+		{
+			if (type.equals(builtInType)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static String getSafeType(String type) {
+		return isBuiltInType(type) ? type.toLowerCase() : type;
+	}
+
+	public static boolean isReservedKeyword(String text) {
+
+		text = text.toLowerCase();
+		for (String builtInType : RESERVED_KEYWORDS)
+		{
+			if (text.equals(builtInType)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static String getSafeKeyword(String text) {
+		return isReservedKeyword(text) ? "var_" + text : text;
 	}
 
 	public static String comment(String text) {
