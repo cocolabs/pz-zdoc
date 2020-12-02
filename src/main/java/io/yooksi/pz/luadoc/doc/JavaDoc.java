@@ -37,6 +37,18 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		super(name, new ArrayList<>(), members, methods);
 	}
 
+	public static URL resolveApiURL(String path) {
+
+		if (Utils.isValidPath(path)) {
+			return Utils.getURL(PZ_URL, "modding", path);
+		}
+		else if (Utils.isValidUrl(path)) {
+			return Utils.getURL(path);
+		}
+		else throw new IllegalArgumentException(String.format("Cannot resolve api URL - " +
+					"argument \"%s\" is not a valid Path or URL", path));
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Map<String, JavaClass<L>> getMembers() {
@@ -170,6 +182,13 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
 		/**
 		 * @throws IOException if Jsoup failed connecting to or parsing document.
+		 */
+		public static WebParser create(URL url) throws IOException {
+			return new WebParser(url);
+		}
+
+		/**
+		 * @throws IOException if Jsoup failed connecting to or parsing document.
 		 * @throws MalformedURLException if url string cannot be converted to URL object.
 		 */
 		public static WebParser create(String url) throws IOException {
@@ -224,6 +243,13 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		 */
 		public static FileParser create(String path) throws IOException {
 			return new FileParser(Paths.get(path));
+		}
+
+		/**
+		 * @throws IOException if the file could not be found or read.
+		 */
+		public static FileParser create(Path path) throws IOException {
+			return new FileParser(path);
 		}
 
 		@Override

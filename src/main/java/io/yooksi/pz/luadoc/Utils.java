@@ -5,6 +5,7 @@ import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -50,5 +51,25 @@ public class Utils {
 			return false;
 		}
 		return true;
+	}
+
+	public static URL getURL(String link) {
+		try {
+			return new URL(link);
+		}
+		catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static URL getURL(URL root, String... link) {
+		try {
+			StringBuilder sb = new StringBuilder();
+			Arrays.stream(link).forEach(l -> sb.append(l).append('/'));
+			return new URL(root, sb.substring(0, sb.length() - 1));
+		}
+		catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
