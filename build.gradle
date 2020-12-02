@@ -15,6 +15,9 @@ plugins {
 apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotless.gradle"
 
 idea {
+    project {
+        languageLevel = '1.8'
+    }
     module {
         inheritOutputDirs = true
         excludeDirs += [file("media"), file("logs"), file("build")]
