@@ -34,7 +34,29 @@ public class JavaDocTest extends TestWorkspace {
 	static void initializeStaticParsers() throws IOException {
 
 		sampleJavaDocParser = JavaDoc.FileParser.create("src/test/resources/Sample.html");
-		globalJavaDocParser = JavaDoc.WebParser.create(JavaDoc.PZ_API_GLOBAL_URL);
+		globalJavaDocParser = JavaDoc.WebParser.create(JavaDoc.API_GLOBAL_OBJECT);
+	}
+
+	@Test
+	void shouldCorrectlyResolveApiURL() {
+
+		String expected = "https://projectzomboid.com/modding/zombie/inventory/InventoryItem.html";
+		URL actual = JavaDoc.resolveApiURL("zombie/inventory/InventoryItem.html");
+
+		Assertions.assertEquals(expected, actual.toString());
+	}
+
+	@Test
+	void shouldCorrectlyResolveApiURLFromOtherURL() {
+
+		String link = "https://projectzomboid.com/";
+		Assertions.assertEquals(link, JavaDoc.resolveApiURL(link).toString());
+	}
+
+	@Test
+	void shouldThrowExceptionWhenResolvingApiURLWithInvalidArgument() {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> JavaDoc.resolveApiURL("inv*lid/p*th"));
 	}
 
 	@Test
@@ -108,7 +130,7 @@ public class JavaDocTest extends TestWorkspace {
 	void shouldCorrectlyParseJavaDocMemberClasses() throws IOException {
 
 		Map<JavaDoc.Parser<?>, Class<?>> dataMap = new HashMap<>();
-		dataMap.put(JavaDoc.WebParser.create(JavaDoc.PZ_API_GLOBAL_URL), URL.class);
+		dataMap.put(JavaDoc.WebParser.create(JavaDoc.API_GLOBAL_OBJECT), URL.class);
 		dataMap.put(JavaDoc.FileParser.create("src/test/resources/GlobalObject.html"), Path.class);
 
 		for (Map.Entry<JavaDoc.Parser<?>, Class<?>> entry1 : dataMap.entrySet())

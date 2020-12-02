@@ -3,15 +3,20 @@ package io.yooksi.pz.luadoc;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
+import io.yooksi.pz.luadoc.app.Application;
+import io.yooksi.pz.luadoc.app.Command;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
 
 public class MainTest extends TestWorkspace {
@@ -21,65 +26,18 @@ public class MainTest extends TestWorkspace {
 	}
 
 	@Test
-	void shouldThrowExceptionWhenApplicationRunWithMissingAppArgs() {
+	void shouldThrowExceptionWhenApplicationRunWithMissingCommand() {
 
-		Arrays.stream(new String[][]{
-						// No application argument supplied
-						new String[]{},
-
-						// No file path supplied
-						new String[]{ "-lua" },
-
-						// Java doc location not specified
-						new String[]{ "-java" },
-
-						// No output file path supplied
-						new String[]{ "-java", "location" }
-				}
-		).forEach(a -> Assertions.assertThrows(
-				IllegalArgumentException.class, () -> Main.main(a)));
-	}
-
-	@Test
-	void shouldThrowExceptionWhenApplicationRunWithInvalidAppArg() {
-
-		// Malformed/unknown application argument
-		String[] invalidArg = { "--lua", "lua", "--java", "java" };
-		for (String arg : invalidArg) {
-			Assertions.assertThrows(IllegalArgumentException.class,
-					() -> Main.main(new String[]{ arg }));
-		}
-	}
-
-	@Test
-	void shouldThrowExceptionWhenApplicationRunWithMalformedPathArg() {
-
-		// Invalid file path or URL
-		String[][] invalidPathArgs = {
-				new String[]{ "-lua", "C:/fi*e" },
-				new String[]{ "-java", "C:/fi*e" },
-		};
-		for (String[] args : invalidPathArgs) {
-			Assertions.assertThrows(IllegalArgumentException.class, () -> Main.main(args));
-		}
-	}
-
-	@Test
-	void shouldThrowExceptionWhenApplicationRunWithInvalidPathArg() {
-
-		Assertions.assertThrows(NoSuchFileException.class,
-				() -> Main.main(new String[]{ "-lua", "invalid/path" }));
-
+		// Missing or unknown command argument
 		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> Main.main(new String[]{ "-java", "invalid/path.text" }));
+				runMain(null, "input/path", "output/path"));
 	}
 
 	@Test
-	void shouldThrowExceptionWhenApplicationRunWithNoPathArg() {
+	void shouldThrowExceptionWhenApplicationRunWithMissingArgs() {
 
-		// IndexOutOfBoundsException
-		Assertions.assertThrows(RuntimeException.class,
-				() -> Main.main(new String[]{ "-lua" }));
+		Application.getCommands().forEach(c -> Assertions.assertThrows(
+				ParseException.class, runMain(c, "", "output/path")));
 	}
 
 	@Test
@@ -89,7 +47,7 @@ public class MainTest extends TestWorkspace {
 		Assertions.assertTrue(notDirFile.createNewFile());
 
 		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> Main.main(new String[]{ "-java", "--api", notDirFile.getPath() }));
+				runMain(Command.JAVA_COMMAND, "input/path", notDirFile.getPath()));
 	}
 
 	@Test
@@ -98,8 +56,7 @@ public class MainTest extends TestWorkspace {
 		createSampleLuaFile();
 		File outputDir = dir.toPath().resolve("output").toFile();
 		Assertions.assertTrue(outputDir.mkdir());
-		Assertions.assertDoesNotThrow(() -> Main.main(new String[]{
-				"-lua", file.getPath(), outputDir.getPath() }));
+		Assertions.assertDoesNotThrow(runMain(Command.LUA_COMMAND, file.getPath(), outputDir.getPath()));
 	}
 
 	@Test
@@ -107,12 +64,11 @@ public class MainTest extends TestWorkspace {
 
 		createSampleLuaFile();
 		File outputDir = dir.toPath().resolve("output").toFile();
-		Assertions.assertDoesNotThrow(() -> Main.main(new String[]{
-				"-lua", file.getPath(), outputDir.getPath() }));
+		Assertions.assertDoesNotThrow(runMain(Command.LUA_COMMAND, file.getPath(), outputDir.getPath()));
 	}
 
 	@Test
-	void whenApplicationRunShouldDocumentLuaClasses() throws IOException {
+	void whenApplicationRunShouldDocumentLuaClasses() throws Throwable {
 
 		String[] write = {
 				"--- This is a sample comment",
@@ -121,14 +77,14 @@ public class MainTest extends TestWorkspace {
 		};
 		FileUtils.writeLines(file, Arrays.asList(write));
 
-		Main.main(new String[]{ "-lua", dir.getPath() });
+		runMain(Command.LUA_COMMAND, dir.getPath(), "").execute();
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(1));
 	}
 
 	@Test
-	void shouldKeepDirectoryHierarchyWhenDocumentingLuaFile() throws IOException {
+	void shouldKeepDirectoryHierarchyWhenDocumentingLuaFile() throws Throwable {
 
 		Path rootPath = dir.toPath();
 		Path outputDir = rootPath.resolve("output");
@@ -140,7 +96,7 @@ public class MainTest extends TestWorkspace {
 		File sampleFile = sampleDir.toPath().resolve(file.getName()).toFile();
 		Assertions.assertTrue(sampleFile.exists());
 
-		Main.main(new String[]{ "-lua", rootPath.toString(), outputDir.toString() });
+		runMain(Command.LUA_COMMAND, rootPath.toString(), outputDir.toString()).execute();
 
 		File outputFile = outputDir.resolve("sample").resolve(file.getName()).toFile();
 		Assertions.assertTrue(outputFile.exists());
@@ -151,12 +107,14 @@ public class MainTest extends TestWorkspace {
 	}
 
 	@Test
-	void whenApplicationRunShouldConvertJavaToLuaDoc() throws IOException {
+	void whenApplicationRunShouldConvertJavaToLuaDoc() throws Throwable {
 
 		File outputDir = dir.toPath().resolve("output").toFile();
 		Assertions.assertTrue(outputDir.mkdir());
 
-		Main.main(new String[]{ "-java", "src/test/resources/Sample.html", outputDir.getPath() });
+		String input = "src/test/resources/Sample.html";
+		runMain(Command.JAVA_COMMAND, input, outputDir.getPath()).execute();
+
 		String[] expected = {
 				"---@return void",
 				"function begin()",
@@ -179,5 +137,27 @@ public class MainTest extends TestWorkspace {
 		for (int i = 0; i < actual.size(); i++) {
 			Assertions.assertEquals(expected[i], actual.get(i));
 		}
+	}
+
+	private static Executable runMain(@Nullable Command command, String input, String output) {
+		return () -> Main.main(formatAppArgs(command != null ? command.getName() : "", input, output));
+	}
+
+	@TestOnly
+	public static String[] formatAppArgs(String command, String input, String output) {
+
+		List<String> args = new java.util.ArrayList<>();
+		args.add(command);
+		if (!input.isEmpty())
+		{
+			args.add("-in");
+			args.add(input);
+		}
+		if (!output.isEmpty())
+		{
+			args.add("-out");
+			args.add(output);
+		}
+		return args.toArray(new String[]{});
 	}
 }
