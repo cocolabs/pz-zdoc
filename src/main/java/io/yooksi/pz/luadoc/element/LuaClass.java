@@ -27,18 +27,6 @@ public class LuaClass extends MemberClass {
 		this.type = "";
 	}
 
-	public Collection<String> writeTo(Collection<String> content, boolean annotate) {
-
-		if (annotate)
-		{
-			content.add(EmmyLua.CLASS.create(type.isEmpty() ?
-					new String[]{ name } : new String[]{ name, type }));
-		}
-		content.add(name + " = {}");
-		content.add("");
-		return content;
-	}
-
 	public static List<String> documentMembers(List<Method> methods, Set<String> excluded) {
 
 		List<String> documentation = new ArrayList<>();
@@ -88,6 +76,18 @@ public class LuaClass extends MemberClass {
 		}
 		contentMap.forEach((n, m) -> m.writeTo(documentation));
 		return documentation;
+	}
+
+	public Collection<String> writeTo(Collection<String> content, boolean annotate) {
+
+		if (annotate)
+		{
+			content.add(EmmyLua.CLASS.create(type.isEmpty() ?
+					new String[]{ name } : new String[]{ name, type }));
+		}
+		content.add(name + " = {}");
+		content.add("");
+		return content;
 	}
 
 	public Collection<String> writeTo(Collection<String> content) {

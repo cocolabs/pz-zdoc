@@ -3,6 +3,7 @@ package io.yooksi.pz.luadoc.app;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Assertions;
@@ -12,11 +13,13 @@ import io.yooksi.pz.luadoc.doc.JavaDoc;
 
 public class CommandLineTest {
 
+	private final Command[] commands = Command.values();
+
 	@Test
 	void shouldProperlyParseCommandInputPath() throws ParseException {
 
 		String path = Paths.get("input/path").toString();
-		for (Command command : Application.getCommands())
+		for (Command command : commands)
 		{
 			String[] args = new String[] { "-in", path, "-out", "output/path" };
 			CommandLine cmdLIne = command.parse(args);
@@ -29,20 +32,21 @@ public class CommandLineTest {
 	void shouldProperlyParseCommandOutputPath() throws ParseException {
 
 		String path = Paths.get("output/path").toString();
-		for (Command command : Application.getCommands())
+		for (Command command : commands)
 		{
 			String[] args = new String[] { "-in", "input/path", "-out", path };
 			CommandLine cmdLIne = command.parse(args);
 
-			Assertions.assertEquals(path, cmdLIne.getOutputPath().toString());
+			Object outputPath = Objects.requireNonNull(cmdLIne.getOutputPath());
+			Assertions.assertEquals(path, outputPath.toString());
 		}
 	}
 
 	@Test
-	void shouldThrowExceptionWhenParsingMalformedCommandPath() throws ParseException {
+	void shouldThrowExceptionWhenParsingMalformedCommandPath() {
 
 		String path = "t*st/pa!h";
-		for (Command command : Application.getCommands())
+		for (Command command : commands)
 		{
 			Assertions.assertThrows(InvalidPathException.class, () -> command.parse(
 					new String[] { "-in", path, "-out", "output/path" }).getInputPath());
@@ -64,7 +68,7 @@ public class CommandLineTest {
 			URL expected = JavaDoc.resolveApiURL(target);
 
 			String[] args = new String[]{ "--api", target, "-out", "output/path",  };
-			CommandLine cmdLIne = Command.JAVA_COMMAND.parse(args);
+			CommandLine cmdLIne = Command.JAVA.parse(args);
 
 			Assertions.assertEquals(expected, cmdLIne.getInputUrl());
 		}

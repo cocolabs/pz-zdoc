@@ -13,7 +13,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import io.yooksi.pz.luadoc.app.Application;
 import io.yooksi.pz.luadoc.app.Command;
 import io.yooksi.pz.luadoc.app.CommandLine;
 import io.yooksi.pz.luadoc.doc.JavaDoc;
@@ -49,7 +48,7 @@ public class Main {
 		LOGGER.debug(String.format("Started application with %d args: %s",
 				args.length, Arrays.toString(args)));
 
-		Command cmd = Application.getMatchingCommand(args);
+		Command cmd = Command.getFromArguments(args);
 		if (cmd == null) {
 			throw new IllegalArgumentException("Missing or unknown command argument");
 		}

@@ -4,20 +4,36 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.jetbrains.annotations.Nullable;
 
-public class Command {
+public enum Command {
 
-	public static final Command LUA_COMMAND = new Command("lua", AppOptions.LUA_OPTIONS);
-	public static final Command JAVA_COMMAND = new Command("java", AppOptions.JAVA_OPTIONS);
+	LUA("lua", AppOptions.LUA_OPTIONS),
+	JAVA("java", AppOptions.JAVA_OPTIONS);
 
 	private static final CommandLineParser PARSER = new DefaultParser();
 
 	private final String name;
 	private final Options options;
 
-	protected Command(String name, Options options) {
+	Command(String name, Options options) {
 		this.name = name;
 		this.options = options;
+	}
+
+	public static @Nullable Command get(String name) {
+
+		for (Command value : Command.values())
+		{
+			if (value.name.equals(name)) {
+				return value;
+			}
+		}
+		return null;
+	}
+
+	public static @Nullable Command getFromArguments(String[] args) {
+		return args.length > 0 ? get(args[0]) : null;
 	}
 
 	public CommandLine parse(String[] args) throws ParseException {

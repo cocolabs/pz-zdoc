@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import io.yooksi.pz.luadoc.app.Application;
 import io.yooksi.pz.luadoc.app.Command;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
 
@@ -36,7 +35,7 @@ public class MainTest extends TestWorkspace {
 	@Test
 	void shouldThrowExceptionWhenApplicationRunWithMissingArgs() {
 
-		Application.getCommands().forEach(c -> Assertions.assertThrows(
+		Arrays.stream(Command.values()).forEach(c -> Assertions.assertThrows(
 				ParseException.class, runMain(c, "", "output/path")));
 	}
 
@@ -47,7 +46,7 @@ public class MainTest extends TestWorkspace {
 		Assertions.assertTrue(notDirFile.createNewFile());
 
 		Assertions.assertThrows(IllegalArgumentException.class,
-				runMain(Command.JAVA_COMMAND, "input/path", notDirFile.getPath()));
+				runMain(Command.JAVA, "input/path", notDirFile.getPath()));
 	}
 
 	@Test
@@ -56,7 +55,7 @@ public class MainTest extends TestWorkspace {
 		createSampleLuaFile();
 		File outputDir = dir.toPath().resolve("output").toFile();
 		Assertions.assertTrue(outputDir.mkdir());
-		Assertions.assertDoesNotThrow(runMain(Command.LUA_COMMAND, file.getPath(), outputDir.getPath()));
+		Assertions.assertDoesNotThrow(runMain(Command.LUA, file.getPath(), outputDir.getPath()));
 	}
 
 	@Test
@@ -64,7 +63,7 @@ public class MainTest extends TestWorkspace {
 
 		createSampleLuaFile();
 		File outputDir = dir.toPath().resolve("output").toFile();
-		Assertions.assertDoesNotThrow(runMain(Command.LUA_COMMAND, file.getPath(), outputDir.getPath()));
+		Assertions.assertDoesNotThrow(runMain(Command.LUA, file.getPath(), outputDir.getPath()));
 	}
 
 	@Test
@@ -77,7 +76,7 @@ public class MainTest extends TestWorkspace {
 		};
 		FileUtils.writeLines(file, Arrays.asList(write));
 
-		runMain(Command.LUA_COMMAND, dir.getPath(), "").execute();
+		runMain(Command.LUA, dir.getPath(), "").execute();
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(1));
@@ -96,7 +95,7 @@ public class MainTest extends TestWorkspace {
 		File sampleFile = sampleDir.toPath().resolve(file.getName()).toFile();
 		Assertions.assertTrue(sampleFile.exists());
 
-		runMain(Command.LUA_COMMAND, rootPath.toString(), outputDir.toString()).execute();
+		runMain(Command.LUA, rootPath.toString(), outputDir.toString()).execute();
 
 		File outputFile = outputDir.resolve("sample").resolve(file.getName()).toFile();
 		Assertions.assertTrue(outputFile.exists());
@@ -113,7 +112,7 @@ public class MainTest extends TestWorkspace {
 		Assertions.assertTrue(outputDir.mkdir());
 
 		String input = "src/test/resources/Sample.html";
-		runMain(Command.JAVA_COMMAND, input, outputDir.getPath()).execute();
+		runMain(Command.JAVA, input, outputDir.getPath()).execute();
 
 		String[] expected = {
 				"---@return void",
