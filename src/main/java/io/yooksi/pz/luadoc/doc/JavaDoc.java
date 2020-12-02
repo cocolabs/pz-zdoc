@@ -18,6 +18,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import io.yooksi.pz.luadoc.Main;
+import io.yooksi.pz.luadoc.Utils;
 import io.yooksi.pz.luadoc.element.JavaClass;
 import io.yooksi.pz.luadoc.element.JavaMethod;
 import io.yooksi.pz.luadoc.element.LuaClass;
@@ -30,8 +31,9 @@ import io.yooksi.pz.luadoc.lang.ParseRegex;
  */
 public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
-	public static final String PZ_API_GLOBAL_URL =
-			"https://projectzomboid.com/modding/zombie/Lua/LuaManager.GlobalObject.html";
+	private static final URL PZ_URL = Utils.getURL("https://projectzomboid.com/");
+
+	public static final URL API_GLOBAL_OBJECT = resolveApiURL("zombie/Lua/LuaManager.GlobalObject.html");
 
 	public JavaDoc(String name, Set<JavaClass<L>> members, List<JavaMethod> methods) {
 		super(name, new ArrayList<>(), members, methods);

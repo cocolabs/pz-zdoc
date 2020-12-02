@@ -6,14 +6,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import io.yooksi.pz.luadoc.app.Application;
+import io.yooksi.pz.luadoc.app.Command;
+import io.yooksi.pz.luadoc.app.CommandLine;
 import io.yooksi.pz.luadoc.doc.JavaDoc;
 import io.yooksi.pz.luadoc.doc.LuaDoc;
 import io.yooksi.pz.luadoc.element.JavaClass;
@@ -23,9 +25,6 @@ import io.yooksi.pz.luadoc.element.Method;
 public class Main {
 
 	public static final Logger LOGGER = LogManager.getLogger(Main.class);
-
-	private static final Pattern OP_ARG_REGEX = Pattern.compile("^\\s*-(\\w+)\\s*$");
-	private static final Pattern API_SWITCH_REGEX = Pattern.compile("^\\s*--api\\s*$");
 
 	/**
 	 * <p>Application main entry point method.</p>
@@ -45,35 +44,24 @@ public class Main {
 	 * @throws NoSuchFileException if unable to find file under argument path
 	 * @throws IndexOutOfBoundsException if no path argument supplied
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ParseException {
 
 		LOGGER.debug(String.format("Started application with %d args: %s",
 				args.length, Arrays.toString(args)));
 
-		if (args.length == 0) {
-			throw new IllegalArgumentException("No application argument supplied");
+		Command cmd = Application.getMatchingCommand(args);
+		if (cmd == null) {
+			throw new IllegalArgumentException("Missing or unknown command argument");
 		}
-		String rawOpArg = args[0];
-		/*
-		 * validate application argument format
-		 */
-		Matcher matcher = OP_ARG_REGEX.matcher(rawOpArg);
-		if (!matcher.find()) {
-			throw new IllegalArgumentException("Malformed application argument: " + rawOpArg);
-		}
-		// application operation argument
-		String opArg = matcher.group(1);
+		CommandLine cmdLine = cmd.parse(args);
 
 		// parse and document LUA files
-		if (opArg.equals("lua"))
+		if (cmd.getName().equals("lua"))
 		{
 			LOGGER.debug("Preparing to parse and document lua files...");
 
-			if (args.length < 2) {
-				throw new IllegalArgumentException("No file path supplied");
-			}
-			Path root = Paths.get(args[1]);
-			Path dir = args.length >= 3 ? Paths.get(args[2]) : null;
+			Path root = cmdLine.getInputPath();
+			Path dir = cmdLine.getOutputPath();
 			java.util.List<Path> paths = Files.walk(Paths.get(root.toString()))
 					.filter(Files::isRegularFile).collect(Collectors.toCollection(ArrayList::new));
 
@@ -100,29 +88,29 @@ public class Main {
 			}
 		}
 		// parse JAVA docs and document LUA files
-		else if (opArg.equals("java"))
+		else if (cmd.getName().equals("java"))
 		{
 			LOGGER.debug("Preparing to parse java doc...");
 
-			if (args.length < 2) {
-				throw new IllegalArgumentException("Java doc location not specified");
-			}
-			else if (args.length < 3) {
-				throw new IllegalArgumentException("No output file path supplied");
-			}
-			String source;
-			/* when source path is unspecified use API url */
-			Matcher match = API_SWITCH_REGEX.matcher(args[1]);
-			if (match.find())
+			Object source;
+			if (cmdLine.isInputApi())
 			{
-				source = JavaDoc.PZ_API_GLOBAL_URL;
-				LOGGER.debug("API argument switch detected");
+				LOGGER.debug("Reading from online api");
+				source = cmdLine.getInputUrl();
+				if (source == null) {
+					source = JavaDoc.API_GLOBAL_OBJECT;
+				}
 			}
-			else source = args[1];
+			else source = cmdLine.getInputPath();
 			LOGGER.debug("Reading from source " + source);
 
-			Path userOutput = Paths.get(args[2]);
-			LOGGER.debug("Output directory set to " + args[2]);
+			Path userOutput = cmdLine.getOutputPath();
+			if (userOutput == null)
+			{
+				userOutput = Paths.get(".");
+				LOGGER.debug("Output directory not specified, using root directory instead");
+			}
+			else LOGGER.debug("Output directory set to " + userOutput.toString());
 
 			File outputDir = userOutput.toFile();
 			if (!outputDir.exists())
@@ -135,10 +123,10 @@ public class Main {
 			}
 			else LOGGER.debug("Designated output path: " + userOutput);
 
-			if (Utils.isValidUrl(source))
+			if (source instanceof URL)
 			{
 				Set<String> exclude = new HashSet<>();
-				JavaDoc.WebParser parser = JavaDoc.WebParser.create(source);
+				JavaDoc.WebParser parser = JavaDoc.WebParser.create((URL) source);
 				JavaDoc<URL> javaDoc = parser.parse();
 
 				Path output = userOutput.resolve(parser.getOutputFilePath("lua"));
@@ -167,15 +155,14 @@ public class Main {
 				List<String> memberDoc = LuaClass.documentMembers(methods, exclude);
 				FileUtils.writeLines(membersFile, memberDoc, false);
 			}
-			else if (Utils.isValidPath(source))
+			else if (source != null)
 			{
-				JavaDoc.FileParser parser = JavaDoc.FileParser.create(source);
-				Path output = userOutput.resolve(Paths.get(source).getFileName());
+				JavaDoc.FileParser parser = JavaDoc.FileParser.create((Path) source);
+				Path output = userOutput.resolve(((Path) source).getFileName());
 				parser.parse().convertToLuaDoc(true, false).writeToFile(output);
 			}
-			else throw new IllegalArgumentException("\"" + source + "\" is not a valid file path or URL");
+			else throw new IllegalArgumentException("Unable to parse input path/url");
 		}
-		else throw new IllegalArgumentException("Unknown application argument: " + opArg);
 		LOGGER.debug("Finished processing command");
 	}
 
