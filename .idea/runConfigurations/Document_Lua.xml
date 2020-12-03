@@ -4,7 +4,7 @@
     <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
     <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.luadoc.Main" />
     <module name="pz-luadoc.main" />
-    <option name="PROGRAM_PARAMETERS" value="-lua media/lua" />
+    <option name="PROGRAM_PARAMETERS" value="lua -i $STEAM_DIR$/steamapps/common/ProjectZomboid/media/lua -o media/lua" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
