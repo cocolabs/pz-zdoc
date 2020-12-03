@@ -29,12 +29,18 @@ public final class CommandOptions {
 
 	static
 	{
-		LUA_OPTIONS.addOption((Option) INPUT_OPTION.clone())
-				.addOption((Option) OUTPUT_OPTION.clone());
+		LUA_OPTIONS.addOption(clone(INPUT_OPTION))
+				.addOption(clone(OUTPUT_OPTION));
 
-		JAVA_OPTIONS.addOptionGroup(createRequiredOptionGroup(
-				(Option) INPUT_OPTION.clone(), (Option) API_OPTION.clone())
-		).addOption((Option) OUTPUT_OPTION.clone());
+		OptionGroup javaOptGroup = createRequiredOptionGroup(
+				clone(INPUT_OPTION), clone(API_OPTION)
+		);
+		JAVA_OPTIONS.addOptionGroup(javaOptGroup)
+				.addOption(clone(OUTPUT_OPTION));
+	}
+
+	private static Option clone(Option option) {
+		return (Option) option.clone();
 	}
 
 	private static OptionGroup createRequiredOptionGroup(Option... options) {
