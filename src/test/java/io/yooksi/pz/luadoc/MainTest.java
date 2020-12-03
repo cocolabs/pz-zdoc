@@ -150,12 +150,12 @@ public class MainTest extends TestWorkspace {
 		args.add(command);
 		if (!input.isEmpty())
 		{
-			args.add("-in");
+			args.add("-i");
 			args.add(input);
 		}
 		if (!output.isEmpty())
 		{
-			args.add("-out");
+			args.add("-o");
 			args.add(output);
 		}
 		return args.toArray(new String[]{});

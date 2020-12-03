@@ -68,7 +68,7 @@ public class CommandLineTest {
 		{
 			URL expected = JavaDoc.resolveApiURL(target);
 
-			String[] args = new String[]{ Command.JAVA.name, "--api", target, "-out", "output/path" };
+			String[] args = new String[]{ Command.JAVA.name, "-a", target, "-o", "output/path" };
 			CommandLine cmdLIne = CommandLine.parse(Command.JAVA.options, args);
 
 			Assertions.assertEquals(expected, cmdLIne.getInputUrl());

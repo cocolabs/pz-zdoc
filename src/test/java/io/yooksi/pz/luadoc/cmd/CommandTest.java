@@ -35,8 +35,8 @@ public class CommandTest {
 	void shouldDetectAllCommandLineOptions() throws ParseException {
 
 		String[][] argArrays = new String[][] {
-				new String[] { "-in", "input/path", "-out", "output/path" },
-				new String[] { "-out", "output/path", "-in", "input/path", }
+				new String[] { "-i", "input/path", "-o", "output/path" },
+				new String[] { "-o", "output/path", "-i", "input/path", }
 		};
 		for (Command command : Command.WORK_COMMANDS)
 		{
@@ -56,16 +56,16 @@ public class CommandTest {
 	void shouldThrowExceptionWhenMissingCommandArguments() {
 
 		String[][] missingArgs = new String[][] {
-//				new String[] { "-in", "input/path" },	 // missing output path
-				new String[] { "-out", "output/path" }	// missing input path
+//				new String[] { "-i", "input/path" },	 // missing output path
+				new String[] { "-o", "output/path" }	// missing input path
 		};
 		for (String[] args : missingArgs) {
 			Arrays.stream(Command.WORK_COMMANDS).forEach(c -> Assertions.assertThrows(ParseException.class,
 					() -> CommandLine.parse(c.options, ArrayUtils.addFirst(args, c.name))));
 		}
 		String[][] correctArgs = new String[][] {
-				new String[] { "-in", "input/path", "-out", "output/path" },
-				new String[] { "-out", "output/path", "-in", "input/path", }
+				new String[] { "-i", "input/path", "-o", "output/path" },
+				new String[] { "-o", "output/path", "-i", "input/path", }
 		};
 		for (String[] args : correctArgs) {
 			Arrays.stream(Command.WORK_COMMANDS).forEach(c -> Assertions.assertDoesNotThrow(() ->
@@ -76,8 +76,8 @@ public class CommandTest {
 	@Test
 	void shouldThrowExceptionWhenIncludingMutuallyExclusiveOptions() {
 
-		String[] badArgs = new String[]{ "-in", "-a", "input/path", "-out", "output/path" };
-		String[] goodArgs = new String[]{ "-a", "input/path", "-out", "output/path" };
+		String[] badArgs = new String[]{ "-i", "-a", "input/path", "-o", "output/path" };
+		String[] goodArgs = new String[]{ "-a", "input/path", "-o", "output/path" };
 
 		Assertions.assertThrows(ParseException.class, () -> CommandLine.parse(
 				Command.JAVA.options, ArrayUtils.addFirst(badArgs, Command.JAVA.name)));
