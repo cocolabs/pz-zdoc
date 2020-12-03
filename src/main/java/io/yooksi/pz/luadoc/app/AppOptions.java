@@ -9,6 +9,9 @@ import org.apache.commons.cli.Options;
 
 public final class AppOptions {
 
+	static final Option HELP_OPTION =
+			Option.builder("help").desc("print command usage info").build();
+
 	static final Option INPUT_OPTION =
 			Option.builder("in").desc("input directory path")
 					.type(File.class).required(true).hasArg().valueSeparator(' ').build();
@@ -21,12 +24,16 @@ public final class AppOptions {
 			Option.builder("a").longOpt("api").desc("use online api docs")
 					.type(URL.class).required(false).hasArg().valueSeparator(' ').build();
 
+	static final Options HELP_OPTIONS = new Options();
 	static final Options LUA_OPTIONS = new Options();
 	static final Options JAVA_OPTIONS = new Options();
 
 	static
 	{
-		LUA_OPTIONS.addOption((Option) INPUT_OPTION.clone())
+		HELP_OPTIONS.addOption((Option) HELP_OPTION.clone());
+
+		LUA_OPTIONS.addOption((Option) HELP_OPTION.clone())
+				.addOption((Option) INPUT_OPTION.clone())
 				.addOption((Option) OUTPUT_OPTION.clone());
 
 		OptionGroup javaInputOptions = new OptionGroup()
@@ -35,7 +42,8 @@ public final class AppOptions {
 
 		javaInputOptions.setRequired(true);
 
-		JAVA_OPTIONS.addOptionGroup(javaInputOptions)
+		JAVA_OPTIONS.addOption((Option) HELP_OPTION.clone())
+				.addOptionGroup(javaInputOptions)
 				.addOption((Option) OUTPUT_OPTION.clone());
 	}
 }

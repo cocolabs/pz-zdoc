@@ -5,9 +5,11 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
 
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 
 import io.yooksi.pz.luadoc.doc.JavaDoc;
@@ -15,6 +17,7 @@ import io.yooksi.pz.luadoc.doc.JavaDoc;
 public class CommandLine extends org.apache.commons.cli.CommandLine {
 
 	private static final CommandParser PARSER = new CommandParser();
+	private static final HelpFormatter FORMATTER = new HelpFormatter();
 
 	protected CommandLine(Option[] options, String[] args) {
 
@@ -27,12 +30,29 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	}
 
 	public static CommandLine parse(Options options, String[] args) throws ParseException {
-		return PARSER.parse(options, args);
+
+		/* remove command arg from array so the parser doesnt treat
+		 * it as an unrecognized element and doesnt parse other elements */
+		String[] rawArgs = ArrayUtils.remove(args, 0);
+
+		/* before parsing command try to find help option, note that
+		 * it will fail if the help token is not the FIRST parsed token */
+		CommandLine result = PARSER.parse(AppOptions.HELP_OPTIONS, rawArgs, true);
+
+		/* if user doesnt want help parse command normally */
+		return result.hasHelpOption() ? result : PARSER.parse(options, args);
 	}
+
+	public void printHelp(Command command, boolean withUsage) {
+		FORMATTER.printHelp(command.getName(), command.getOptions(), withUsage);
 	}
 
 	public boolean isInputApi() {
 		return hasOption(AppOptions.API_OPTION.getOpt());
+	}
+
+	public boolean hasHelpOption() {
+		return hasOption(AppOptions.HELP_OPTION.getOpt());
 	}
 
 	public @Nullable URL getInputUrl() {

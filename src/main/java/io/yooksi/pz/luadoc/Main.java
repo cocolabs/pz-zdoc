@@ -53,6 +53,10 @@ public class Main {
 			throw new ParseException("Missing or unknown command argument");
 		}
 		CommandLine cmdLine = CommandLine.parse(command.getOptions(), args);
+		if (cmdLine.hasHelpOption())
+		{
+			cmdLine.printHelp(command, true);
+			return;
 		}
 		// parse and document LUA files
 		if (command == Command.LUA)
