@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 
 import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,10 +14,21 @@ import io.yooksi.pz.luadoc.doc.JavaDoc;
 
 public class CommandLine extends org.apache.commons.cli.CommandLine {
 
-	protected CommandLine(org.apache.commons.cli.CommandLine cmdLine) {
+	private static final CommandParser PARSER = new CommandParser();
 
-		Arrays.stream(cmdLine.getOptions()).forEach(this::addOption);
-		Arrays.stream(cmdLine.getArgs()).forEach(this::addArg);
+	protected CommandLine(Option[] options, String[] args) {
+
+		Arrays.stream(options).forEach(this::addOption);
+		Arrays.stream(args).forEach(this::addArg);
+	}
+
+	protected CommandLine(org.apache.commons.cli.CommandLine cmdLine) {
+		this(cmdLine.getOptions(), cmdLine.getArgs());
+	}
+
+	public static CommandLine parse(Options options, String[] args) throws ParseException {
+		return PARSER.parse(options, args);
+	}
 	}
 
 	public boolean isInputApi() {

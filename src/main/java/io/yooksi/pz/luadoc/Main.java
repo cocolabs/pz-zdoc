@@ -48,14 +48,14 @@ public class Main {
 		LOGGER.debug(String.format("Started application with %d args: %s",
 				args.length, Arrays.toString(args)));
 
-		Command cmd = Command.getFromArguments(args);
-		if (cmd == null) {
-			throw new IllegalArgumentException("Missing or unknown command argument");
+		Command command = Command.parse(args);
+		if (command == null) {
+			throw new ParseException("Missing or unknown command argument");
 		}
-		CommandLine cmdLine = cmd.parse(args);
-
+		CommandLine cmdLine = CommandLine.parse(command.getOptions(), args);
+		}
 		// parse and document LUA files
-		if (cmd.getName().equals("lua"))
+		if (command == Command.LUA)
 		{
 			LOGGER.debug("Preparing to parse and document lua files...");
 
@@ -87,7 +87,7 @@ public class Main {
 			}
 		}
 		// parse JAVA docs and document LUA files
-		else if (cmd.getName().equals("java"))
+		else if (command == Command.JAVA)
 		{
 			LOGGER.debug("Preparing to parse java doc...");
 

@@ -28,7 +28,7 @@ public class MainTest extends TestWorkspace {
 	void shouldThrowExceptionWhenApplicationRunWithMissingCommand() {
 
 		// Missing or unknown command argument
-		Assertions.assertThrows(IllegalArgumentException.class,
+		Assertions.assertThrows(ParseException.class,
 				runMain(null, "input/path", "output/path"));
 	}
 
@@ -158,5 +158,11 @@ public class MainTest extends TestWorkspace {
 			args.add(output);
 		}
 		return args.toArray(new String[]{});
+	}
+
+
+	@TestOnly
+	public static String[] formatAppArgs(Command command, String input, String output) {
+		return formatAppArgs(command.getName(), input, output);
 	}
 }

@@ -9,6 +9,7 @@ import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import io.yooksi.pz.luadoc.MainTest;
 import io.yooksi.pz.luadoc.doc.JavaDoc;
 
 public class CommandLineTest {
@@ -21,8 +22,8 @@ public class CommandLineTest {
 		String path = Paths.get("input/path").toString();
 		for (Command command : commands)
 		{
-			String[] args = new String[] { "-in", path, "-out", "output/path" };
-			CommandLine cmdLIne = command.parse(args);
+			String[] args = MainTest.formatAppArgs(command, path, "output/path");
+			CommandLine cmdLIne = CommandLine.parse(command.getOptions(), args);
 
 			Assertions.assertEquals(path, cmdLIne.getInputPath().toString());
 		}
@@ -34,8 +35,8 @@ public class CommandLineTest {
 		String path = Paths.get("output/path").toString();
 		for (Command command : commands)
 		{
-			String[] args = new String[] { "-in", "input/path", "-out", path };
-			CommandLine cmdLIne = command.parse(args);
+			String[] args = MainTest.formatAppArgs(command, "input/path", path);
+			CommandLine cmdLIne = CommandLine.parse(command.getOptions(), args);
 
 			Object outputPath = Objects.requireNonNull(cmdLIne.getOutputPath());
 			Assertions.assertEquals(path, outputPath.toString());
@@ -48,11 +49,13 @@ public class CommandLineTest {
 		String path = "t*st/pa!h";
 		for (Command command : commands)
 		{
-			Assertions.assertThrows(InvalidPathException.class, () -> command.parse(
-					new String[] { "-in", path, "-out", "output/path" }).getInputPath());
+			final String[] args1 = MainTest.formatAppArgs(command, path, "output/path");
+			Assertions.assertThrows(InvalidPathException.class, () ->
+					CommandLine.parse(command.getOptions(), args1).getInputPath());
 
-			Assertions.assertThrows(InvalidPathException.class, () -> command.parse(
-					new String[] { "-in", "input/path", "-out", path }).getOutputPath());
+			final String[] args2 = MainTest.formatAppArgs(command, "input/path", path);
+			Assertions.assertThrows(InvalidPathException.class, () ->
+					CommandLine.parse(command.getOptions(), args2).getOutputPath());
 		}
 	}
 
@@ -67,8 +70,8 @@ public class CommandLineTest {
 		{
 			URL expected = JavaDoc.resolveApiURL(target);
 
-			String[] args = new String[]{ "--api", target, "-out", "output/path",  };
-			CommandLine cmdLIne = Command.JAVA.parse(args);
+			String[] args = new String[]{ Command.JAVA.getName(), "--api", target, "-out", "output/path" };
+			CommandLine cmdLIne = CommandLine.parse(Command.JAVA.getOptions(), args);
 
 			Assertions.assertEquals(expected, cmdLIne.getInputUrl());
 		}
