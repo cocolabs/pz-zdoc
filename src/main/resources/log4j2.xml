@@ -4,10 +4,23 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss} [%-5level] %logger{1} - %msg%n"/>
         </Console>
+        <File name="MainLog" fileName="logs/main.log">
+            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %logger{1} - %msg%n"/>
+        </File>
+        <RollingFile name="DebugLog" fileName="logs/debug.log"
+                     filePattern="logs/$${date:yyyy-MM}/pz-luadoc-%d{MM-dd-yyyy}-%i.log.zip">
+            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %logger{1} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="info">
-            <AppenderRef ref="Console"/>
+        <Root level="debug">
+            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="MainLog" level="info"/>
+            <AppenderRef ref="DebugLog"/>
         </Root>
     </Loggers>
 </Configuration>
