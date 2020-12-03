@@ -19,7 +19,7 @@ public class Parameter {
 
 		name = name.trim();
 		// ensure parameter name is not a reserved lua keyword
-		this.name = EmmyLua.isReservedKeyword(name) ? "var_" + name : name;
+		this.name = EmmyLua.getSafeKeyword(name);
 	}
 
 	@Override
