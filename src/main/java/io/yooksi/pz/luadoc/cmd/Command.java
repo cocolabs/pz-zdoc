@@ -4,17 +4,26 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.jetbrains.annotations.Nullable;
 
 public enum Command {
 
-	HELP("help", "", CommandOptions.HELP_OPTIONS, "print command usage info"),
+	HELP("help", "", new Options(), "print command usage info"),
 	LUA("lua", CommandOptions.LUA_OPTIONS, "annotate local lua files"),
 	JAVA("java", CommandOptions.JAVA_OPTIONS, "convert java doc to lua library");
 
 	static final Command[] WORK_COMMANDS = Arrays.stream(Command.values())
 			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
+
+	static
+	{
+		for (Command cmd : WORK_COMMANDS) {
+			HELP.options.addOption(Option.builder(cmd.name).desc(cmd.help).build());
+		}
+	}
+
 	final String name;
 	final String prefix;
 	final Options options;

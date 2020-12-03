@@ -21,15 +21,11 @@ public final class CommandOptions {
 			Option.builder("a").longOpt("api").desc("use online api docs")
 					.type(URL.class).required(false).hasArg().valueSeparator(' ').build();
 
-	static final Options HELP_OPTIONS = new Options();
 	static final Options LUA_OPTIONS = new Options();
 	static final Options JAVA_OPTIONS = new Options();
 
 	static
 	{
-		HELP_OPTIONS.addOption(Option.builder("lua").desc("annotate local lua files").build())
-				.addOption(Option.builder("java").desc("convert java doc to lua library").build());
-
 		LUA_OPTIONS.addOption((Option) INPUT_OPTION.clone())
 				.addOption((Option) OUTPUT_OPTION.clone());
 
