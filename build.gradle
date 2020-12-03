@@ -95,3 +95,9 @@ application {
     // Define the main class for the application.
     mainClassName = 'io.yooksi.pz.luadoc.Main'
 }
+
+task luaLibJar(type: Jar) {
+    archiveClassifier = 'lib'
+    from sourceSets.media.allSource
+}
+jar.dependsOn(luaLibJar)
