@@ -24,6 +24,12 @@ public final class CommandOptions {
 					.type(URL.class).required(false).hasArg().argName("url")
 					.valueSeparator(' ').build();
 
+	static final Option EXCLUDE_CLASS_OPTION =
+			Option.builder("e").longOpt("exclude-class")
+					.desc("list of classes (separated by commas) " +
+							"to exclude classes from document generation")
+					.required(false).hasArg().argName("list").valueSeparator(' ').build();
+
 	static final Options LUA_OPTIONS = new Options();
 	static final Options JAVA_OPTIONS = new Options();
 
@@ -36,7 +42,8 @@ public final class CommandOptions {
 				clone(INPUT_OPTION), clone(API_OPTION)
 		);
 		JAVA_OPTIONS.addOptionGroup(javaOptGroup)
-				.addOption(clone(OUTPUT_OPTION));
+				.addOption(clone(OUTPUT_OPTION))
+				.addOption(EXCLUDE_CLASS_OPTION);
 	}
 
 	private static Option clone(Option option) {

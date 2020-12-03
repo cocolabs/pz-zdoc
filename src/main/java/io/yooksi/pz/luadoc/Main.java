@@ -132,7 +132,9 @@ public class Main {
 
 			if (source instanceof URL)
 			{
-				Set<String> exclude = new HashSet<>();
+				List<String> userExclude = cmdLine.getExcludedClasses();
+				Set<String> exclude = new HashSet<>(userExclude);
+
 				JavaDoc.WebParser parser = JavaDoc.WebParser.create((URL) source);
 				JavaDoc<URL> javaDoc = parser.parse();
 
@@ -145,7 +147,11 @@ public class Main {
 
 				for (Map.Entry<String, JavaClass<URL>> entry : javaDoc.getMembers().entrySet())
 				{
-					String memberUrl = entry.getValue().getLocation().toString();
+					JavaClass<URL> javaClass = entry.getValue();
+					if (userExclude.contains(javaClass.getName())) {
+						continue;
+					}
+					String memberUrl = javaClass.getLocation().toString();
 					JavaDoc.WebParser memberParser = JavaDoc.WebParser.create(memberUrl);
 
 					output = userOutput.resolve(memberParser.getOutputFilePath("lua"));

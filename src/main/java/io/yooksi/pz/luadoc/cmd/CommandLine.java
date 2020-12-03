@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
@@ -63,6 +65,17 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		return hasOption(CommandOptions.API_OPTION.getOpt());
 	}
 
+	public List<String> getExcludedClasses() {
+
+		Option excludeOpt = CommandOptions.EXCLUDE_CLASS_OPTION;
+		if (hasOption(excludeOpt.getOpt()))
+		{
+			String value = getParsedValue(excludeOpt);
+			return Arrays.asList(value.split(","));
+		}
+		return new ArrayList<>();
+	}
+
 	public @Nullable URL getInputUrl() {
 
 		if (isInputApi())
@@ -96,7 +109,8 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 			return ((T) getParsedOptionValue(sOption));
 		}
 		catch (ParseException | ClassCastException e) {
-			throw new IllegalArgumentException('\"' + getOptionValue(sOption) + "\" is not a valid Path");
+			throw new IllegalArgumentException(String.format("An error occurred while " +
+					"parsing option value for option \"%s\"", getOptionValue(sOption)));
 		}
 	}
 }
