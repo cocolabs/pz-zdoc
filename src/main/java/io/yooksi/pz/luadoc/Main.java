@@ -52,12 +52,16 @@ public class Main {
 		if (command == null) {
 			throw new ParseException("Missing or unknown command argument");
 		}
-		CommandLine cmdLine = CommandLine.parse(command.getOptions(), args);
-		if (cmdLine.hasHelpOption())
+		else if (command == Command.HELP)
 		{
-			cmdLine.printHelp(command, true);
+			Command info = Command.parse(args, 1);
+			if (info == null) {
+				CommandLine.printHelp(Command.values());
+			}
+			else CommandLine.printHelp(info);
 			return;
 		}
+		CommandLine cmdLine = CommandLine.parse(command.getOptions(), args);
 		// parse and document LUA files
 		if (command == Command.LUA)
 		{

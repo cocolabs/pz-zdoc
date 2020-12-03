@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 
 public class CommandTest {
 
-	private final Command[] commands = Command.values();
-
 	@Test
 	void shouldReturnAllMatchingCommands() {
 
@@ -40,14 +38,14 @@ public class CommandTest {
 				new String[] { "-in", "input/path", "-out", "output/path" },
 				new String[] { "-out", "output/path", "-in", "input/path", }
 		};
-		for (Command command : commands)
+		for (Command command : Command.WORK_COMMANDS)
 		{
 			for (String[] args : argArrays)
 			{
-				CommandLine cmd = CommandLine.parse(command.getOptions(),
-						ArrayUtils.addFirst(args, command.getName()));
+				CommandLine cmd = CommandLine.parse(command.options,
+						ArrayUtils.addFirst(args, command.name));
 
-				command.getOptions().getOptions().forEach(opt -> Assertions.assertTrue(
+				command.options.getOptions().forEach(opt -> Assertions.assertTrue(
 						!opt.isRequired() || cmd.hasOption(opt.getOpt()))
 				);
 			}
@@ -62,16 +60,16 @@ public class CommandTest {
 				new String[] { "-out", "output/path" }	// missing input path
 		};
 		for (String[] args : missingArgs) {
-			Arrays.stream(commands).forEach(c -> Assertions.assertThrows(ParseException.class,
-					() -> CommandLine.parse(c.getOptions(), ArrayUtils.addFirst(args, c.getName()))));
+			Arrays.stream(Command.WORK_COMMANDS).forEach(c -> Assertions.assertThrows(ParseException.class,
+					() -> CommandLine.parse(c.options, ArrayUtils.addFirst(args, c.name))));
 		}
 		String[][] correctArgs = new String[][] {
 				new String[] { "-in", "input/path", "-out", "output/path" },
 				new String[] { "-out", "output/path", "-in", "input/path", }
 		};
 		for (String[] args : correctArgs) {
-			Arrays.stream(commands).forEach(c -> Assertions.assertDoesNotThrow(() ->
-					CommandLine.parse(c.getOptions(), ArrayUtils.addFirst(args, c.getName()))));
+			Arrays.stream(Command.WORK_COMMANDS).forEach(c -> Assertions.assertDoesNotThrow(() ->
+					CommandLine.parse(c.options, ArrayUtils.addFirst(args, c.name))));
 		}
 	}
 
@@ -82,9 +80,9 @@ public class CommandTest {
 		String[] goodArgs = new String[]{ "-a", "input/path", "-out", "output/path" };
 
 		Assertions.assertThrows(ParseException.class, () -> CommandLine.parse(
-				Command.JAVA.getOptions(), ArrayUtils.addFirst(badArgs, Command.JAVA.getName())));
+				Command.JAVA.options, ArrayUtils.addFirst(badArgs, Command.JAVA.name)));
 
-		Assertions.assertDoesNotThrow(() -> CommandLine.parse(Command.JAVA.getOptions(),
-				ArrayUtils.addFirst(goodArgs, Command.JAVA.getName())));
+		Assertions.assertDoesNotThrow(() -> CommandLine.parse(Command.JAVA.options,
+				ArrayUtils.addFirst(goodArgs, Command.JAVA.name)));
 	}
 }

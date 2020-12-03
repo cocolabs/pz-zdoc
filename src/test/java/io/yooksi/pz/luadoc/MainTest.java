@@ -35,8 +35,9 @@ public class MainTest extends TestWorkspace {
 	@Test
 	void shouldThrowExceptionWhenApplicationRunWithMissingArgs() {
 
-		Arrays.stream(Command.values()).forEach(c -> Assertions.assertThrows(
-				ParseException.class, runMain(c, "", "output/path")));
+		Arrays.stream(Command.values()).filter(c -> c != Command.HELP)
+				.forEach(c -> Assertions.assertThrows(ParseException.class,
+						runMain(c, "", "output/path")));
 	}
 
 	@Test

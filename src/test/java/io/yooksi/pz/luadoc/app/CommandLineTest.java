@@ -14,16 +14,14 @@ import io.yooksi.pz.luadoc.doc.JavaDoc;
 
 public class CommandLineTest {
 
-	private final Command[] commands = Command.values();
-
 	@Test
 	void shouldProperlyParseCommandInputPath() throws ParseException {
 
 		String path = Paths.get("input/path").toString();
-		for (Command command : commands)
+		for (Command command : Command.WORK_COMMANDS)
 		{
 			String[] args = MainTest.formatAppArgs(command, path, "output/path");
-			CommandLine cmdLIne = CommandLine.parse(command.getOptions(), args);
+			CommandLine cmdLIne = CommandLine.parse(command.options, args);
 
 			Assertions.assertEquals(path, cmdLIne.getInputPath().toString());
 		}
@@ -33,10 +31,10 @@ public class CommandLineTest {
 	void shouldProperlyParseCommandOutputPath() throws ParseException {
 
 		String path = Paths.get("output/path").toString();
-		for (Command command : commands)
+		for (Command command : Command.WORK_COMMANDS)
 		{
 			String[] args = MainTest.formatAppArgs(command, "input/path", path);
-			CommandLine cmdLIne = CommandLine.parse(command.getOptions(), args);
+			CommandLine cmdLIne = CommandLine.parse(command.options, args);
 
 			Object outputPath = Objects.requireNonNull(cmdLIne.getOutputPath());
 			Assertions.assertEquals(path, outputPath.toString());
@@ -47,15 +45,15 @@ public class CommandLineTest {
 	void shouldThrowExceptionWhenParsingMalformedCommandPath() {
 
 		String path = "t*st/pa!h";
-		for (Command command : commands)
+		for (Command command : Command.WORK_COMMANDS)
 		{
 			final String[] args1 = MainTest.formatAppArgs(command, path, "output/path");
 			Assertions.assertThrows(InvalidPathException.class, () ->
-					CommandLine.parse(command.getOptions(), args1).getInputPath());
+					CommandLine.parse(command.options, args1).getInputPath());
 
 			final String[] args2 = MainTest.formatAppArgs(command, "input/path", path);
 			Assertions.assertThrows(InvalidPathException.class, () ->
-					CommandLine.parse(command.getOptions(), args2).getOutputPath());
+					CommandLine.parse(command.options, args2).getOutputPath());
 		}
 	}
 
@@ -70,8 +68,8 @@ public class CommandLineTest {
 		{
 			URL expected = JavaDoc.resolveApiURL(target);
 
-			String[] args = new String[]{ Command.JAVA.getName(), "--api", target, "-out", "output/path" };
-			CommandLine cmdLIne = CommandLine.parse(Command.JAVA.getOptions(), args);
+			String[] args = new String[]{ Command.JAVA.name, "--api", target, "-out", "output/path" };
+			CommandLine cmdLIne = CommandLine.parse(Command.JAVA.options, args);
 
 			Assertions.assertEquals(expected, cmdLIne.getInputUrl());
 		}

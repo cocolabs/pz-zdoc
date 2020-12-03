@@ -9,9 +9,6 @@ import org.apache.commons.cli.Options;
 
 public final class AppOptions {
 
-	static final Option HELP_OPTION =
-			Option.builder("help").desc("print command usage info").build();
-
 	static final Option INPUT_OPTION =
 			Option.builder("in").desc("input directory path")
 					.type(File.class).required(true).hasArg().valueSeparator(' ').build();
@@ -30,20 +27,24 @@ public final class AppOptions {
 
 	static
 	{
-		HELP_OPTIONS.addOption((Option) HELP_OPTION.clone());
+		HELP_OPTIONS.addOption(Option.builder("lua").desc("annotate local lua files").build())
+				.addOption(Option.builder("java").desc("convert java doc to lua library").build());
 
-		LUA_OPTIONS.addOption((Option) HELP_OPTION.clone())
-				.addOption((Option) INPUT_OPTION.clone())
+		LUA_OPTIONS.addOption((Option) INPUT_OPTION.clone())
 				.addOption((Option) OUTPUT_OPTION.clone());
 
-		OptionGroup javaInputOptions = new OptionGroup()
-				.addOption((Option) INPUT_OPTION.clone())
-				.addOption((Option) API_OPTION.clone());
+		JAVA_OPTIONS.addOptionGroup(createRequiredOptionGroup(
+				(Option) INPUT_OPTION.clone(), (Option) API_OPTION.clone())
+		).addOption((Option) OUTPUT_OPTION.clone());
+	}
 
-		javaInputOptions.setRequired(true);
+	private static OptionGroup createRequiredOptionGroup(Option... options) {
 
-		JAVA_OPTIONS.addOption((Option) HELP_OPTION.clone())
-				.addOptionGroup(javaInputOptions)
-				.addOption((Option) OUTPUT_OPTION.clone());
+		OptionGroup optionGroup = new OptionGroup();
+		for (Option option : options) {
+			optionGroup.addOption(option);
+		}
+		optionGroup.setRequired(true);
+		return optionGroup;
 	}
 }
