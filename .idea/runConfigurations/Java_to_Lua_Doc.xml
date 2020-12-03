@@ -1,5 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Java to Lua Doc" type="Application" factoryName="Application">
+    <log_file alias="Main" path="$PROJECT_DIR$/logs/main.log" />
+    <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
     <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.luadoc.Main" />
     <module name="pz-luadoc.main" />
     <option name="PROGRAM_PARAMETERS" value="-java --api media/lua/shared/Library" />
