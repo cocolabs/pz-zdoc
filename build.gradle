@@ -14,6 +14,9 @@ plugins {
 
 apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotless.gradle"
 
+group 'io.yooksi'
+version '1.0'
+
 idea {
     project {
         languageLevel = '1.8'
