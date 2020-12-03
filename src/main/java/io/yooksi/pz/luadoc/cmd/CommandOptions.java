@@ -10,15 +10,15 @@ import org.apache.commons.cli.Options;
 public final class CommandOptions {
 
 	static final Option INPUT_OPTION =
-			Option.builder("i").desc("input directory path")
+			Option.builder("i").longOpt("input-path").desc("input directory path")
 					.type(File.class).required(true).hasArg().valueSeparator(' ').build();
 
 	static final Option OUTPUT_OPTION =
-			Option.builder("o").desc("output directory path")
+			Option.builder("o").longOpt("output-path").desc("output directory path")
 					.type(File.class).required(false).hasArg().valueSeparator(' ').build();
 
 	static final Option API_OPTION =
-			Option.builder("a").longOpt("api").desc("use online api docs")
+			Option.builder("a").longOpt("api-docs").desc("use online api docs")
 					.type(URL.class).required(false).hasArg().valueSeparator(' ').build();
 
 	static final Options LUA_OPTIONS = new Options();
