@@ -1,4 +1,4 @@
-package io.yooksi.pz.luadoc.app;
+package io.yooksi.pz.luadoc.cmd;
 
 import java.net.URL;
 import java.nio.file.InvalidPathException;

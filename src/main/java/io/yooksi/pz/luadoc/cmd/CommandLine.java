@@ -1,4 +1,4 @@
-package io.yooksi.pz.luadoc.app;
+package io.yooksi.pz.luadoc.cmd;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -60,14 +60,14 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	}
 
 	public boolean isInputApi() {
-		return hasOption(AppOptions.API_OPTION.getOpt());
+		return hasOption(CommandOptions.API_OPTION.getOpt());
 	}
 
 	public @Nullable URL getInputUrl() {
 
 		if (isInputApi())
 		{
-			Option option = AppOptions.API_OPTION;
+			Option option = CommandOptions.API_OPTION;
 			try {
 				return getParsedValue(option);
 			}
@@ -79,12 +79,12 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	}
 
 	public Path getInputPath() {
-		return ((File) getParsedValue(AppOptions.INPUT_OPTION)).toPath();
+		return ((File) getParsedValue(CommandOptions.INPUT_OPTION)).toPath();
 	}
 
 	public @Nullable Path getOutputPath() {
 
-		File outputFile = getParsedValue(AppOptions.OUTPUT_OPTION);
+		File outputFile = getParsedValue(CommandOptions.OUTPUT_OPTION);
 		return outputFile != null ? outputFile.toPath() : null;
 	}
 

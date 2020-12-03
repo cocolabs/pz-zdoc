@@ -1,4 +1,4 @@
-package io.yooksi.pz.luadoc.app;
+package io.yooksi.pz.luadoc.cmd;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -9,9 +9,9 @@ import org.jetbrains.annotations.Nullable;
 
 public enum Command {
 
-	HELP("help", "", AppOptions.HELP_OPTIONS, "print command usage info"),
-	LUA("lua", AppOptions.LUA_OPTIONS, "annotate local lua files"),
-	JAVA("java", AppOptions.JAVA_OPTIONS, "convert java doc to lua library");
+	HELP("help", "", CommandOptions.HELP_OPTIONS, "print command usage info"),
+	LUA("lua", CommandOptions.LUA_OPTIONS, "annotate local lua files"),
+	JAVA("java", CommandOptions.JAVA_OPTIONS, "convert java doc to lua library");
 
 	static final Command[] WORK_COMMANDS = Arrays.stream(Command.values())
 			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});

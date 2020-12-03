@@ -13,8 +13,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import io.yooksi.pz.luadoc.app.Command;
-import io.yooksi.pz.luadoc.app.CommandLine;
+import io.yooksi.pz.luadoc.cmd.Command;
+import io.yooksi.pz.luadoc.cmd.CommandLine;
 import io.yooksi.pz.luadoc.doc.JavaDoc;
 import io.yooksi.pz.luadoc.doc.LuaDoc;
 import io.yooksi.pz.luadoc.element.JavaClass;

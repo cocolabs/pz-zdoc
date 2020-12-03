@@ -1,4 +1,4 @@
-package io.yooksi.pz.luadoc.app;
+package io.yooksi.pz.luadoc.cmd;
 
 import java.io.File;
 import java.net.URL;
@@ -7,7 +7,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 
-public final class AppOptions {
+public final class CommandOptions {
 
 	static final Option INPUT_OPTION =
 			Option.builder("in").desc("input directory path")

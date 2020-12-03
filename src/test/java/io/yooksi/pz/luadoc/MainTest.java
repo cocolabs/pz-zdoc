@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import io.yooksi.pz.luadoc.app.Command;
+import io.yooksi.pz.luadoc.cmd.Command;
 import io.yooksi.pz.luadoc.lang.EmmyLua;
 
 public class MainTest extends TestWorkspace {
