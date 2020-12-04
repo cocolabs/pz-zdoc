@@ -2,10 +2,10 @@
 <Configuration status="INFO">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{[HH:mm:ss,SSS]} [%level] %logger{1} - %msg%n"/>
+            <PatternLayout pattern="%d{[HH:mm:ss,SSS]} [%level] %t - %msg%n"/>
         </Console>
         <File name="TestLog" fileName="logs/test.log">
-            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss,SSS]} [%level] %logger{1} - %msg%n"/>
+            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss,SSS]} [%level] %t - %msg%n"/>
         </File>
     </Appenders>
     <Loggers>
