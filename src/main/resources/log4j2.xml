@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss} [%-5level] %logger{1} - %msg%n"/>
+        <!-- Console for standard use in production environment -->
+        <Console name="StandardConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%msg%n"/>
         </Console>
-        <File name="MainLog" fileName="logs/main.log">
-            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %logger{1} - %msg%n"/>
+        <!-- Console for debugging use in production environment -->
+        <Console name="DebugConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%level{WARN=Warning, DEBUG=Debug, ERROR=Error, INFO=Info}: %msg%n"/>
+        </Console>
+        <!-- Log file for standard use in production environment -->
+        <File name="StandardFile" fileName="pz-luadoc.log">
+            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %msg%n"/>
         </File>
-        <RollingFile name="DebugLog" fileName="logs/debug.log"
+        <!-- Console for standard use in development environment -->
+        <Console name="DevConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{[HH:mm:ss]} [%level] %t - %msg%n"/>
+        </Console>
+        <!-- Log file for standard use in development environment -->
+        <File name="DevFile" fileName="logs/main.log">
+            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
+        </File>
+        <!-- Log file for debugging use in development environment -->
+        <RollingFile name="DevDebugFile" fileName="logs/debug.log"
                      filePattern="logs/$${date:yyyy-MM}/pz-luadoc-%d{MM-dd-yyyy}-%i.log.zip">
-            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %logger{1} - %msg%n"/>
+            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy />
             </Policies>
@@ -17,10 +32,19 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="debug">
-            <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="MainLog" level="info"/>
-            <AppenderRef ref="DebugLog"/>
-        </Root>
+        <Logger name="StandardLogger" level="info" additivity="false">
+            <AppenderRef ref="StandardConsole"/>
+            <AppenderRef ref="StandardFile"/>
+        </Logger>
+        <Logger name="DebugLogger" level="debug" additivity="false">
+            <AppenderRef ref="DebugConsole"/>
+            <AppenderRef ref="StandardFile"/>
+        </Logger>
+        <Logger name="DevLogger" level="debug" additivity="false">
+            <AppenderRef ref="DevConsole" level="info"/>
+            <AppenderRef ref="DevFile" level="info"/>
+            <AppenderRef ref="DevDebugFile"/>
+        </Logger>
+        <Root level="debug"/>
     </Loggers>
 </Configuration>

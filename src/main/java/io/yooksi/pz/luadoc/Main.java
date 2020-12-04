@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import io.yooksi.pz.luadoc.cmd.Command;
 import io.yooksi.pz.luadoc.cmd.CommandLine;
@@ -22,8 +20,6 @@ import io.yooksi.pz.luadoc.element.LuaClass;
 import io.yooksi.pz.luadoc.element.Method;
 
 public class Main {
-
-	public static final Logger LOGGER = LogManager.getLogger(Main.class);
 
 	/**
 	 * <p>Application main entry point method.</p>
@@ -45,7 +41,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException, ParseException {
 
-		LOGGER.debug(String.format("Started application with %d args: %s",
+		Logger.debug(String.format("Started application with %d args: %s",
 				args.length, Arrays.toString(args)));
 
 		Command command = Command.parse(args);
@@ -65,7 +61,7 @@ public class Main {
 		// parse and document LUA files
 		if (command == Command.LUA)
 		{
-			LOGGER.debug("Preparing to parse and document lua files...");
+			Logger.debug("Preparing to parse and document lua files...");
 
 			Path root = cmdLine.getInputPath();
 			Path dir = cmdLine.getOutputPath();
@@ -73,10 +69,10 @@ public class Main {
 					.filter(Files::isRegularFile).collect(Collectors.toCollection(ArrayList::new));
 
 			if (paths.size() > 1) {
-				LOGGER.info("Parsing and documenting lua files found in " + root);
+				Logger.info("Parsing and documenting lua files found in " + root);
 			}
 			else if (paths.isEmpty()) {
-				LOGGER.warn("No files found under path " + root);
+				Logger.warn("No files found under path " + root);
 			}
 			// process every file found under given root path
 			Set<String> excludedMembers = new java.util.HashSet<>();
@@ -84,7 +80,7 @@ public class Main {
 			{
 				if (Utils.isLuaFile(path))
 				{
-					LOGGER.debug(String.format("Found lua file \"%s\"", path.getFileName()));
+					Logger.debug(String.format("Found lua file \"%s\"", path.getFileName()));
 					Path outputFilePath = validateLuaOutputPath(path, root, dir);
 
 					LuaDoc doc = LuaDoc.Parser.create(path.toFile(), excludedMembers).parse();
@@ -97,27 +93,27 @@ public class Main {
 		// parse JAVA docs and document LUA files
 		else if (command == Command.JAVA)
 		{
-			LOGGER.debug("Preparing to parse java doc...");
+			Logger.debug("Preparing to parse java doc...");
 
 			Object source;
 			if (cmdLine.isInputApi())
 			{
-				LOGGER.debug("Reading from online api");
+				Logger.debug("Reading from online api");
 				source = cmdLine.getInputUrl();
 				if (source == null) {
 					source = JavaDoc.API_GLOBAL_OBJECT;
 				}
 			}
 			else source = cmdLine.getInputPath();
-			LOGGER.debug("Reading from source " + source);
+			Logger.debug("Reading from source " + source);
 
 			Path userOutput = cmdLine.getOutputPath();
 			if (userOutput == null)
 			{
 				userOutput = Paths.get(".");
-				LOGGER.debug("Output directory not specified, using root directory instead");
+				Logger.debug("Output directory not specified, using root directory instead");
 			}
-			else LOGGER.debug("Output directory set to " + userOutput.toString());
+			else Logger.debug("Output directory set to " + userOutput.toString());
 
 			File outputDir = userOutput.toFile();
 			if (!outputDir.exists())
@@ -128,7 +124,7 @@ public class Main {
 			} else if (!outputDir.isDirectory()) {
 				throw new IllegalArgumentException("Output path does not point to a directory");
 			}
-			else LOGGER.debug("Designated output path: " + userOutput);
+			else Logger.debug("Designated output path: " + userOutput);
 
 			if (source instanceof URL)
 			{
@@ -176,7 +172,7 @@ public class Main {
 			}
 			else throw new IllegalArgumentException("Unable to parse input path/url");
 		}
-		LOGGER.debug("Finished processing command");
+		Logger.debug("Finished processing command");
 	}
 
 	private static Path validateLuaOutputPath(Path path, Path root, Path dir) throws IOException {
@@ -204,7 +200,7 @@ public class Main {
 		else
 		{
 			outputPath = path;
-			Main.LOGGER.warn("Unspecified output directory, overwriting files");
+			Logger.warn("Unspecified output directory, overwriting files");
 		}
 		/* make sure output file exists before we try to write to it */
 		File outputFile = outputPath.toFile();

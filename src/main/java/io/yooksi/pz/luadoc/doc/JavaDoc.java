@@ -17,7 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import io.yooksi.pz.luadoc.Main;
+import io.yooksi.pz.luadoc.Logger;
 import io.yooksi.pz.luadoc.Utils;
 import io.yooksi.pz.luadoc.element.JavaClass;
 import io.yooksi.pz.luadoc.element.JavaMethod;
@@ -128,11 +128,11 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 							return match.group(1);
 						}
 					}
-					Main.LOGGER.warn(String.format("Expected to find method access " +
+					Logger.warn(String.format("Expected to find method access " +
 							"modifier (i=%d) for method %s", i, methodName));
 				}
 			}
-			Main.LOGGER.error("Unable to parse method access modifier for method " + methodName);
+			Logger.error("Unable to parse method access modifier for method " + methodName);
 			return "public";
 		}
 
@@ -163,7 +163,7 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 						methods.add(javaMethod);
 					}
 				}
-				else Main.LOGGER.warn("Skipping non-public method " + methodName);
+				else Logger.warn("Skipping non-public method " + methodName);
 			}
 			return methods;
 		}
