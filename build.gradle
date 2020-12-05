@@ -8,6 +8,9 @@ plugins {
     // https://docs.gradle.org/current/userguide/idea_plugin.html
     id 'idea'
 
+    // https://docs.gradle.org/current/userguide/maven_plugin.html
+    id 'maven'
+
     // https://plugins.gradle.org/plugin/com.diffplug.spotless
     id "com.diffplug.spotless" version "5.8.2"
 
