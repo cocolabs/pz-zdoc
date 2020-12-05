@@ -24,9 +24,10 @@
         <!-- Log file for debugging use in development environment -->
         <RollingFile name="DevDebugFile" fileName="logs/debug.log"
                      filePattern="logs/$${date:yyyy-MM}/pz-luadoc-%d{MM-dd-yyyy}-%i.log.zip">
-            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
+            <PatternLayout
+                    pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
             <Policies>
-                <TimeBasedTriggeringPolicy />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
