@@ -1,0 +1,108 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+
+    // https://docs.gradle.org/current/userguide/idea_plugin.html
+    id 'idea'
+
+    // https://plugins.gradle.org/plugin/com.diffplug.spotless
+    id "com.diffplug.spotless" version "5.8.2"
+
+    // https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
+    id "com.github.johnrengelman.shadow" version "6.1.0"
+}
+
+apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotless.gradle"
+
+group 'io.yooksi'
+version '1.0'
+
+idea {
+    project {
+        languageLevel = '1.8'
+    }
+    module {
+        inheritOutputDirs = true
+        excludeDirs += [file("media"), file("logs"), file("build")]
+    }
+}
+
+sourceSets {
+     media { java { srcDirs 'media/lua' } }
+}
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    jcenter()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'
+
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
+
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    compile group: 'org.jetbrains', name: 'annotations', version: '20.1.0'
+
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
+}
+
+test {
+    // Clean the old test-results first
+    dependsOn cleanTest
+
+    useJUnitPlatform()
+
+    testLogging.exceptionFormat = 'full'
+
+    // Fail the 'test' task on the first test failure
+    failFast = false
+
+    doFirst {
+        logger.debug("Running project Unit Tests...")
+    }
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: $descriptor")
+    }
+    doLast {
+        logger.quiet("Finished running Unit Tests.")
+    }
+}
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'io.yooksi.pz.zdoc.Main'
+}
+
+task luaLibJar(type: Jar) {
+    archiveClassifier = 'lib'
+    archiveExtension = 'zip'
+
+    from sourceSets.media.allSource
+}
+jar.dependsOn(luaLibJar)

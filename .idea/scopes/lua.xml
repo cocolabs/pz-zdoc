@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="lua" pattern="file[pz-zdoc.media]:*.lua" />
+</component>

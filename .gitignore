@@ -1,7 +1,12 @@
+# Game asset files
+media/
+
 ### IntelliJ ###
 
-# Compiler output
-out/
+# Project file-based format
+*.ipr
+*.iws
+*.iml
 
 ### Gradle ###
 
@@ -9,7 +14,7 @@ out/
 .gradle
 
 # Ignore Gradle build output directory
-build
+build/
 
 ### Java ###
 

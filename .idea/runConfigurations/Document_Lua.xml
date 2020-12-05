@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Document Lua" type="Application" factoryName="Application">
+    <log_file alias="Main" path="$PROJECT_DIR$/logs/main.log" />
+    <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
+    <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.zdoc.Main" />
+    <module name="pz-zdoc.main" />
+    <option name="PROGRAM_PARAMETERS" value="lua -i $STEAM_DIR$/steamapps/common/ProjectZomboid/media/lua -o media/lua" />
+    <option name="VM_PARAMETERS" value="-Dld.logger=&quot;dev&quot;" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
