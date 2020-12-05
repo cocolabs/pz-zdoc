@@ -1,3 +1,3 @@
 <component name="DependencyValidationManager">
-  <scope name="java" pattern="src[pz-luadoc.main]:*..*" />
+  <scope name="java" pattern="src[pz-zdoc.main]:*..*" />
 </component>

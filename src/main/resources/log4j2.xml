@@ -10,7 +10,7 @@
             <PatternLayout pattern="%level{WARN=Warning, DEBUG=Debug, ERROR=Error, INFO=Info}: %msg%n"/>
         </Console>
         <!-- Log file for standard use in production environment -->
-        <File name="StandardFile" fileName="pz-luadoc.log">
+        <File name="StandardFile" fileName="pz-zdoc.log">
             <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %msg%n"/>
         </File>
         <!-- Console for standard use in development environment -->
@@ -23,7 +23,7 @@
         </File>
         <!-- Log file for debugging use in development environment -->
         <RollingFile name="DevDebugFile" fileName="logs/debug.log"
-                     filePattern="logs/$${date:yyyy-MM}/pz-luadoc-%d{MM-dd-yyyy}-%i.log.zip">
+                     filePattern="logs/$${date:yyyy-MM}/pz-zdoc-%d{MM-dd-yyyy}-%i.log.zip">
             <PatternLayout
                     pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
             <Policies>

@@ -96,7 +96,7 @@ test {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'io.yooksi.pz.luadoc.Main'
+    mainClassName = 'io.yooksi.pz.zdoc.Main'
 }
 
 task luaLibJar(type: Jar) {
