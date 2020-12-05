@@ -58,11 +58,11 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
 	public static URL resolveApiURL(String path) {
 
-		if (Utils.isValidPath(path)) {
-			return Utils.getURL(PZ_URL, "modding", path);
-		}
-		else if (Utils.isValidUrl(path)) {
+		if (Utils.isValidUrl(path)) {
 			return Utils.getURL(path);
+		}
+		else if (Utils.isValidPath(path)) {
+			return Utils.getURL(PZ_URL, "modding", path);
 		}
 		else throw new IllegalArgumentException(String.format("Cannot resolve api URL - " +
 					"argument \"%s\" is not a valid Path or URL", path));

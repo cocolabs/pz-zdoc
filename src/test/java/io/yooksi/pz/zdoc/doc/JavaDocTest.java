@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -37,8 +35,6 @@ import io.yooksi.pz.zdoc.TestWorkspace;
 import io.yooksi.pz.zdoc.element.*;
 
 public class JavaDocTest extends TestWorkspace {
-
-	private static final Logger logger = LogManager.getLogger(JavaDocTest.class);
 
 	private static JavaDoc.WebParser globalJavaDocParser;
 	private static JavaDoc.FileParser sampleJavaDocParser;
@@ -73,7 +69,7 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldThrowExceptionWhenResolvingApiURLWithInvalidArgument() {
 		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> JavaDoc.resolveApiURL("inv*lid/p*th"));
+				() -> JavaDoc.resolveApiURL('\u0000' + "/p*!h"));
 	}
 
 	@Test

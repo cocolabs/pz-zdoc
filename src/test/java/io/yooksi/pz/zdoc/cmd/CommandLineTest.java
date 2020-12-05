@@ -61,7 +61,7 @@ public class CommandLineTest {
 	@Test
 	void shouldThrowExceptionWhenParsingMalformedCommandPath() {
 
-		String path = "t*st/pa!h";
+		String path = '\u0000' + "/p*!h";
 		for (Command command : Command.WORK_COMMANDS)
 		{
 			final String[] args1 = MainTest.formatAppArgs(command, path, "output/path");
