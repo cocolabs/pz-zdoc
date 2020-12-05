@@ -10,6 +10,9 @@ plugins {
 
     // https://plugins.gradle.org/plugin/com.diffplug.spotless
     id "com.diffplug.spotless" version "5.8.2"
+
+    // https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
+    id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
 apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotless.gradle"
