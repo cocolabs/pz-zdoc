@@ -148,7 +148,7 @@ public class JavaDocTest extends TestWorkspace {
 
 		Map<JavaDoc.Parser<?>, Class<?>> dataMap = new HashMap<>();
 		dataMap.put(JavaDoc.WebParser.create(JavaDoc.API_GLOBAL_OBJECT), URL.class);
-		dataMap.put(JavaDoc.FileParser.create("src/test/resources/GlobalObject.html"), Path.class);
+		dataMap.put(JavaDoc.FileParser.create("src/test/resources/Sample.html"), Path.class);
 
 		for (Map.Entry<JavaDoc.Parser<?>, Class<?>> entry1 : dataMap.entrySet())
 		{
@@ -163,8 +163,6 @@ public class JavaDocTest extends TestWorkspace {
 				Object location = ((JavaClass<?>) member).getLocation();
 				Assertions.assertTrue(entry1.getValue().isInstance(location));
 				Assertions.assertFalse(location.toString().isEmpty());
-
-				logger.info(member.toString());
 			}
 		}
 	}
