@@ -78,7 +78,7 @@ public class LuaMethod extends Method {
 		sb.append("function ");
 
 		if (!qualifier.isEmpty()) {
-			sb.append(qualifier).append('.');
+			sb.append(qualifier).append(':');
 		}
 		sb.append(name).append('(');
 
