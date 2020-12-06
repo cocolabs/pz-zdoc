@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Java to Lua Doc" type="Application" factoryName="Application">
+  <configuration default="false" name="Compile Lua" type="Application" factoryName="Application">
     <log_file alias="Main" path="$PROJECT_DIR$/logs/main.log" />
     <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
     <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.zdoc.Main" />
