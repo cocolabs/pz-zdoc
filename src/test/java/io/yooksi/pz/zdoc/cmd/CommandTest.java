@@ -51,9 +51,9 @@ public class CommandTest {
 	@Test
 	void shouldDetectAllCommandLineOptions() throws ParseException {
 
-		String[][] argArrays = new String[][] {
-				new String[] { "-i", "input/path", "-o", "output/path" },
-				new String[] { "-o", "output/path", "-i", "input/path", }
+		String[][] argArrays = new String[][]{
+				new String[]{ "-i", "input/path", "-o", "output/path" },
+				new String[]{ "-o", "output/path", "-i", "input/path", }
 		};
 		for (Command command : Command.WORK_COMMANDS)
 		{
@@ -72,19 +72,20 @@ public class CommandTest {
 	@Test
 	void shouldThrowExceptionWhenMissingCommandArguments() {
 
-		String[][] missingArgs = new String[][] {
+		String[][] missingArgs = new String[][]{
 //				new String[] { "-i", "input/path" },	 // missing output path
-				new String[] { "-o", "output/path" }	// missing input path
+				new String[]{ "-o", "output/path" }    // missing input path
 		};
 		for (String[] args : missingArgs) {
 			Arrays.stream(Command.WORK_COMMANDS).forEach(c -> Assertions.assertThrows(ParseException.class,
 					() -> CommandLine.parse(c.options, ArrayUtils.addFirst(args, c.name))));
 		}
-		String[][] correctArgs = new String[][] {
-				new String[] { "-i", "input/path", "-o", "output/path" },
-				new String[] { "-o", "output/path", "-i", "input/path", }
+		String[][] correctArgs = new String[][]{
+				new String[]{ "-i", "input/path", "-o", "output/path" },
+				new String[]{ "-o", "output/path", "-i", "input/path", }
 		};
-		for (String[] args : correctArgs) {
+		for (String[] args : correctArgs)
+		{
 			Arrays.stream(Command.WORK_COMMANDS).forEach(c -> Assertions.assertDoesNotThrow(() ->
 					CommandLine.parse(c.options, ArrayUtils.addFirst(args, c.name))));
 		}
