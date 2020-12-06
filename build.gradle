@@ -100,6 +100,15 @@ test {
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
+
+check.dependsOn jacocoTestReport
+
 application {
     // Define the main class for the application.
     mainClassName = 'io.yooksi.pz.zdoc.Main'
