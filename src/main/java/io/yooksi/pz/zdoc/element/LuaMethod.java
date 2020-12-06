@@ -28,6 +28,7 @@ import io.yooksi.pz.zdoc.lang.EmmyLua;
 /**
  * This class represents a parsed Lua method.
  */
+@SuppressWarnings("unused")
 public class LuaMethod extends Method {
 
 	private final String qualifier;
