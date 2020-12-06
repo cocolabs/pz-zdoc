@@ -58,7 +58,7 @@ public class LuaDocTest extends TestWorkspace {
 	}
 
 	@Test
-	void shouldNotWriteToFileIfNoDocElementsFound() throws IOException {
+	void shouldNotWriteToFileIfNoDocElementsFound() {
 
 		String[] expected = new String[]{ "--- No doc elements" };
 		String actual = writeParseAndReadLua(expected).get(0);
@@ -67,7 +67,7 @@ public class LuaDocTest extends TestWorkspace {
 	}
 
 	@Test
-	void shouldOverwriteExistingLuaAnnotation() throws IOException {
+	void shouldOverwriteExistingLuaAnnotation() {
 
 		List<String> read = writeParseAndReadLua(new String[]{
 				"--- This is a sample comment",
@@ -78,7 +78,7 @@ public class LuaDocTest extends TestWorkspace {
 	}
 
 	@Test
-	void shouldReadAnnotationsWithWhitespaces() throws IOException {
+	void shouldReadAnnotationsWithWhitespaces() {
 
 		List<String> read = writeParseAndReadLua(new String[]{
 				"---  @class otherSampleLua",
@@ -88,7 +88,7 @@ public class LuaDocTest extends TestWorkspace {
 	}
 
 	@Test
-	void shouldParseAnnotationIncludeParentType() throws IOException {
+	void shouldParseAnnotationIncludeParentType() {
 
 		String[] write = {
 				"---@class sampleLua",

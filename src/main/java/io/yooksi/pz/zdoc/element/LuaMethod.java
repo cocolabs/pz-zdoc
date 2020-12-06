@@ -28,6 +28,7 @@ import io.yooksi.pz.zdoc.lang.EmmyLua;
 /**
  * This class represents a parsed Lua method.
  */
+@SuppressWarnings("unused")
 public class LuaMethod extends Method {
 
 	private final String qualifier;
@@ -78,7 +79,7 @@ public class LuaMethod extends Method {
 		sb.append("function ");
 
 		if (!qualifier.isEmpty()) {
-			sb.append(qualifier).append('.');
+			sb.append(qualifier).append(':');
 		}
 		sb.append(name).append('(');
 

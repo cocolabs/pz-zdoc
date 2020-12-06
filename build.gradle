@@ -24,7 +24,7 @@ plugins {
 apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotless.gradle"
 
 group 'io.yooksi'
-version '1.0.1'
+version '1.0.2'
 
 idea {
     project {

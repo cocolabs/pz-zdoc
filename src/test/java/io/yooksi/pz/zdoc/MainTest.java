@@ -41,6 +41,33 @@ public class MainTest extends TestWorkspace {
 		super("sampleLua.lua");
 	}
 
+	private static Executable runMain(@Nullable Command command, String input, String output) {
+		return () -> Main.main(formatAppArgs(command != null ? command.getName() : "", input, output));
+	}
+
+	@TestOnly
+	public static String[] formatAppArgs(String command, String input, String output) {
+
+		List<String> args = new java.util.ArrayList<>();
+		args.add(command);
+		if (!input.isEmpty())
+		{
+			args.add("-i");
+			args.add(input);
+		}
+		if (!output.isEmpty())
+		{
+			args.add("-o");
+			args.add(output);
+		}
+		return args.toArray(new String[]{});
+	}
+
+	@TestOnly
+	public static String[] formatAppArgs(Command command, String input, String output) {
+		return formatAppArgs(command.getName(), input, output);
+	}
+
 	@Test
 	void shouldThrowExceptionWhenApplicationRunWithMissingCommand() {
 
@@ -154,33 +181,5 @@ public class MainTest extends TestWorkspace {
 		for (int i = 0; i < actual.size(); i++) {
 			Assertions.assertEquals(expected[i], actual.get(i));
 		}
-	}
-
-	private static Executable runMain(@Nullable Command command, String input, String output) {
-		return () -> Main.main(formatAppArgs(command != null ? command.getName() : "", input, output));
-	}
-
-	@TestOnly
-	public static String[] formatAppArgs(String command, String input, String output) {
-
-		List<String> args = new java.util.ArrayList<>();
-		args.add(command);
-		if (!input.isEmpty())
-		{
-			args.add("-i");
-			args.add(input);
-		}
-		if (!output.isEmpty())
-		{
-			args.add("-o");
-			args.add(output);
-		}
-		return args.toArray(new String[]{});
-	}
-
-
-	@TestOnly
-	public static String[] formatAppArgs(Command command, String input, String output) {
-		return formatAppArgs(command.getName(), input, output);
 	}
 }
