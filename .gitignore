@@ -8,14 +8,6 @@ media/
 *.iws
 *.iml
 
-### Gradle ###
-
-# Ignore Gradle project-specific cache directory
-.gradle
-
-# Ignore Gradle build output directory
-build/
-
 ### Java ###
 
 # Compiled class file
@@ -29,3 +21,14 @@ build/
 # Log files
 logs/
 *.log
+
+### Gradle ###
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build/
+
+# Exclude Wrapper
+!gradle-wrapper.jar
