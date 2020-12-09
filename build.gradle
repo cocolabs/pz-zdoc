@@ -119,6 +119,6 @@ task luaLibJar(type: Jar) {
     classifier('lib')
     extension('zip')
 
-    from sourceSets.media.allSource
+    from "$buildDir/generated/sources/lua"
 }
 jar.dependsOn(luaLibJar)
