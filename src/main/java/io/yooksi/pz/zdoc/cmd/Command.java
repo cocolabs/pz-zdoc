@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public enum Command {
 
 	HELP("help", "", new Options(), "print command usage info"),
-	LUA("lua", CommandOptions.LUA_OPTIONS, "annotate local lua files"),
+	LUA("lua", CommandOptions.LUA_OPTIONS, "annotate lua files with EmmyLua"),
 	JAVA("java", CommandOptions.JAVA_OPTIONS, "convert java doc to lua library");
 
 	static final Command[] WORK_COMMANDS = Arrays.stream(Command.values())
