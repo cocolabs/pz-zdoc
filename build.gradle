@@ -117,8 +117,8 @@ application {
 }
 
 task luaLibJar(type: Jar) {
-    archiveClassifier = 'lib'
-    archiveExtension = 'zip'
+    classifier('lib')
+    extension('zip')
 
     from sourceSets.media.allSource
 }
