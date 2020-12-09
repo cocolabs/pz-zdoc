@@ -17,6 +17,8 @@
  */
 package io.yooksi.pz.zdoc;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.Level;
@@ -26,14 +28,37 @@ import org.apache.logging.log4j.LogManager;
 public class Logger {
 
 	private static final org.apache.logging.log4j.Logger logger;
+	private static final Type TYPE;
 
+	static final String JVM_PROPERTY = "ld.logger";
+	static final String STANDARD_LOG_PATH = "pz-zdoc.log";
+
+	public enum Type {
+
+		INFO("info", "StandardLogger"),
+		DEBUG("debug", "DebugLogger"),
+		DEV("dev", "DevLogger");
+
+		final String key;
+		final String name;
+
+		Type(String key, String name) {
+			this.key = key;
+			this.name = name;
+		}
+
+		public static Logger.Type get(String key, Type defaultType) {
+			return Arrays.stream(Type.values()).filter(l ->
+					l.key.equals(key)).findFirst().orElse(defaultType);
+		}
+	}
 	static
 	{
-		String logProperty = System.getProperty("ld.logger");
-		Type type = logProperty != null && !logProperty.isEmpty() ?
-				Type.get(logProperty, Type.INFO) : Type.INFO;
+		String loggerName = System.getProperty(JVM_PROPERTY);
+		TYPE = loggerName != null && !loggerName.isEmpty() ?
+				Type.get(loggerName, Type.INFO) : Type.INFO;
 
-		logger = LogManager.getLogger(type.name);
+		logger = LogManager.getLogger(TYPE.name);
 	}
 
 	/* Make the constructor private to disable instantiation */
@@ -91,26 +116,5 @@ public class Logger {
 
 	public static void printf(Level level, String format, Object... params) {
 		logger.printf(level, format, params);
-	}
-
-	enum Type {
-
-		INFO("info", "StandardLogger"),
-		DEBUG("debug", "DebugLogger"),
-		DEV("dev", "DevLogger");
-
-		private final String key;
-		private final String name;
-
-		Type(String key, String name) {
-			this.key = key;
-			this.name = name;
-		}
-
-		static Logger.Type get(String key, Type defaultType) {
-
-			return Arrays.stream(Type.values()).filter(l ->
-					l.key.equals(key)).findFirst().orElse(defaultType);
-		}
 	}
 }
