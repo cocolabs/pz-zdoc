@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import io.yooksi.pz.zdoc.logger.Logger;
-import io.yooksi.pz.zdoc.logger.LoggerType;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 
@@ -195,15 +194,6 @@ public class Main {
 			else throw new IllegalArgumentException("Unable to parse input path/url");
 		}
 		Logger.debug("Finished processing command");
-
-		// Delete redundant log file created by log4j
-		if (!Logger.isType(LoggerType.INFO))
-		{
-			File standardLogFile = Logger.getStandardLogFile();
-			if (standardLogFile.exists()) {
-				standardLogFile.deleteOnExit();
-			}
-		}
 	}
 
 	private static Path validateLuaOutputPath(Path path, Path root, Path dir) throws IOException {
