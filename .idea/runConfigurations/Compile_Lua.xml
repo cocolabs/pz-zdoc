@@ -5,7 +5,7 @@
     <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.zdoc.Main" />
     <module name="pz-zdoc.main" />
     <option name="PROGRAM_PARAMETERS" value="java --api-docs zombie/Lua/LuaManager.GlobalObject.html -o media/lua/shared/Library -e Recipe,Vector2" />
-    <option name="VM_PARAMETERS" value="-Dld.logger=&quot;dev&quot;" />
+    <option name="VM_PARAMETERS" value="-Dzdoc.logger=&quot;dev&quot;" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

@@ -30,7 +30,7 @@ public class Logger {
 	private static final org.apache.logging.log4j.Logger logger;
 	private static final Type TYPE;
 
-	static final String JVM_PROPERTY = "ld.logger";
+	static final String JVM_PROPERTY = "zdoc.logger";
 	static final String STANDARD_LOG_PATH = "pz-zdoc.log";
 
 	public enum Type {
