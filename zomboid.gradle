@@ -41,3 +41,4 @@ task zomboidJar(type: Jar) {
     }
     setExcludes(excludePaths)
 }
+jar.dependsOn(zomboidJar)
