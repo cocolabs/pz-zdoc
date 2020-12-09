@@ -22,6 +22,7 @@ plugins {
 }
 
 apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotless.gradle"
+apply from: 'zomboid.gradle'
 
 group 'io.yooksi'
 version '1.0.2'
@@ -75,6 +76,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     compile group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
+
+    compile files("$buildDir/libs/zomboid.jar")
 }
 
 test {
