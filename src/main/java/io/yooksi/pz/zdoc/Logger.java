@@ -66,6 +66,14 @@ public class Logger {
 		throw new UnsupportedOperationException();
 	}
 
+	public static boolean isType(Type type) {
+		return type == TYPE;
+	}
+
+	public static File getStandardLogFile() {
+		return Paths.get(STANDARD_LOG_PATH).toFile();
+	}
+
 	public static org.apache.logging.log4j.Logger get() {
 		return logger;
 	}

@@ -190,6 +190,15 @@ public class Main {
 			else throw new IllegalArgumentException("Unable to parse input path/url");
 		}
 		Logger.debug("Finished processing command");
+
+		// Delete redundant log file created by log4j
+		if (!Logger.isType(Logger.Type.INFO))
+		{
+			File standardLogFile = Logger.getStandardLogFile();
+			if (standardLogFile.exists()) {
+				standardLogFile.deleteOnExit();
+			}
+		}
 	}
 
 	private static Path validateLuaOutputPath(Path path, Path root, Path dir) throws IOException {
