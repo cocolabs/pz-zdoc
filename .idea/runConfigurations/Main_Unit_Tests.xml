@@ -5,7 +5,7 @@
     <useClassPathOnly />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="io.yooksi.pz.zdoc.*" />
+        <option name="PATTERN" value="io.yooksi.pz.zdoc.logger.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
