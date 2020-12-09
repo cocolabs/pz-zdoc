@@ -1,0 +1,43 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
+Properties properties = new Properties()
+def propertiesFile = project.rootProject.file('local.properties')
+if (propertiesFile.exists()) {
+    properties.load(propertiesFile.newDataInputStream())
+}
+project.ext.ideaHome = properties.getProperty('idea.home', '')
+project.ext.gameDir = Paths.get(properties.getProperty('game.dir', ''))
+
+if (project.ext.gameDir == null)
+{
+    if (providers.environmentVariable('GAME_DIR').present) {
+        project.ext.gameDir = Paths.get(providers.environmentVariable('GAME_DIR').get())
+    }
+    else if (System.hasProperty('game.dir')) {
+        project.ext.gameDir = Paths.get(System.getProperty('game.dir'))
+    }
+    else throw new RuntimeException("Game directory path not specified")
+}
+
+task zomboidJar(type: Jar) {
+    onlyIf {
+        !project.ext.gameDir.empty
+    }
+    description('Assembles a jar archive containing game classes.')
+    setGroup('build')
+
+    archiveFileName = "zomboid.jar"
+    includeEmptyDirs = false
+
+    from project.ext.gameDir
+
+    HashSet<String> excludePaths = new HashSet<>()
+    Files.walk(project.ext.gameDir as java.nio.file.Path).withCloseable
+    {
+        it.filter({Files.isRegularFile(it) &&
+                !it.fileName.toString().endsWith('class') && it.fileName.toString() != "stdlib.lbc"
+        }).collect().forEach({ excludePaths.add(gameDir.relativize(it as java.nio.file.Path).toString()) })
+    }
+    setExcludes(excludePaths)
+}
