@@ -1,6 +1,9 @@
 # Game asset files
 media/
 
+# User data
+local.properties
+
 ### IntelliJ ###
 
 # Project file-based format
