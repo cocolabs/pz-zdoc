@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.TestWorkspace;
 import io.yooksi.pz.zdoc.lang.EmmyLua;
+import io.yooksi.pz.zdoc.parser.LuaDocParser;
 
 public class LuaDocTest extends TestWorkspace {
 
@@ -39,7 +40,7 @@ public class LuaDocTest extends TestWorkspace {
 	void shouldCorrectlyDocumentSampleLuaFile() throws IOException {
 
 		createSampleLuaFile();
-		LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
+		LuaDocParser.create(file).parse().writeToFile(file.toPath());
 
 		List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(7, lines.size());
@@ -54,7 +55,7 @@ public class LuaDocTest extends TestWorkspace {
 
 		// IndexOutOfBoundsException
 		Assertions.assertDoesNotThrow(() ->
-				LuaDoc.Parser.create(file).parse().writeToFile(file.toPath()));
+				LuaDocParser.create(file).parse().writeToFile(file.toPath()));
 	}
 
 	@Test
@@ -135,7 +136,7 @@ public class LuaDocTest extends TestWorkspace {
 
 		try {
 			FileUtils.writeLines(file, Arrays.asList(text));
-			LuaDoc.Parser.create(file).parse().writeToFile(file.toPath());
+			LuaDocParser.create(file).parse().writeToFile(file.toPath());
 			return FileUtils.readLines(file, Charset.defaultCharset());
 		}
 		catch (IOException e) {

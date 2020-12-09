@@ -33,11 +33,14 @@ import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.TestWorkspace;
 import io.yooksi.pz.zdoc.element.*;
+import io.yooksi.pz.zdoc.parser.JavaDocFileParser;
+import io.yooksi.pz.zdoc.parser.JavaDocParser;
+import io.yooksi.pz.zdoc.parser.JavaDocWebParser;
 
 public class JavaDocTest extends TestWorkspace {
 
-	private static JavaDoc.WebParser globalJavaDocParser;
-	private static JavaDoc.FileParser sampleJavaDocParser;
+	private static JavaDocWebParser globalJavaDocParser;
+	private static JavaDocFileParser sampleJavaDocParser;
 
 	JavaDocTest() {
 		super("outputLua.lua");
@@ -46,8 +49,8 @@ public class JavaDocTest extends TestWorkspace {
 	@BeforeAll
 	static void initializeStaticParsers() throws IOException {
 
-		sampleJavaDocParser = JavaDoc.FileParser.create("src/test/resources/Sample.html");
-		globalJavaDocParser = JavaDoc.WebParser.create(JavaDoc.API_GLOBAL_OBJECT);
+		sampleJavaDocParser = JavaDocFileParser.create("src/test/resources/Sample.html");
+		globalJavaDocParser = JavaDocWebParser.create(JavaDoc.API_GLOBAL_OBJECT);
 	}
 
 	@Test
@@ -142,11 +145,11 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyParseJavaDocMemberClasses() throws IOException {
 
-		Map<JavaDoc.Parser<?>, Class<?>> dataMap = new HashMap<>();
-		dataMap.put(JavaDoc.WebParser.create(JavaDoc.API_GLOBAL_OBJECT), URL.class);
-		dataMap.put(JavaDoc.FileParser.create("src/test/resources/Sample.html"), Path.class);
+		Map<JavaDocParser<?>, Class<?>> dataMap = new HashMap<>();
+		dataMap.put(JavaDocWebParser.create(JavaDoc.API_GLOBAL_OBJECT), URL.class);
+		dataMap.put(JavaDocFileParser.create("src/test/resources/Sample.html"), Path.class);
 
-		for (Map.Entry<JavaDoc.Parser<?>, Class<?>> entry1 : dataMap.entrySet())
+		for (Map.Entry<JavaDocParser<?>, Class<?>> entry1 : dataMap.entrySet())
 		{
 			Map<String, ? extends MemberClass> map = entry1.getKey().parse().getMembers();
 			for (Map.Entry<String, ? extends MemberClass> entry2 : map.entrySet())

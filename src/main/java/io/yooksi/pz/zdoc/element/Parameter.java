@@ -17,8 +17,8 @@
  */
 package io.yooksi.pz.zdoc.element;
 
-import io.yooksi.pz.zdoc.doc.JavaDoc;
 import io.yooksi.pz.zdoc.lang.EmmyLua;
+import io.yooksi.pz.zdoc.parser.JavaDocParser;
 
 /**
  * This class represents parsed method parameter.
@@ -45,11 +45,11 @@ public class Parameter {
 	}
 
 	public String getType(boolean qualified) {
-		return qualified ? type : JavaDoc.Parser.removeElementQualifier(type);
+		return qualified ? type : JavaDocParser.removeElementQualifier(type);
 	}
 
 	public String getName(boolean qualified) {
-		return qualified ? name : JavaDoc.Parser.removeElementQualifier(name);
+		return qualified ? name : JavaDocParser.removeElementQualifier(name);
 	}
 
 	public Parameter getUnqualified() {

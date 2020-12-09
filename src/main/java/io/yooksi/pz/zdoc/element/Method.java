@@ -17,8 +17,8 @@
  */
 package io.yooksi.pz.zdoc.element;
 
-import io.yooksi.pz.zdoc.doc.JavaDoc;
 import io.yooksi.pz.zdoc.lang.ParseResult;
+import io.yooksi.pz.zdoc.parser.JavaDocParser;
 
 /**
  * This class represents a parsed code method.
@@ -55,7 +55,7 @@ public abstract class Method implements ParseResult {
 	}
 
 	public String getReturnType(boolean qualified) {
-		return qualified ? returnType : JavaDoc.Parser.removeElementQualifier(returnType);
+		return qualified ? returnType : JavaDocParser.removeElementQualifier(returnType);
 	}
 
 	public String getName() {

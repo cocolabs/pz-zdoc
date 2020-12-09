@@ -20,7 +20,7 @@ package io.yooksi.pz.zdoc.lang;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.yooksi.pz.zdoc.doc.JavaDoc;
+import io.yooksi.pz.zdoc.parser.JavaDocParser;
 
 /**
  * This class represents an EmmyLua annotation
@@ -68,7 +68,7 @@ public enum EmmyLua {
 
 	public static boolean isBuiltInType(String type) {
 
-		String unqualifiedType = JavaDoc.Parser.removeElementQualifier(type);
+		String unqualifiedType = JavaDocParser.removeElementQualifier(type);
 		type = unqualifiedType.replaceAll("\\[\\s*]", "").toLowerCase();
 
 		for (String builtInType : BUILT_IN_TYPES)

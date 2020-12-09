@@ -21,9 +21,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 
-import io.yooksi.pz.zdoc.doc.JavaDoc;
 import io.yooksi.pz.zdoc.lang.EmmyLua;
 import io.yooksi.pz.zdoc.lang.ParseRegex;
+import io.yooksi.pz.zdoc.parser.JavaDocParser;
 
 /**
  * This class represents a parsed lua class reference.
@@ -81,7 +81,7 @@ public class LuaClass extends MemberClass {
 				hasMatchedObjectType = true;
 				for (String e : match2.group(1).split(","))
 				{
-					String s = JavaDoc.Parser.removeElementQualifier(e);
+					String s = JavaDocParser.removeElementQualifier(e);
 					if (!excluded.contains(s)) {
 						contentMap.putIfAbsent(s, new LuaClass(s));
 					}

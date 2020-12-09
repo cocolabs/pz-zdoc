@@ -35,6 +35,9 @@ import io.yooksi.pz.zdoc.doc.LuaDoc;
 import io.yooksi.pz.zdoc.element.JavaClass;
 import io.yooksi.pz.zdoc.element.LuaClass;
 import io.yooksi.pz.zdoc.element.Method;
+import io.yooksi.pz.zdoc.parser.JavaDocFileParser;
+import io.yooksi.pz.zdoc.parser.JavaDocWebParser;
+import io.yooksi.pz.zdoc.parser.LuaDocParser;
 
 public class Main {
 
@@ -100,7 +103,7 @@ public class Main {
 					Logger.debug(String.format("Found lua file \"%s\"", path.getFileName()));
 					Path outputFilePath = validateLuaOutputPath(path, root, dir);
 
-					LuaDoc doc = LuaDoc.Parser.create(path.toFile(), excludedMembers).parse();
+					LuaDoc doc = LuaDocParser.create(path.toFile(), excludedMembers).parse();
 					if (!doc.getMembers().isEmpty()) {
 						doc.writeToFile(outputFilePath);
 					}
@@ -148,7 +151,7 @@ public class Main {
 				List<String> userExclude = cmdLine.getExcludedClasses();
 				Set<String> exclude = new HashSet<>(userExclude);
 
-				JavaDoc.WebParser parser = JavaDoc.WebParser.create((URL) source);
+				JavaDocWebParser parser = JavaDocWebParser.create((URL) source);
 				JavaDoc<URL> javaDoc = parser.parse();
 
 				Path output = userOutput.resolve(parser.getOutputFilePath("lua"));
@@ -165,7 +168,7 @@ public class Main {
 						continue;
 					}
 					String memberUrl = javaClass.getLocation().toString();
-					JavaDoc.WebParser memberParser = JavaDoc.WebParser.create(memberUrl);
+					JavaDocWebParser memberParser = JavaDocWebParser.create(memberUrl);
 
 					output = userOutput.resolve(memberParser.getOutputFilePath("lua"));
 					luaDoc = memberParser.parse().convertToLuaDoc(true, true);
@@ -183,7 +186,7 @@ public class Main {
 			}
 			else if (source != null)
 			{
-				JavaDoc.FileParser parser = JavaDoc.FileParser.create((Path) source);
+				JavaDocFileParser parser = JavaDocFileParser.create((Path) source);
 				Path output = userOutput.resolve(((Path) source).getFileName());
 				parser.parse().convertToLuaDoc(true, false).writeToFile(output);
 			}
