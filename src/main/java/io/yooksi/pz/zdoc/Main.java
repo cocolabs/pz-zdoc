@@ -202,7 +202,7 @@ public class Main {
 		else if (dir != null)
 		{
 			File outputDirFile = dir.toFile();
-			if (!outputDirFile.exists() && !outputDirFile.mkdir()) {
+			if (!outputDirFile.exists() && !outputDirFile.mkdirs()) {
 				throw new IOException("Unable to create output directory: " + dir);
 			}
 			/* root path matches current path so there are no
