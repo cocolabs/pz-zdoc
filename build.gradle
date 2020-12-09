@@ -28,9 +28,6 @@ group 'io.yooksi'
 version '1.0.2'
 
 idea {
-    project {
-        languageLevel = '1.8'
-    }
     module {
         inheritOutputDirs = true
         excludeDirs += [file("logs"), file("build")]
