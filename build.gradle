@@ -112,10 +112,10 @@ application {
     mainClassName = 'io.yooksi.pz.zdoc.Main'
 }
 
-task luaLibJar(type: Jar) {
+task luaDocJar(type: Jar) {
     classifier('lib')
     extension('zip')
 
     from "$buildDir/generated/sources/lua"
 }
-jar.dependsOn(luaLibJar)
+jar.dependsOn(luaDocJar)
