@@ -162,7 +162,8 @@ public class Main {
 				if (!outputDir.mkdirs()) {
 					throw new IOException("Unable to create output directory");
 				}
-			} else if (!outputDir.isDirectory()) {
+			}
+			else if (!outputDir.isDirectory()) {
 				throw new IllegalArgumentException("Output path does not point to a directory");
 			}
 			else Logger.debug("Designated output path: " + userOutput);
@@ -222,7 +223,8 @@ public class Main {
 						List<String> memberDoc = LuaClass.documentRefMembers(methods, exclude);
 						FileUtils.writeLines(membersFile, memberDoc, false);
 					}
-				} else {
+				}
+				else {
 					Path sourcePath = (Path) source;
 					JavaDocFileParser parser = JavaDocFileParser.create(sourcePath);
 					Path output = userOutput.resolve(sourcePath.getFileName());
