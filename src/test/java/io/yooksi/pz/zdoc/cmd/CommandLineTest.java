@@ -19,7 +19,9 @@ package io.yooksi.pz.zdoc.cmd;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Assertions;
@@ -29,11 +31,14 @@ import io.yooksi.pz.zdoc.MainTest;
 
 public class CommandLineTest {
 
+	private static final Command[] COMMANDS = Arrays.stream(Command.values())
+			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
+
 	@Test
 	void shouldProperlyParseCommandInputPath() throws ParseException {
 
 		String path = Paths.get("input/path").toString();
-		for (Command command : Command.WORK_COMMANDS)
+		for (Command command : COMMANDS)
 		{
 			String[] args = MainTest.formatAppArgs(command, path, "output/path");
 			CommandLine cmdLIne = CommandLine.parse(command.options, args);
@@ -46,7 +51,7 @@ public class CommandLineTest {
 	void shouldProperlyParseCommandOutputPath() throws ParseException {
 
 		String path = Paths.get("output/path").toString();
-		for (Command command : Command.WORK_COMMANDS)
+		for (Command command : COMMANDS)
 		{
 			String[] args = MainTest.formatAppArgs(command, "input/path", path);
 			CommandLine cmdLIne = CommandLine.parse(command.options, args);
@@ -60,7 +65,7 @@ public class CommandLineTest {
 	void shouldThrowExceptionWhenParsingMalformedCommandPath() {
 
 		String path = '\u0000' + "/p*!h";
-		for (Command command : Command.WORK_COMMANDS)
+		for (Command command : COMMANDS)
 		{
 			final String[] args1 = MainTest.formatAppArgs(command, path, "output/path");
 			Assertions.assertThrows(InvalidPathException.class, () ->

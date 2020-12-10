@@ -23,9 +23,9 @@ import java.util.regex.Matcher;
 
 import org.jetbrains.annotations.Nullable;
 
-import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.lang.DataParser;
 import io.yooksi.pz.zdoc.lang.ParseRegex;
+import io.yooksi.pz.zdoc.logger.Logger;
 
 /**
  * This class represents a parsed Java method.

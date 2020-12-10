@@ -17,7 +17,9 @@
  */
 package io.yooksi.pz.zdoc.doc;
 
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +36,7 @@ import io.yooksi.pz.zdoc.element.LuaMethod;
  */
 public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
-	private static final URL PZ_URL = Utils.getURL("https://projectzomboid.com/");
-
+	private static final URL PZ_MODDING_URL = Utils.getURL("https://projectzomboid.com/modding");
 	public static final URL API_GLOBAL_OBJECT = resolveApiURL("zombie/Lua/LuaManager.GlobalObject.html");
 
 	public JavaDoc(String name, Set<JavaClass<L>> members, List<JavaMethod> methods) {
@@ -44,11 +45,22 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
 	public static URL resolveApiURL(String path) {
 
-		if (Utils.isValidUrl(path)) {
-			return Utils.getURL(path);
+		URL url = Utils.getURLOrNull(path);
+		if (url != null)
+		{
+			URL host = Utils.getURL(url.getProtocol() + "://" + url.getHost());
+			URL segment = Utils.getURL(host, Paths.get(url.getPath()).getName(0).toString());
+			try {
+				if (!segment.toURI().equals(PZ_MODDING_URL.toURI())) {
+					throw new IllegalArgumentException("Invalid PZ modding API url: " + segment.toString());
+				}
+			} catch (URISyntaxException e) {
+				throw new RuntimeException(e);
+			}
+			return url;
 		}
 		else if (Utils.isValidPath(path)) {
-			return Utils.getURL(PZ_URL, "modding", path);
+			return Utils.getURL(PZ_MODDING_URL, "modding", path);
 		}
 		else throw new IllegalArgumentException(String.format("Cannot resolve api URL - " +
 					"argument \"%s\" is not a valid Path or URL", path));
@@ -60,7 +72,7 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		return (Map<String, JavaClass<L>>) super.getMembers();
 	}
 
-	public LuaDoc convertToLuaDoc(boolean annotate, boolean qualify) {
+	public LuaDoc compileLuaLibrary(boolean annotate, boolean qualify) {
 
 		List<String> content = new java.util.ArrayList<>();
 		List<LuaMethod> luaMethods = new java.util.ArrayList<>();

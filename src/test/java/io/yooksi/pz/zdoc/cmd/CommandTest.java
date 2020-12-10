@@ -18,6 +18,7 @@
 package io.yooksi.pz.zdoc.cmd;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.ArrayUtils;
@@ -25,6 +26,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class CommandTest {
+
+	private static final Command[] COMMANDS = Arrays.stream(Command.values())
+			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
 
 	@Test
 	void shouldReturnAllMatchingCommands() {
@@ -55,7 +59,7 @@ public class CommandTest {
 				new String[]{ "-i", "input/path", "-o", "output/path" },
 				new String[]{ "-o", "output/path", "-i", "input/path", }
 		};
-		for (Command command : Command.WORK_COMMANDS)
+		for (Command command : COMMANDS)
 		{
 			for (String[] args : argArrays)
 			{
@@ -77,7 +81,7 @@ public class CommandTest {
 				new String[]{ "-o", "output/path" }    // missing input path
 		};
 		for (String[] args : missingArgs) {
-			Arrays.stream(Command.WORK_COMMANDS).forEach(c -> Assertions.assertThrows(ParseException.class,
+			Arrays.stream(COMMANDS).forEach(c -> Assertions.assertThrows(ParseException.class,
 					() -> CommandLine.parse(c.options, ArrayUtils.addFirst(args, c.name))));
 		}
 		String[][] correctArgs = new String[][]{
@@ -86,7 +90,7 @@ public class CommandTest {
 		};
 		for (String[] args : correctArgs)
 		{
-			Arrays.stream(Command.WORK_COMMANDS).forEach(c -> Assertions.assertDoesNotThrow(() ->
+			Arrays.stream(COMMANDS).forEach(c -> Assertions.assertDoesNotThrow(() ->
 					CommandLine.parse(c.options, ArrayUtils.addFirst(args, c.name))));
 		}
 	}

@@ -23,11 +23,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import io.yooksi.pz.zdoc.element.MemberClass;
 import io.yooksi.pz.zdoc.element.Method;
@@ -43,26 +44,29 @@ public abstract class CodeDoc<M extends Method> implements ParseResult {
 
 	private final String name;
 
-	private final List<M> methods;
+	private final @UnmodifiableView List<M> methods;
 
 	/**
 	 * Textual representation of this document ready for output.
 	 */
-	private final List<String> content;
+	private final @UnmodifiableView List<String> content;
 
 	/**
 	 * Textual representation of class fields or function parameters.
 	 */
-	private final Map<String, MemberClass> members;
+	private final @UnmodifiableView Map<String, MemberClass> members;
 
 	public CodeDoc(String name, List<String> content, Set<? extends MemberClass> members, List<M> methods) {
 
 		this.name = name;
-		this.content = content;
-		this.methods = ListUtils.predicatedList(methods, PredicateUtils.notNullPredicate());
+		this.content = Collections.unmodifiableList(content);
+		this.methods = Collections.unmodifiableList(
+				ListUtils.predicatedList(methods, PredicateUtils.notNullPredicate()));
 
-		this.members = new ConcurrentHashMap<>();
-		members.forEach(m -> this.members.put(m.getName(), m));
+		Map<String, MemberClass> membersMap = new java.util.HashMap<>();
+		members.forEach(m -> membersMap.put(m.getName(), m));
+		this.members = Collections.unmodifiableMap(MapUtils.predicatedMap(membersMap,
+				PredicateUtils.notNullPredicate(), PredicateUtils.notNullPredicate()));
 	}
 
 	public String getName() {
@@ -70,15 +74,15 @@ public abstract class CodeDoc<M extends Method> implements ParseResult {
 	}
 
 	public List<String> readContent() {
-		return Collections.unmodifiableList(content);
+		return content;
 	}
 
 	public Map<String, ? extends MemberClass> getMembers() {
-		return Collections.unmodifiableMap(members);
+		return members;
 	}
 
 	public List<M> getMethods() {
-		return Collections.unmodifiableList(methods);
+		return methods;
 	}
 
 	public void writeToFile(Path path) throws IOException {

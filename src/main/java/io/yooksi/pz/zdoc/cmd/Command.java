@@ -31,14 +31,10 @@ public enum Command {
 	ANNOTATE("annotate", CommandOptions.LUA_OPTIONS, "annotate lua files with EmmyLua"),
 	COMPILE("compile", CommandOptions.JAVA_OPTIONS, "compile javadoc to lua library");
 
-	static final Command[] WORK_COMMANDS = Arrays.stream(Command.values())
-			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
-
 	static
 	{
-		for (Command cmd : WORK_COMMANDS) {
-			HELP.options.addOption(Option.builder(cmd.name).desc(cmd.help).build());
-		}
+		Arrays.stream(Command.values()).filter(c -> c != Command.HELP).collect(Collectors.toSet())
+				.forEach(c -> HELP.options.addOption(Option.builder(c.name).desc(c.help).build()));
 	}
 
 	final String name;

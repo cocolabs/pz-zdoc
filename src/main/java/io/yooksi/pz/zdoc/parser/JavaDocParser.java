@@ -28,11 +28,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.doc.JavaDoc;
 import io.yooksi.pz.zdoc.element.JavaMethod;
 import io.yooksi.pz.zdoc.lang.DataParser;
 import io.yooksi.pz.zdoc.lang.ParseRegex;
+import io.yooksi.pz.zdoc.logger.Logger;
 
 public abstract class JavaDocParser<T> extends DataParser<JavaDoc<T>, T> {
 

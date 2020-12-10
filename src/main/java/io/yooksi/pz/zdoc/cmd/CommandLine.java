@@ -94,10 +94,24 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		return new ArrayList<>();
 	}
 
-	public @Nullable String getApiLocation() {
+	public @Nullable Object getApiLocation() throws ParseException {
 
-		if (isInputApi()) {
-			return getParsedValue(CommandOptions.API_OPTION);
+		if (isInputApi())
+		{
+			String value = getParsedValue(CommandOptions.API_OPTION);
+			if (value == null) {
+				return null;
+			}
+			URL url = Utils.getURLOrNull(value);
+			if (url != null) {
+				return url;
+			}
+			Path path = Utils.getPathOrNull(value);
+			if (path != null) {
+				return path;
+			}
+			throw new ParseException(String.format("Unable to parse api location " +
+					"(%s), expected URL or Path", value));
 		}
 		throw new UnsupportedOperationException("Cannot get API location, " +
 				"command was not executed with api switch");

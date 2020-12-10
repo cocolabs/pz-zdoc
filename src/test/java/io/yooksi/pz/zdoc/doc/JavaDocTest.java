@@ -63,6 +63,13 @@ public class JavaDocTest extends TestWorkspace {
 	}
 
 	@Test
+	void shouldThrowExceptionWhenResolvingNonApiUrl() {
+
+		Assertions.assertThrows(IllegalArgumentException.class, () ->
+				JavaDoc.resolveApiURL("https://nonapiwebsite.com"));
+	}
+
+	@Test
 	void shouldCorrectlyResolveApiURLFromOtherURL() {
 
 		String link = "https://projectzomboid.com/";
@@ -117,7 +124,7 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyConvertJavaToLuaDocumentation() throws IOException {
 
-		sampleJavaDocParser.parse().convertToLuaDoc(true, false).writeToFile(file.toPath());
+		sampleJavaDocParser.parse().compileLuaLibrary(true, false).writeToFile(file.toPath());
 
 		List<String> output = FileUtils.readLines(file, Charset.defaultCharset());
 		String[] actual = output.toArray(new String[]{});
@@ -186,7 +193,7 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldQualifyMethodsWhenConvertingToLuaDoc() {
 
-		LuaDoc luaDoc = sampleJavaDocParser.parse().convertToLuaDoc(false, true);
+		LuaDoc luaDoc = sampleJavaDocParser.parse().compileLuaLibrary(false, true);
 		for (LuaMethod method : luaDoc.getMethods()) {
 			Assertions.assertTrue(method.toString().startsWith("function Sample."));
 		}
@@ -195,7 +202,7 @@ public class JavaDocTest extends TestWorkspace {
 	@Test
 	void shouldCorrectlyParseObjectType() {
 
-		LuaDoc luaDoc = sampleJavaDocParser.parse().convertToLuaDoc(true, false);
+		LuaDoc luaDoc = sampleJavaDocParser.parse().compileLuaLibrary(true, false);
 		LuaMethod method = luaDoc.getMethods().get(4);
 		String[] expected = {
 				"---@return ArrayList<String>",

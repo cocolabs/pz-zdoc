@@ -44,7 +44,7 @@ public class LuaClass extends MemberClass {
 		this.type = "";
 	}
 
-	public static List<String> documentMembers(List<Method> methods, Set<String> excluded) {
+	public static List<String> documentRefMembers(List<Method> methods, Set<String> excluded) {
 
 		List<String> documentation = new ArrayList<>();
 		Map<String, LuaClass> memberMap = new HashMap<>();
@@ -91,11 +91,11 @@ public class LuaClass extends MemberClass {
 				contentMap.putIfAbsent(parsedKey, luaClass);
 			}
 		}
-		contentMap.forEach((n, m) -> m.writeTo(documentation));
+		contentMap.forEach((n, m) -> m.writeTo(documentation, true));
 		return documentation;
 	}
 
-	public Collection<String> writeTo(Collection<String> content, boolean annotate) {
+	void writeTo(Collection<String> content, boolean annotate) {
 
 		if (annotate)
 		{
@@ -104,11 +104,6 @@ public class LuaClass extends MemberClass {
 		}
 		content.add(name + " = {}");
 		content.add("");
-		return content;
-	}
-
-	public Collection<String> writeTo(Collection<String> content) {
-		return writeTo(content, true);
 	}
 
 	public String getType() {

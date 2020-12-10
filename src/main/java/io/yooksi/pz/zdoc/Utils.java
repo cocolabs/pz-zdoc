@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.Nullable;
 
 public class Utils {
 
@@ -47,27 +48,25 @@ public class Utils {
 	}
 
 	/**
-	 * @return {@code true} if the given string can be parsed into a valid {@link URL} object.
+	 * @return {@code true} if the given string can be parsed into a valid {@link Path} object.
 	 */
-	public static boolean isValidUrl(String url) {
-
-		try { new URL(url); }
-		catch (MalformedURLException e) {
+	public static boolean isValidPath(String path) {
+		try {
+			Paths.get(path);
+		}
+		catch (InvalidPathException e) {
 			return false;
 		}
 		return true;
 	}
 
-	/**
-	 * @return {@code true} if the given string can be parsed into a valid {@link Path} object.
-	 */
-	public static boolean isValidPath(String path) {
-
-		try { Paths.get(path); }
-		catch (InvalidPathException e) {
-			return false;
+	public static @Nullable Path getPathOrNull(String path) {
+		try {
+			return Paths.get(path);
 		}
-		return true;
+		catch (InvalidPathException e) {
+			return null;
+		}
 	}
 
 	public static URL getURL(String link) {
@@ -76,6 +75,15 @@ public class Utils {
 		}
 		catch (MalformedURLException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	public static @Nullable URL getURLOrNull(String link) {
+		try {
+			return new URL(link);
+		}
+		catch (MalformedURLException e) {
+			return null;
 		}
 	}
 

@@ -25,7 +25,6 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import io.yooksi.pz.zdoc.logger.Logger;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 
@@ -36,6 +35,7 @@ import io.yooksi.pz.zdoc.doc.LuaDoc;
 import io.yooksi.pz.zdoc.element.JavaClass;
 import io.yooksi.pz.zdoc.element.LuaClass;
 import io.yooksi.pz.zdoc.element.Method;
+import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.parser.JavaDocFileParser;
 import io.yooksi.pz.zdoc.parser.JavaDocWebParser;
 import io.yooksi.pz.zdoc.parser.LuaDocParser;
@@ -102,8 +102,40 @@ public class Main {
 				if (Utils.isLuaFile(path))
 				{
 					Logger.debug(String.format("Found lua file \"%s\"", path.getFileName()));
-					Path outputFilePath = validateLuaOutputPath(path, root, dir);
-
+					Path outputFilePath;
+					if (!root.toFile().exists()) {
+						throw new FileNotFoundException(root.toString());
+					}
+					/* user did not specify output dir path */
+					else if (dir != null)
+					{
+						File outputDirFile = dir.toFile();
+						if (!outputDirFile.exists() && !outputDirFile.mkdirs()) {
+							throw new IOException("Unable to create output directory: " + dir);
+						}
+						/* root path matches current path so there are no
+						 * subdirectories, just resolve the filename against root path
+						 */
+						if (root.compareTo(path) == 0) {
+							outputFilePath = dir.resolve(path.getFileName());
+						}
+						else outputFilePath = dir.resolve(root.relativize(path));
+					}
+					/* overwrite file when unspecified output directory */
+					else
+					{
+						outputFilePath = path;
+						Logger.warn("Unspecified output directory, overwriting files");
+					}
+					/* make sure output file exists before we try to write to it */
+					File outputFile = outputFilePath.toFile();
+					if (!outputFile.exists())
+					{
+						File parentFile = outputFile.getParentFile();
+						if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
+							throw new IOException("Unable to create specified output file: " + outputFilePath);
+						}
+					}
 					LuaDoc doc = LuaDocParser.create(path.toFile(), excludedMembers).parse();
 					if (!doc.getMembers().isEmpty()) {
 						doc.writeToFile(outputFilePath);
@@ -137,15 +169,13 @@ public class Main {
 
 			if (cmdLine.isInputApi())
 			{
-				URL sourceURL;
-				String source = cmdLine.getApiLocation();
+				Object source = cmdLine.getApiLocation();
 				if (source == null) {
-					sourceURL = JavaDoc.API_GLOBAL_OBJECT;
+					source = JavaDoc.API_GLOBAL_OBJECT;
 				}
-				else sourceURL = Utils.isValidUrl(source) ? Utils.getURL(source) : null;
-				if (sourceURL != null)
+				if (source instanceof URL)
 				{
-					Logger.debug("Reading from api URL: " + sourceURL.toString());
+					Logger.debug("Reading from api URL: " + source.toString());
 
 					boolean includeRefs = cmdLine.shouldIncludeRefs();
 					List<Method> methods = new ArrayList<>();
@@ -153,11 +183,11 @@ public class Main {
 					List<String> userExclude = cmdLine.getExcludedClasses();
 					Set<String> exclude = new HashSet<>(userExclude);
 
-					JavaDocWebParser parser = JavaDocWebParser.create(sourceURL);
+					JavaDocWebParser parser = JavaDocWebParser.create((URL) source);
 					JavaDoc<URL> javaDoc = parser.parse();
 
 					Path output = userOutput.resolve(parser.getOutputFilePath("lua"));
-					LuaDoc luaDoc = javaDoc.convertToLuaDoc(true, false);
+					LuaDoc luaDoc = javaDoc.compileLuaLibrary(true, false);
 					exclude.add(luaDoc.getName());
 
 					if (includeRefs) {
@@ -175,7 +205,7 @@ public class Main {
 						JavaDocWebParser memberParser = JavaDocWebParser.create(memberUrl);
 
 						output = userOutput.resolve(memberParser.getOutputFilePath("lua"));
-						luaDoc = memberParser.parse().convertToLuaDoc(true, true);
+						luaDoc = memberParser.parse().compileLuaLibrary(true, true);
 						exclude.add(luaDoc.getName());
 
 						if (includeRefs) {
@@ -189,59 +219,17 @@ public class Main {
 						if (!membersFile.exists() && !membersFile.createNewFile()) {
 							throw new IOException("Unable to create Members.lua");
 						}
-						List<String> memberDoc = LuaClass.documentMembers(methods, exclude);
+						List<String> memberDoc = LuaClass.documentRefMembers(methods, exclude);
 						FileUtils.writeLines(membersFile, memberDoc, false);
 					}
-				}
-				else if (Utils.isValidPath(source))
-				{
-					Path sourcePath = Paths.get(source);
+				} else {
+					Path sourcePath = (Path) source;
 					JavaDocFileParser parser = JavaDocFileParser.create(sourcePath);
 					Path output = userOutput.resolve(sourcePath.getFileName());
-					parser.parse().convertToLuaDoc(true, false).writeToFile(output);
+					parser.parse().compileLuaLibrary(true, false).writeToFile(output);
 				}
-				else throw new IllegalArgumentException("Unable to parse api path/url");
 			}
 		}
 		Logger.debug("Finished processing command");
-	}
-
-	private static Path validateLuaOutputPath(Path path, Path root, Path dir) throws IOException {
-
-		Path outputPath;
-		if (!root.toFile().exists()) {
-			throw new FileNotFoundException(root.toString());
-		}
-		/* user did not specify output dir path */
-		else if (dir != null)
-		{
-			File outputDirFile = dir.toFile();
-			if (!outputDirFile.exists() && !outputDirFile.mkdirs()) {
-				throw new IOException("Unable to create output directory: " + dir);
-			}
-			/* root path matches current path so there are no
-			 * subdirectories, just resolve the filename against root path
-			 */
-			if (root.compareTo(path) == 0) {
-				outputPath = dir.resolve(path.getFileName());
-			}
-			else outputPath = dir.resolve(root.relativize(path));
-		}
-		/* overwrite file when unspecified output directory */
-		else
-		{
-			outputPath = path;
-			Logger.warn("Unspecified output directory, overwriting files");
-		}
-		/* make sure output file exists before we try to write to it */
-		File outputFile = outputPath.toFile();
-		if (!outputFile.exists())
-		{
-			File parentFile = outputFile.getParentFile();
-			if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
-				throw new IOException("Unable to create specified output file: " + outputPath);
-			}
-		}
-		return outputPath;
 	}
 }
