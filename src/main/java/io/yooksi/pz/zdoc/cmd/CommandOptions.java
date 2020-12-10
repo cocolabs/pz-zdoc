@@ -36,9 +36,10 @@ public final class CommandOptions {
 					.valueSeparator(' ').build();
 
 	static final Option API_OPTION =
-			Option.builder("a").longOpt("api-docs").desc("read online api from url")
-					.type(URL.class).required(false).hasArg().argName("url")
-					.valueSeparator(' ').build();
+			Option.builder("a").longOpt("api-doc").desc("read api from url or path")
+					.type(String.class).required(false).hasArg().optionalArg(true)
+					.argName("url|path").valueSeparator(' ').build();
+
 	static final Option INCLUDE_REFS_OPTION =
 			Option.builder("r").longOpt("include-refs").desc("include referenced classes such as " +
 					"parameter and return types found in main class").required(false).build();

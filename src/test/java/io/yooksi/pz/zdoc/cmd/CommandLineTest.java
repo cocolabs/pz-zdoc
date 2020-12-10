@@ -88,7 +88,7 @@ public class CommandLineTest {
 			String[] args = new String[]{ Command.COMPILE.name, "-a", target, "-o", "output/path" };
 			CommandLine cmdLIne = CommandLine.parse(Command.COMPILE.options, args);
 
-			Assertions.assertEquals(expected, cmdLIne.getInputUrl());
+			Assertions.assertEquals(expected, cmdLIne.getApiLocation());
 		}
 	}
 }

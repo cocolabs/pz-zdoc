@@ -116,18 +116,6 @@ public class Main {
 		{
 			Logger.debug("Preparing to parse java doc...");
 
-			Object source;
-			if (cmdLine.isInputApi())
-			{
-				Logger.debug("Reading from online api");
-				source = cmdLine.getInputUrl();
-				if (source == null) {
-					source = JavaDoc.API_GLOBAL_OBJECT;
-				}
-			}
-			else source = cmdLine.getInputPath();
-			Logger.debug("Reading from source " + source);
-
 			Path userOutput = cmdLine.getOutputPath();
 			if (userOutput == null)
 			{
@@ -147,61 +135,73 @@ public class Main {
 			}
 			else Logger.debug("Designated output path: " + userOutput);
 
-			if (source instanceof URL)
+			if (cmdLine.isInputApi())
 			{
-				boolean includeRefs = cmdLine.shouldIncludeRefs();
-				List<Method> methods = new ArrayList<>();
-
-				List<String> userExclude = cmdLine.getExcludedClasses();
-				Set<String> exclude = new HashSet<>(userExclude);
-
-				JavaDocWebParser parser = JavaDocWebParser.create((URL) source);
-				JavaDoc<URL> javaDoc = parser.parse();
-
-				Path output = userOutput.resolve(parser.getOutputFilePath("lua"));
-				LuaDoc luaDoc = javaDoc.convertToLuaDoc(true, false);
-				exclude.add(luaDoc.getName());
-
-				if (includeRefs) {
-					methods.addAll(luaDoc.getMethods());
+				URL sourceURL;
+				String source = cmdLine.getApiLocation();
+				if (source == null) {
+					sourceURL = JavaDoc.API_GLOBAL_OBJECT;
 				}
-				luaDoc.writeToFile(output);
-
-				for (Map.Entry<String, JavaClass<URL>> entry : javaDoc.getMembers().entrySet())
+				else sourceURL = Utils.isValidUrl(source) ? Utils.getURL(source) : null;
+				if (sourceURL != null)
 				{
-					JavaClass<URL> javaClass = entry.getValue();
-					if (userExclude.contains(javaClass.getName())) {
-						continue;
-					}
-					String memberUrl = javaClass.getLocation().toString();
-					JavaDocWebParser memberParser = JavaDocWebParser.create(memberUrl);
+					Logger.debug("Reading from api URL: " + sourceURL.toString());
 
-					output = userOutput.resolve(memberParser.getOutputFilePath("lua"));
-					luaDoc = memberParser.parse().convertToLuaDoc(true, true);
+					boolean includeRefs = cmdLine.shouldIncludeRefs();
+					List<Method> methods = new ArrayList<>();
+
+					List<String> userExclude = cmdLine.getExcludedClasses();
+					Set<String> exclude = new HashSet<>(userExclude);
+
+					JavaDocWebParser parser = JavaDocWebParser.create(sourceURL);
+					JavaDoc<URL> javaDoc = parser.parse();
+
+					Path output = userOutput.resolve(parser.getOutputFilePath("lua"));
+					LuaDoc luaDoc = javaDoc.convertToLuaDoc(true, false);
 					exclude.add(luaDoc.getName());
 
 					if (includeRefs) {
 						methods.addAll(luaDoc.getMethods());
 					}
 					luaDoc.writeToFile(output);
-				}
-				if (includeRefs)
-				{
-					File membersFile = userOutput.resolve("Members.lua").toFile();
-					if (!membersFile.exists() && !membersFile.createNewFile()) {
-						throw new IOException("Unable to create Members.lua");
+
+					for (Map.Entry<String, JavaClass<URL>> entry : javaDoc.getMembers().entrySet())
+					{
+						JavaClass<URL> javaClass = entry.getValue();
+						if (userExclude.contains(javaClass.getName())) {
+							continue;
+						}
+						String memberUrl = javaClass.getLocation().toString();
+						JavaDocWebParser memberParser = JavaDocWebParser.create(memberUrl);
+
+						output = userOutput.resolve(memberParser.getOutputFilePath("lua"));
+						luaDoc = memberParser.parse().convertToLuaDoc(true, true);
+						exclude.add(luaDoc.getName());
+
+						if (includeRefs) {
+							methods.addAll(luaDoc.getMethods());
+						}
+						luaDoc.writeToFile(output);
 					}
-					List<String> memberDoc = LuaClass.documentMembers(methods, exclude);
-					FileUtils.writeLines(membersFile, memberDoc, false);
+					if (includeRefs)
+					{
+						File membersFile = userOutput.resolve("Members.lua").toFile();
+						if (!membersFile.exists() && !membersFile.createNewFile()) {
+							throw new IOException("Unable to create Members.lua");
+						}
+						List<String> memberDoc = LuaClass.documentMembers(methods, exclude);
+						FileUtils.writeLines(membersFile, memberDoc, false);
+					}
 				}
+				else if (Utils.isValidPath(source))
+				{
+					Path sourcePath = Paths.get(source);
+					JavaDocFileParser parser = JavaDocFileParser.create(sourcePath);
+					Path output = userOutput.resolve(sourcePath.getFileName());
+					parser.parse().convertToLuaDoc(true, false).writeToFile(output);
+				}
+				else throw new IllegalArgumentException("Unable to parse api path/url");
 			}
-			else if (source != null)
-			{
-				JavaDocFileParser parser = JavaDocFileParser.create((Path) source);
-				Path output = userOutput.resolve(((Path) source).getFileName());
-				parser.parse().convertToLuaDoc(true, false).writeToFile(output);
-			}
-			else throw new IllegalArgumentException("Unable to parse input path/url");
 		}
 		Logger.debug("Finished processing command");
 	}

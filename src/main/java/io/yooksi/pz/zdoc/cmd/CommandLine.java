@@ -19,7 +19,6 @@ package io.yooksi.pz.zdoc.cmd;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +29,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.Nullable;
-
-import io.yooksi.pz.zdoc.doc.JavaDoc;
 
 public class CommandLine extends org.apache.commons.cli.CommandLine {
 
@@ -97,19 +94,13 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		return new ArrayList<>();
 	}
 
-	public @Nullable URL getInputUrl() {
+	public @Nullable String getApiLocation() {
 
-		if (isInputApi())
-		{
-			Option option = CommandOptions.API_OPTION;
-			try {
-				return getParsedValue(option);
-			}
-			catch (IllegalArgumentException e) {
-				return JavaDoc.resolveApiURL(getOptionValue(option.getOpt()));
-			}
+		if (isInputApi()) {
+			return getParsedValue(CommandOptions.API_OPTION);
 		}
-		return null;
+		throw new UnsupportedOperationException("Cannot get API location, " +
+				"command was not executed with api switch");
 	}
 
 	public Path getInputPath() {
