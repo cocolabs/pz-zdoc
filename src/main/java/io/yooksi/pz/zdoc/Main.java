@@ -149,6 +149,9 @@ public class Main {
 
 			if (source instanceof URL)
 			{
+				boolean includeRefs = cmdLine.shouldIncludeRefs();
+				List<Method> methods = new ArrayList<>();
+
 				List<String> userExclude = cmdLine.getExcludedClasses();
 				Set<String> exclude = new HashSet<>(userExclude);
 
@@ -159,7 +162,9 @@ public class Main {
 				LuaDoc luaDoc = javaDoc.convertToLuaDoc(true, false);
 				exclude.add(luaDoc.getName());
 
-				List<Method> methods = new ArrayList<>(luaDoc.getMethods());
+				if (includeRefs) {
+					methods.addAll(luaDoc.getMethods());
+				}
 				luaDoc.writeToFile(output);
 
 				for (Map.Entry<String, JavaClass<URL>> entry : javaDoc.getMembers().entrySet())
@@ -175,15 +180,20 @@ public class Main {
 					luaDoc = memberParser.parse().convertToLuaDoc(true, true);
 					exclude.add(luaDoc.getName());
 
-					methods.addAll(luaDoc.getMethods());
+					if (includeRefs) {
+						methods.addAll(luaDoc.getMethods());
+					}
 					luaDoc.writeToFile(output);
 				}
-				File membersFile = userOutput.resolve("Members.lua").toFile();
-				if (!membersFile.exists() && !membersFile.createNewFile()) {
-					throw new IOException("Unable to create Members.lua");
+				if (includeRefs)
+				{
+					File membersFile = userOutput.resolve("Members.lua").toFile();
+					if (!membersFile.exists() && !membersFile.createNewFile()) {
+						throw new IOException("Unable to create Members.lua");
+					}
+					List<String> memberDoc = LuaClass.documentMembers(methods, exclude);
+					FileUtils.writeLines(membersFile, memberDoc, false);
 				}
-				List<String> memberDoc = LuaClass.documentMembers(methods, exclude);
-				FileUtils.writeLines(membersFile, memberDoc, false);
 			}
 			else if (source != null)
 			{

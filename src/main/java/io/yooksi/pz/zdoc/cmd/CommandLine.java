@@ -78,6 +78,10 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		}
 	}
 
+	public boolean shouldIncludeRefs() {
+		return hasOption(CommandOptions.INCLUDE_REFS_OPTION.getOpt());
+	}
+
 	public boolean isInputApi() {
 		return hasOption(CommandOptions.API_OPTION.getOpt());
 	}

@@ -18,7 +18,6 @@
 package io.yooksi.pz.zdoc.cmd;
 
 import java.io.File;
-import java.net.URL;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
@@ -40,6 +39,9 @@ public final class CommandOptions {
 			Option.builder("a").longOpt("api-docs").desc("read online api from url")
 					.type(URL.class).required(false).hasArg().argName("url")
 					.valueSeparator(' ').build();
+	static final Option INCLUDE_REFS_OPTION =
+			Option.builder("r").longOpt("include-refs").desc("include referenced classes such as " +
+					"parameter and return types found in main class").required(false).build();
 
 	static final Option EXCLUDE_CLASS_OPTION =
 			Option.builder("e").longOpt("exclude-class")
@@ -60,6 +62,7 @@ public final class CommandOptions {
 		);
 		JAVA_OPTIONS.addOptionGroup(javaOptGroup)
 				.addOption(clone(OUTPUT_OPTION))
+				.addOption(INCLUDE_REFS_OPTION)
 				.addOption(EXCLUDE_CLASS_OPTION);
 	}
 
