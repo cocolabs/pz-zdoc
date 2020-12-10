@@ -29,9 +29,9 @@ public class CommandTest {
 	@Test
 	void shouldReturnAllMatchingCommands() {
 
-		Assertions.assertNotNull(Command.parse(new String[]{ "lua" }));
-		Assertions.assertNotNull(Command.parse(new String[]{ "java" }));
-
+		Arrays.stream(Command.values()).forEach(c ->
+				Assertions.assertNotNull(Command.parse(new String[]{ c.name }))
+		);
 		Assertions.assertNull(Command.parse(new String[]{}));
 		Assertions.assertNull(Command.parse(new String[]{ "t" }));
 		Assertions.assertNull(Command.parse(new String[]{ "t", "lua" }));
@@ -41,11 +41,11 @@ public class CommandTest {
 	@Test
 	void shouldRecognizeAllCommands() {
 
-		Assertions.assertNotNull(Command.get("lua"));
-		Assertions.assertNotNull(Command.get("java"));
-
+		Arrays.stream(Command.values()).forEach(c ->
+				Assertions.assertNotNull(Command.get(c.name))
+		);
 		Assertions.assertNull(Command.get(""));
-		Assertions.assertNull(Command.get("t"));
+		Assertions.assertNull(Command.get("invalid"));
 	}
 
 	@Test

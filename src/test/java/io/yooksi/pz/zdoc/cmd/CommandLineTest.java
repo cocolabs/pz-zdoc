@@ -17,7 +17,6 @@
  */
 package io.yooksi.pz.zdoc.cmd;
 
-import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -27,7 +26,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.MainTest;
-import io.yooksi.pz.zdoc.doc.JavaDoc;
 
 public class CommandLineTest {
 
@@ -71,24 +69,6 @@ public class CommandLineTest {
 			final String[] args2 = MainTest.formatAppArgs(command, "input/path", path);
 			Assertions.assertThrows(InvalidPathException.class, () ->
 					CommandLine.parse(command.options, args2).getOutputPath());
-		}
-	}
-
-	@Test
-	void shouldProperlyParseCommandInputURL() throws ParseException {
-
-		String[] targets = {
-				"zombie/inventory/InventoryItem.html",
-				JavaDoc.resolveApiURL("zombie/inventory/InventoryItem.html").toString()
-		};
-		for (String target : targets)
-		{
-			URL expected = JavaDoc.resolveApiURL(target);
-
-			String[] args = new String[]{ Command.COMPILE.name, "-a", target, "-o", "output/path" };
-			CommandLine cmdLIne = CommandLine.parse(Command.COMPILE.options, args);
-
-			Assertions.assertEquals(expected, cmdLIne.getApiLocation());
 		}
 	}
 }
