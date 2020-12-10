@@ -98,9 +98,9 @@ public class CommandTest {
 		String[] goodArgs = new String[]{ "-a", "input/path", "-o", "output/path" };
 
 		Assertions.assertThrows(ParseException.class, () -> CommandLine.parse(
-				Command.JAVA.options, ArrayUtils.addFirst(badArgs, Command.JAVA.name)));
+				Command.COMPILE.options, ArrayUtils.addFirst(badArgs, Command.COMPILE.name)));
 
-		Assertions.assertDoesNotThrow(() -> CommandLine.parse(Command.JAVA.options,
-				ArrayUtils.addFirst(goodArgs, Command.JAVA.name)));
+		Assertions.assertDoesNotThrow(() -> CommandLine.parse(Command.COMPILE.options,
+				ArrayUtils.addFirst(goodArgs, Command.COMPILE.name)));
 	}
 }

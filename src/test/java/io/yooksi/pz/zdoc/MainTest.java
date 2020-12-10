@@ -91,7 +91,7 @@ public class MainTest extends TestWorkspace {
 		Assertions.assertTrue(notDirFile.createNewFile());
 
 		Assertions.assertThrows(IllegalArgumentException.class,
-				runMain(Command.JAVA, "input/path", notDirFile.getPath()));
+				runMain(Command.COMPILE, "input/path", notDirFile.getPath()));
 	}
 
 	@Test
@@ -100,7 +100,7 @@ public class MainTest extends TestWorkspace {
 		createSampleLuaFile();
 		File outputDir = dir.toPath().resolve("output").toFile();
 		Assertions.assertTrue(outputDir.mkdir());
-		Assertions.assertDoesNotThrow(runMain(Command.LUA, file.getPath(), outputDir.getPath()));
+		Assertions.assertDoesNotThrow(runMain(Command.ANNOTATE, file.getPath(), outputDir.getPath()));
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class MainTest extends TestWorkspace {
 
 		createSampleLuaFile();
 		File outputDir = dir.toPath().resolve("output").toFile();
-		Assertions.assertDoesNotThrow(runMain(Command.LUA, file.getPath(), outputDir.getPath()));
+		Assertions.assertDoesNotThrow(runMain(Command.ANNOTATE, file.getPath(), outputDir.getPath()));
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class MainTest extends TestWorkspace {
 		};
 		FileUtils.writeLines(file, Arrays.asList(write));
 
-		runMain(Command.LUA, dir.getPath(), "").execute();
+		runMain(Command.ANNOTATE, dir.getPath(), "").execute();
 
 		List<String> read = FileUtils.readLines(file, Charset.defaultCharset());
 		Assertions.assertEquals(EmmyLua.CLASS.create(new String[]{ "sampleLua" }), read.get(1));
@@ -140,7 +140,7 @@ public class MainTest extends TestWorkspace {
 		File sampleFile = sampleDir.toPath().resolve(file.getName()).toFile();
 		Assertions.assertTrue(sampleFile.exists());
 
-		runMain(Command.LUA, rootPath.toString(), outputDir.toString()).execute();
+		runMain(Command.ANNOTATE, rootPath.toString(), outputDir.toString()).execute();
 
 		File outputFile = outputDir.resolve("sample").resolve(file.getName()).toFile();
 		Assertions.assertTrue(outputFile.exists());
@@ -157,7 +157,7 @@ public class MainTest extends TestWorkspace {
 		Assertions.assertTrue(outputDir.mkdir());
 
 		String input = "src/test/resources/Sample.html";
-		runMain(Command.JAVA, input, outputDir.getPath()).execute();
+		runMain(Command.COMPILE, input, outputDir.getPath()).execute();
 
 		String[] expected = {
 				"---@return void",

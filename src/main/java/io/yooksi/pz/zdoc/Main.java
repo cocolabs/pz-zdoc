@@ -80,7 +80,7 @@ public class Main {
 		}
 		CommandLine cmdLine = CommandLine.parse(command.getOptions(), args);
 		// parse and document LUA files
-		if (command == Command.LUA)
+		if (command == Command.ANNOTATE)
 		{
 			Logger.debug("Preparing to parse and document lua files...");
 
@@ -112,7 +112,7 @@ public class Main {
 			}
 		}
 		// parse JAVA docs and document LUA files
-		else if (command == Command.JAVA)
+		else if (command == Command.COMPILE)
 		{
 			Logger.debug("Preparing to parse java doc...");
 

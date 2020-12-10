@@ -28,8 +28,8 @@ import org.jetbrains.annotations.Nullable;
 public enum Command {
 
 	HELP("help", "", new Options(), "print command usage info"),
-	LUA("lua", CommandOptions.LUA_OPTIONS, "annotate lua files with EmmyLua"),
-	JAVA("java", CommandOptions.JAVA_OPTIONS, "convert java doc to lua library");
+	ANNOTATE("annotate", CommandOptions.LUA_OPTIONS, "annotate lua files with EmmyLua"),
+	COMPILE("compile", CommandOptions.JAVA_OPTIONS, "compile javadoc to lua library");
 
 	static final Command[] WORK_COMMANDS = Arrays.stream(Command.values())
 			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
