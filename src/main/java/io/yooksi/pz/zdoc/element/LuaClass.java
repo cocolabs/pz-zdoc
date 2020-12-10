@@ -103,7 +103,7 @@ public class LuaClass extends MemberClass {
 		return documentation;
 	}
 
-	void writeTo(Collection<String> content, boolean annotate) {
+	public void writeTo(Collection<String> content, boolean annotate) {
 
 		if (annotate)
 		{
