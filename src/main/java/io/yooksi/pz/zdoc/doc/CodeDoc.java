@@ -42,18 +42,16 @@ import io.yooksi.pz.zdoc.lang.ParseResult;
 @SuppressWarnings("unused")
 public abstract class CodeDoc<M extends Method> implements ParseResult {
 
+	/** Name of this document and main class. */
 	private final String name;
 
+	/** Non-null guaranteed list of parsed methods contained in this document. */
 	private final @UnmodifiableView List<M> methods;
 
-	/**
-	 * Textual representation of this document ready for output.
-	 */
+	/** Textual representation of this document ready for output. */
 	private final @UnmodifiableView List<String> content;
 
-	/**
-	 * Textual representation of class fields or function parameters.
-	 */
+	/** Textual representation of class fields or function parameters. */
 	private final @UnmodifiableView Map<String, MemberClass> members;
 
 	public CodeDoc(String name, List<String> content, Set<? extends MemberClass> members, List<M> methods) {
@@ -85,6 +83,14 @@ public abstract class CodeDoc<M extends Method> implements ParseResult {
 		return methods;
 	}
 
+	/**
+	 * Write textual representation of this document to file.
+	 * Note that the file will be cleared of all content before writing.
+	 *
+	 * @param path path to target file.
+	 *
+	 * @throws IOException if an I/O error occurred while writing to file.
+	 */
 	public void writeToFile(Path path) throws IOException {
 		FileUtils.writeLines(path.toFile(), content, false);
 	}

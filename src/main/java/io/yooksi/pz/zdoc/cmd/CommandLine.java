@@ -19,6 +19,7 @@ package io.yooksi.pz.zdoc.cmd;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +31,14 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.Nullable;
 
+import io.yooksi.pz.zdoc.Utils;
+
+/**
+ * Apache Commons {@code CommandLine} wrapper providing additional methods.
+ */
 public class CommandLine extends org.apache.commons.cli.CommandLine {
 
+	/** Used to parse application arguments to find command options. */
 	private static final CommandParser PARSER = new CommandParser();
 
 	protected CommandLine(Option[] options, String[] args) {
@@ -48,6 +55,12 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		return PARSER.parse(options, args);
 	}
 
+	/**
+	 * Prints help text for the given {@code Command}.
+	 *
+	 * @see HelpFormatter#printHelp(String cmdLineSyntax, String header,
+	 *        Options options, String footer, boolean autoUsage) HelpFormatter.printHelp(...)
+	 */
 	public static void printHelp(Command command) {
 
 		HelpFormatter formatter = new HelpFormatter();
@@ -56,6 +69,13 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		formatter.printHelp(command.name, command.help, command.options, "", true);
 	}
 
+	/**
+	 * Prints help text for the given array of commands.
+	 *
+	 * @see HelpFormatter#printHelp(PrintWriter pw, int width, String cmdLineSyntax, String header,
+	 *        Options options, int leftPad, int descPad, String footer, boolean autoUsage)
+	 * 		HelpFormatter.printHelp(...)
+	 */
 	public static void printHelp(Command[] commands) {
 
 		try (PrintWriter pw = new PrintWriter(System.out))
@@ -75,14 +95,32 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		}
 	}
 
+	/**
+	 * @return {@code true} if command operation is configured to include
+	 * 		referenced members such as method parameters and return values.
+	 *
+	 * @see CommandOptions#INCLUDE_REFS_OPTION
+	 */
 	public boolean shouldIncludeRefs() {
 		return hasOption(CommandOptions.INCLUDE_REFS_OPTION.getOpt());
 	}
 
+	/**
+	 * @return {@code true} if command operation is configured to read
+	 * 		from API documentation instead of game classes.
+	 *
+	 * @see CommandOptions#API_OPTION
+	 */
 	public boolean isInputApi() {
 		return hasOption(CommandOptions.API_OPTION.getOpt());
 	}
 
+	/**
+	 * @return a list of class names specified in command options to exclude from
+	 * 		compilation process or an empty list if exclude option has not been set.
+	 *
+	 * @see CommandOptions#EXCLUDE_CLASS_OPTION
+	 */
 	public List<String> getExcludedClasses() {
 
 		Option excludeOpt = CommandOptions.EXCLUDE_CLASS_OPTION;
@@ -94,6 +132,14 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		return new ArrayList<>();
 	}
 
+	/**
+	 * @return location of API specified by command options or {@code null} if API option has not been set.
+	 * 		Returned value will always be either an {@link URL} or {@link Path} object.
+	 *
+	 * @throws UnsupportedOperationException if command operation is not configured to read from API.
+	 * @throws ParseException if parsed location is not a supported object type (URL or Path).
+	 * @see CommandOptions#API_OPTION
+	 */
 	public @Nullable Object getApiLocation() throws ParseException {
 
 		if (isInputApi())
@@ -117,10 +163,17 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 				"command was not executed with api switch");
 	}
 
+	/**
+	 * @return input path specified in command options.
+	 */
 	public Path getInputPath() {
 		return ((File) getParsedValue(CommandOptions.INPUT_OPTION)).toPath();
 	}
 
+	/**
+	 * @return output path specified in command options or {@code null} if
+	 * 		output command option was not specified.
+	 */
 	public @Nullable Path getOutputPath() {
 
 		File outputFile = getParsedValue(CommandOptions.OUTPUT_OPTION);

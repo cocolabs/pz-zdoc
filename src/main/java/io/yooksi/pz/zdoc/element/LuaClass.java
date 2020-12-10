@@ -44,6 +44,14 @@ public class LuaClass extends MemberClass {
 		this.type = "";
 	}
 
+	/**
+	 * Compile documentation on all classes referenced in given methods.
+	 * References are searched in method parameters and return values.
+	 *
+	 * @param methods list of methods to search for references.
+	 * @param excluded list of classes to exclude from search.
+	 * @return list of strings representing a ready-to-write document.
+	 */
 	public static List<String> documentRefMembers(List<Method> methods, Set<String> excluded) {
 
 		List<String> documentation = new ArrayList<>();

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import io.yooksi.pz.zdoc.lang.DataParser;
@@ -56,10 +57,15 @@ public class JavaMethod extends Method {
 			super(data);
 		}
 
-		public static Parser create(String data) {
+		/** @return new parser instance initialized with given data. */
+		public static @NotNull Parser create(String data) {
 			return new Parser(data);
 		}
 
+		/**
+		 * @return parsed {@code JavaMethod} instance or {@code null} if unable to parse given data.
+		 * @throws RuntimeException if parse data is {@code null}.
+		 */
 		@Override
 		public @Nullable JavaMethod parse() {
 

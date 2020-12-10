@@ -24,6 +24,9 @@ import java.util.Set;
 import io.yooksi.pz.zdoc.element.LuaClass;
 import io.yooksi.pz.zdoc.element.LuaMethod;
 
+/**
+ * This class represents a parsed Lua document.
+ */
 public class LuaDoc extends CodeDoc<LuaMethod> {
 
 	public LuaDoc(String name, List<String> content, Set<LuaClass> members, List<LuaMethod> methods) {

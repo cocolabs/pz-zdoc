@@ -25,6 +25,9 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * All available application commands.
+ */
 public enum Command {
 
 	HELP("help", "", new Options(), "print command usage info"),
@@ -33,13 +36,23 @@ public enum Command {
 
 	static
 	{
+		/* Add options (used only to print help) from static context to
+		 * help command since enums are not fully instantiated yet
+		 */
 		Arrays.stream(Command.values()).filter(c -> c != Command.HELP).collect(Collectors.toSet())
 				.forEach(c -> HELP.options.addOption(Option.builder(c.name).desc(c.help).build()));
 	}
 
+	/** Used to parse the command from application arguments. */
 	final String name;
+
+	/** Optional used to prefix printed commands in help context. */
 	final String prefix;
+
+	/** Possible options for this command. */
 	final Options options;
+
+	/** Command description printed with help command. */
 	final String help;
 
 	Command(String name, String prefix, Options options, String help) {
@@ -54,6 +67,7 @@ public enum Command {
 		this(name, HelpFormatter.DEFAULT_OPT_PREFIX, options, help);
 	}
 
+	/** @return {@code Command} that matches the given name. */
 	public static @Nullable Command get(String name) {
 
 		for (Command value : Command.values())
@@ -65,12 +79,33 @@ public enum Command {
 		return null;
 	}
 
+	/**
+	 * @return {@code Command} that matches first element in the given
+	 * 		array of arguments or {@code null} if no matching command was found.
+	 *
+	 * @throws IllegalArgumentException if argument array is empty.
+	 */
 	public static @Nullable Command parse(String[] args) {
-		return args.length > 0 ? get(args[0]) : null;
+
+		if (args.length > 0) {
+			return get(args[0]);
+		}
+		throw new IllegalArgumentException("Unable to parse command, argument array is empty.");
 	}
 
+	/**
+	 * @return {@code Command} that matches first element in the given
+	 * 		array of arguments or {@code null} if no matching command was found.
+	 *
+	 * @throws IllegalArgumentException if argument array is empty.
+	 */
 	public static @Nullable Command parse(String[] args, int fromIndex) {
-		return args.length > fromIndex ? get(args[fromIndex]) : null;
+
+		if (args.length > fromIndex) {
+			return get(args[fromIndex]);
+		}
+		throw new IllegalArgumentException(String.format("Unable to parse command from array, " +
+				"index %d is out of bounds for array size %d", fromIndex, args.length));
 	}
 
 	public String getName() {

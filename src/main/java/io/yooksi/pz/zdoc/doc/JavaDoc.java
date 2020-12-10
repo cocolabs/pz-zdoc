@@ -33,6 +33,9 @@ import io.yooksi.pz.zdoc.element.LuaMethod;
 
 /**
  * This class represents a parsed JavaDoc document.
+ *
+ * @param <L> object type denoting document location.
+ * 		Use {@code Path} for local documents and {@code URL} for remote documents.
  */
 public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
@@ -43,11 +46,23 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		super(name, new ArrayList<>(), members, methods);
 	}
 
+	/**
+	 * Resolve API url from the given path. If the given path can be parsed as an {@code URL}
+	 * the parsed {@code URL} object will be returned, otherwise if the path represents a
+	 * local file path it will be concatenated to the end of modding API URL.
+	 *
+	 * @throws IllegalArgumentException if the given path is not a valid {@code Path}
+	 * 		or {@code URL} object or if given path represents an {@code URL} object and
+	 * 		is not a valid Project Zomboid modding API link.
+	 */
 	public static URL resolveApiURL(String path) {
 
 		URL url = Utils.getURLOrNull(path);
 		if (url != null)
 		{
+			/* validate if link is valid PZ modding API link,
+			 * and use URI comparison because URL equivalent is flawed.
+			 */
 			URL host = Utils.getURL(url.getProtocol() + "://" + url.getHost());
 			URL segment = Utils.getURL(host, Paths.get(url.getPath()).getName(0).toString());
 			try {
@@ -72,6 +87,13 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 		return (Map<String, JavaClass<L>>) super.getMembers();
 	}
 
+	/**
+	 * Compiles Lua library from Java documentation.
+	 *
+	 * @param annotate should annotate elements with EmmyLua.
+	 * @param qualify should compile members with qualifiers.
+	 * @return compiled Lua library document.
+	 */
 	public LuaDoc compileLuaLibrary(boolean annotate, boolean qualify) {
 
 		List<String> content = new java.util.ArrayList<>();
@@ -93,6 +115,7 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 			content.add(luaMethod.toString());
 			content.add("");
 		}
+		// remove empty line at end of file
 		content.remove(content.size() - 1);
 		return new LuaDoc(getName(), content, new java.util.HashSet<>(), luaMethods);
 	}

@@ -19,6 +19,9 @@ package io.yooksi.pz.zdoc.element;
 
 /**
  * This class represents a parsed non-java-native class reference.
+ *
+ * @param <L> object type denoting class file location.
+ * 		Use {@code Path} for local documents and {@code URL} for remote documents.
  */
 public class JavaClass<L> extends MemberClass {
 
@@ -29,6 +32,7 @@ public class JavaClass<L> extends MemberClass {
 		this.location = location;
 	}
 
+	/** @return location of the file representing this class. */
 	public L getLocation() {
 		return location;
 	}
