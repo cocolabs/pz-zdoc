@@ -19,6 +19,7 @@ package io.yooksi.pz.zdoc.doc;
 
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,13 +65,18 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 			 * and use URI comparison because URL equivalent is flawed.
 			 */
 			URL host = Utils.getURL(url.getProtocol() + "://" + url.getHost());
-			URL segment = Utils.getURL(host, Paths.get(url.getPath()).getName(0).toString());
-			try {
-				if (!segment.toURI().equals(PZ_MODDING_URL.toURI())) {
-					throw new IllegalArgumentException("Invalid PZ modding API url: " + segment.toString());
+			Path urlPath = Paths.get(url.getPath());
+			if (urlPath.getNameCount() > 0)
+			{
+				URL segment = Utils.getURL(host, urlPath.getName(0).toString());
+				try {
+					if (!segment.toURI().equals(PZ_MODDING_URL.toURI())) {
+						throw new IllegalArgumentException("Invalid PZ modding API url: " + segment.toString());
+					}
 				}
-			} catch (URISyntaxException e) {
-				throw new RuntimeException(e);
+				catch (URISyntaxException e) {
+					throw new RuntimeException(e);
+				}
 			}
 			return url;
 		}
