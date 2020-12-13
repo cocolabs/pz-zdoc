@@ -20,12 +20,13 @@ package io.yooksi.pz.zdoc.cmd;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import io.yooksi.pz.zdoc.UnitTest;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CommandTest {
+public class CommandTest implements UnitTest {
 
 	private static final Command[] COMMANDS = Arrays.stream(Command.values())
 			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});

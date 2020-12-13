@@ -3,16 +3,11 @@
     <log_file alias="TestLog" path="$PROJECT_DIR$/logs/test.log" />
     <module name="pz-zdoc.test" />
     <useClassPathOnly />
-    <extension name="coverage">
-      <pattern>
-        <option name="PATTERN" value="io.yooksi.pz.zdoc.cmd.*" />
-        <option name="ENABLED" value="true" />
-      </pattern>
-    </extension>
     <option name="PACKAGE_NAME" value="io.yooksi.pz.zdoc.cmd" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="package" />
+    <option name="VM_PARAMETERS" value="-ea -Dzdoc.logger=&quot;dev&quot;" />
     <option name="PARAMETERS" value="" />
     <method v="2">
       <option name="Make" enabled="true" />

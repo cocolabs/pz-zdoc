@@ -17,10 +17,11 @@
  */
 package io.yooksi.pz.zdoc.element;
 
+import io.yooksi.pz.zdoc.UnitTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class JavaMethodTest {
+public class JavaMethodTest implements UnitTest {
 
 	@Test
 	void shouldCorrectlyParseComplexJavaMethod() {

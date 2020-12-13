@@ -35,7 +35,7 @@ import org.junit.jupiter.api.function.Executable;
 import io.yooksi.pz.zdoc.cmd.Command;
 import io.yooksi.pz.zdoc.lang.EmmyLua;
 
-public class MainTest extends TestWorkspace {
+public class MainTest extends TestWorkspace implements IntegrationTest {
 
 	MainTest() {
 		super("sampleLua.lua");

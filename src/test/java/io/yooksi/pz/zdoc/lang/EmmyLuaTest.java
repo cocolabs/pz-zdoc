@@ -17,10 +17,11 @@
  */
 package io.yooksi.pz.zdoc.lang;
 
+import io.yooksi.pz.zdoc.UnitTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class EmmyLuaTest {
+public class EmmyLuaTest implements UnitTest {
 
 	@Test
 	void shouldCorrectlyFormatEmmyLuaClassAnnotation() {

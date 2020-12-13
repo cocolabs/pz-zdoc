@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.yooksi.pz.zdoc.UnitTest;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,7 +38,7 @@ import io.yooksi.pz.zdoc.parser.JavaDocFileParser;
 import io.yooksi.pz.zdoc.parser.JavaDocParser;
 import io.yooksi.pz.zdoc.parser.JavaDocWebParser;
 
-public class JavaDocTest extends TestWorkspace {
+public class JavaDocTest extends TestWorkspace implements UnitTest {
 
 	private static JavaDocWebParser globalJavaDocParser;
 	private static JavaDocFileParser sampleJavaDocParser;
