@@ -36,7 +36,6 @@ public class CommandTest {
 		Arrays.stream(Command.values()).forEach(c ->
 				Assertions.assertNotNull(Command.parse(new String[]{ c.name }))
 		);
-		Assertions.assertNull(Command.parse(new String[]{}));
 		Assertions.assertNull(Command.parse(new String[]{ "t" }));
 		Assertions.assertNull(Command.parse(new String[]{ "t", "lua" }));
 		Assertions.assertNull(Command.parse(new String[]{ "t", "java" }));
