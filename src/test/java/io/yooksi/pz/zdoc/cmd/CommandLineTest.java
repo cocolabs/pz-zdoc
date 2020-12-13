@@ -23,12 +23,12 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.MainTest;
+import io.yooksi.pz.zdoc.UnitTest;
 
 public class CommandLineTest implements UnitTest {
 

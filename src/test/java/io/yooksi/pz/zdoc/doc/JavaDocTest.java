@@ -27,13 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.TestWorkspace;
+import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.*;
 import io.yooksi.pz.zdoc.parser.JavaDocFileParser;
 import io.yooksi.pz.zdoc.parser.JavaDocParser;

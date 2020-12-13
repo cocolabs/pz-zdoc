@@ -22,12 +22,12 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.TestWorkspace;
+import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.lang.EmmyLua;
 import io.yooksi.pz.zdoc.parser.LuaDocParser;
 

@@ -20,11 +20,12 @@ package io.yooksi.pz.zdoc.cmd;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import io.yooksi.pz.zdoc.UnitTest;
 
 public class CommandTest implements UnitTest {
 
