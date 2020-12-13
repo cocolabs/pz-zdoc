@@ -18,6 +18,7 @@
 package io.yooksi.pz.zdoc.doc;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -81,6 +82,13 @@ public class JavaDocTest extends TestWorkspace implements UnitTest {
 	void shouldThrowExceptionWhenResolvingApiURLWithInvalidArgument() {
 		Assertions.assertThrows(IllegalArgumentException.class,
 				() -> JavaDoc.resolveApiURL('\u0000' + "/p*!h"));
+	}
+
+	@Test
+	void shouldAttachMissingHTMLFileExtensionWhenParsingApiURL() throws MalformedURLException {
+
+		URL url = new URL("https://projectzomboid.com/modding/zombie/Class.html");
+		Assertions.assertEquals(url, JavaDoc.resolveApiURL("zombie/Class"));
 	}
 
 	@Test

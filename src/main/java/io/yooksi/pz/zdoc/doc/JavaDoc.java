@@ -31,6 +31,7 @@ import io.yooksi.pz.zdoc.element.JavaClass;
 import io.yooksi.pz.zdoc.element.JavaMethod;
 import io.yooksi.pz.zdoc.element.LuaClass;
 import io.yooksi.pz.zdoc.element.LuaMethod;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * This class represents a parsed JavaDoc document.
@@ -48,9 +49,13 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 	}
 
 	/**
-	 * Resolve API url from the given path. If the given path can be parsed as an {@code URL}
+	 * <p>Resolve API url from the given path. If the given path can be parsed as an {@code URL}
 	 * the parsed {@code URL} object will be returned, otherwise if the path represents a
-	 * local file path it will be concatenated to the end of modding API URL.
+	 * local file path it will be concatenated to the end of modding API URL.</p>
+	 *
+	 * Note that the resolved API URL always has to point to a HTML document,
+	 * which means that the resulting URL is guaranteed to point to a file with
+	 * an {@code .html} extension even if the user did not specify it.
 	 *
 	 * @throws IllegalArgumentException if the given path is not a valid {@code Path}
 	 * 		or {@code URL} object or if given path represents an {@code URL} object and
@@ -80,8 +85,11 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 			}
 			return url;
 		}
-		else if (Utils.isValidPath(path)) {
-			return Utils.getURL(PZ_MODDING_URL, "modding", path);
+		Path pPath = Utils.getPathOrNull(path);
+		if (pPath != null)
+		{
+			String ext = FilenameUtils.getExtension(pPath.getFileName().toString());
+			return Utils.getURL(PZ_MODDING_URL, "modding", ext.equals("html") ? path : path + ".html");
 		}
 		else throw new IllegalArgumentException(String.format("Cannot resolve api URL - " +
 					"argument \"%s\" is not a valid Path or URL", path));
