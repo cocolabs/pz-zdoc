@@ -70,6 +70,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     compile group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
 
+    // Project Zomboid libraries
+    runtimeOnly fileTree(dir: gameDir, include: ['*.jar'])
+
     compile files("$buildDir/libs/zomboid.jar")
 }
 
