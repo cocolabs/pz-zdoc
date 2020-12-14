@@ -255,8 +255,8 @@ public class Main {
 			Logger.debug("Initializing PZ LuaManager...");
 			LuaManager.init();
 		}
-		catch (ExceptionInInitializerError e) {
-			Logger.debug("Caught ExceptionInInitializerError - this was expected");
+		catch (Throwable e) {
+			Logger.debug(String.format("Caught exception %s: %s", e.getClass().getName(), e.getMessage()));
 		}
 		return (HashSet<Class<?>>) FieldUtils.readDeclaredField(
 				LuaManager.exposer, "exposed", true);
