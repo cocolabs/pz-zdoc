@@ -4,8 +4,9 @@
     <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
     <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.zdoc.Main" />
     <module name="pz-zdoc.main" />
-    <option name="PROGRAM_PARAMETERS" value="java --api-docs zombie/Lua/LuaManager.GlobalObject.html -o build/generated/sources/lua/shared/Library -e Recipe,Vector2" />
+    <option name="PROGRAM_PARAMETERS" value="compile -i $STEAM_DIR$/steamapps/common/ProjectZomboid -o build/generated/sources/lua/shared/Library -e Recipe,Vector2" />
     <option name="VM_PARAMETERS" value="-Dzdoc.logger=&quot;dev&quot;" />
+    <option name="WORKING_DIRECTORY" value="$STEAM_DIR$/steamapps/common/ProjectZomboid" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
