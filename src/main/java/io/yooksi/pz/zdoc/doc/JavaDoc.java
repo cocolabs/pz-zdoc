@@ -54,10 +54,12 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 	 * Resolve API url from the given path. If the given path can be parsed as an {@code URL}
 	 * the parsed {@code URL} object will be returned, otherwise if the path represents a
 	 * local file path it will be concatenated to the end of modding API URL.
-	 * </p>
+	 * </p><br/>
+	 * <i>
 	 * Note that the resolved API URL always has to point to a HTML document,
 	 * which means that the resulting URL is guaranteed to point to a file with
 	 * an {@code .html} extension even if the user did not specify it.
+	 * </i>
 	 *
 	 * @throws IllegalArgumentException if the given path is not a valid {@code Path}
 	 * 		or {@code URL} object or if given path represents an {@code URL} object and
