@@ -182,4 +182,13 @@ public class MainTest extends TestWorkspace implements IntegrationTest {
 			Assertions.assertEquals(expected[i], actual.get(i));
 		}
 	}
+
+	@Test
+	void shouldGetExposedJavaClasses() throws IllegalAccessException {
+		/*
+		 * just confirm that the list is populated,
+		 * validating exposed objects would be too much setup
+		 */
+		Assertions.assertFalse(Main.getExposedJava(true).isEmpty());
+	}
 }

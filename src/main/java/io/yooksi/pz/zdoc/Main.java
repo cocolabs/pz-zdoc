@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 import io.yooksi.pz.zdoc.cmd.Command;
 import io.yooksi.pz.zdoc.cmd.CommandLine;
@@ -39,6 +40,8 @@ import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.parser.JavaDocFileParser;
 import io.yooksi.pz.zdoc.parser.JavaDocWebParser;
 import io.yooksi.pz.zdoc.parser.LuaDocParser;
+import zombie.Lua.LuaManager;
+import zombie.core.Core;
 
 public class Main {
 
@@ -233,5 +236,29 @@ public class Main {
 			}
 		}
 		Logger.debug("Finished processing command");
+	}
+
+	/**
+	 * Initialize {@link LuaManager} and return a set of exposed Java classes.
+	 *
+	 * @param debug should debug related classes be exposed.
+	 * @return a set of exposed Java classes.
+	 *
+	 * @throws IllegalAccessException if the private field ({@code LuaManager.Exposer#exposed})
+	 * 		holding the set of exposed Java classes could not be found.
+	 */
+	@SuppressWarnings("unchecked")
+	static HashSet<Class<?>> getExposedJava(boolean debug) throws IllegalAccessException {
+
+		Core.bDebug = debug;
+		try {
+			Logger.debug("Initializing PZ LuaManager...");
+			LuaManager.init();
+		}
+		catch (ExceptionInInitializerError e) {
+			Logger.debug("Caught ExceptionInInitializerError - this was expected");
+		}
+		return (HashSet<Class<?>>) FieldUtils.readDeclaredField(
+				LuaManager.exposer, "exposed", true);
 	}
 }
