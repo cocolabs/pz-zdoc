@@ -60,10 +60,15 @@ public class JavaDocWebParser extends JavaDocParser<URL> {
 		if (data == null) {
 			throw new RuntimeException("Tried to parse null data");
 		}
-		Element summaryTable = getMethodSummary();
-		List<JavaMethod> methods = parseMethods(summaryTable);
+		String filename = Paths.get(data.getPath()).getFileName().toString();
+		String name = FilenameUtils.getBaseName(filename);
 
 		Set<JavaClass<URL>> members = new java.util.HashSet<>();
+		Element summaryTable = getMethodSummary();
+		if (summaryTable == null) {
+			return new JavaDoc<>(name, members, new java.util.ArrayList<>());
+		}
+		List<JavaMethod> methods = parseMethods(summaryTable);
 		for (Element member : parseMemberHyperlinks(summaryTable))
 		{
 			try {
@@ -74,8 +79,8 @@ public class JavaDocWebParser extends JavaDocParser<URL> {
 				throw new RuntimeException(e);
 			}
 		}
-		String filename = Paths.get(data.getPath()).getFileName().toString();
-		return new JavaDoc<>(FilenameUtils.getBaseName(filename), members, methods);
+
+		return new JavaDoc<>(name, members, methods);
 	}
 
 	public Path getRelativeFilePath() {

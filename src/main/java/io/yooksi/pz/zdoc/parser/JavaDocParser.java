@@ -47,12 +47,11 @@ public abstract class JavaDocParser<T> extends DataParser<JavaDoc<T>, T> {
 		return element.replaceAll("\\w+\\.", "");
 	}
 
-	protected Element getMethodSummary() throws NoSuchElementException {
+	protected Element getMethodSummary() {
 
 		return Objects.requireNonNull(document).select("table").stream()
-				.filter(t -> t.className().equals("memberSummary") &&
-						t.attr("summary").startsWith("Method Summary")).findFirst()
-				.orElseThrow(() -> new NoSuchElementException("Unable to find method summary table."));
+				.filter(t -> t.className().equals("memberSummary") && t.attr("summary")
+						.startsWith("Method Summary")).findFirst().orElse(null);
 	}
 
 	protected Element getMethodDetails() {
