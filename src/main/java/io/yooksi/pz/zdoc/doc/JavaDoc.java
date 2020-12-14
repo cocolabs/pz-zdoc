@@ -133,7 +133,9 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 			content.add("");
 		}
 		// remove empty line at end of file
-		content.remove(content.size() - 1);
+		if (!content.isEmpty()) {
+			content.remove(content.size() - 1);
+		}
 		return new LuaDoc(getName(), content, new java.util.HashSet<>(), luaMethods);
 	}
 }
