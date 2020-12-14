@@ -97,4 +97,16 @@ public class Utils {
 			throw new RuntimeException(e);
 		}
 	}
+
+	/**
+	 * @return {@code true} if the given {@code Class} object is declared in Java JDK.
+	 * 		Note that this method only checks if the target class was loaded using the same
+	 *        {@link ClassLoader} used to load Java JDK, and cannot guarantee that the target
+	 * 		class is declared in Java JDK, but is good enough in most cases.
+	 *
+	 * @see <a href="https://stackoverflow.com/a/8703709/5759072">Code snippet on StackOverflow</a>
+	 */
+	public static boolean isJavaJDKClass(Class<?> clazz) {
+		return clazz.getClassLoader() == "".getClass().getClassLoader();
+	}
 }
