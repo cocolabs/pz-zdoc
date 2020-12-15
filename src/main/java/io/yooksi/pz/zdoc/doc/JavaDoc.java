@@ -36,16 +36,13 @@ import io.yooksi.pz.zdoc.element.LuaMethod;
 
 /**
  * This class represents a parsed JavaDoc document.
- *
- * @param <L> object type denoting document location.
- * 		Use {@code Path} for local documents and {@code URL} for remote documents.
  */
-public class JavaDoc<L> extends CodeDoc<JavaMethod> {
+public class JavaDoc extends CodeDoc {
 
 	private static final URL PZ_MODDING_URL = Utils.getURL("https://projectzomboid.com/modding");
 	public static final URL API_GLOBAL_OBJECT = resolveApiURL("zombie/Lua/LuaManager.GlobalObject.html");
 
-	public JavaDoc(String name, Set<JavaClass<L>> members, List<JavaMethod> methods) {
+	public JavaDoc(String name, Set<JavaClass> members, List<JavaMethod> methods) {
 		super(name, new ArrayList<>(), members, methods);
 	}
 
@@ -100,8 +97,8 @@ public class JavaDoc<L> extends CodeDoc<JavaMethod> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Map<String, JavaClass<L>> getMembers() {
-		return (Map<String, JavaClass<L>>) super.getMembers();
+	public Map<String, JavaClass> getMembers() {
+		return (Map<String, JavaClass>) super.getMembers();
 	}
 
 	/**

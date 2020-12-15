@@ -36,17 +36,15 @@ import io.yooksi.pz.zdoc.lang.ParseResult;
 
 /**
  * This class represents a parsed code based document.
- *
- * @param <M> method type used by this document.
  */
 @SuppressWarnings("unused")
-public abstract class CodeDoc<M extends Method> implements ParseResult {
+public abstract class CodeDoc implements ParseResult {
 
 	/** Name of this document and main class. */
 	private final String name;
 
 	/** Non-null guaranteed list of parsed methods contained in this document. */
-	private final @UnmodifiableView List<M> methods;
+	private final @UnmodifiableView List<? extends Method> methods;
 
 	/** Textual representation of this document ready for output. */
 	private final @UnmodifiableView List<String> content;
@@ -54,7 +52,8 @@ public abstract class CodeDoc<M extends Method> implements ParseResult {
 	/** Textual representation of class fields or function parameters. */
 	private final @UnmodifiableView Map<String, MemberClass> members;
 
-	public CodeDoc(String name, List<String> content, Set<? extends MemberClass> members, List<M> methods) {
+	public CodeDoc(String name, List<String> content,
+				   Set<? extends MemberClass> members, List<? extends Method> methods) {
 
 		this.name = name;
 		this.content = Collections.unmodifiableList(content);
@@ -79,8 +78,9 @@ public abstract class CodeDoc<M extends Method> implements ParseResult {
 		return members;
 	}
 
-	public List<M> getMethods() {
-		return methods;
+	@SuppressWarnings("unchecked")
+	public <T extends Method> List<T> getMethods() {
+		return (List<T>) methods;
 	}
 
 	/**

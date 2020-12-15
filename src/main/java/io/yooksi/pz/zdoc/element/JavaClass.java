@@ -17,6 +17,7 @@
  */
 package io.yooksi.pz.zdoc.element;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 
@@ -27,17 +28,24 @@ import io.yooksi.pz.zdoc.logger.Logger;
 
 /**
  * This class represents a parsed non-java-native class reference.
- *
- * @param <L> object type denoting class file location.
- * 		Use {@code Path} for local documents and {@code URL} for remote documents.
  */
-public class JavaClass<L> extends MemberClass {
+public class JavaClass extends MemberClass {
 
-	private final L location;
+	private final URL apiDocPage;
 
-	public JavaClass(String name, L location) {
+	public JavaClass(String name, String apiDocPage) {
 		super(name);
-		this.location = location;
+		try {
+			this.apiDocPage = new URL(apiDocPage);
+		}
+		catch (MalformedURLException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	public JavaClass(String name, URL apiDocPage) {
+		super(name);
+		this.apiDocPage = apiDocPage;
 	}
 
 	private static Pair<String, String> parseClass(Class<?> clazz) {
@@ -63,10 +71,10 @@ public class JavaClass<L> extends MemberClass {
 		return Pair.of(className, classPath);
 	}
 
-	public static <L> JavaClass<L> createClass(Class<?> clazz, L location) {
+	public static JavaClass createClass(Class<?> clazz, URL docPage) {
 
 		Pair<String, String> data = parseClass(clazz);
-		return new JavaClass<>(data.getKey(), location);
+		return new JavaClass(data.getKey(), docPage);
 	}
 
 	/**
@@ -81,19 +89,18 @@ public class JavaClass<L> extends MemberClass {
 	 *
 	 * @throws IllegalStateException if encountered an unexpected class signature.
 	 */
-	public static JavaClass<URL> createZomboidClass(Class<?> clazz) {
+	public static JavaClass createZomboidClass(Class<?> clazz) {
 
 		Pair<String, String> data = parseClass(clazz);
-		return new JavaClass<>(data.getKey(), JavaDoc.resolveApiURL(data.getValue()));
+		return new JavaClass(data.getKey(), JavaDoc.resolveApiURL(data.getValue()));
 	}
 
-	/** @return location of the file representing this class. */
-	public L getLocation() {
-		return location;
+	public URL getApiDocPage() {
+		return apiDocPage;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s (%s)", name, location.toString());
+		return String.format("%s (%s)", name, apiDocPage.toString());
 	}
 }
