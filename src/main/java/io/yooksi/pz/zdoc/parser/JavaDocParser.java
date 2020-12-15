@@ -164,6 +164,8 @@ public class JavaDocParser extends DataParser<JavaDoc, Object> {
 			else Logger.warn("Skipping non-public method " + methodName);
 		}
 		List<JavaField> fields = new ArrayList<>();
+		for (Elements fieldElements : parseSummary(JavaDoc.SUMMARY.FIELD)) {
+			fields.add(new JavaField(fieldElements.first().text(), fieldElements.last().text()));
 		}
 		return new JavaDoc(name, fields, methods);
 	}
