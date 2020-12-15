@@ -20,7 +20,6 @@ package io.yooksi.pz.zdoc.cmd;
 import java.io.File;
 
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 
 public final class CommandOptions {
@@ -34,11 +33,6 @@ public final class CommandOptions {
 			Option.builder("o").longOpt("output-path").desc("output directory path")
 					.type(File.class).required(false).hasArg().argName("path")
 					.valueSeparator(' ').build();
-
-	static final Option API_OPTION =
-			Option.builder("a").longOpt("api-doc").desc("read api from url or path")
-					.type(String.class).required(false).hasArg().optionalArg(true)
-					.argName("url|path").valueSeparator(' ').build();
 
 	static final Option INCLUDE_REFS_OPTION =
 			Option.builder("r").longOpt("include-refs").desc("include referenced classes such as " +
@@ -58,10 +52,7 @@ public final class CommandOptions {
 		LUA_OPTIONS.addOption(clone(INPUT_OPTION))
 				.addOption(clone(OUTPUT_OPTION));
 
-		OptionGroup javaOptGroup = createRequiredOptionGroup(
-				clone(INPUT_OPTION), clone(API_OPTION)
-		);
-		JAVA_OPTIONS.addOptionGroup(javaOptGroup)
+		JAVA_OPTIONS.addOption(clone(INPUT_OPTION))
 				.addOption(clone(OUTPUT_OPTION))
 				.addOption(INCLUDE_REFS_OPTION)
 				.addOption(EXCLUDE_CLASS_OPTION);
@@ -69,15 +60,5 @@ public final class CommandOptions {
 
 	private static Option clone(Option option) {
 		return (Option) option.clone();
-	}
-
-	private static OptionGroup createRequiredOptionGroup(Option... options) {
-
-		OptionGroup optionGroup = new OptionGroup();
-		for (Option option : options) {
-			optionGroup.addOption(option);
-		}
-		optionGroup.setRequired(true);
-		return optionGroup;
 	}
 }
