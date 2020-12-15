@@ -17,30 +17,56 @@
  */
 package io.yooksi.pz.zdoc.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import io.yooksi.pz.zdoc.doc.JavaDoc;
+import io.yooksi.pz.zdoc.element.JavaClass;
 import io.yooksi.pz.zdoc.element.JavaMethod;
 import io.yooksi.pz.zdoc.lang.DataParser;
 import io.yooksi.pz.zdoc.lang.ParseRegex;
 import io.yooksi.pz.zdoc.logger.Logger;
 
-public abstract class JavaDocParser<T> extends DataParser<JavaDoc<T>, T> {
+public class JavaDocParser extends DataParser<JavaDoc, Object> {
 
 	protected final Document document;
 
-	protected JavaDocParser(T data, Document document) {
+	private JavaDocParser(Object data) throws IOException {
 		super(data);
-		this.document = document;
+		if (data instanceof URL) {
+			this.document = Jsoup.connect(data.toString()).get();
+		}
+		else if (data instanceof Path) {
+			this.document = Jsoup.parse(((Path) data).toFile(), Charset.defaultCharset().name());
+		}
+		else throw new ExceptionInInitializerError("Unrecognized data object type: " + data.toString());
+	}
+
+	/**
+	 * @throws IOException if Jsoup failed connecting to or parsing document.
+	 */
+	public static JavaDocParser create(URL url) throws IOException {
+		return new JavaDocParser(url);
+	}
+
+	/**
+	 * @throws IOException if the file could not be found or read.
+	 */
+	public static JavaDocParser create(Path path) throws IOException {
+		return new JavaDocParser(path);
 	}
 
 	public static String removeElementQualifier(String element) {
@@ -124,5 +150,33 @@ public abstract class JavaDocParser<T> extends DataParser<JavaDoc<T>, T> {
 		return methodSummary.getElementsByTag("a").stream()
 				.filter(e -> e.attr("title").startsWith("class in"))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public JavaDoc parse() {
+
+		if (data == null) {
+			throw new RuntimeException("Tried to parse null data");
+		}
+		String name = FilenameUtils.getBaseName(data instanceof URL ? Paths.get(
+				((URL) data).getPath()).getFileName().toString() : data.toString());
+
+		Set<JavaClass> members = new java.util.HashSet<>();
+		Element summaryTable = getMethodSummary();
+		if (summaryTable == null) {
+			return new JavaDoc(name, members, new java.util.ArrayList<>());
+		}
+		List<JavaMethod> methods = parseMethods(summaryTable);
+		for (Element member : parseMemberHyperlinks(summaryTable))
+		{
+			try {
+				URL url = new java.net.URL(member.attr("abs:href"));
+				members.add(new JavaClass(member.text(), url));
+			}
+			catch (MalformedURLException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return new JavaDoc(name, members, methods);
 	}
 }
