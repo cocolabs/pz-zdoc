@@ -17,6 +17,14 @@
  */
 package io.yooksi.pz.zdoc.element;
 
+import java.net.URL;
+import java.nio.file.Paths;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import io.yooksi.pz.zdoc.doc.JavaDoc;
+import io.yooksi.pz.zdoc.logger.Logger;
+
 /**
  * This class represents a parsed non-java-native class reference.
  *
@@ -30,6 +38,53 @@ public class JavaClass<L> extends MemberClass {
 	public JavaClass(String name, L location) {
 		super(name);
 		this.location = location;
+	}
+
+	private static Pair<String, String> parseClass(Class<?> clazz) {
+
+		String signature = clazz.toString();
+		String[] elements = signature.split("\\s");
+		if (elements.length != 2)
+		{
+			throw new IllegalStateException(String.format(
+					"Unexpected class (%s) signature: %s", clazz.getSimpleName(), signature));
+		}
+		String classPath = elements[1].replaceAll("\\.", "\\/");
+		String className = Paths.get(classPath).getFileName().toString();
+		if (clazz.isMemberClass())
+		{
+			if (!signature.contains("$")) {
+				Logger.warn(String.format("Expected to find \"$\" symbol denoting a member class " +
+						"(%s) in class signature: %s", clazz.getSimpleName(), signature));
+			}
+			classPath = classPath.replaceAll("\\$", ".");
+			className = className.replace("$", "_");
+		}
+		return Pair.of(className, classPath);
+	}
+
+	public static <L> JavaClass<L> createClass(Class<?> clazz, L location) {
+
+		Pair<String, String> data = parseClass(clazz);
+		return new JavaClass<>(data.getKey(), location);
+	}
+
+	/**
+	 * Create and return a new {@code JavaClass} instance that represents a given
+	 * Project Zomboid {@code Class}. The given {@code Class} object is assumed to be a
+	 * class that originates from a Project Zomboid library and this method does not
+	 * take responsibility for validating its origin.
+	 *
+	 * @param clazz target {@code Class} object to create a {@code JavaClass} from.
+	 * @return new {@code JavaClass} instance with a location that points to an API URL
+	 * 		that corresponds to the given {@code Class} object being part of PZ code base.
+	 *
+	 * @throws IllegalStateException if encountered an unexpected class signature.
+	 */
+	public static JavaClass<URL> createZomboidClass(Class<?> clazz) {
+
+		Pair<String, String> data = parseClass(clazz);
+		return new JavaClass<>(data.getKey(), JavaDoc.resolveApiURL(data.getValue()));
 	}
 
 	/** @return location of the file representing this class. */
