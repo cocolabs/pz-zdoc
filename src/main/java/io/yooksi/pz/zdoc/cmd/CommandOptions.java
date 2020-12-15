@@ -34,10 +34,6 @@ public final class CommandOptions {
 					.type(File.class).required(false).hasArg().argName("path")
 					.valueSeparator(' ').build();
 
-	static final Option INCLUDE_REFS_OPTION =
-			Option.builder("r").longOpt("include-refs").desc("include referenced classes such as " +
-					"parameter and return types found in main class").required(false).build();
-
 	static final Option EXCLUDE_CLASS_OPTION =
 			Option.builder("e").longOpt("exclude-class")
 					.desc("list of classes (separated by commas) " +
@@ -54,7 +50,6 @@ public final class CommandOptions {
 
 		JAVA_OPTIONS.addOption(clone(INPUT_OPTION))
 				.addOption(clone(OUTPUT_OPTION))
-				.addOption(INCLUDE_REFS_OPTION)
 				.addOption(EXCLUDE_CLASS_OPTION);
 	}
 

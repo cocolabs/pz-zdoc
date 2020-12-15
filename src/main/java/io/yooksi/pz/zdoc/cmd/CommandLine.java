@@ -96,16 +96,6 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	}
 
 	/**
-	 * @return {@code true} if command operation is configured to include
-	 * 		referenced members such as method parameters and return values.
-	 *
-	 * @see CommandOptions#INCLUDE_REFS_OPTION
-	 */
-	public boolean shouldIncludeRefs() {
-		return hasOption(CommandOptions.INCLUDE_REFS_OPTION.getOpt());
-	}
-
-	/**
 	 * @return a list of class names specified in command options to exclude from
 	 * 		compilation process or an empty list if exclude option has not been set.
 	 *
