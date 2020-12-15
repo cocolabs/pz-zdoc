@@ -19,7 +19,6 @@ package io.yooksi.pz.zdoc.cmd;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +29,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.Nullable;
-
-import io.yooksi.pz.zdoc.Utils;
 
 /**
  * Apache Commons {@code CommandLine} wrapper providing additional methods.

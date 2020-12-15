@@ -40,65 +40,6 @@ public class LuaClass implements MemberClass {
 		this.type = "";
 	}
 
-	/**
-	 * Compile documentation on all classes referenced in given methods.
-	 * References are searched in method parameters and return values.
-	 *
-	 * @param methods list of methods to search for references.
-	 * @param excluded list of classes to exclude from search.
-	 * @return list of strings representing a ready-to-write document.
-	 */
-	public static List<String> documentRefMembers(List<Method> methods, Set<String> excluded) {
-
-		List<String> documentation = new ArrayList<>();
-		Map<String, LuaClass> memberMap = new HashMap<>();
-
-		for (Method method : methods)
-		{
-			String returnType = method.getReturnType(false);
-			memberMap.putIfAbsent(returnType, new LuaClass(returnType));
-
-			for (Parameter param : method.getParams())
-			{
-				String paramType = param.getType(false);
-				memberMap.putIfAbsent(paramType, new LuaClass(paramType));
-			}
-		}
-		Map<String, LuaClass> contentMap = new ConcurrentHashMap<>();
-		for (Map.Entry<String, LuaClass> entry : memberMap.entrySet())
-		{
-			String key = entry.getKey();
-			LuaClass value = entry.getValue();
-
-			// remove array brackets
-			String parsedKey = key.replaceAll("\\[\\s*]", "");
-			if (EmmyLua.isBuiltInType(parsedKey)) {
-				continue;
-			}
-			LuaClass luaClass = parsedKey.equals(key) ? value :
-					new LuaClass(parsedKey, value.getType());
-
-			boolean hasMatchedObjectType = false;
-			Matcher match2 = ParseRegex.OBJECT_TYPE_REGEX.matcher(key);
-			while (match2.find())
-			{
-				hasMatchedObjectType = true;
-				for (String e : match2.group(1).split(","))
-				{
-					String s = JavaDocParser.removeElementQualifier(e);
-					if (!excluded.contains(s)) {
-						contentMap.putIfAbsent(s, new LuaClass(s));
-					}
-				}
-			}
-			if (!hasMatchedObjectType && !excluded.contains(parsedKey)) {
-				contentMap.putIfAbsent(parsedKey, luaClass);
-			}
-		}
-		contentMap.forEach((n, m) -> m.writeTo(documentation, true));
-		return documentation;
-	}
-
 	public void writeTo(Collection<String> content, boolean annotate) {
 
 		if (annotate)

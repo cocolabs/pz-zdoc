@@ -21,11 +21,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
@@ -34,7 +31,10 @@ import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.TestWorkspace;
 import io.yooksi.pz.zdoc.UnitTest;
-import io.yooksi.pz.zdoc.element.*;
+import io.yooksi.pz.zdoc.element.JavaMethod;
+import io.yooksi.pz.zdoc.element.LuaMethod;
+import io.yooksi.pz.zdoc.element.Method;
+import io.yooksi.pz.zdoc.element.Parameter;
 import io.yooksi.pz.zdoc.parser.JavaDocParser;
 
 public class JavaDocTest extends TestWorkspace implements UnitTest {
@@ -150,30 +150,6 @@ public class JavaDocTest extends TestWorkspace implements UnitTest {
 		};
 		for (int i = 0; i < expected.length; i++) {
 			Assertions.assertEquals(expected[i], actual[i]);
-		}
-	}
-
-	@Test
-	void shouldCorrectlyParseJavaDocMemberClasses() throws IOException {
-
-		Map<JavaDocParser, Class<?>> dataMap = new HashMap<>();
-		dataMap.put(JavaDocParser.create(JavaDoc.API_GLOBAL_OBJECT), URL.class);
-		dataMap.put(JavaDocParser.create(Paths.get("src/test/resources/Sample.html")), Path.class);
-
-		for (Map.Entry<JavaDocParser, Class<?>> entry1 : dataMap.entrySet())
-		{
-			Map<String, ? extends MemberClass> map = entry1.getKey().parse().getFields();
-			for (Map.Entry<String, ? extends MemberClass> entry2 : map.entrySet())
-			{
-				Assertions.assertFalse(entry2.getKey().isEmpty());
-
-				MemberClass member = entry2.getValue();
-				Assertions.assertTrue(member instanceof JavaClass);
-
-				Object location = ((JavaClass) member).getApiDocPage();
-				Assertions.assertTrue(entry1.getValue().isInstance(location));
-				Assertions.assertFalse(location.toString().isEmpty());
-			}
 		}
 	}
 
