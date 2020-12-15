@@ -95,17 +95,4 @@ public class CommandTest implements UnitTest {
 					CommandLine.parse(c.options, ArrayUtils.addFirst(args, c.name))));
 		}
 	}
-
-	@Test
-	void shouldThrowExceptionWhenIncludingMutuallyExclusiveOptions() {
-
-		String[] badArgs = new String[]{ "-i", "-a", "input/path", "-o", "output/path" };
-		String[] goodArgs = new String[]{ "-a", "input/path", "-o", "output/path" };
-
-		Assertions.assertThrows(ParseException.class, () -> CommandLine.parse(
-				Command.COMPILE.options, ArrayUtils.addFirst(badArgs, Command.COMPILE.name)));
-
-		Assertions.assertDoesNotThrow(() -> CommandLine.parse(Command.COMPILE.options,
-				ArrayUtils.addFirst(goodArgs, Command.COMPILE.name)));
-	}
 }

@@ -35,14 +35,11 @@ import org.junit.jupiter.api.Test;
 import io.yooksi.pz.zdoc.TestWorkspace;
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.*;
-import io.yooksi.pz.zdoc.parser.JavaDocFileParser;
 import io.yooksi.pz.zdoc.parser.JavaDocParser;
-import io.yooksi.pz.zdoc.parser.JavaDocWebParser;
 
 public class JavaDocTest extends TestWorkspace implements UnitTest {
 
-	private static JavaDocWebParser globalJavaDocParser;
-	private static JavaDocFileParser sampleJavaDocParser;
+	private static JavaDocParser sampleJavaDocParser;
 
 	JavaDocTest() {
 		super("outputLua.lua");
@@ -50,9 +47,7 @@ public class JavaDocTest extends TestWorkspace implements UnitTest {
 
 	@BeforeAll
 	static void initializeStaticParsers() throws IOException {
-
-		sampleJavaDocParser = JavaDocFileParser.create("src/test/resources/Sample.html");
-		globalJavaDocParser = JavaDocWebParser.create(JavaDoc.API_GLOBAL_OBJECT);
+		sampleJavaDocParser = JavaDocParser.create(Paths.get("src/test/resources/Sample.html"));
 	}
 
 	@Test
@@ -161,11 +156,11 @@ public class JavaDocTest extends TestWorkspace implements UnitTest {
 	@Test
 	void shouldCorrectlyParseJavaDocMemberClasses() throws IOException {
 
-		Map<JavaDocParser<?>, Class<?>> dataMap = new HashMap<>();
-		dataMap.put(JavaDocWebParser.create(JavaDoc.API_GLOBAL_OBJECT), URL.class);
-		dataMap.put(JavaDocFileParser.create("src/test/resources/Sample.html"), Path.class);
+		Map<JavaDocParser, Class<?>> dataMap = new HashMap<>();
+		dataMap.put(JavaDocParser.create(JavaDoc.API_GLOBAL_OBJECT), URL.class);
+		dataMap.put(JavaDocParser.create(Paths.get("src/test/resources/Sample.html")), Path.class);
 
-		for (Map.Entry<JavaDocParser<?>, Class<?>> entry1 : dataMap.entrySet())
+		for (Map.Entry<JavaDocParser, Class<?>> entry1 : dataMap.entrySet())
 		{
 			Map<String, ? extends MemberClass> map = entry1.getKey().parse().getMembers();
 			for (Map.Entry<String, ? extends MemberClass> entry2 : map.entrySet())
@@ -175,20 +170,11 @@ public class JavaDocTest extends TestWorkspace implements UnitTest {
 				MemberClass member = entry2.getValue();
 				Assertions.assertTrue(member instanceof JavaClass);
 
-				Object location = ((JavaClass<?>) member).getLocation();
+				Object location = ((JavaClass) member).getApiDocPage();
 				Assertions.assertTrue(entry1.getValue().isInstance(location));
 				Assertions.assertFalse(location.toString().isEmpty());
 			}
 		}
-	}
-
-	@Test
-	void shouldGetCorrectOutputPathFromWebParser() {
-
-		Path expected = Paths.get("zombie/Lua/LuaManager.GlobalObject.lua");
-		Path actual = globalJavaDocParser.getOutputFilePath("lua");
-
-		Assertions.assertEquals(expected.toString(), actual.toString());
 	}
 
 	@Test
@@ -203,8 +189,8 @@ public class JavaDocTest extends TestWorkspace implements UnitTest {
 	void shouldQualifyMethodsWhenConvertingToLuaDoc() {
 
 		LuaDoc luaDoc = sampleJavaDocParser.parse().compileLuaLibrary(false, true);
-		for (LuaMethod method : luaDoc.getMethods()) {
-			Assertions.assertTrue(method.toString().startsWith("function Sample."));
+		for (Method method : luaDoc.getMethods()) {
+			Assertions.assertTrue(method.toString().startsWith("function Sample:"));
 		}
 	}
 
@@ -212,7 +198,7 @@ public class JavaDocTest extends TestWorkspace implements UnitTest {
 	void shouldCorrectlyParseObjectType() {
 
 		LuaDoc luaDoc = sampleJavaDocParser.parse().compileLuaLibrary(true, false);
-		LuaMethod method = luaDoc.getMethods().get(4);
+		Method method = luaDoc.getMethods().get(4);
 		String[] expected = {
 				"---@return ArrayList<String>",
 				"function getActivatedMods() end"
