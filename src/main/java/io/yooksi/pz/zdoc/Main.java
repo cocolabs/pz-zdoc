@@ -140,7 +140,7 @@ public class Main {
 						}
 					}
 					LuaDoc doc = LuaDocParser.create(path.toFile(), excludedMembers).parse();
-					if (!doc.getMembers().isEmpty()) {
+					if (!doc.getFields().isEmpty()) {
 						doc.writeToFile(outputFilePath);
 					}
 				}

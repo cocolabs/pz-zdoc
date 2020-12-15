@@ -29,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import io.yooksi.pz.zdoc.doc.LuaDoc;
@@ -44,30 +45,27 @@ public class LuaDocParser extends DataParser<LuaDoc, File> {
 
 	private final Set<String> excludedMembers;
 
-	private LuaDocParser(File data, Set<String> excludedMembers) {
+	private LuaDocParser(@NotNull File data, Set<String> excludedMembers) {
 		super(data);
 		this.excludedMembers = excludedMembers;
 	}
 
-	public static LuaDocParser create(File data) {
+	public static LuaDocParser create(@NotNull File data) {
 		return new LuaDocParser(data, new HashSet<>());
 	}
 
-	public static LuaDocParser create(File data, Set<String> excludedMembers) {
+	public static LuaDocParser create(@NotNull File data, Set<String> excludedMembers) {
 		return new LuaDocParser(data, excludedMembers);
 	}
 
 	@Override
 	public LuaDoc parse() {
 
-		if (data == null) {
-			throw new RuntimeException("Tried to parse null data");
-		}
-		else if (!data.exists()) {
+		if (!data.exists()) {
 			throw new RuntimeException(new FileNotFoundException(data.getPath()));
 		}
 		List<String> content = new ArrayList<>();
-		Set<LuaClass> members = new java.util.HashSet<>();
+		List<LuaClass> members = new ArrayList<>();
 
 		List<String> input;
 		try {

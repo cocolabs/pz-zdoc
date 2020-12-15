@@ -19,6 +19,7 @@ package io.yooksi.pz.zdoc.element;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 import org.jetbrains.annotations.NotNull;
@@ -58,8 +59,8 @@ public class JavaMethod extends Method {
 		}
 
 		/** @return new parser instance initialized with given data. */
-		public static @NotNull Parser create(String data) {
-			return new Parser(data);
+		public static Parser create(@NotNull String data) {
+			return new Parser(Objects.requireNonNull(data));
 		}
 
 		/**
@@ -69,9 +70,6 @@ public class JavaMethod extends Method {
 		@Override
 		public @Nullable JavaMethod parse() {
 
-			if (data == null) {
-				throw new RuntimeException("Tried to parse null data");
-			}
 			Matcher matcher = ParseRegex.JAVA_METHOD_REGEX.matcher(data);
 			if (matcher.find())
 			{

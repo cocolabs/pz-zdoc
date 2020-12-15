@@ -21,11 +21,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -49,21 +46,18 @@ public abstract class CodeDoc implements ParseResult {
 	/** Textual representation of this document ready for output. */
 	private final @UnmodifiableView List<String> content;
 
-	/** Textual representation of class fields or function parameters. */
-	private final @UnmodifiableView Map<String, MemberClass> members;
+	/** Textual representation of parsed class fields. */
+	private final @UnmodifiableView List<MemberClass> fields;
 
-	public CodeDoc(String name, List<String> content,
-				   Set<? extends MemberClass> members, List<? extends Method> methods) {
+	public CodeDoc(String name, List<String> content, List<? extends MemberClass> fields,
+				   List<? extends Method> methods) {
 
 		this.name = name;
 		this.content = Collections.unmodifiableList(content);
 		this.methods = Collections.unmodifiableList(
 				ListUtils.predicatedList(methods, PredicateUtils.notNullPredicate()));
-
-		Map<String, MemberClass> membersMap = new java.util.HashMap<>();
-		members.forEach(m -> membersMap.put(m.getName(), m));
-		this.members = Collections.unmodifiableMap(MapUtils.predicatedMap(membersMap,
-				PredicateUtils.notNullPredicate(), PredicateUtils.notNullPredicate()));
+		this.fields = Collections.unmodifiableList(
+				ListUtils.predicatedList(fields, PredicateUtils.notNullPredicate()));
 	}
 
 	public String getName() {
@@ -74,8 +68,8 @@ public abstract class CodeDoc implements ParseResult {
 		return content;
 	}
 
-	public Map<String, ? extends MemberClass> getMembers() {
-		return members;
+	public List<MemberClass> getFields() {
+		return fields;
 	}
 
 	@SuppressWarnings("unchecked")

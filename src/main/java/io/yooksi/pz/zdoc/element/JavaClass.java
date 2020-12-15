@@ -29,12 +29,13 @@ import io.yooksi.pz.zdoc.logger.Logger;
 /**
  * This class represents a parsed non-java-native class reference.
  */
-public class JavaClass extends MemberClass {
+public class JavaClass implements MemberClass {
 
+	private final String name;
 	private final URL apiDocPage;
 
 	public JavaClass(String name, String apiDocPage) {
-		super(name);
+		this.name = name;
 		try {
 			this.apiDocPage = new URL(apiDocPage);
 		}
@@ -44,7 +45,7 @@ public class JavaClass extends MemberClass {
 	}
 
 	public JavaClass(String name, URL apiDocPage) {
-		super(name);
+		this.name = name;
 		this.apiDocPage = apiDocPage;
 	}
 
@@ -97,6 +98,11 @@ public class JavaClass extends MemberClass {
 
 	public URL getApiDocPage() {
 		return apiDocPage;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 
 	@Override

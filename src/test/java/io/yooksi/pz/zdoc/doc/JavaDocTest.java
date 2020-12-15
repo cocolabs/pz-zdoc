@@ -162,7 +162,7 @@ public class JavaDocTest extends TestWorkspace implements UnitTest {
 
 		for (Map.Entry<JavaDocParser, Class<?>> entry1 : dataMap.entrySet())
 		{
-			Map<String, ? extends MemberClass> map = entry1.getKey().parse().getMembers();
+			Map<String, ? extends MemberClass> map = entry1.getKey().parse().getFields();
 			for (Map.Entry<String, ? extends MemberClass> entry2 : map.entrySet())
 			{
 				Assertions.assertFalse(entry2.getKey().isEmpty());

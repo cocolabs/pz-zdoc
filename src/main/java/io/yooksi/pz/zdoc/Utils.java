@@ -27,6 +27,7 @@ import java.util.Arrays;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public class Utils {
 
 	/**

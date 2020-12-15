@@ -15,19 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.doc;
+package io.yooksi.pz.zdoc.element;
 
-import java.util.List;
+public class JavaField implements MemberClass {
 
-import io.yooksi.pz.zdoc.element.LuaClass;
-import io.yooksi.pz.zdoc.element.LuaMethod;
+	private final String type;
+	private final String name;
 
-/**
- * This class represents a parsed Lua document.
- */
-public class LuaDoc extends CodeDoc {
+	public JavaField(String type, String name) {
+		this.type = type;
+		this.name = name;
+	}
 
-	public LuaDoc(String name, List<String> content, List<LuaClass> fields, List<LuaMethod> methods) {
-		super(name, content, fields, methods);
+	public String getType() {
+		return type;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String toString() {
+		return type + " " + name;
 	}
 }

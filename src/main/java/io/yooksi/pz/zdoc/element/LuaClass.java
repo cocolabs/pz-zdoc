@@ -17,30 +17,26 @@
  */
 package io.yooksi.pz.zdoc.element;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
+import java.util.Collection;
 
 import io.yooksi.pz.zdoc.lang.EmmyLua;
-import io.yooksi.pz.zdoc.lang.ParseRegex;
-import io.yooksi.pz.zdoc.parser.JavaDocParser;
 
 /**
  * This class represents a parsed lua class reference.
  */
-public class LuaClass extends MemberClass {
+public class LuaClass implements MemberClass {
 
+	private final String name;
 	private final String type;
 
 	public LuaClass(String name, String type) {
-		super(name);
-
+		this.name = name;
 		// ensure built-in types are lower-cased
 		this.type = EmmyLua.getSafeType(type);
 	}
 
 	public LuaClass(String name) {
-		super(name);
+		this.name = name;
 		this.type = "";
 	}
 
@@ -121,5 +117,10 @@ public class LuaClass extends MemberClass {
 	@Override
 	public String toString() {
 		return String.format("%s (%s)", name, type);
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

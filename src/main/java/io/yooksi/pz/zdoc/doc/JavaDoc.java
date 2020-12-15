@@ -23,13 +23,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 
 import io.yooksi.pz.zdoc.Utils;
-import io.yooksi.pz.zdoc.element.JavaClass;
+import io.yooksi.pz.zdoc.element.JavaField;
 import io.yooksi.pz.zdoc.element.JavaMethod;
 import io.yooksi.pz.zdoc.element.LuaClass;
 import io.yooksi.pz.zdoc.element.LuaMethod;
@@ -42,8 +40,8 @@ public class JavaDoc extends CodeDoc {
 	private static final URL PZ_MODDING_URL = Utils.getURL("https://projectzomboid.com/modding");
 	public static final URL API_GLOBAL_OBJECT = resolveApiURL("zombie/Lua/LuaManager.GlobalObject.html");
 
-	public JavaDoc(String name, Set<JavaClass> members, List<JavaMethod> methods) {
-		super(name, new ArrayList<>(), members, methods);
+	public JavaDoc(String name, List<JavaField> fields, List<JavaMethod> methods) {
+		super(name, new ArrayList<>(), fields, methods);
 	}
 
 	/**
@@ -95,12 +93,6 @@ public class JavaDoc extends CodeDoc {
 				"argument \"%s\" is not a valid Path or URL", path));
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public Map<String, JavaClass> getMembers() {
-		return (Map<String, JavaClass>) super.getMembers();
-	}
-
 	/**
 	 * Compiles Lua library from Java documentation.
 	 *
@@ -110,8 +102,8 @@ public class JavaDoc extends CodeDoc {
 	 */
 	public LuaDoc compileLuaLibrary(boolean annotate, boolean qualify) {
 
-		List<String> content = new java.util.ArrayList<>();
-		List<LuaMethod> luaMethods = new java.util.ArrayList<>();
+		List<String> content = new ArrayList<>();
+		List<LuaMethod> luaMethods = new ArrayList<>();
 
 		if (qualify) {
 			new LuaClass(getName()).writeTo(content, annotate);
@@ -133,6 +125,19 @@ public class JavaDoc extends CodeDoc {
 		if (!content.isEmpty()) {
 			content.remove(content.size() - 1);
 		}
-		return new LuaDoc(getName(), content, new java.util.HashSet<>(), luaMethods);
+		return new LuaDoc(getName(), content, new ArrayList<>(), luaMethods);
+	}
+
+	public enum SUMMARY {
+
+		METHOD("Method"),
+		FIELD("Field"),
+		CONSTRUCTOR("Constructor");
+
+		public final String name;
+
+		SUMMARY(String name) {
+			this.name = name;
+		}
 	}
 }

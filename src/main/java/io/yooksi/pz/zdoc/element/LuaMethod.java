@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.yooksi.pz.zdoc.lang.DataParser;
 import io.yooksi.pz.zdoc.lang.EmmyLua;
 
@@ -96,25 +98,22 @@ public class LuaMethod extends Method {
 
 		private final String qualifier;
 
-		private Parser(JavaMethod data, String qualifier) {
+		private Parser(@NotNull JavaMethod data, String qualifier) {
 			super(data);
 			this.qualifier = qualifier;
 		}
 
-		public static Parser create(JavaMethod javaMethod) {
+		public static Parser create(@NotNull JavaMethod javaMethod) {
 			return new Parser(javaMethod, "");
 		}
 
-		public static Parser create(JavaMethod javaMethod, String qualifier) {
+		public static Parser create(@NotNull JavaMethod javaMethod, String qualifier) {
 			return new Parser(javaMethod, qualifier);
 		}
 
 		@Override
 		public LuaMethod parse() {
 
-			if (data == null) {
-				throw new RuntimeException("Tried to parse null data");
-			}
 			String returnType = data.getReturnType(false);
 			return new LuaMethod(qualifier, EmmyLua.getSafeType(returnType),
 					data.getName(), data.getParams(), data.getComment());

@@ -17,6 +17,8 @@
  */
 package io.yooksi.pz.zdoc.lang;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * This class represents an object that has data parsing functionality.
  *
@@ -28,7 +30,7 @@ public abstract class DataParser<T, I> {
 	/** Data to be parsed by the parser. */
 	public final I data;
 
-	protected DataParser(I data) {
+	protected DataParser(@NotNull I data) {
 		this.data = data;
 	}
 

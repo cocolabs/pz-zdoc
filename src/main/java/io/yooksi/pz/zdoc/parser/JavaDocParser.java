@@ -18,23 +18,26 @@
 package io.yooksi.pz.zdoc.parser;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import io.yooksi.pz.zdoc.doc.JavaDoc;
-import io.yooksi.pz.zdoc.element.JavaClass;
+import io.yooksi.pz.zdoc.element.JavaField;
 import io.yooksi.pz.zdoc.element.JavaMethod;
 import io.yooksi.pz.zdoc.lang.DataParser;
 import io.yooksi.pz.zdoc.lang.ParseRegex;
@@ -44,7 +47,7 @@ public class JavaDocParser extends DataParser<JavaDoc, Object> {
 
 	protected final Document document;
 
-	private JavaDocParser(Object data) throws IOException {
+	private JavaDocParser(@NotNull Object data) throws IOException {
 		super(data);
 		if (data instanceof URL) {
 			this.document = Jsoup.connect(data.toString()).get();
@@ -58,14 +61,14 @@ public class JavaDocParser extends DataParser<JavaDoc, Object> {
 	/**
 	 * @throws IOException if Jsoup failed connecting to or parsing document.
 	 */
-	public static JavaDocParser create(URL url) throws IOException {
+	public static JavaDocParser create(@NotNull URL url) throws IOException {
 		return new JavaDocParser(url);
 	}
 
 	/**
 	 * @throws IOException if the file could not be found or read.
 	 */
-	public static JavaDocParser create(Path path) throws IOException {
+	public static JavaDocParser create(@NotNull Path path) throws IOException {
 		return new JavaDocParser(path);
 	}
 
@@ -73,14 +76,34 @@ public class JavaDocParser extends DataParser<JavaDoc, Object> {
 		return element.replaceAll("\\w+\\.", "");
 	}
 
-	protected Element getMethodSummary() {
+	protected @Nullable Element getSummary(JavaDoc.SUMMARY summary) {
 
 		return Objects.requireNonNull(document).select("table").stream()
 				.filter(t -> t.className().equals("memberSummary") && t.attr("summary")
-						.startsWith("Method Summary")).findFirst().orElse(null);
+						.startsWith(summary.name + " Summary")).findFirst().orElse(null);
 	}
 
-	protected Element getMethodDetails() {
+	private List<Elements> parseSummary(Element summary) {
+
+		Elements tableRows = summary.getElementsByTag("tr");
+
+		// remove table header
+		tableRows.remove(0);
+
+		List<Elements> result = new ArrayList<>();
+		for (Element element : tableRows) {
+			result.add(element.getElementsByTag("td"));
+		}
+		return result;
+	}
+
+	private List<Elements> parseSummary(JavaDoc.SUMMARY summary) {
+
+		Element element = getSummary(summary);
+		return element != null ? parseSummary(element) : new ArrayList<>();
+	}
+
+	private Element getMethodDetails() {
 
 		return Objects.requireNonNull(document).getElementsByTag("a").stream()
 				.filter(e -> e.hasAttr("name") && e.attr("name")
@@ -88,7 +111,7 @@ public class JavaDocParser extends DataParser<JavaDoc, Object> {
 						new NoSuchElementException("Unable to find method details table")).parent();
 	}
 
-	protected String parseMethodAccessModifier(String methodName, int index) {
+	private String parseMethodAccessModifier(String methodName, int index) {
 
 		Elements methodDetails = getMethodDetails().getElementsByTag("ul");
 		for (int i = 0; i < methodDetails.size(); i++)
@@ -113,70 +136,35 @@ public class JavaDocParser extends DataParser<JavaDoc, Object> {
 		return "public";
 	}
 
-	protected List<JavaMethod> parseMethods(Element methodSummary) {
+	@Override
+	public JavaDoc parse() {
 
-		Elements tableRows = methodSummary.getElementsByTag("tr");
-
-		// remove table header
-		tableRows.remove(0);
+		String name = FilenameUtils.getBaseName(data instanceof URL ? Paths.get(
+				((URL) data).getPath()).getFileName().toString() : data.toString());
 
 		List<JavaMethod> methods = new ArrayList<>();
-
-		for (int i = 0; i < tableRows.size(); i++)
+		List<Elements> methodSummary = parseSummary(JavaDoc.SUMMARY.METHOD);
+		for (int i = 0; i < methodSummary.size(); i++)
 		{
-			Element element = tableRows.get(i);
-
-			Elements columns = element.getElementsByTag("td");
-			Element[] column = { columns.first(), columns.last() };
+			Elements methodElements = methodSummary.get(i);
+			Element[] column = { methodElements.first(), methodElements.last() };
 
 			String methodName = column[1].getElementsByClass("memberNameLink").text();
 			if (parseMethodAccessModifier(methodName, i).equals("public"))
 			{
-				String methodText = column[0].text() + " " + column[1].text();
-
-				JavaMethod javaMethod = JavaMethod.Parser.create(methodText).parse();
-				/* Do not add methods which were not parsed */
+				String text = methodElements.first().text() + " " + methodElements.last().text();
+				JavaMethod javaMethod = JavaMethod.Parser.create(text).parse();
+				/*
+				 * Do not add methods which were not parsed
+				 */
 				if (javaMethod != null) {
 					methods.add(javaMethod);
 				}
 			}
 			else Logger.warn("Skipping non-public method " + methodName);
 		}
-		return methods;
-	}
-
-	protected List<Element> parseMemberHyperlinks(Element methodSummary) {
-
-		return methodSummary.getElementsByTag("a").stream()
-				.filter(e -> e.attr("title").startsWith("class in"))
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public JavaDoc parse() {
-
-		if (data == null) {
-			throw new RuntimeException("Tried to parse null data");
+		List<JavaField> fields = new ArrayList<>();
 		}
-		String name = FilenameUtils.getBaseName(data instanceof URL ? Paths.get(
-				((URL) data).getPath()).getFileName().toString() : data.toString());
-
-		Set<JavaClass> members = new java.util.HashSet<>();
-		Element summaryTable = getMethodSummary();
-		if (summaryTable == null) {
-			return new JavaDoc(name, members, new java.util.ArrayList<>());
-		}
-		List<JavaMethod> methods = parseMethods(summaryTable);
-		for (Element member : parseMemberHyperlinks(summaryTable))
-		{
-			try {
-				URL url = new java.net.URL(member.attr("abs:href"));
-				members.add(new JavaClass(member.text(), url));
-			}
-			catch (MalformedURLException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return new JavaDoc(name, members, methods);
+		return new JavaDoc(name, fields, methods);
 	}
 }
