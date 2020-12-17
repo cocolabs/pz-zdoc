@@ -34,7 +34,7 @@ import io.yooksi.pz.zdoc.logger.Logger;
  */
 public class JavaMethod extends Method {
 
-	public JavaMethod(String modifier, String returnType, String name, Parameter[] params, String comment) {
+	public JavaMethod(String modifier, String returnType, String name, JavaField[] params, String comment) {
 		super(modifier, returnType, name, params, comment);
 	}
 
@@ -73,7 +73,7 @@ public class JavaMethod extends Method {
 			Matcher matcher = ParseRegex.JAVA_METHOD_REGEX.matcher(data);
 			if (matcher.find())
 			{
-				java.util.List<Parameter> paramList = new ArrayList<>();
+				java.util.List<JavaField> paramList = new ArrayList<>();
 				String paramsMatched = matcher.group(4);
 				if (paramsMatched != null)
 				{
@@ -84,13 +84,13 @@ public class JavaMethod extends Method {
 						// parse vararg expression as array
 						String type = params[0].replaceFirst("\\.\\.\\.", "[]");
 
-						paramList.add(new Parameter(type, params.length < 2 ? "" : params[1]));
+						paramList.add(new JavaField(type, params.length < 2 ? "" : params[1]));
 					}
 				}
 				return new JavaMethod(ParseRegex.getMatchedGroup(matcher, 1),
 						ParseRegex.getMatchedGroup(matcher, 2),
 						ParseRegex.getMatchedGroup(matcher, 3),
-						paramList.toArray(new Parameter[]{}),
+						paramList.toArray(new JavaField[]{}),
 						ParseRegex.getMatchedGroup(matcher, 5));
 			}
 			else {

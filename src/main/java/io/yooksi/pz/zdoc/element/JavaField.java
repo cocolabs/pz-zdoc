@@ -17,26 +17,51 @@
  */
 package io.yooksi.pz.zdoc.element;
 
+import io.yooksi.pz.zdoc.lang.EmmyLua;
+import io.yooksi.pz.zdoc.parser.JavaDocParser;
+
+/**
+ * This class represents parsed method parameter.
+ */
 public class JavaField implements MemberClass {
 
 	private final String type;
 	private final String name;
 
 	public JavaField(String type, String name) {
-		this.type = type;
-		this.name = name;
-	}
 
-	public String getType() {
-		return type;
-	}
+		type = type.trim();
+		// ensure built-in types are lower-cased
+		this.type = EmmyLua.getSafeType(type);
 
-	public String getName() {
-		return name;
+		name = name.trim();
+		// ensure parameter name is not a reserved lua keyword
+		this.name = EmmyLua.getSafeKeyword(name);
 	}
 
 	@Override
 	public String toString() {
-		return type + " " + name;
+		return (type + ' ' + name).trim();
+	}
+
+	public String getType(boolean qualified) {
+		return qualified ? type : JavaDocParser.removeElementQualifier(type);
+	}
+
+	public String getName(boolean qualified) {
+		return qualified ? name : JavaDocParser.removeElementQualifier(name);
+	}
+
+	@Override
+	public String getName() {
+		return getName(false);
+	}
+
+	public JavaField getUnqualified() {
+		return new JavaField(getType(false), getName(false));
+	}
+
+	public JavaField copy() {
+		return new JavaField(type, name);
 	}
 }

@@ -23,7 +23,7 @@ import io.yooksi.pz.zdoc.doc.LuaDoc;
 import io.yooksi.pz.zdoc.element.JavaMethod;
 import io.yooksi.pz.zdoc.element.LuaMethod;
 import io.yooksi.pz.zdoc.element.Method;
-import io.yooksi.pz.zdoc.element.Parameter;
+import io.yooksi.pz.zdoc.element.JavaField;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -66,7 +66,7 @@ public class JavaDocParserTest extends TestWorkspace implements UnitTest {
 
 		List<JavaMethod> methods = sampleJavaDocParser.parse().getMethods();
 
-		Parameter[] params = methods.get(0).getParams();
+		JavaField[] params = methods.get(0).getParams();
 		Assertions.assertEquals(0, params.length);
 	}
 

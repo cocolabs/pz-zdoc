@@ -36,17 +36,17 @@ public class LuaMethod extends Method {
 	private final String qualifier;
 	private final List<String> luaDoc = new ArrayList<>();
 
-	public LuaMethod(String qualifier, String returnType, String name, Parameter[] params, String comment) {
+	public LuaMethod(String qualifier, String returnType, String name, JavaField[] params, String comment) {
 		super("", returnType, name, params, comment);
 		this.qualifier = qualifier;
 	}
 
-	public LuaMethod(String returnType, String name, Parameter[] params, String comment) {
+	public LuaMethod(String returnType, String name, JavaField[] params, String comment) {
 		super("", returnType, name, params, comment);
 		this.qualifier = "";
 	}
 
-	public LuaMethod(String returnType, String name, Parameter[] params) {
+	public LuaMethod(String returnType, String name, JavaField[] params) {
 		super(returnType, name, params);
 		this.qualifier = "";
 	}
@@ -57,7 +57,7 @@ public class LuaMethod extends Method {
 		if (hasComment()) {
 			luaDoc.add(EmmyLua.comment(getComment()));
 		}
-		for (Parameter param : getParams())
+		for (JavaField param : getParams())
 		{
 			luaDoc.add(EmmyLua.PARAM.create(new String[]{
 					param.getName(false),

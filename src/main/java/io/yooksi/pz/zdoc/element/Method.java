@@ -30,10 +30,10 @@ public abstract class Method implements ParseResult {
 	final String returnType;
 	final String name;
 
-	final Parameter[] params;
+	final JavaField[] params;
 	final String comment;
 
-	public Method(String modifier, String returnType, String name, Parameter[] params, String comment) {
+	public Method(String modifier, String returnType, String name, JavaField[] params, String comment) {
 
 		this.modifier = modifier.trim();
 		this.returnType = returnType.trim();
@@ -42,11 +42,11 @@ public abstract class Method implements ParseResult {
 		this.comment = comment.trim();
 	}
 
-	public Method(String modifier, String returnType, String name, Parameter[] params) {
+	public Method(String modifier, String returnType, String name, JavaField[] params) {
 		this(modifier, returnType, name, params, "");
 	}
 
-	public Method(String returnType, String name, Parameter[] params) {
+	public Method(String returnType, String name, JavaField[] params) {
 		this("", returnType, name, params, "");
 	}
 
@@ -62,9 +62,9 @@ public abstract class Method implements ParseResult {
 		return name;
 	}
 
-	public Parameter[] getParams() {
+	public JavaField[] getParams() {
 
-		Parameter[] result = new Parameter[params.length];
+		JavaField[] result = new JavaField[params.length];
 		for (int i = 0; i < params.length; i++) {
 			result[i] = params[i].copy();
 		}
