@@ -17,6 +17,16 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
+import static io.yooksi.pz.zdoc.doc.detail.MethodDetail.Signature;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
 import io.yooksi.pz.zdoc.element.java.JavaMethod;
@@ -24,17 +34,8 @@ import io.yooksi.pz.zdoc.element.java.JavaParameter;
 import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.element.mod.ModifierKey;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import zombie.characters.IsoPlayer;
 import zombie.core.Color;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static io.yooksi.pz.zdoc.doc.detail.MethodDetail.Signature;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {

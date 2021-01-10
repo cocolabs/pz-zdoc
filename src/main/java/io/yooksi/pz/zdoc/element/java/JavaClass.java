@@ -17,12 +17,16 @@
  */
 package io.yooksi.pz.zdoc.element.java;
 
-import io.yooksi.pz.zdoc.element.IClass;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.*;
+import io.yooksi.pz.zdoc.element.IClass;
 
 /**
  * This class represents a parsed Java class.

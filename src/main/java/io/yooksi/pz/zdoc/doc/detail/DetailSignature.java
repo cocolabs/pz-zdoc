@@ -17,15 +17,16 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+import org.jsoup.nodes.Element;
+
 import io.yooksi.pz.zdoc.element.java.JavaClass;
 import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.util.ParseUtils;
 import io.yooksi.pz.zdoc.util.Utils;
-import org.jetbrains.annotations.Nullable;
-import org.jsoup.nodes.Element;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class DetailSignature {
 

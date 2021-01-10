@@ -17,13 +17,14 @@
  */
 package io.yooksi.pz.zdoc.doc;
 
+import java.util.List;
+import java.util.Set;
+
+import org.jetbrains.annotations.UnmodifiableView;
+
 import io.yooksi.pz.zdoc.element.IClass;
 import io.yooksi.pz.zdoc.element.IField;
 import io.yooksi.pz.zdoc.element.IMethod;
-import org.jetbrains.annotations.UnmodifiableView;
-
-import java.util.List;
-import java.util.Set;
 
 public interface ZomboidDoc {
 

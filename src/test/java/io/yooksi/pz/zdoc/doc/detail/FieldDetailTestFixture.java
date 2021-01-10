@@ -18,7 +18,6 @@
 package io.yooksi.pz.zdoc.doc.detail;
 
 import io.yooksi.pz.zdoc.doc.DocTest;
-
 import io.yooksi.pz.zdoc.doc.detail.FieldDetail.Signature;
 
 class FieldDetailTestFixture extends DetailTestFixture<FieldDetail> {

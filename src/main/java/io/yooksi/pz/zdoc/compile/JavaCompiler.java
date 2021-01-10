@@ -17,6 +17,21 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.file.Paths;
+import java.util.*;
+
+import org.apache.commons.collections4.PredicateUtils;
+import org.apache.commons.collections4.list.PredicatedList;
+import org.apache.commons.collections4.set.PredicatedSet;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
+import org.jetbrains.annotations.Nullable;
+
 import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.detail.DetailParsingException;
@@ -27,22 +42,8 @@ import io.yooksi.pz.zdoc.element.java.JavaField;
 import io.yooksi.pz.zdoc.element.java.JavaMethod;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.logger.Logger;
-import org.apache.commons.collections4.PredicateUtils;
-import org.apache.commons.collections4.list.PredicatedList;
-import org.apache.commons.collections4.set.PredicatedSet;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
-import org.jetbrains.annotations.Nullable;
 import zombie.Lua.LuaManager;
 import zombie.core.Core;
-
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.file.Paths;
-import java.util.*;
 
 public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 

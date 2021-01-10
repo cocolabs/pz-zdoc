@@ -17,9 +17,9 @@
  */
 package io.yooksi.pz.zdoc.lang.lua;
 
-import io.yooksi.pz.zdoc.element.lua.LuaType;
-
 import java.util.regex.Pattern;
+
+import io.yooksi.pz.zdoc.element.lua.LuaType;
 
 /**
  * Use {@code @field} to add extra fields to an existing class

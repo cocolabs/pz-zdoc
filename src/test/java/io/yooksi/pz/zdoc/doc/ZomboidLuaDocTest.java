@@ -17,17 +17,18 @@
  */
 package io.yooksi.pz.zdoc.doc;
 
+import java.io.IOException;
+import java.util.*;
+
+import org.jetbrains.annotations.TestOnly;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import io.yooksi.pz.zdoc.TestWorkspace;
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.lua.*;
 import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
-import org.jetbrains.annotations.TestOnly;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.util.*;
 
 public class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 

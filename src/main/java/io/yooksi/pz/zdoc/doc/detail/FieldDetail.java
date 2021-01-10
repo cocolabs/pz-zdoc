@@ -17,6 +17,14 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.collections4.list.SetUniqueList;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
 import io.yooksi.pz.zdoc.element.java.JavaField;
@@ -24,13 +32,6 @@ import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.element.mod.ModifierKey;
 import io.yooksi.pz.zdoc.logger.Logger;
-import org.apache.commons.collections4.list.SetUniqueList;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class FieldDetail extends Detail<JavaField> {
 

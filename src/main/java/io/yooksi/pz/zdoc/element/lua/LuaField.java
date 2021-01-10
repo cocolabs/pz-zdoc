@@ -19,10 +19,10 @@ package io.yooksi.pz.zdoc.element.lua;
 
 import java.util.List;
 
-import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import org.jetbrains.annotations.Unmodifiable;
 
 import io.yooksi.pz.zdoc.element.IField;
+import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaField;

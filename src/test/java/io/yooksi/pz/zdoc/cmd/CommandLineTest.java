@@ -23,10 +23,11 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.yooksi.pz.zdoc.IntegrationTest;
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import io.yooksi.pz.zdoc.IntegrationTest;
 
 public class CommandLineTest implements IntegrationTest {
 

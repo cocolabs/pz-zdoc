@@ -17,12 +17,13 @@
  */
 package io.yooksi.pz.zdoc.element.lua;
 
-import io.yooksi.pz.zdoc.element.IClass;
-import org.jetbrains.annotations.UnmodifiableView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.jetbrains.annotations.UnmodifiableView;
+
+import io.yooksi.pz.zdoc.element.IClass;
 
 public class LuaType implements IClass {
 

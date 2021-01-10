@@ -17,19 +17,20 @@
  */
 package io.yooksi.pz.zdoc.doc;
 
-import io.yooksi.pz.zdoc.Main;
-import io.yooksi.pz.zdoc.util.Utils;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import io.yooksi.pz.zdoc.Main;
+import io.yooksi.pz.zdoc.util.Utils;
 
 /**
  * This class represents a parsed JavaDoc document.

@@ -17,18 +17,19 @@
  */
 package io.yooksi.pz.zdoc.element.java;
 
-import io.yooksi.pz.zdoc.UnitTest;
-import io.yooksi.pz.zdoc.element.mod.MemberModifier;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import io.yooksi.pz.zdoc.UnitTest;
+import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
 @SuppressWarnings("unused")
 public class JavaMethodTest implements UnitTest {

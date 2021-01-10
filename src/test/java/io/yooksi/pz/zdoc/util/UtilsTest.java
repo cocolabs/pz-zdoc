@@ -19,13 +19,11 @@ package io.yooksi.pz.zdoc.util;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.UnitTest;
-import zombie.Lua.LuaManager;
 
 public class UtilsTest implements UnitTest {
 

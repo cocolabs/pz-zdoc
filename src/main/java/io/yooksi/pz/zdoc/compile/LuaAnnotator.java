@@ -17,13 +17,6 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
-import io.yooksi.pz.zdoc.element.lua.LuaClass;
-import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
-import io.yooksi.pz.zdoc.logger.Logger;
-import io.yooksi.pz.zdoc.util.ParseUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,6 +24,14 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
+import io.yooksi.pz.zdoc.element.lua.LuaClass;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
+import io.yooksi.pz.zdoc.logger.Logger;
+import io.yooksi.pz.zdoc.util.ParseUtils;
 
 public class LuaAnnotator {
 

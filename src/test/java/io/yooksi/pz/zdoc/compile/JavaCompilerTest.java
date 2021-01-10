@@ -17,6 +17,17 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import io.yooksi.pz.zdoc.IntegrationTest;
 import io.yooksi.pz.zdoc.doc.DocTest;
 import io.yooksi.pz.zdoc.doc.detail.DetailParsingException;
@@ -27,18 +38,8 @@ import io.yooksi.pz.zdoc.element.java.JavaParameter;
 import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.element.mod.ModifierKey;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
 import zombie.characters.IsoPlayer;
 import zombie.core.Color;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.util.*;
 
 @Tag("compile")
 public class JavaCompilerTest extends DocTest implements IntegrationTest {

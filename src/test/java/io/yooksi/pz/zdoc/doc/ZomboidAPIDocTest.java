@@ -17,15 +17,16 @@
  */
 package io.yooksi.pz.zdoc.doc;
 
-import io.yooksi.pz.zdoc.UnitTest;
-import io.yooksi.pz.zdoc.util.Utils;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import io.yooksi.pz.zdoc.UnitTest;
+import io.yooksi.pz.zdoc.util.Utils;
 
 public class ZomboidAPIDocTest extends DocTest implements UnitTest {
 

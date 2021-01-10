@@ -17,12 +17,13 @@
  */
 package io.yooksi.pz.zdoc.lang.lua;
 
-import io.yooksi.pz.zdoc.UnitTest;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import io.yooksi.pz.zdoc.UnitTest;
 
 public class EmmyLuaTest implements UnitTest {
 

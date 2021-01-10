@@ -17,16 +17,17 @@
  */
 package io.yooksi.pz.zdoc.element.java;
 
-import io.yooksi.pz.zdoc.element.IMethod;
-import io.yooksi.pz.zdoc.element.mod.MemberModifier;
-import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.UnmodifiableView;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.UnmodifiableView;
+
+import io.yooksi.pz.zdoc.element.IMethod;
+import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
 /**
  * This class represents a wrapped {@link Method} object.

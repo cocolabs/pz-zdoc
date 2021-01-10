@@ -17,11 +17,12 @@
  */
 package io.yooksi.pz.zdoc;
 
-import io.yooksi.pz.zdoc.cmd.Command;
+import java.util.List;
+
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Tag;
 
-import java.util.List;
+import io.yooksi.pz.zdoc.cmd.Command;
 
 @Tag("integration")
 public interface IntegrationTest {

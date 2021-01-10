@@ -17,11 +17,8 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
-import io.yooksi.pz.zdoc.Main;
-import io.yooksi.pz.zdoc.TestWorkspace;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,8 +27,12 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.regex.Matcher;
 
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.yooksi.pz.zdoc.Main;
+import io.yooksi.pz.zdoc.TestWorkspace;
 
 public class LuaAnnotatorTest extends TestWorkspace {
 

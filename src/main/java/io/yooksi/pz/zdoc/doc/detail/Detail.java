@@ -17,8 +17,10 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
-import io.yooksi.pz.zdoc.element.IMember;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -27,9 +29,8 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.springframework.util.ClassUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
+import io.yooksi.pz.zdoc.element.IMember;
 
 public abstract class Detail<T extends IMember> {
 

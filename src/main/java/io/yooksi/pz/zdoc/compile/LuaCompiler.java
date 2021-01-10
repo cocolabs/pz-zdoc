@@ -17,6 +17,12 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
+import java.util.*;
+
+import org.apache.commons.collections4.PredicateUtils;
+import org.apache.commons.collections4.set.PredicatedSet;
+import org.jetbrains.annotations.UnmodifiableView;
+
 import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
 import io.yooksi.pz.zdoc.element.IClass;
@@ -24,11 +30,6 @@ import io.yooksi.pz.zdoc.element.IField;
 import io.yooksi.pz.zdoc.element.IMethod;
 import io.yooksi.pz.zdoc.element.IParameter;
 import io.yooksi.pz.zdoc.element.lua.*;
-import org.apache.commons.collections4.PredicateUtils;
-import org.apache.commons.collections4.set.PredicatedSet;
-import org.jetbrains.annotations.UnmodifiableView;
-
-import java.util.*;
 
 public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 

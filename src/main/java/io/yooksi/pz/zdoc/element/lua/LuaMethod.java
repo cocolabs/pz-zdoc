@@ -22,16 +22,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
-import io.yooksi.pz.zdoc.lang.lua.EmmyLuaAccess;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import io.yooksi.pz.zdoc.element.IMethod;
+import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLuaAccess;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaReturn;
 
 /**

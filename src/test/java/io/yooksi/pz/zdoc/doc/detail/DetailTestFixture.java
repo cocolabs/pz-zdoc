@@ -17,18 +17,20 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import com.google.common.collect.Sets;
-import io.yooksi.pz.zdoc.doc.DocTest;
-import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
-import io.yooksi.pz.zdoc.element.mod.MemberModifier;
-import io.yooksi.pz.zdoc.element.mod.ModifierKey;
+import java.util.Set;
+import java.util.function.Supplier;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
 
-import java.util.Set;
-import java.util.function.Supplier;
+import com.google.common.collect.Sets;
+
+import io.yooksi.pz.zdoc.doc.DocTest;
+import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
+import io.yooksi.pz.zdoc.element.mod.MemberModifier;
+import io.yooksi.pz.zdoc.element.mod.ModifierKey;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class DetailTestFixture<T extends Detail<?>> extends DocTest {

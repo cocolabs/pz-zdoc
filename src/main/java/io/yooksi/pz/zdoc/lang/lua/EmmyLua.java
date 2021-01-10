@@ -20,9 +20,10 @@ package io.yooksi.pz.zdoc.lang.lua;
 import java.util.List;
 import java.util.Set;
 
-import io.yooksi.pz.zdoc.element.lua.LuaType;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
+
+import io.yooksi.pz.zdoc.element.lua.LuaType;
 
 /**
  * This class represents an EmmyLua annotation

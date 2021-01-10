@@ -17,11 +17,13 @@
  */
 package io.yooksi.pz.zdoc.element.mod;
 
-import org.apache.commons.collections4.list.SetUniqueList;
-
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.list.SetUniqueList;
 
 public enum ModifierKey {
 

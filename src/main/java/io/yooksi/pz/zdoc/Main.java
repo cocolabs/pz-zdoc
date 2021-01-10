@@ -17,18 +17,8 @@
  */
 package io.yooksi.pz.zdoc;
 
-import io.yooksi.pz.zdoc.cmd.Command;
-import io.yooksi.pz.zdoc.cmd.CommandLine;
-import io.yooksi.pz.zdoc.compile.CompilerException;
-import io.yooksi.pz.zdoc.compile.JavaCompiler;
-import io.yooksi.pz.zdoc.compile.LuaAnnotator;
-import io.yooksi.pz.zdoc.compile.LuaCompiler;
-import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
-import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
-import io.yooksi.pz.zdoc.logger.Logger;
-import io.yooksi.pz.zdoc.util.Utils;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.io.FileUtils;
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,8 +31,19 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.FileUtils;
+
+import io.yooksi.pz.zdoc.cmd.Command;
+import io.yooksi.pz.zdoc.cmd.CommandLine;
+import io.yooksi.pz.zdoc.compile.CompilerException;
+import io.yooksi.pz.zdoc.compile.JavaCompiler;
+import io.yooksi.pz.zdoc.compile.LuaAnnotator;
+import io.yooksi.pz.zdoc.compile.LuaCompiler;
+import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
+import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
+import io.yooksi.pz.zdoc.logger.Logger;
+import io.yooksi.pz.zdoc.util.Utils;
 
 public class Main {
 

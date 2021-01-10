@@ -20,7 +20,9 @@ package io.yooksi.pz.zdoc.cmd;
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;

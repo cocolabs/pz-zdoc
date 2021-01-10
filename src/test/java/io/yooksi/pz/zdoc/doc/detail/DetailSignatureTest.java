@@ -17,14 +17,15 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import io.yooksi.pz.zdoc.UnitTest;
-import io.yooksi.pz.zdoc.element.java.JavaClass;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.yooksi.pz.zdoc.UnitTest;
+import io.yooksi.pz.zdoc.element.java.JavaClass;
 
 public class DetailSignatureTest implements UnitTest {
 

@@ -17,6 +17,12 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
+import java.util.*;
+
+import org.jetbrains.annotations.TestOnly;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
@@ -27,11 +33,6 @@ import io.yooksi.pz.zdoc.element.lua.*;
 import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.element.mod.ModifierKey;
-import org.jetbrains.annotations.TestOnly;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.util.*;
 
 public class LuaCompilerTest {
 

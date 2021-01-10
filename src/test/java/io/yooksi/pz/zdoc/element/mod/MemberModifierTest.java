@@ -17,18 +17,19 @@
  */
 package io.yooksi.pz.zdoc.element.mod;
 
-import io.yooksi.pz.zdoc.UnitTest;
-import org.apache.commons.collections4.list.SetUniqueList;
-import org.jetbrains.annotations.TestOnly;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.collections4.list.SetUniqueList;
+import org.jetbrains.annotations.TestOnly;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.yooksi.pz.zdoc.UnitTest;
 
 @SuppressWarnings("unused")
 public class MemberModifierTest implements UnitTest {

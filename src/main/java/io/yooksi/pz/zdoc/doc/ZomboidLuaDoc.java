@@ -17,17 +17,18 @@
  */
 package io.yooksi.pz.zdoc.doc;
 
-import io.yooksi.pz.zdoc.Main;
-import io.yooksi.pz.zdoc.element.IClass;
-import io.yooksi.pz.zdoc.element.lua.*;
-import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import io.yooksi.pz.zdoc.Main;
+import io.yooksi.pz.zdoc.element.IClass;
+import io.yooksi.pz.zdoc.element.lua.*;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
 
 public class ZomboidLuaDoc implements ZomboidDoc {
 

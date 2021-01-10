@@ -17,13 +17,14 @@
  */
 package io.yooksi.pz.zdoc.element.java;
 
-import io.yooksi.pz.zdoc.UnitTest;
+import java.lang.reflect.Method;
+import java.util.List;
+
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Method;
-import java.util.List;
+import io.yooksi.pz.zdoc.UnitTest;
 
 public class JavaClassTest implements UnitTest {
 
