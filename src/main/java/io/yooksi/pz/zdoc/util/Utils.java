@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc;
+package io.yooksi.pz.zdoc.util;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -26,6 +28,7 @@ import java.util.Arrays;
 
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.util.ClassUtils;
 
 @SuppressWarnings("unused")
 public class Utils {
@@ -99,6 +102,19 @@ public class Utils {
 		}
 	}
 
+	public static URL getURLBase(URL url) {
+		return getURL(url.getProtocol() + "://" + url.getHost());
+	}
+
+	public static @Nullable URI getURIOrNull(String link) {
+		try {
+			return new URI(link);
+		}
+		catch (URISyntaxException e) {
+			return null;
+		}
+	}
+
 	/**
 	 * @return {@code true} if the given {@code Class} object is declared in Java JDK.
 	 * 		Note that this method only checks if the target class was loaded using the same
@@ -109,5 +125,9 @@ public class Utils {
 	 */
 	public static boolean isJavaJDKClass(Class<?> clazz) {
 		return clazz.getClassLoader() == "".getClass().getClassLoader();
+	}
+
+	public static Class<?> getClassForName(String name) throws ClassNotFoundException {
+		return ClassUtils.forName(name, null);
 	}
 }

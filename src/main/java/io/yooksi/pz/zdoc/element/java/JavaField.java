@@ -15,53 +15,115 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.element;
+package io.yooksi.pz.zdoc.element.java;
 
-import io.yooksi.pz.zdoc.lang.EmmyLua;
-import io.yooksi.pz.zdoc.parser.JavaDocParser;
+import java.lang.reflect.Field;
+
+import io.yooksi.pz.zdoc.element.IField;
+import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
 /**
- * This class represents parsed method parameter.
+ * This class represents a wrapped {@link Field} object.
  */
-public class JavaField implements MemberClass {
+public class JavaField implements IField {
 
-	private final String type;
 	private final String name;
+	private final JavaClass type;
+	private final MemberModifier modifier;
+	private final String comment;
 
-	public JavaField(String type, String name) {
+	public JavaField(JavaClass type, String name, MemberModifier modifier, String comment) {
+		this.name = name;
+		this.type = type;
+		this.modifier = modifier;
+		this.comment = comment;
+	}
 
-		type = type.trim();
-		// ensure built-in types are lower-cased
-		this.type = EmmyLua.getSafeType(type);
+	public JavaField(JavaClass type, String name, MemberModifier modifier) {
+		this(type, name, modifier, "");
+	}
 
-		name = name.trim();
-		// ensure parameter name is not a reserved lua keyword
-		this.name = EmmyLua.getSafeKeyword(name);
+	public JavaField(Class<?> type, String name, MemberModifier modifier, String comment) {
+		this(new JavaClass(type), name, modifier, comment);
+	}
+
+	public JavaField(Class<?> type, String name, MemberModifier modifier) {
+		this(new JavaClass(type), name, modifier, "");
+	}
+
+	public JavaField(Field field) {
+		this.name = field.getName();
+		this.type = new JavaClass(field.getType());
+		this.modifier = new MemberModifier(field.getModifiers());
+		this.comment = "";
 	}
 
 	@Override
 	public String toString() {
-		return (type + ' ' + name).trim();
+		return (modifier.toString() + ' ' + type.getName() + ' ' + getName()).trim();
 	}
 
-	public String getType(boolean qualified) {
-		return qualified ? type : JavaDocParser.removeElementQualifier(type);
-	}
-
-	public String getName(boolean qualified) {
-		return qualified ? name : JavaDocParser.removeElementQualifier(name);
+	@Override
+	public JavaClass getType() {
+		return type;
 	}
 
 	@Override
 	public String getName() {
-		return getName(false);
+		return name;
 	}
 
-	public JavaField getUnqualified() {
-		return new JavaField(getType(false), getName(false));
+	@Override
+	public MemberModifier getModifier() {
+		return modifier;
 	}
 
-	public JavaField copy() {
-		return new JavaField(type, name);
+	@Override
+	public String getComment() {
+		return comment;
+	}
+
+	public boolean equals(JavaField field, boolean shallow) {
+
+		if (shallow)
+		{
+			if (this == field) {
+				return true;
+			}
+			if (field == null) {
+				return false;
+			}
+			if (!name.equals(field.name)) {
+				return false;
+			}
+			if (!type.equals(field.type, true)) {
+				return false;
+			}
+			return modifier.equals(field.modifier);
+		}
+		else return equals(field);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		JavaField jField = (JavaField) obj;
+		if (name.equals(jField.name) && type.equals(jField.type)) {
+			return true;
+		}
+		return modifier.equals(jField.modifier);
+	}
+
+	@Override
+	public int hashCode() {
+
+		int result = 31 * name.hashCode() + type.hashCode();
+		return 31 * result + modifier.hashCode();
 	}
 }

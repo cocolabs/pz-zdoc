@@ -15,108 +15,134 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.element;
+package io.yooksi.pz.zdoc.element.lua;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
-import org.jetbrains.annotations.NotNull;
+import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLuaAccess;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.UnmodifiableView;
 
-import io.yooksi.pz.zdoc.lang.DataParser;
-import io.yooksi.pz.zdoc.lang.EmmyLua;
+import io.yooksi.pz.zdoc.element.IMethod;
+import io.yooksi.pz.zdoc.element.mod.MemberModifier;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLuaReturn;
 
 /**
  * This class represents a parsed Lua method.
  */
 @SuppressWarnings("unused")
-public class LuaMethod extends Method {
+public class LuaMethod implements IMethod, Annotated {
 
-	private final String qualifier;
-	private final List<String> luaDoc = new ArrayList<>();
+	private final @Nullable LuaClass owner;
 
-	public LuaMethod(String qualifier, String returnType, String name, JavaField[] params, String comment) {
-		super("", returnType, name, params, comment);
-		this.qualifier = qualifier;
-	}
+	private final String name;
+	private final LuaType returnType;
+	private final List<LuaParameter> params;
+	private final MemberModifier modifier;
+	private final List<EmmyLua> annotations;
 
-	public LuaMethod(String returnType, String name, JavaField[] params, String comment) {
-		super("", returnType, name, params, comment);
-		this.qualifier = "";
-	}
+	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
+					 LuaType returnType, List<LuaParameter> params) {
 
-	public LuaMethod(String returnType, String name, JavaField[] params) {
-		super(returnType, name, params);
-		this.qualifier = "";
-	}
+		this.name = EmmyLua.getSafeLuaName(name);
+		this.owner = owner;
+		this.returnType = returnType;
+		this.params = Collections.unmodifiableList(params);
+		this.modifier = modifier;
 
-	public List<String> annotate() {
-
-		luaDoc.clear();
-		if (hasComment()) {
-			luaDoc.add(EmmyLua.comment(getComment()));
+		List<EmmyLua> annotations = new ArrayList<>();
+		if (!modifier.hasAccess(AccessModifierKey.DEFAULT)) {
+			annotations.add(new EmmyLuaAccess(modifier.getAccess()));
 		}
-		for (JavaField param : getParams())
-		{
-			luaDoc.add(EmmyLua.PARAM.create(new String[]{
-					param.getName(false),
-					param.getType(false)
-			}));
-		}
-		luaDoc.add(EmmyLua.RETURN.create(new String[]{ getReturnType(false) }));
-		return getLuaDoc();
+		params.forEach(p -> annotations.addAll(p.getAnnotations()));
+		annotations.add(new EmmyLuaReturn(returnType));
+		this.annotations = Collections.unmodifiableList(annotations);
 	}
 
-	public List<String> getLuaDoc() {
-		return Collections.unmodifiableList(luaDoc);
+	public LuaMethod(String name, MemberModifier modifier, LuaType returnType, List<LuaParameter> params) {
+		this(name, null, modifier, returnType, params);
 	}
 
 	@Override
 	public String toString() {
 
-		final StringBuilder sb = new StringBuilder();
+		List<String> params = new ArrayList<>();
+		this.params.forEach(p -> params.add(p.getName()));
 
-		luaDoc.forEach(l -> sb.append(l).append("\n"));
-		sb.append("function ");
-
-		if (!qualifier.isEmpty()) {
-			sb.append(qualifier).append(':');
-		}
-		sb.append(name).append('(');
-
-		if (this.params.length > 0)
-		{
-			Arrays.stream(this.params).forEach(
-					p -> sb.append(p.getName(false)).append(", "));
-			sb.delete(sb.length() - 2, sb.length());
-		}
-		return sb.append(')').append(" end").toString();
+		return String.format("%s%s(%s)", owner != null ? owner.getName() + ':' : "",
+				getName(), StringUtils.join(params, ','));
 	}
 
-	public static class Parser extends DataParser<LuaMethod, JavaMethod> {
+	@Override
+	public String getName() {
+		return name;
+	}
 
-		private final String qualifier;
+	@Override
+	public MemberModifier getModifier() {
+		return modifier;
+	}
 
-		private Parser(@NotNull JavaMethod data, String qualifier) {
-			super(data);
-			this.qualifier = qualifier;
+	@Override
+	public String getComment() {
+		return "";
+	}
+
+	@Override
+	public LuaType getReturnType() {
+		return returnType;
+	}
+
+	@Override
+	public @UnmodifiableView List<LuaParameter> getParams() {
+		return params;
+	}
+
+	@Override
+	public @Unmodifiable List<EmmyLua> getAnnotations() {
+		return annotations;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+
+		if (this == o) {
+			return true;
 		}
-
-		public static Parser create(@NotNull JavaMethod javaMethod) {
-			return new Parser(javaMethod, "");
+		if (o == null || getClass() != o.getClass()) {
+			return false;
 		}
+		LuaMethod luaMethod = (LuaMethod) o;
 
-		public static Parser create(@NotNull JavaMethod javaMethod, String qualifier) {
-			return new Parser(javaMethod, qualifier);
+		if (!Objects.equals(owner, luaMethod.owner)) {
+			return false;
 		}
-
-		@Override
-		public LuaMethod parse() {
-
-			String returnType = data.getReturnType(false);
-			return new LuaMethod(qualifier, EmmyLua.getSafeType(returnType),
-					data.getName(), data.getParams(), data.getComment());
+		if (!name.equals(luaMethod.name)) {
+			return false;
 		}
+		if (!returnType.equals(luaMethod.returnType)) {
+			return false;
+		}
+		if (!params.equals(luaMethod.params)) {
+			return false;
+		}
+		return modifier.equals(luaMethod.modifier);
+	}
+
+	@Override
+	public int hashCode() {
+
+		int result = owner != null ? owner.hashCode() : 0;
+		result = 31 * result + name.hashCode();
+		result = 31 * result + returnType.hashCode();
+		result = 31 * result + params.hashCode();
+		return 31 * result + modifier.hashCode();
 	}
 }

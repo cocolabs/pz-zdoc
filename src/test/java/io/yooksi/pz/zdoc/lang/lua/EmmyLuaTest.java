@@ -15,60 +15,51 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.lang;
+package io.yooksi.pz.zdoc.lang.lua;
 
+import io.yooksi.pz.zdoc.UnitTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.UnitTest;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EmmyLuaTest implements UnitTest {
 
 	@Test
-	void shouldCorrectlyFormatEmmyLuaClassAnnotation() {
+	void shouldCorrectlyValidateEmmyLuaBuiltInTypes() {
 
-		// ---@class TYPE
-		String annotation = EmmyLua.CLASS.create(new String[]{ "Car" });
-		Assertions.assertEquals("---@class Car", annotation);
-
-		// ---@class TYPE[:PARENT_TYPE]
-		annotation = EmmyLua.CLASS.create(new String[]{ "Car", "Vehicle" });
-		Assertions.assertEquals("---@class Car : Vehicle", annotation);
-
-		// ---@class TYPE[:PARENT_TYPE] [@comment]
-		annotation = EmmyLua.CLASS.create(new String[]{ "Car", "Vehicle", "goes vroom" });
-		Assertions.assertEquals("---@class Car : Vehicle @goes vroom", annotation);
+		for (String type : EmmyLua.BUILT_IN_TYPES)
+		{
+			Assertions.assertTrue(EmmyLua.isBuiltInType(type));
+			Assertions.assertFalse(EmmyLua.isBuiltInType(type.toUpperCase()));
+		}
+		Assertions.assertFalse(EmmyLua.isBuiltInType("testType"));
 	}
 
 	@Test
-	void shouldCorrectlyFormatEmmyLuaParamAnnotation() {
+	void shouldCorrectlyValidateLuaReservedKeywords() {
 
-		// ---@param param_name
-		String annotation = EmmyLua.PARAM.create(new String[]{ "apple" });
-		Assertions.assertEquals("---@param apple", annotation);
-
-		// ---@param param_name TYPE
-		annotation = EmmyLua.PARAM.create(new String[]{ "apple", "Apple" });
-		Assertions.assertEquals("---@param apple Apple", annotation);
-
-		// ---@param param_name TYPE[|other_type]
-		annotation = EmmyLua.PARAM.create(new String[]{ "apple", "Apple", "Fruit" });
-		Assertions.assertEquals("---@param apple Apple|Fruit", annotation);
-
-		// ---@param param_name TYPE[|other_type] [@comment]
-		annotation = EmmyLua.PARAM.create(new String[]{ "apple", "Apple", "Fruit", "very healthy" });
-		Assertions.assertEquals("---@param apple Apple|Fruit @very healthy", annotation);
+		for (String keyword : EmmyLua.RESERVED_KEYWORDS)
+		{
+			Assertions.assertTrue(EmmyLua.isReservedKeyword(keyword));
+			Assertions.assertFalse(EmmyLua.isReservedKeyword(keyword.toUpperCase()));
+		}
+		Assertions.assertFalse(EmmyLua.isReservedKeyword("testKeyword"));
 	}
 
 	@Test
-	void shouldCorrectlyFormatEmmyLuaReturnAnnotation() {
+	void shouldEnsureLuaMemberNameSafety() {
 
-		// ---@param TYPE
-		String annotation = EmmyLua.RETURN.create(new String[]{ "Dog" });
-		Assertions.assertEquals("---@return Dog", annotation);
+		Set<String> reserved = new HashSet<>(EmmyLua.RESERVED_KEYWORDS);
+		reserved.addAll(EmmyLua.BUILT_IN_TYPES);
 
-		// ---@param TYPE|OTHER_TYPE
-		annotation = EmmyLua.RETURN.create(new String[]{ "Dog", "Animal" });
-		Assertions.assertEquals("---@return Dog|Animal", annotation);
+		for (String keyword :reserved)
+		{
+			String expected = '_' + keyword;
+			Assertions.assertEquals(expected, EmmyLua.getSafeLuaName(keyword));
+			Assertions.assertEquals(expected, EmmyLua.getSafeLuaName(keyword.toUpperCase()));
+		}
+		Assertions.assertNotEquals("type", EmmyLua.getSafeLuaName("Type"));
 	}
 }

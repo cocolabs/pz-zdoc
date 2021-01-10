@@ -15,29 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.lang;
+package io.yooksi.pz.zdoc.element;
 
-import org.jetbrains.annotations.NotNull;
+import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
 /**
- * This class represents an object that has data parsing functionality.
+ * Member is an interface that reflects identifying information about
+ * a single member (a field or a method) or a constructor.
  *
- * @param <T> parsing result object type.
- * @param <I> input type data.
+ * @see java.lang.reflect.Member
  */
-public abstract class DataParser<T, I> {
-
-	/** Data to be parsed by the parser. */
-	public final I data;
-
-	protected DataParser(@NotNull I data) {
-		this.data = data;
-	}
+public interface IMember {
 
 	/**
-	 * Run parsing operation on designated data.
+	 * Returns the simple name of the underlying member or constructor
+	 * represented by this Member.
 	 *
-	 * @return this parser instance.
+	 * @return the simple name of the underlying member
 	 */
-	abstract public T parse();
+	String getName();
+
+	MemberModifier getModifier();
+
+	String getComment();
 }

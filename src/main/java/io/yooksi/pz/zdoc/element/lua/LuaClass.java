@@ -15,53 +15,82 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.element;
+package io.yooksi.pz.zdoc.element.lua;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-import io.yooksi.pz.zdoc.lang.EmmyLua;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
+
+import io.yooksi.pz.zdoc.element.IClass;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
 
 /**
  * This class represents a parsed lua class reference.
  */
-public class LuaClass implements MemberClass {
+public class LuaClass implements IClass, Annotated {
 
-	private final String name;
-	private final String type;
+	final String type;
+	final @Nullable String parentType;
+	private final List<EmmyLua> annotations;
 
-	public LuaClass(String name, String type) {
-		this.name = name;
-		// ensure built-in types are lower-cased
-		this.type = EmmyLua.getSafeType(type);
+	public LuaClass(String type, @Nullable String parentType) {
+
+		this.type = type;
+		this.parentType = parentType;
+		this.annotations = List.of(new EmmyLuaClass(this));
 	}
 
-	public LuaClass(String name) {
-		this.name = name;
-		this.type = "";
+	public LuaClass(String type) {
+		this(type, null);
 	}
 
-	public void writeTo(Collection<String> content, boolean annotate) {
-
-		if (annotate)
-		{
-			content.add(EmmyLua.CLASS.create(type.isEmpty() ?
-					new String[]{ name } : new String[]{ name, type }));
-		}
-		content.add(name + " = {}");
-		content.add("");
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("%s (%s)", name, type);
+	public @Nullable String getParentType() {
+		return parentType;
 	}
 
 	@Override
 	public String getName() {
-		return name;
+		return type;
+	}
+
+	@Override
+	public List<IClass> getTypeParameters() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public String toString() {
+		return parentType != null ? type + " : " + parentType : type;
+	}
+
+	@Override
+	public @Unmodifiable List<EmmyLua> getAnnotations() {
+		return annotations;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		LuaClass luaClass = (LuaClass) obj;
+
+		if (!type.equals(luaClass.type)) {
+			return false;
+		}
+		return Objects.equals(parentType, luaClass.parentType);
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * type.hashCode() + (parentType != null ? parentType.hashCode() : 0);
 	}
 }

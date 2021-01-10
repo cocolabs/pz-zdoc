@@ -17,8 +17,11 @@
  */
 package io.yooksi.pz.zdoc.element;
 
-import io.yooksi.pz.zdoc.lang.ParseResult;
+import java.util.List;
 
-public interface MemberClass extends ParseResult {
+public interface IClass {
+
 	String getName();
+
+	List<? extends IClass> getTypeParameters();
 }

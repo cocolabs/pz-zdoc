@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.lang;
+package io.yooksi.pz.zdoc.element;
 
-/**
- * This interface represents a result of parsing operation.
- */
-public interface ParseResult {
-	String toString();
+public interface IParameter {
+
+	IClass getType();
+
+	String getName();
 }

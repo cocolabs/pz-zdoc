@@ -17,67 +17,13 @@
  */
 package io.yooksi.pz.zdoc.element;
 
-import io.yooksi.pz.zdoc.lang.ParseResult;
-import io.yooksi.pz.zdoc.parser.JavaDocParser;
+import java.util.List;
 
-/**
- * This class represents a parsed code method.
- */
-@SuppressWarnings("unused")
-public abstract class Method implements ParseResult {
+import org.jetbrains.annotations.UnmodifiableView;
 
-	final String modifier;
-	final String returnType;
-	final String name;
+public interface IMethod extends IMember {
 
-	final JavaField[] params;
-	final String comment;
+	IClass getReturnType();
 
-	public Method(String modifier, String returnType, String name, JavaField[] params, String comment) {
-
-		this.modifier = modifier.trim();
-		this.returnType = returnType.trim();
-		this.name = name.trim();
-		this.params = params;
-		this.comment = comment.trim();
-	}
-
-	public Method(String modifier, String returnType, String name, JavaField[] params) {
-		this(modifier, returnType, name, params, "");
-	}
-
-	public Method(String returnType, String name, JavaField[] params) {
-		this("", returnType, name, params, "");
-	}
-
-	public String getModifier() {
-		return modifier;
-	}
-
-	public String getReturnType(boolean qualified) {
-		return qualified ? returnType : JavaDocParser.removeElementQualifier(returnType);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public JavaField[] getParams() {
-
-		JavaField[] result = new JavaField[params.length];
-		for (int i = 0; i < params.length; i++) {
-			result[i] = params[i].copy();
-		}
-		return result;
-	}
-
-	public boolean hasComment() {
-		return !comment.isEmpty();
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public abstract String toString();
+	@UnmodifiableView List<? extends IParameter> getParams();
 }

@@ -15,98 +15,144 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.element;
+package io.yooksi.pz.zdoc.element.java;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Paths;
+import io.yooksi.pz.zdoc.element.IClass;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import io.yooksi.pz.zdoc.doc.JavaDoc;
-import io.yooksi.pz.zdoc.logger.Logger;
+import java.util.*;
 
 /**
- * This class represents a parsed non-java-native class reference.
+ * This class represents a parsed Java class.
  */
-public class JavaClass implements MemberClass {
+public class JavaClass implements IClass {
 
-	private final String name;
-	private final URL apiDocPage;
+	private final Class<?> clazz;
+	private final List<JavaClass> typeParameters;
 
-	public JavaClass(String name, String apiDocPage) {
-		this.name = name;
-		try {
-			this.apiDocPage = new URL(apiDocPage);
-		}
-		catch (MalformedURLException e) {
-			throw new IllegalArgumentException(e);
-		}
+	public JavaClass(Class<?> clazz, @Nullable List<JavaClass> typeParameters) {
+		this.clazz = clazz;
+		this.typeParameters = Collections.unmodifiableList(
+				Optional.ofNullable(typeParameters).orElse(new ArrayList<>())
+		);
 	}
 
-	public JavaClass(String name, URL apiDocPage) {
-		this.name = name;
-		this.apiDocPage = apiDocPage;
+	public JavaClass(Class<?> clazz, int typeParameterCount) {
+		this(clazz, getUnknownTypeParameterList(typeParameterCount));
 	}
 
-	private static Pair<String, String> parseClass(Class<?> clazz) {
+	public JavaClass(Class<?> clazz) {
+		this.clazz = clazz;
+		int length = clazz.getTypeParameters().length;
+		this.typeParameters = Collections.unmodifiableList(
+				length != 0 ? getUnknownTypeParameterList(length) : new ArrayList<>()
+		);
+	}
 
-		String signature = clazz.toString();
-		String[] elements = signature.split("\\s");
-		if (elements.length != 2)
-		{
-			throw new IllegalStateException(String.format(
-					"Unexpected class (%s) signature: %s", clazz.getSimpleName(), signature));
+	static @UnmodifiableView List<JavaClass> getUnknownTypeParameterList(int size) {
+
+		Validate.inclusiveBetween(1, 2, size);
+		List<JavaClass> result = new ArrayList<>();
+		for (int i = 0; i < size; i++) {
+			result.add(null);
 		}
-		String classPath = elements[1].replaceAll("\\.", "\\/");
-		String className = Paths.get(classPath).getFileName().toString();
-		if (clazz.isMemberClass())
+		return Collections.unmodifiableList(result);
+	}
+
+	public static String getPathForClass(Class<?> clazz) {
+
+		if (clazz.getPackage() != null)
 		{
-			if (!signature.contains("$")) {
-				Logger.warn(String.format("Expected to find \"$\" symbol denoting a member class " +
-						"(%s) in class signature: %s", clazz.getSimpleName(), signature));
+			char[] className = clazz.getName().toCharArray();
+			char[] cClassPath = new char[className.length];
+			for (int i = 0; i < className.length; i++)
+			{
+				char c = className[i];
+				if (c == '.') {
+					cClassPath[i] = '/';
+				}
+				else if (c == '$') {
+					cClassPath[i] = '.';
+				}
+				else cClassPath[i] = c;
 			}
-			classPath = classPath.replaceAll("\\$", ".");
-			className = className.replace("$", "_");
+			return new String(cClassPath);
 		}
-		return Pair.of(className, classPath);
+		else return "";
 	}
 
-	public static JavaClass createClass(Class<?> clazz, URL docPage) {
-
-		Pair<String, String> data = parseClass(clazz);
-		return new JavaClass(data.getKey(), docPage);
-	}
-
-	/**
-	 * Create and return a new {@code JavaClass} instance that represents a given
-	 * Project Zomboid {@code Class}. The given {@code Class} object is assumed to be a
-	 * class that originates from a Project Zomboid library and this method does not
-	 * take responsibility for validating its origin.
-	 *
-	 * @param clazz target {@code Class} object to create a {@code JavaClass} from.
-	 * @return new {@code JavaClass} instance with a location that points to an API URL
-	 * 		that corresponds to the given {@code Class} object being part of PZ code base.
-	 *
-	 * @throws IllegalStateException if encountered an unexpected class signature.
-	 */
-	public static JavaClass createZomboidClass(Class<?> clazz) {
-
-		Pair<String, String> data = parseClass(clazz);
-		return new JavaClass(data.getKey(), JavaDoc.resolveApiURL(data.getValue()));
-	}
-
-	public URL getApiDocPage() {
-		return apiDocPage;
+	public Class<?> getClazz() {
+		return clazz;
 	}
 
 	@Override
 	public String getName() {
-		return name;
+		return clazz.getTypeName();
+	}
+
+	@Override
+	public @UnmodifiableView List<JavaClass> getTypeParameters() {
+		return typeParameters;
+	}
+
+	private String readTypeParameter(int index) {
+
+		JavaClass parameter = typeParameters.get(index);
+		return parameter != null ? parameter.toString() : "?";
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s (%s)", name, apiDocPage.toString());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(getName());
+		if (!typeParameters.isEmpty())
+		{
+			sb.append('<');
+			sb.append(readTypeParameter(0));
+			for (int i = 1; i < typeParameters.size(); i++) {
+				sb.append(", ").append(readTypeParameter(i));
+			}
+			sb.append('>');
+		}
+		return sb.toString();
+	}
+
+	public boolean equals(JavaClass jClass, boolean shallow) {
+
+		if (shallow)
+		{
+			if (this == jClass) {
+				return true;
+			}
+			if (jClass == null) {
+				return false;
+			}
+			if (!clazz.equals(jClass.clazz)) {
+				return false;
+			}
+			return typeParameters.size() == jClass.typeParameters.size();
+		}
+		else return equals(jClass);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		JavaClass jClass = (JavaClass) obj;
+		return clazz.equals(jClass.clazz) && jClass.typeParameters.equals(typeParameters);
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * clazz.hashCode() + typeParameters.hashCode();
 	}
 }

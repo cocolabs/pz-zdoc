@@ -15,88 +15,168 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.element;
+package io.yooksi.pz.zdoc.element.java;
 
+import io.yooksi.pz.zdoc.element.IMethod;
+import io.yooksi.pz.zdoc.element.mod.MemberModifier;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.UnmodifiableView;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.regex.Matcher;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import io.yooksi.pz.zdoc.lang.DataParser;
-import io.yooksi.pz.zdoc.lang.ParseRegex;
-import io.yooksi.pz.zdoc.logger.Logger;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * This class represents a parsed Java method.
+ * This class represents a wrapped {@link Method} object.
  */
-public class JavaMethod extends Method {
+public class JavaMethod implements IMethod {
 
-	public JavaMethod(String modifier, String returnType, String name, JavaField[] params, String comment) {
-		super(modifier, returnType, name, params, comment);
+	private final String name;
+	private final JavaClass returnType;
+	private final List<JavaParameter> params;
+	private final MemberModifier modifier;
+	private final String comment;
+
+	public JavaMethod(String name, JavaClass returnType,
+					  List<JavaParameter> params, MemberModifier modifier, String comment) {
+		this.name = name;
+		this.returnType = Validate.notNull(returnType);
+		this.params = Collections.unmodifiableList(params);
+		this.modifier = modifier;
+		this.comment = comment;
+	}
+
+	public JavaMethod(String name, Class<?> returnType,
+					  List<JavaParameter> params, MemberModifier modifier, String comment) {
+		this(name, new JavaClass(returnType), params, modifier, comment);
+	}
+
+	public JavaMethod(String name, JavaClass returnType,
+					  List<JavaParameter> params, MemberModifier modifier) {
+		this(name, returnType, params, modifier, "");
+	}
+
+	public JavaMethod(String name, JavaClass returnType, MemberModifier modifier) {
+		this(name, returnType, List.of(), modifier, "");
+	}
+
+	public JavaMethod(String name, Class<?> returnType,
+					  List<JavaParameter> params, MemberModifier modifier) {
+		this(name, new JavaClass(returnType), params, modifier, "");
+	}
+
+	public JavaMethod(String name, Class<?> returnType, MemberModifier modifier) {
+		this(name, new JavaClass(returnType), List.of(), modifier, "");
+	}
+
+	public JavaMethod(Method method) {
+
+		this.name = method.getName();
+		this.returnType = new JavaClass(method.getReturnType());
+
+		List<JavaParameter> params = new ArrayList<>();
+		for (Parameter methodParam : method.getParameters()) {
+			params.add(new JavaParameter(methodParam));
+		}
+		this.params = Collections.unmodifiableList(params);
+		this.modifier = new MemberModifier(method.getModifiers());
+		this.comment = "";
 	}
 
 	@Override
 	public String toString() {
 
 		String sParams = "";
-		if (this.params.length > 0)
+		if (this.params.size() > 0)
 		{
 			final StringBuilder sb = new StringBuilder();
-			Arrays.stream(params).forEach(p -> sb.append(p.getUnqualified().toString()).append(", "));
+			params.forEach(p -> sb.append(p.toString()).append(", "));
 			sParams = sb.substring(0, sb.length() - 2).trim();
 		}
-		return String.format("%s%s%s%s %s(%s)", !hasComment() ? "" : "\\\\" + getComment() +
-				'\n', modifier, (modifier.length() > 0 ? ' ' : ""), returnType, name, sParams);
+		return String.format("%s %s %s(%s)", getModifier(), returnType, getName(), sParams);
 	}
 
-	public static class Parser extends DataParser<JavaMethod, String> {
+	@Override
+	public String getName() {
+		return name;
+	}
 
-		private Parser(String data) {
-			super(data);
-		}
+	@Override
+	public MemberModifier getModifier() {
+		return modifier;
+	}
 
-		/** @return new parser instance initialized with given data. */
-		public static Parser create(@NotNull String data) {
-			return new Parser(Objects.requireNonNull(data));
-		}
+	@Override
+	public String getComment() {
+		return comment;
+	}
 
-		/**
-		 * @return parsed {@code JavaMethod} instance or {@code null} if unable to parse given data.
-		 * @throws RuntimeException if parse data is {@code null}.
-		 */
-		@Override
-		public @Nullable JavaMethod parse() {
+	@Override
+	public JavaClass getReturnType() {
+		return returnType;
+	}
 
-			Matcher matcher = ParseRegex.JAVA_METHOD_REGEX.matcher(data);
-			if (matcher.find())
+	@Override
+	public @UnmodifiableView List<JavaParameter> getParams() {
+		return params;
+	}
+
+	public boolean equals(JavaMethod method, boolean shallow) {
+
+		if (shallow)
+		{
+			if (this == method) {
+				return true;
+			}
+			if (method == null) {
+				return false;
+			}
+			if (!name.equals(method.name)) {
+				return false;
+			}
+			if (!returnType.equals(method.returnType, true)) {
+				return false;
+			}
+			else if (!modifier.equals(method.modifier)) {
+				return false;
+			}
+			if (params.size() != method.params.size()) {
+				return false;
+			}
+			for (int i = 0; i < params.size(); i++)
 			{
-				java.util.List<JavaField> paramList = new ArrayList<>();
-				String paramsMatched = matcher.group(4);
-				if (paramsMatched != null)
-				{
-					for (String param : paramsMatched.trim().split(",(?:\\s+)"))
-					{
-						String[] params = param.split("\\s+");
-
-						// parse vararg expression as array
-						String type = params[0].replaceFirst("\\.\\.\\.", "[]");
-
-						paramList.add(new JavaField(type, params.length < 2 ? "" : params[1]));
-					}
+				if (!params.get(i).equals(method.params.get(i), true)) {
+					return false;
 				}
-				return new JavaMethod(ParseRegex.getMatchedGroup(matcher, 1),
-						ParseRegex.getMatchedGroup(matcher, 2),
-						ParseRegex.getMatchedGroup(matcher, 3),
-						paramList.toArray(new JavaField[]{}),
-						ParseRegex.getMatchedGroup(matcher, 5));
 			}
-			else {
-				Logger.warn("Unable to parse method data: " + data);
-				return null;
-			}
+			return true;
 		}
+		else return equals(method);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		JavaMethod jMethod = (JavaMethod) obj;
+		if (name.equals(jMethod.name) && returnType.equals(jMethod.returnType)) {
+			return true;
+		}
+		return params.equals(jMethod.params) && modifier.equals(jMethod.modifier);
+	}
+
+	@Override
+	public int hashCode() {
+
+		int result = 31 * name.hashCode() + returnType.hashCode();
+		result = 31 * result + params.hashCode();
+		return 31 * result + modifier.hashCode();
 	}
 }

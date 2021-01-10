@@ -17,75 +17,23 @@
  */
 package io.yooksi.pz.zdoc.doc;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.collections4.PredicateUtils;
-import org.apache.commons.io.FileUtils;
+import io.yooksi.pz.zdoc.element.IClass;
+import io.yooksi.pz.zdoc.element.IField;
+import io.yooksi.pz.zdoc.element.IMethod;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import io.yooksi.pz.zdoc.element.MemberClass;
-import io.yooksi.pz.zdoc.element.Method;
-import io.yooksi.pz.zdoc.lang.ParseResult;
+import java.util.List;
+import java.util.Set;
 
-/**
- * This class represents a parsed code based document.
- */
-@SuppressWarnings("unused")
-public abstract class CodeDoc implements ParseResult {
+public interface ZomboidDoc {
 
-	/** Name of this document and main class. */
-	private final String name;
+	IClass getClazz();
 
-	/** Non-null guaranteed list of parsed methods contained in this document. */
-	private final @UnmodifiableView List<? extends Method> methods;
+	String getName();
 
-	/** Textual representation of this document ready for output. */
-	private final @UnmodifiableView List<String> content;
+	@UnmodifiableView
+	List<? extends IField> getFields();
 
-	/** Textual representation of parsed class fields. */
-	private final @UnmodifiableView List<MemberClass> fields;
-
-	public CodeDoc(String name, List<String> content, List<? extends MemberClass> fields,
-				   List<? extends Method> methods) {
-
-		this.name = name;
-		this.content = Collections.unmodifiableList(content);
-		this.methods = Collections.unmodifiableList(
-				ListUtils.predicatedList(methods, PredicateUtils.notNullPredicate()));
-		this.fields = Collections.unmodifiableList(
-				ListUtils.predicatedList(fields, PredicateUtils.notNullPredicate()));
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public List<String> readContent() {
-		return content;
-	}
-
-	public List<MemberClass> getFields() {
-		return fields;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Method> List<T> getMethods() {
-		return (List<T>) methods;
-	}
-
-	/**
-	 * Write textual representation of this document to file.
-	 * Note that the file will be cleared of all content before writing.
-	 *
-	 * @param path path to target file.
-	 *
-	 * @throws IOException if an I/O error occurred while writing to file.
-	 */
-	public void writeToFile(Path path) throws IOException {
-		FileUtils.writeLines(path.toFile(), content, false);
-	}
+	@UnmodifiableView
+	Set<? extends IMethod> getMethods();
 }

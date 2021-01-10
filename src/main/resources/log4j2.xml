@@ -42,8 +42,8 @@
             <AppenderRef ref="StandardFile"/>
         </Logger>
         <Logger name="DevLogger" level="debug" additivity="false">
-            <AppenderRef ref="DevConsole" level="info"/>
-            <AppenderRef ref="DevFile" level="info"/>
+            <AppenderRef ref="DevConsole"/>
+            <AppenderRef ref="DevFile"/>
             <AppenderRef ref="DevDebugFile"/>
         </Logger>
         <Root level="debug"/>
