@@ -33,28 +33,35 @@ public abstract class DetailSignature {
 	protected final String signature;
 
 	DetailSignature(String signature) {
-		this.signature = normalizeElementText(signature);
+		this.signature = normalizeSignature(signature);
 	}
 
 	/**
-	 * Normalize and trim whitespace of given text. The normalization process also
-	 * includes converting non-breaking space ({@code &nbsp}) to whitespace.
+	 * Normalize given signature text:
+	 * <ul>
+	 * <li>Convert non-breaking space ({@code &nbsp}) to whitespace.</li>
+	 * <li>Remove newlines.</li>
+	 * <li>Remove consecutive whitespaces.</li>
+	 * </ul>
 	 *
 	 * @param text {@code String} to normalize.
-	 * @return normalized and trimmed text.
+	 * @return normalized text.
 	 */
-	private static String normalizeElementText(String text) {
+	private static String normalizeSignature(String text) {
 
 		StringBuilder sb = new StringBuilder();
 		char lastChar = 0;
 		for (char c : text.toCharArray())
 		{
+			// convert &nbsp to whitespace
 			if (c == 160) {
 				c = ' ';
 			}
+			// remove newlines
 			else if (c == '\r' || c == '\n') {
 				continue;
 			}
+			// remove consecutive whitespaces
 			else if (lastChar == ' ' && c == ' ') {
 				continue;
 			}
@@ -74,8 +81,8 @@ public abstract class DetailSignature {
 	 *
 	 * @see Element#text()
 	 */
-	protected static String normalizeElementText(Element element) {
-		return normalizeElementText(element.text());
+	protected static String normalizeElement(Element element) {
+		return normalizeSignature(element.text());
 	}
 
 	public static @Nullable JavaClass parseClassSignature(String signature) {

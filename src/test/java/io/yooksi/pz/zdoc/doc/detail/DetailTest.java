@@ -74,10 +74,10 @@ public class DetailTest extends DetailTestFixture<DetailTest.TestDetail> impleme
 		{
 			Element blockList = detail.get(i += 1);
 			Element pre = blockList.getElementsByTag("pre").first();
-			Assertions.assertEquals(entry.getKey(), DetailSignature.normalizeElementText(pre));
+			Assertions.assertEquals(entry.getKey(), DetailSignature.normalizeElement(pre));
 
 			Element signature = this.detail.qualifyZomboidClassElements(pre);
-			Assertions.assertEquals(entry.getValue(), DetailSignature.normalizeElementText(signature));
+			Assertions.assertEquals(entry.getValue(), DetailSignature.normalizeElement(signature));
 		}
 	}
 
