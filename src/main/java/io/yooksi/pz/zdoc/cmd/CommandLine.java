@@ -20,9 +20,7 @@ package io.yooksi.pz.zdoc.cmd;
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
@@ -93,20 +91,20 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	}
 
 	/**
-	 * @return a list of class names specified in command options to exclude from
+	 * @return {@code Set} of class names specified in command options to exclude from
 	 * 		compilation process or an empty list if exclude option has not been set.
 	 *
 	 * @see CommandOptions#EXCLUDE_CLASS_OPTION
 	 */
-	public List<String> getExcludedClasses() {
+	public Set<String> getExcludedClasses() {
 
 		Option excludeOpt = CommandOptions.EXCLUDE_CLASS_OPTION;
 		if (hasOption(excludeOpt.getOpt()))
 		{
 			String value = getParsedValue(excludeOpt);
-			return Arrays.asList(value.split(","));
+			return Set.of(value.split(","));
 		}
-		return new ArrayList<>();
+		return new HashSet<>();
 	}
 
 	/**

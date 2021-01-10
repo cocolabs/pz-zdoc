@@ -88,6 +88,7 @@ public class Main {
 			return;
 		}
 		CommandLine cmdLine = CommandLine.parse(command.getOptions(), args);
+		Set<String> exclude = cmdLine.getExcludedClasses();
 		if (command == Command.ANNOTATE)
 		{
 			Logger.debug("Preparing to parse and document lua files...");
@@ -117,7 +118,6 @@ public class Main {
 				throw new RuntimeException(e);
 			}
 			// process every file found under given root path
-			Set<String> exclude = new HashSet<>();
 			for (Path path : paths)
 			{
 				if (Utils.isLuaFile(path))
@@ -228,8 +228,11 @@ public class Main {
 			else Logger.debug("Designated output path: " + userOutput);
 
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler().compile();
-			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
-				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
+			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile())
+			{
+				if (!exclude.contains(zLuaDoc.getName())) {
+					zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
+				}
 			}
 		}
 		Logger.debug("Finished processing command");
