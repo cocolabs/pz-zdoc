@@ -20,16 +20,16 @@ package io.yooksi.pz.zdoc.cmd;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
+import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.IntegrationTest;
-
-public class CommandLineTest implements IntegrationTest {
+public class CommandLineTest {
 
 	private static final Command[] COMMANDS = Arrays.stream(Command.values())
 			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
@@ -40,7 +40,7 @@ public class CommandLineTest implements IntegrationTest {
 		String path = Paths.get("input/path").toString();
 		for (Command command : COMMANDS)
 		{
-			String[] args = IntegrationTest.formatAppArgs(command, path, "output/path");
+			String[] args = formatAppArgs(command, path, "output/path");
 			CommandLine cmdLIne = CommandLine.parse(command.options, args);
 
 			Assertions.assertEquals(path, cmdLIne.getInputPath().toString());
@@ -53,7 +53,7 @@ public class CommandLineTest implements IntegrationTest {
 		String path = Paths.get("output/path").toString();
 		for (Command command : COMMANDS)
 		{
-			String[] args = IntegrationTest.formatAppArgs(command, "input/path", path);
+			String[] args = formatAppArgs(command, "input/path", path);
 			CommandLine cmdLIne = CommandLine.parse(command.options, args);
 
 			Object outputPath = Objects.requireNonNull(cmdLIne.getOutputPath());
@@ -67,13 +67,36 @@ public class CommandLineTest implements IntegrationTest {
 		String path = '\u0000' + "/p*!h";
 		for (Command command : COMMANDS)
 		{
-			final String[] args1 = IntegrationTest.formatAppArgs(command, path, "output/path");
+			final String[] args1 = formatAppArgs(command, path, "output/path");
 			Assertions.assertThrows(InvalidPathException.class, () ->
 					CommandLine.parse(command.options, args1).getInputPath());
 
-			final String[] args2 = IntegrationTest.formatAppArgs(command, "input/path", path);
+			final String[] args2 = formatAppArgs(command, "input/path", path);
 			Assertions.assertThrows(InvalidPathException.class, () ->
 					CommandLine.parse(command.options, args2).getOutputPath());
 		}
+	}
+
+	@TestOnly
+	private static String[] formatAppArgs(String command, String input, String output) {
+
+		List<String> args = new java.util.ArrayList<>();
+		args.add(command);
+		if (!input.isEmpty())
+		{
+			args.add("-i");
+			args.add(input);
+		}
+		if (!output.isEmpty())
+		{
+			args.add("-o");
+			args.add(output);
+		}
+		return args.toArray(new String[]{});
+	}
+
+	@TestOnly
+	private static String[] formatAppArgs(Command command, String input, String output) {
+		return formatAppArgs(command.getName(), input, output);
 	}
 }

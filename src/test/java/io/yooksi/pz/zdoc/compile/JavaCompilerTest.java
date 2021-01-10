@@ -17,18 +17,14 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
-import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.IntegrationTest;
 import io.yooksi.pz.zdoc.doc.DocTest;
 import io.yooksi.pz.zdoc.doc.detail.DetailParsingException;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
@@ -42,22 +38,7 @@ import zombie.characters.IsoPlayer;
 import zombie.core.Color;
 
 @Tag("compile")
-public class JavaCompilerTest extends DocTest implements IntegrationTest {
-
-	private static final File EXPOSED_JAVA;
-
-	static
-	{
-		try {
-			ClassLoader cl = JavaCompilerTest.class.getClassLoader();
-			EXPOSED_JAVA = new File(
-					Objects.requireNonNull(cl.getResource("exposed.txt")).toURI()
-			);
-		}
-		catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-	}
+public class JavaCompilerTest extends DocTest {
 
 	@Test
 	void shouldCompileDeclaredJavaFieldsFromClassWithNullDocument() throws DetailParsingException {
@@ -81,18 +62,6 @@ public class JavaCompilerTest extends DocTest implements IntegrationTest {
 		List<JavaField> compiledFields = JavaCompiler.compileJavaFields(CompileTest.class, null);
 		Assertions.assertEquals(expectedJavaFields, compiledFields);
 	}
-
-//	@Test
-//	void shouldGetAllExposedJavaClasses() throws ReflectiveOperationException, IOException {
-//
-//		List<String> expectedExposedElements = FileUtils.readLines(EXPOSED_JAVA, Charset.defaultCharset());
-//		HashSet<Class<?>> actualExposedElements = JavaCompiler.getExposedJava();
-//
-//		Assertions.assertEquals(expectedExposedElements.size(), actualExposedElements.size());
-//		for (Class<?> actualExposedElement : actualExposedElements) {
-//			Assertions.assertTrue(expectedExposedElements.contains(actualExposedElement.getName()));
-//		}
-//	}
 
 	@Test
 	void shouldCompileDeclaredJavaFieldsFromClassWithDocument() throws DetailParsingException {

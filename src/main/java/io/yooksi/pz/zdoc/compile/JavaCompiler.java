@@ -186,8 +186,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 					if (document == null) {
 						Logger.warn(String.format("Unable to find API page for path %s", classPath));
 					}
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					String msg = "Error occurred while getting API page for path %s";
 					Logger.error(String.format(msg, classPath), e);

@@ -17,10 +17,15 @@
  */
 package io.yooksi.pz.zdoc;
 
-//
-//public class MainTest extends TestWorkspace implements IntegrationTest {
-//
-//	MainTest() {
+import java.util.List;
+
+import org.jetbrains.annotations.TestOnly;
+
+import io.yooksi.pz.zdoc.cmd.Command;
+
+public class MainTest extends TestWorkspace implements IntegrationTest {
+
+	//	MainTest() {
 //		super("sampleLua.lua");
 //	}
 //
@@ -142,4 +147,27 @@ package io.yooksi.pz.zdoc;
 //			Assertions.assertEquals(expected[i], actual.get(i));
 //		}
 //	}
-//}
+//
+	@TestOnly
+	static String[] formatAppArgs(String command, String input, String output) {
+
+		List<String> args = new java.util.ArrayList<>();
+		args.add(command);
+		if (!input.isEmpty())
+		{
+			args.add("-i");
+			args.add(input);
+		}
+		if (!output.isEmpty())
+		{
+			args.add("-o");
+			args.add(output);
+		}
+		return args.toArray(new String[]{});
+	}
+
+	@TestOnly
+	static String[] formatAppArgs(Command command, String input, String output) {
+		return formatAppArgs(command.getName(), input, output);
+	}
+}
