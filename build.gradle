@@ -27,11 +27,32 @@ apply from: 'zomboid.gradle'
 group 'io.yooksi'
 version '1.0.2'
 
+sourceSets {
+    intTest {
+        java.srcDir 'src/intTest/java'
+        resources.srcDir 'src/intTest/resources'
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+    }
+    test {
+        java.srcDir 'src/test/java'
+        resources.srcDir 'src/test/resources'
+    }
+}
+
 idea {
     module {
         inheritOutputDirs = true
         excludeDirs += [file("logs"), file("build")]
+        sourceDirs -= project.sourceSets.intTest.java.srcDirs
+        testSourceDirs += project.sourceSets.intTest.java.srcDirs
     }
+}
+
+configurations {
+    intTestCompile.extendsFrom testCompile
+    intTestImplementation.extendsFrom testImplementation
+    intTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 repositories {
