@@ -19,8 +19,6 @@ package io.yooksi.pz.zdoc.doc.detail;
 
 import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
 import io.yooksi.pz.zdoc.element.IMember;
-import io.yooksi.pz.zdoc.logger.Logger;
-import io.yooksi.pz.zdoc.util.Utils;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
