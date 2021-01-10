@@ -17,8 +17,36 @@
  */
 package io.yooksi.pz.zdoc;
 
+import java.util.List;
+
+import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Tag;
+
+import io.yooksi.pz.zdoc.cmd.Command;
 
 @Tag("integration")
 public interface IntegrationTest {
+
+	@TestOnly
+	static String[] formatAppArgs(String command, String input, String output) {
+
+		List<String> args = new java.util.ArrayList<>();
+		args.add(command);
+		if (!input.isEmpty())
+		{
+			args.add("-i");
+			args.add(input);
+		}
+		if (!output.isEmpty())
+		{
+			args.add("-o");
+			args.add(output);
+		}
+		return args.toArray(new String[]{});
+	}
+
+	@TestOnly
+	static String[] formatAppArgs(Command command, String input, String output) {
+		return formatAppArgs(command.getName(), input, output);
+	}
 }

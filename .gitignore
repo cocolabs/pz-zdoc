@@ -1,6 +1,9 @@
 # User data
 local.properties
 
+# Generated Lua
+/media/
+
 ### IntelliJ ###
 
 # Project file-based format

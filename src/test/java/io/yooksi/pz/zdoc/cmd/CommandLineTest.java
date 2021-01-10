@@ -27,10 +27,9 @@ import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.MainTest;
-import io.yooksi.pz.zdoc.UnitTest;
+import io.yooksi.pz.zdoc.IntegrationTest;
 
-public class CommandLineTest implements UnitTest {
+public class CommandLineTest implements IntegrationTest {
 
 	private static final Command[] COMMANDS = Arrays.stream(Command.values())
 			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
@@ -41,7 +40,7 @@ public class CommandLineTest implements UnitTest {
 		String path = Paths.get("input/path").toString();
 		for (Command command : COMMANDS)
 		{
-			String[] args = MainTest.formatAppArgs(command, path, "output/path");
+			String[] args = IntegrationTest.formatAppArgs(command, path, "output/path");
 			CommandLine cmdLIne = CommandLine.parse(command.options, args);
 
 			Assertions.assertEquals(path, cmdLIne.getInputPath().toString());
@@ -54,7 +53,7 @@ public class CommandLineTest implements UnitTest {
 		String path = Paths.get("output/path").toString();
 		for (Command command : COMMANDS)
 		{
-			String[] args = MainTest.formatAppArgs(command, "input/path", path);
+			String[] args = IntegrationTest.formatAppArgs(command, "input/path", path);
 			CommandLine cmdLIne = CommandLine.parse(command.options, args);
 
 			Object outputPath = Objects.requireNonNull(cmdLIne.getOutputPath());
@@ -68,11 +67,11 @@ public class CommandLineTest implements UnitTest {
 		String path = '\u0000' + "/p*!h";
 		for (Command command : COMMANDS)
 		{
-			final String[] args1 = MainTest.formatAppArgs(command, path, "output/path");
+			final String[] args1 = IntegrationTest.formatAppArgs(command, path, "output/path");
 			Assertions.assertThrows(InvalidPathException.class, () ->
 					CommandLine.parse(command.options, args1).getInputPath());
 
-			final String[] args2 = MainTest.formatAppArgs(command, "input/path", path);
+			final String[] args2 = IntegrationTest.formatAppArgs(command, "input/path", path);
 			Assertions.assertThrows(InvalidPathException.class, () ->
 					CommandLine.parse(command.options, args2).getOutputPath());
 		}

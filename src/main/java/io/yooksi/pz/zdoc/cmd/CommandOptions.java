@@ -46,7 +46,8 @@ public final class CommandOptions {
 	static
 	{
 		LUA_OPTIONS.addOption(clone(INPUT_OPTION))
-				.addOption(clone(OUTPUT_OPTION));
+				.addOption(clone(OUTPUT_OPTION))
+				.addOption(clone(EXCLUDE_CLASS_OPTION));
 
 		JAVA_OPTIONS.addOption(clone(INPUT_OPTION))
 				.addOption(clone(OUTPUT_OPTION))
