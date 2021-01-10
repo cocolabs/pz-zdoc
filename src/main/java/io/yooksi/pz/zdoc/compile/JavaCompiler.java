@@ -179,21 +179,18 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 			String classPath = JavaClass.getPathForClass(exposedClass);
 			if (!classPath.isEmpty())
 			{
-				@Nullable ZomboidAPIDoc document;
+				@Nullable ZomboidAPIDoc document = null;
 				try {
 					Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
 					document = ZomboidAPIDoc.getPage(Paths.get(classPath));
+					if (document == null) {
+						Logger.warn(String.format("Unable to find API page for path %s", classPath));
+					}
 				}
 				catch (IOException e)
 				{
 					String msg = "Error occurred while getting API page for path %s";
 					Logger.error(String.format(msg, classPath), e);
-					continue;
-				}
-				if (document == null)
-				{
-					Logger.warn(String.format("Unable to find API page for path %s", classPath));
-					continue;
 				}
 				JavaClass javaClass = new JavaClass(exposedClass);
 				List<JavaField> javaFields;
@@ -203,7 +200,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 				catch (DetailParsingException e)
 				{
 					String msg = "Error occurred while compiling java fields for document %s";
-					Logger.error(String.format(msg, document.getName()), e);
+					Logger.error(String.format(msg, Objects.requireNonNull(document).getName()), e);
 					continue;
 				}
 				Set<JavaMethod> javaMethods;
@@ -213,7 +210,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 				catch (DetailParsingException e)
 				{
 					String msg = "Error occurred while compiling java methods for document %s";
-					Logger.error(String.format(msg, document.getName()), e);
+					Logger.error(String.format(msg, Objects.requireNonNull(document).getName()), e);
 					continue;
 				}
 				result.add(new ZomboidJavaDoc(javaClass, javaFields, javaMethods));
