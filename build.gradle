@@ -40,6 +40,9 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    testImplementation 'com.google.guava:guava:30.1-jre'
+
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
 
