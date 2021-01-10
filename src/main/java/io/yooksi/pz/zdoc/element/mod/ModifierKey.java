@@ -30,6 +30,7 @@ public enum ModifierKey {
 	STATIC("static", Modifier.STATIC),
 	ABSTRACT("abstract", Modifier.ABSTRACT),
 	FINAL("final", Modifier.FINAL),
+	VOLATILE("volatile", Modifier.VOLATILE),
 	SYNCHRONIZED("synchronized", Modifier.SYNCHRONIZED),
 	UNDECLARED("", 0x00000000);
 
