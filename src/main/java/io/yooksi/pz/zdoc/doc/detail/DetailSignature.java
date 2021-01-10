@@ -24,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Element;
 
 import io.yooksi.pz.zdoc.element.java.JavaClass;
-import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.util.ParseUtils;
 import io.yooksi.pz.zdoc.util.Utils;
 
@@ -152,7 +151,7 @@ public abstract class DetailSignature {
 			return Utils.getClassForName(name);
 		}
 		catch (ClassNotFoundException e) {
-			Logger.error("Unable to get class for name: " + name);
+//			Logger.error("Unable to get class for name: " + name);
 		}
 		return null;
 	}
