@@ -27,7 +27,8 @@ public class JavaParameter implements IParameter {
 	private final String name;
 
 	public JavaParameter(JavaClass type, String name) {
-		this.type = type; this.name = name;
+		this.type = type;
+		this.name = name;
 	}
 
 	public JavaParameter(Class<?> type, String name) {

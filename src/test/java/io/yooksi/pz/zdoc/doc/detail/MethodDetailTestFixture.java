@@ -23,6 +23,10 @@ import io.yooksi.pz.zdoc.doc.DocTest;
 
 class MethodDetailTestFixture extends DetailTestFixture<MethodDetail> {
 
+	MethodDetailTestFixture() throws DetailParsingException {
+		super(new MethodDetail(DocTest.document));
+	}
+
 	abstract static class MethodSignatureSupplier extends SignatureSupplier<Signature> {
 
 		MethodSignatureSupplier(String signature) throws DetailParsingException {
@@ -76,9 +80,5 @@ class MethodDetailTestFixture extends DetailTestFixture<MethodDetail> {
 		public String get() {
 			return signature.comment;
 		}
-	}
-
-	MethodDetailTestFixture() throws DetailParsingException {
-		super(new MethodDetail(DocTest.document));
 	}
 }

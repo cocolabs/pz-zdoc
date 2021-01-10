@@ -58,59 +58,6 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 		}
 	}
 
-	public Set<ZomboidJavaDoc> compile() {
-
-		Set<ZomboidJavaDoc> result = new HashSet<>();
-		for (Class<?> exposedClass : exposedJavaClasses)
-		{
-			String classPath = JavaClass.getPathForClass(exposedClass);
-			if (!classPath.isEmpty())
-			{
-				@Nullable ZomboidAPIDoc document;
-				try {
-					Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
-					document = ZomboidAPIDoc.getPage(Paths.get(classPath));
-				}
-				catch (IOException e)
-				{
-					String msg = "Error occurred while getting API page for path %s";
-					Logger.error(String.format(msg, classPath), e);
-					continue;
-				}
-				if (document == null)
-				{
-					Logger.warn(String.format("Unable to find API page for path %s", classPath));
-					continue;
-				}
-				JavaClass javaClass = new JavaClass(exposedClass);
-				List<JavaField> javaFields;
-				try {
-					javaFields = compileJavaFields(exposedClass, document);
-				}
-				catch (DetailParsingException e)
-				{
-					String msg = "Error occurred while compiling java fields for document %s";
-					Logger.error(String.format(msg, document.getName()), e);
-					continue;
-				}
-				Set<JavaMethod> javaMethods;
-				try {
-					javaMethods = compileJavaMethods(exposedClass, document);
-				}
-				catch (DetailParsingException e)
-				{
-					String msg = "Error occurred while compiling java methods for document %s";
-					Logger.error(String.format(msg, document.getName()), e);
-					continue;
-				}
-				result.add(new ZomboidJavaDoc(javaClass, javaFields, javaMethods));
-			}
-			else Logger.error(String.format("Unable to find path for Java class \"%s\", " +
-					"might be an internal class.", exposedClass.getName()));
-		}
-		return result;
-	}
-
 	static List<JavaField> compileJavaFields(Class<?> clazz, @Nullable ZomboidAPIDoc doc) throws DetailParsingException {
 
 		List<JavaField> result = PredicatedList.predicatedList(
@@ -222,5 +169,58 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 		return (HashSet<Class<?>>) FieldUtils.readDeclaredField(
 				exposer, "exposed", true
 		);
+	}
+
+	public Set<ZomboidJavaDoc> compile() {
+
+		Set<ZomboidJavaDoc> result = new HashSet<>();
+		for (Class<?> exposedClass : exposedJavaClasses)
+		{
+			String classPath = JavaClass.getPathForClass(exposedClass);
+			if (!classPath.isEmpty())
+			{
+				@Nullable ZomboidAPIDoc document;
+				try {
+					Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
+					document = ZomboidAPIDoc.getPage(Paths.get(classPath));
+				}
+				catch (IOException e)
+				{
+					String msg = "Error occurred while getting API page for path %s";
+					Logger.error(String.format(msg, classPath), e);
+					continue;
+				}
+				if (document == null)
+				{
+					Logger.warn(String.format("Unable to find API page for path %s", classPath));
+					continue;
+				}
+				JavaClass javaClass = new JavaClass(exposedClass);
+				List<JavaField> javaFields;
+				try {
+					javaFields = compileJavaFields(exposedClass, document);
+				}
+				catch (DetailParsingException e)
+				{
+					String msg = "Error occurred while compiling java fields for document %s";
+					Logger.error(String.format(msg, document.getName()), e);
+					continue;
+				}
+				Set<JavaMethod> javaMethods;
+				try {
+					javaMethods = compileJavaMethods(exposedClass, document);
+				}
+				catch (DetailParsingException e)
+				{
+					String msg = "Error occurred while compiling java methods for document %s";
+					Logger.error(String.format(msg, document.getName()), e);
+					continue;
+				}
+				result.add(new ZomboidJavaDoc(javaClass, javaFields, javaMethods));
+			}
+			else Logger.error(String.format("Unable to find path for Java class \"%s\", " +
+					"might be an internal class.", exposedClass.getName()));
+		}
+		return result;
 	}
 }

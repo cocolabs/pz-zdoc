@@ -35,23 +35,12 @@ import io.yooksi.pz.zdoc.element.mod.ModifierKey;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class DetailTestFixture<T extends Detail<?>> extends DocTest {
 
-	static abstract class SignatureSupplier<T extends DetailSignature> implements Supplier<String> {
-
-		final T signature;
-
-		SignatureSupplier(T signature) {
-			this.signature = signature;
-		}
-	}
-
 	static final String[] PRIMITIVE_TYPES = new String[]{
 			"boolean", "byte", "char", "short", "int",
 			"long", "float", "double", "void"
 	};
-
 	static final Set<Set<ModifierKey>> MODIFIER_KEY_COMBINATIONS =
 			Sets.powerSet(Set.of(ModifierKey.values()));
-
 	final T detail;
 
 	DetailTestFixture(@NotNull T detail) {
@@ -80,6 +69,15 @@ abstract class DetailTestFixture<T extends Detail<?>> extends DocTest {
 					throw new RuntimeException(e);
 				}
 			}
+		}
+	}
+
+	static abstract class SignatureSupplier<T extends DetailSignature> implements Supplier<String> {
+
+		final T signature;
+
+		SignatureSupplier(T signature) {
+			this.signature = signature;
 		}
 	}
 }

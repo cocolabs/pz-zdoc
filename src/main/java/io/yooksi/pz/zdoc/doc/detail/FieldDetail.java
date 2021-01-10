@@ -35,75 +35,6 @@ import io.yooksi.pz.zdoc.logger.Logger;
 
 public class FieldDetail extends Detail<JavaField> {
 
-	static class Signature extends DetailSignature {
-
-		final MemberModifier modifier;
-		final String type, name, comment;
-
-		Signature(String signature) throws SignatureParsingException {
-			super(signature);
-			Logger.debug("Parsing field signature: " + this.signature);
-
-			String[] elements = this.signature.split("\\s+");
-			if (elements.length < 2) {
-				throw new SignatureParsingException(this.signature, "Missing one or more elements.");
-			}
-			int index = 0;
-			/*
-			 * parse signature access modifier
-			 */
-			AccessModifierKey access = AccessModifierKey.get(elements[0]);
-			if (access != AccessModifierKey.DEFAULT) {
-				index = 1;
-			}
-			/*
-			 * parse signature non-access modifier
-			 */
-			SetUniqueList<ModifierKey> modifierKeys = SetUniqueList.setUniqueList(new ArrayList<>());
-			for (;index < elements.length; index++)
-			{
-				Collection<ModifierKey> foundKeys = ModifierKey.get(elements[index]);
-				if (!foundKeys.contains(ModifierKey.UNDECLARED)) {
-					modifierKeys.addAll(foundKeys);
-				}
-				else break;
-			}
-			if (modifierKeys.isEmpty()) {
-				modifierKeys.add(ModifierKey.UNDECLARED);
-			}
-			this.modifier = new MemberModifier(access, modifierKeys);
-			/*
-			 * parse signature type and name
-			 */
-			String[] data = new String[] { "type", "name" };
-			for (int i = 0; i < data.length; i++, index++)
-			{
-				if (index < elements.length) {
-					data[i] = elements[index];
-				}
-				else throw new SignatureParsingException(signature, "Missing element " + data[0] + ".");
-			}
-			this.type = data[0]; this.name = data[1];
-			/*
-			 * parse signature comment
-			 */
-			if (index < elements.length)
-			{
-				StringBuilder sb = new StringBuilder();
-				for (; index < elements.length; index++) {
-					sb.append(elements[index]).append(" ");
-				}
-				sb.deleteCharAt(sb.length() - 1);
-				this.comment = sb.toString();
-			}
-			else this.comment = "";
-		}
-
-		private Signature(Element element) throws SignatureParsingException {
-			this(element.text());
-		}
-	}
-
 	public FieldDetail(ZomboidAPIDoc document) throws DetailParsingException {
 		super("field.detail", document);
 	}
@@ -140,5 +71,75 @@ public class FieldDetail extends Detail<JavaField> {
 					"class %s does not exist", signature.toString(), signature.type));
 		}
 		return result;
+	}
+
+	static class Signature extends DetailSignature {
+
+		final MemberModifier modifier;
+		final String type, name, comment;
+
+		Signature(String signature) throws SignatureParsingException {
+			super(signature);
+			Logger.debug("Parsing field signature: " + this.signature);
+
+			String[] elements = this.signature.split("\\s+");
+			if (elements.length < 2) {
+				throw new SignatureParsingException(this.signature, "Missing one or more elements.");
+			}
+			int index = 0;
+			/*
+			 * parse signature access modifier
+			 */
+			AccessModifierKey access = AccessModifierKey.get(elements[0]);
+			if (access != AccessModifierKey.DEFAULT) {
+				index = 1;
+			}
+			/*
+			 * parse signature non-access modifier
+			 */
+			SetUniqueList<ModifierKey> modifierKeys = SetUniqueList.setUniqueList(new ArrayList<>());
+			for (; index < elements.length; index++)
+			{
+				Collection<ModifierKey> foundKeys = ModifierKey.get(elements[index]);
+				if (!foundKeys.contains(ModifierKey.UNDECLARED)) {
+					modifierKeys.addAll(foundKeys);
+				}
+				else break;
+			}
+			if (modifierKeys.isEmpty()) {
+				modifierKeys.add(ModifierKey.UNDECLARED);
+			}
+			this.modifier = new MemberModifier(access, modifierKeys);
+			/*
+			 * parse signature type and name
+			 */
+			String[] data = new String[]{ "type", "name" };
+			for (int i = 0; i < data.length; i++, index++)
+			{
+				if (index < elements.length) {
+					data[i] = elements[index];
+				}
+				else throw new SignatureParsingException(signature, "Missing element " + data[0] + ".");
+			}
+			this.type = data[0];
+			this.name = data[1];
+			/*
+			 * parse signature comment
+			 */
+			if (index < elements.length)
+			{
+				StringBuilder sb = new StringBuilder();
+				for (; index < elements.length; index++) {
+					sb.append(elements[index]).append(" ");
+				}
+				sb.deleteCharAt(sb.length() - 1);
+				this.comment = sb.toString();
+			}
+			else this.comment = "";
+		}
+
+		private Signature(Element element) throws SignatureParsingException {
+			this(element.text());
+		}
 	}
 }

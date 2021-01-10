@@ -65,9 +65,33 @@ public class LuaCompilerTest {
 	);
 	private static final JavaClass JAVA_ARRAY_LIST_NULL;
 
-	static {
-		List<JavaClass> noTypeParams = new ArrayList<>(); noTypeParams.add(null);
+	static
+	{
+		List<JavaClass> noTypeParams = new ArrayList<>();
+		noTypeParams.add(null);
 		JAVA_ARRAY_LIST_NULL = new JavaClass(ArrayList.class, noTypeParams);
+	}
+
+	@TestOnly
+	private static Set<ZomboidLuaDoc> compileLua(Set<ZomboidJavaDoc> zJavaDocs) throws CompilerException {
+
+		Set<ZomboidLuaDoc> result = new LuaCompiler(zJavaDocs).compile();
+		Iterator<ZomboidLuaDoc> iterator = result.iterator();
+		while (iterator.hasNext())
+		{
+			ZomboidLuaDoc doc = iterator.next();
+			if (doc.getClazz().getName().equals("Unknown"))
+			{
+				iterator.remove();
+				break;
+			}
+		}
+		return result;
+	}
+
+	@TestOnly
+	private static Set<ZomboidLuaDoc> compileLua(ZomboidJavaDoc zDoc) throws CompilerException {
+		return compileLua(Set.of(zDoc));
 	}
 
 	@Test
@@ -80,8 +104,7 @@ public class LuaCompilerTest {
 				io.yooksi.pz.zdoc.compile.test.Integer.class
 		};
 		Set<ZomboidJavaDoc> zJavaDocs = new LinkedHashSet<>();
-		for (Class<?> c : classObjects)
-		{
+		for (Class<?> c : classObjects) {
 			zJavaDocs.add(new ZomboidJavaDoc(new JavaClass(c), new ArrayList<>(), new HashSet<>()));
 		}
 		Map<java.lang.String, java.lang.String> classData = Map.of(
@@ -108,8 +131,7 @@ public class LuaCompilerTest {
 				Object.class, String.class, Integer.class
 		};
 		Set<ZomboidJavaDoc> zJavaDocs = new LinkedHashSet<>();
-		for (Class<?> c : classObjects)
-		{
+		for (Class<?> c : classObjects) {
 			zJavaDocs.add(new ZomboidJavaDoc(new JavaClass(c), new ArrayList<>(), new HashSet<>()));
 		}
 		Map<java.lang.String, java.lang.String> classData = Map.of(
@@ -327,31 +349,13 @@ public class LuaCompilerTest {
 	}
 
 	@TestOnly
-	private static Set<ZomboidLuaDoc> compileLua(Set<ZomboidJavaDoc> zJavaDocs) throws CompilerException {
-
-		Set<ZomboidLuaDoc> result = new LuaCompiler(zJavaDocs).compile();
-		Iterator<ZomboidLuaDoc> iterator = result.iterator();
-		while (iterator.hasNext())
-		{
-			ZomboidLuaDoc doc = iterator.next();
-			if (doc.getClazz().getName().equals("Unknown")) {
-				iterator.remove(); break;
-			}
-		}
-		return result;
-	}
-
-	@TestOnly
-	private static Set<ZomboidLuaDoc> compileLua(ZomboidJavaDoc zDoc) throws CompilerException {
-		return compileLua(Set.of(zDoc));
-	}
-
-	@TestOnly
 	private static class Object {
 	}
+
 	@TestOnly
 	private static class String {
 	}
+
 	@TestOnly
 	private static class Integer {
 	}

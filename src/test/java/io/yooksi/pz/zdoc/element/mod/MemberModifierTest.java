@@ -40,24 +40,27 @@ public class MemberModifierTest implements UnitTest {
 	private static final TestMember STATIC_FINAL_MEMBER = new TestMember(
 			AccessModifierKey.PUBLIC, ModifierKey.STATIC, ModifierKey.FINAL
 	);
-
-	private static Object staticField;
 	private static final Object staticFinalField = null;
-
+	private static Object staticField;
 	public Object publicField;
 	protected Object protectedField;
-	private Object privateField;
 	Object defaultField;
+	private Object privateField;
 
-	private static class TestMember extends MemberModifier {
+	@TestOnly
+	private static Field getDeclaredField(String name) {
 
-		TestMember(Member member) {
-			super(member.getModifiers());
-		}
+		return Arrays.stream(MemberModifierTest.class.getDeclaredFields())
+				.filter(f -> f.getName().equals(name)).findFirst()
+				.orElseThrow(RuntimeException::new);
+	}
 
-		TestMember(AccessModifierKey accessKey, ModifierKey... modifierKeys) {
-			super(accessKey, modifierKeys);
-		}
+	@TestOnly
+	private static Method getDeclaredMethod(String name) {
+
+		return Arrays.stream(MemberModifierTest.class.getDeclaredMethods())
+				.filter(f -> f.getName().equals(name)).findFirst()
+				.orElseThrow(RuntimeException::new);
 	}
 
 	@Test
@@ -125,8 +128,7 @@ public class MemberModifierTest implements UnitTest {
 	@Test
 	void shouldGetCorrectMemberModifierKeysByModifiersValue() {
 
-		for (AccessModifierKey key : AccessModifierKey.values())
-		{
+		for (AccessModifierKey key : AccessModifierKey.values()) {
 			Assertions.assertEquals(key, AccessModifierKey.get(key.value));
 		}
 		for (ModifierKey key : ModifierKey.values())
@@ -227,19 +229,14 @@ public class MemberModifierTest implements UnitTest {
 	void defaultMethod() {
 	}
 
-	@TestOnly
-	private static Field getDeclaredField(String name) {
+	private static class TestMember extends MemberModifier {
 
-		return Arrays.stream(MemberModifierTest.class.getDeclaredFields())
-				.filter(f -> f.getName().equals(name)).findFirst()
-				.orElseThrow(RuntimeException::new);
-	}
+		TestMember(Member member) {
+			super(member.getModifiers());
+		}
 
-	@TestOnly
-	private static Method getDeclaredMethod(String name) {
-
-		return Arrays.stream(MemberModifierTest.class.getDeclaredMethods())
-				.filter(f -> f.getName().equals(name)).findFirst()
-				.orElseThrow(RuntimeException::new);
+		TestMember(AccessModifierKey accessKey, ModifierKey... modifierKeys) {
+			super(accessKey, modifierKeys);
+		}
 	}
 }

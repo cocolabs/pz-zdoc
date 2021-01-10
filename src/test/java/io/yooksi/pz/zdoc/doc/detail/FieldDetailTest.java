@@ -35,8 +35,8 @@ import zombie.core.Color;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class FieldDetailTest extends FieldDetailTestFixture {
-
-	FieldDetailTest() throws DetailParsingException {}
+	FieldDetailTest() throws DetailParsingException {
+	}
 
 	@Test
 	void shouldMatchAccessModifierInFieldSignature() throws DetailParsingException {
@@ -217,9 +217,8 @@ public class FieldDetailTest extends FieldDetailTestFixture {
 				new JavaClass(Integer.class),                       // b
 				new JavaClass(Color.class),                         // black
 				new JavaClass(Color[].class),                       // blue
-				new JavaClass(ArrayList.class, 						// cyan
+				new JavaClass(ArrayList.class,                        // cyan
 						List.of(new JavaClass(Color.class)))
-
 		};
 		Assertions.assertEquals(expectedTypes.length, entries.size());
 		for (int i = 0; i < expectedTypes.length; i++) {
@@ -246,21 +245,21 @@ public class FieldDetailTest extends FieldDetailTestFixture {
 	void shouldGetCorrectFieldDetailEntriesByName() {
 
 		List<JavaField> expectedJavaFieldEntries = List.of(
-			new JavaField(float.class, "a", new MemberModifier(
-				AccessModifierKey.PUBLIC, ModifierKey.UNDECLARED
-			)),
-			new JavaField(Integer.class, "b", new MemberModifier(
-					AccessModifierKey.PRIVATE, ModifierKey.FINAL
-			)),
-			new JavaField(Color.class, "black", new MemberModifier(
-					AccessModifierKey.PROTECTED, ModifierKey.STATIC, ModifierKey.FINAL
-			)),
-			new JavaField(Color[].class, "blue", new MemberModifier(
-					AccessModifierKey.DEFAULT, ModifierKey.STATIC
-			)),
-			new JavaField(new JavaClass(ArrayList.class, List.of(new JavaClass(Color.class))),
-					"cyan", new MemberModifier(AccessModifierKey.PUBLIC)
-			)
+				new JavaField(float.class, "a", new MemberModifier(
+						AccessModifierKey.PUBLIC, ModifierKey.UNDECLARED
+				)),
+				new JavaField(Integer.class, "b", new MemberModifier(
+						AccessModifierKey.PRIVATE, ModifierKey.FINAL
+				)),
+				new JavaField(Color.class, "black", new MemberModifier(
+						AccessModifierKey.PROTECTED, ModifierKey.STATIC, ModifierKey.FINAL
+				)),
+				new JavaField(Color[].class, "blue", new MemberModifier(
+						AccessModifierKey.DEFAULT, ModifierKey.STATIC
+				)),
+				new JavaField(new JavaClass(ArrayList.class, List.of(new JavaClass(Color.class))),
+						"cyan", new MemberModifier(AccessModifierKey.PUBLIC)
+				)
 		);
 		Assertions.assertEquals(expectedJavaFieldEntries.size(), detail.getEntries().size());
 		for (JavaField field : expectedJavaFieldEntries) {

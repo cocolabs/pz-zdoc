@@ -22,6 +22,10 @@ import io.yooksi.pz.zdoc.doc.detail.FieldDetail.Signature;
 
 class FieldDetailTestFixture extends DetailTestFixture<FieldDetail> {
 
+	FieldDetailTestFixture() throws DetailParsingException {
+		super(new FieldDetail(DocTest.document));
+	}
+
 	abstract static class FieldSignatureSupplier extends SignatureSupplier<Signature> {
 
 		FieldSignatureSupplier(String signature) throws DetailParsingException {
@@ -63,9 +67,5 @@ class FieldDetailTestFixture extends DetailTestFixture<FieldDetail> {
 		public String get() {
 			return signature.comment;
 		}
-	}
-
-	FieldDetailTestFixture() throws DetailParsingException {
-		super(new FieldDetail(DocTest.document));
 	}
 }

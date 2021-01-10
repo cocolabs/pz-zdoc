@@ -46,6 +46,19 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 		this(clazz, new ArrayList<>(), new HashSet<>());
 	}
 
+	private static void appendAnnotations(StringBuilder sb, Annotated element) {
+
+		List<EmmyLua> annotations = element.getAnnotations();
+		if (annotations.size() > 0)
+		{
+			sb.append(annotations.get(0).toString());
+			for (int i = 1; i < annotations.size(); i++) {
+				sb.append('\n').append(annotations.get(i).toString());
+			}
+			sb.append('\n');
+		}
+	}
+
 	public void writeToFile(File file) throws IOException {
 
 		StringBuilder sb = new StringBuilder();
@@ -74,19 +87,6 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 		}
 		sb.deleteCharAt(sb.length() - 1);
 		FileUtils.write(file, sb.toString(), Main.CHARSET);
-	}
-
-	private static void appendAnnotations(StringBuilder sb, Annotated element) {
-
-		List<EmmyLua> annotations = element.getAnnotations();
-		if (annotations.size() > 0)
-		{
-			sb.append(annotations.get(0).toString());
-			for (int i = 1; i < annotations.size(); i++) {
-				sb.append('\n').append(annotations.get(i).toString());
-			}
-			sb.append('\n');
-		}
 	}
 
 	@Override

@@ -46,7 +46,8 @@ public class JavaCompilerTest extends DocTest implements IntegrationTest {
 
 	private static final File EXPOSED_JAVA;
 
-	static {
+	static
+	{
 		try {
 			ClassLoader cl = JavaCompilerTest.class.getClassLoader();
 			EXPOSED_JAVA = new File(
@@ -58,36 +59,27 @@ public class JavaCompilerTest extends DocTest implements IntegrationTest {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private static abstract class CompileTest {
+	@Test
+	void shouldCompileDeclaredJavaFieldsFromClassWithNullDocument() throws DetailParsingException {
 
-		public float a;
-		private final Integer b = null;
-		protected static final Color black = null;
-		static Color[] blue;
-		public ArrayList<Color> cyan;
-
-		public int begin(Object param) {
-			return 0;
-		}
-		protected static boolean DoesInstantly(int number) {
-			return false;
-		}
-		@SuppressWarnings({ "FinalPrivateMethod", "FinalStaticMethod" })
-		private static final String init(String object, String[] params) {
-			return "";
-		}
-		Object[] IsFinished() {
-			return new Object[0];
-		}
-		static void update(ArrayList<String> params) {
-		}
-		static ArrayList<String> getActivatedMods() {
-			return new ArrayList<>();
-		}
-		public Color[] getColor(IsoPlayer player) {
-			return new Color[0];
-		}
+		List<JavaField> expectedJavaFields = List.of(
+				new JavaField(float.class, "a", new MemberModifier(
+						AccessModifierKey.PUBLIC
+				)),
+				new JavaField(Integer.class, "b", new MemberModifier(
+						AccessModifierKey.PRIVATE, ModifierKey.FINAL
+				)),
+				new JavaField(Color.class, "black", new MemberModifier(
+						AccessModifierKey.PROTECTED, ModifierKey.STATIC, ModifierKey.FINAL
+				)),
+				new JavaField(Color[].class, "blue", new MemberModifier(
+						AccessModifierKey.DEFAULT, ModifierKey.STATIC
+				)),
+				new JavaField(new JavaClass(ArrayList.class, 1),
+						"cyan", new MemberModifier(AccessModifierKey.PUBLIC))
+		);
+		List<JavaField> compiledFields = JavaCompiler.compileJavaFields(CompileTest.class, null);
+		Assertions.assertEquals(expectedJavaFields, compiledFields);
 	}
 
 //	@Test
@@ -101,29 +93,6 @@ public class JavaCompilerTest extends DocTest implements IntegrationTest {
 //			Assertions.assertTrue(expectedExposedElements.contains(actualExposedElement.getName()));
 //		}
 //	}
-
-	@Test
-	void shouldCompileDeclaredJavaFieldsFromClassWithNullDocument() throws DetailParsingException {
-
-		List<JavaField> expectedJavaFields = List.of(
-			new JavaField(float.class, "a", new MemberModifier(
-					AccessModifierKey.PUBLIC
-			)),
-			new JavaField(Integer.class, "b", new MemberModifier(
-					AccessModifierKey.PRIVATE, ModifierKey.FINAL
-			)),
-			new JavaField(Color.class, "black", new MemberModifier(
-					AccessModifierKey.PROTECTED, ModifierKey.STATIC, ModifierKey.FINAL
-			)),
-			new JavaField(Color[].class, "blue", new MemberModifier(
-					AccessModifierKey.DEFAULT, ModifierKey.STATIC
-			)),
-			new JavaField(new JavaClass(ArrayList.class, 1),
-					"cyan", new MemberModifier(AccessModifierKey.PUBLIC))
-		);
-		List<JavaField> compiledFields = JavaCompiler.compileJavaFields(CompileTest.class, null);
-		Assertions.assertEquals(expectedJavaFields, compiledFields);
-	}
 
 	@Test
 	void shouldCompileDeclaredJavaFieldsFromClassWithDocument() throws DetailParsingException {
@@ -162,8 +131,8 @@ public class JavaCompilerTest extends DocTest implements IntegrationTest {
 				),
 				new JavaMethod("init", String.class,
 						List.of(
-							new JavaParameter(String.class, "arg0"),
-							new JavaParameter(String[].class, "arg1")
+								new JavaParameter(String.class, "arg0"),
+								new JavaParameter(String[].class, "arg1")
 						),
 						new MemberModifier(AccessModifierKey.PRIVATE, ModifierKey.STATIC, ModifierKey.FINAL)
 				),
@@ -226,5 +195,43 @@ public class JavaCompilerTest extends DocTest implements IntegrationTest {
 		);
 		Set<JavaMethod> compiledMethods = JavaCompiler.compileJavaMethods(CompileTest.class, document);
 		Assertions.assertEquals(expectedJavaMethods, compiledMethods);
+	}
+
+	@SuppressWarnings("unused")
+	private static abstract class CompileTest {
+
+		protected static final Color black = null;
+		static Color[] blue;
+		private final Integer b = null;
+		public float a;
+		public ArrayList<Color> cyan;
+
+		protected static boolean DoesInstantly(int number) {
+			return false;
+		}
+
+		@SuppressWarnings({ "FinalPrivateMethod", "FinalStaticMethod" })
+		private static final String init(String object, String[] params) {
+			return "";
+		}
+
+		static void update(ArrayList<String> params) {
+		}
+
+		static ArrayList<String> getActivatedMods() {
+			return new ArrayList<>();
+		}
+
+		public int begin(Object param) {
+			return 0;
+		}
+
+		Object[] IsFinished() {
+			return new Object[0];
+		}
+
+		public Color[] getColor(IsoPlayer player) {
+			return new Color[0];
+		}
 	}
 }

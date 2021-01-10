@@ -37,6 +37,68 @@ import io.yooksi.pz.zdoc.util.ParseUtils;
 
 public class MethodDetail extends Detail<JavaMethod> {
 
+	public MethodDetail(ZomboidAPIDoc document) throws DetailParsingException {
+		super("method.detail", document);
+	}
+
+	@Override
+	protected List<JavaMethod> parse() throws DetailParsingException {
+
+		Elements detail = getDetail();
+		List<JavaMethod> result = new ArrayList<>();
+
+		for (Element blockList : detail)
+		{
+			Element listHeader = blockList.getElementsByTag("h4").first();
+			String listName = listHeader != null ? listHeader.text() : "unknown";
+
+			Element eSignature = blockList.getElementsByTag("pre").first();
+			if (eSignature == null)
+			{
+				Logger.error("Unable to find method signature for method: " + listName);
+				continue;
+			}
+			Signature signature = new Signature(qualifyZomboidClassElements(eSignature));
+			JavaClass type = DetailSignature.parseClassSignature(signature.returnType);
+			if (type == null)
+			{
+				String msg = "Excluding method (%s) from detail, class %s does not exist";
+				Logger.warn(String.format(msg, signature.toString(), signature.returnType));
+				continue;
+			}
+			List<JavaParameter> params = new ArrayList<>();
+			if (!signature.params.isEmpty())
+			{
+				for (String param : signature.params.split("\\s*,\\s*"))
+				{
+					String[] paramElements = param.split("\\s+");
+					String className = paramElements[0];
+
+					if (paramElements.length < 2)
+					{
+						paramElements = param.split("/././.");
+						if (paramElements.length < 2)
+						{
+							Logger.error("Unexpected parameter format: " + param);
+							continue;
+						}
+						className = paramElements[0] + "[]";
+					}
+					JavaClass paramType = DetailSignature.parseClassSignature(className);
+					if (paramType == null)
+					{
+						String msg = "Excluding method (%s) from detail, class %s does not exist";
+						Logger.warn(String.format(msg, signature.toString(), className));
+						continue;
+					}
+					params.add(new JavaParameter(paramType, paramElements[1]));
+				}
+			}
+			result.add(new JavaMethod(signature.name, type, params, signature.modifier, signature.comment));
+		}
+		return result;
+	}
+
 	static class Signature extends DetailSignature {
 
 		final MemberModifier modifier;
@@ -118,7 +180,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 				}
 				if (params == null)
 				{
-					 // most probably dealing with vararg parameter here
+					// most probably dealing with vararg parameter here
 					if (paramsSegment.endsWith(")")) {
 						params = ParseUtils.flushStringBuilder(sb.deleteCharAt(sb.length() - 1));
 					}
@@ -143,67 +205,5 @@ public class MethodDetail extends Detail<JavaMethod> {
 		private Signature(Element element) throws SignatureParsingException {
 			this(element.text());
 		}
-	}
-
-	public MethodDetail(ZomboidAPIDoc document) throws DetailParsingException {
-		super("method.detail", document);
-	}
-
-	@Override
-	protected List<JavaMethod> parse() throws DetailParsingException {
-
-		Elements detail = getDetail();
-		List<JavaMethod> result = new ArrayList<>();
-
-		for (Element blockList : detail)
-		{
-			Element listHeader = blockList.getElementsByTag("h4").first();
-			String listName = listHeader != null ? listHeader.text() : "unknown";
-
-			Element eSignature = blockList.getElementsByTag("pre").first();
-			if (eSignature == null)
-			{
-				Logger.error("Unable to find method signature for method: " + listName);
-				continue;
-			}
-			Signature signature = new Signature(qualifyZomboidClassElements(eSignature));
-			JavaClass type = DetailSignature.parseClassSignature(signature.returnType);
-			if (type == null)
-			{
-				String msg = "Excluding method (%s) from detail, class %s does not exist";
-				Logger.warn(String.format(msg, signature.toString(), signature.returnType));
-				continue;
-			}
-			List<JavaParameter> params = new ArrayList<>();
-			if (!signature.params.isEmpty())
-			{
-				for (String param : signature.params.split("\\s*,\\s*"))
-				{
-					String[] paramElements = param.split("\\s+");
-					String className = paramElements[0];
-
-					if (paramElements.length < 2)
-					{
-						paramElements = param.split("/././.");
-						if (paramElements.length < 2)
-						{
-							Logger.error("Unexpected parameter format: " + param);
-							continue;
-						}
-						className = paramElements[0] + "[]";
-					}
-					JavaClass paramType = DetailSignature.parseClassSignature(className);
-					if (paramType == null)
-					{
-						String msg = "Excluding method (%s) from detail, class %s does not exist";
-						Logger.warn(String.format(msg, signature.toString(), className));
-						continue;
-					}
-					params.add(new JavaParameter(paramType, paramElements[1]));
-				}
-			}
-			result.add(new JavaMethod(signature.name, type, params, signature.modifier, signature.comment));
-		}
-		return result;
 	}
 }

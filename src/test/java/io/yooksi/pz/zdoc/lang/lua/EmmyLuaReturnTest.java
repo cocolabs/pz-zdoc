@@ -41,7 +41,7 @@ public class EmmyLuaReturnTest {
 	@Test
 	void shouldParseEmmyLuaReturnAnnotationFromString() {
 
-		String[] returnAnnotations = new String[] {
+		String[] returnAnnotations = new String[]{
 				"---@return type",
 				"---@return type @comment_",
 				"---@return type@ comment-line",

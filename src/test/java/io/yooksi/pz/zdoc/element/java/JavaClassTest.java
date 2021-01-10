@@ -28,6 +28,20 @@ import io.yooksi.pz.zdoc.UnitTest;
 
 public class JavaClassTest implements UnitTest {
 
+	@TestOnly
+	private static void methodWithVoidReturnType() {
+	}
+
+	@TestOnly
+	private static int methodWithPrimitiveReturnType() {
+		return 0;
+	}
+
+	@TestOnly
+	private static boolean methodWithBooleanReturnType() {
+		return true;
+	}
+
 	@Test
 	void shouldParseValidJavaClassFromClassObject() {
 
@@ -51,7 +65,7 @@ public class JavaClassTest implements UnitTest {
 	@Test
 	void shouldReturnNullPathWhenJavaClassHasNoPackage() throws NoSuchMethodException {
 
-		Method[] methods = new Method[] {
+		Method[] methods = new Method[]{
 				JavaClassTest.class.getDeclaredMethod("methodWithVoidReturnType"),
 				JavaClassTest.class.getDeclaredMethod("methodWithPrimitiveReturnType"),
 				JavaClassTest.class.getDeclaredMethod("methodWithBooleanReturnType"),
@@ -104,7 +118,6 @@ public class JavaClassTest implements UnitTest {
 	@Test
 	@SuppressWarnings("ConstantConditions")
 	void shouldThrowExceptionWhenModifyingUnknownTypeParameterList() {
-
 		Assertions.assertThrows(UnsupportedOperationException.class,
 				() -> JavaClass.getUnknownTypeParameterList(1).add(null));
 	}
@@ -131,18 +144,4 @@ public class JavaClassTest implements UnitTest {
 	}
 
 	private static class InnerClass {}
-
-	@TestOnly
-	private static void methodWithVoidReturnType() {
-	}
-
-	@TestOnly
-	private static int methodWithPrimitiveReturnType() {
-		return 0;
-	}
-
-	@TestOnly
-	private static boolean methodWithBooleanReturnType() {
-		return true;
-	}
 }

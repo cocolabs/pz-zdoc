@@ -151,8 +151,7 @@ public class ZomboidAPIDoc {
 			if (!segment.toURI().equals(target.toURI())) {
 				return false;
 			}
-		}
-		catch (URISyntaxException e) {
+		} catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
 		return true;

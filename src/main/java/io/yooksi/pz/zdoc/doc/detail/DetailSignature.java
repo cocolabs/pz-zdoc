@@ -58,7 +58,8 @@ public abstract class DetailSignature {
 			else if (lastChar == ' ' && c == ' ') {
 				continue;
 			}
-			sb.append(c); lastChar = c;
+			sb.append(c);
+			lastChar = c;
 		}
 		return sb.toString();
 	}
@@ -108,8 +109,7 @@ public abstract class DetailSignature {
 						for (int i4 = i3 + 1; i4 < _charArray.length; i4++)
 						{
 							c = _charArray[i4];
-							if (passedLeadingWhitespace)
-							{
+							if (passedLeadingWhitespace) {
 								sb.append(_charArray[i4]);
 							}
 							else if (c != ' ')
@@ -126,8 +126,7 @@ public abstract class DetailSignature {
 				if (sTypeParameters[0] != null)
 				{
 					List<JavaClass> typeParameters = new ArrayList<>(2);
-					for (String segment : new String[]{ sTypeParameters[0], sTypeParameters[1] })
-					{
+					for (String segment : new String[]{ sTypeParameters[0], sTypeParameters[1] }) {
 						typeParameters.addAll(internalParseClassSignature(segment));
 					}
 					return List.of(new JavaClass(targetClass, typeParameters));

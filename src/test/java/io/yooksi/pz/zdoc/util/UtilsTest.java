@@ -41,7 +41,8 @@ public class UtilsTest implements UnitTest {
 	void shouldGetValidClassForObjectClassName() throws ClassNotFoundException {
 
 		Assertions.assertEquals(Object.class, Utils.getClassForName(Object.class.getName()));
-		Assertions.assertThrows(ClassNotFoundException.class, () -> Utils.getClassForName("nonExistingClass"));
+		Assertions.assertThrows(ClassNotFoundException.class, () -> Utils.getClassForName("nonExistingClass"
+		));
 	}
 
 	@Test

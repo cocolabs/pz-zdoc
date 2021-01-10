@@ -39,8 +39,8 @@ import zombie.core.Color;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
-
-	MethodDetailTest() throws DetailParsingException {}
+	MethodDetailTest() throws DetailParsingException {
+	}
 
 	@Test
 	void shouldMatchAccessModifierInMethodSignature() throws DetailParsingException {
@@ -411,14 +411,14 @@ public class MethodDetailTest extends MethodDetailTestFixture implements UnitTes
 				new JavaMethod("update", void.class, List.of(
 						new JavaParameter(
 								new JavaClass(ArrayList.class,
-								List.of(new JavaClass(String.class))), "params"
+										List.of(new JavaClass(String.class))), "params"
 						)
 				), new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
 				),
 				new JavaMethod("getActivatedMods", new JavaClass(
 						ArrayList.class, List.of(new JavaClass(String.class))
 				), List.of(),
-				new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
+						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
 				),
 				new JavaMethod("getColor", Color[].class, List.of(
 						new JavaParameter(new JavaClass(IsoPlayer.class), "player")

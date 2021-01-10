@@ -34,8 +34,8 @@ import io.yooksi.pz.zdoc.element.IMember;
 
 public abstract class Detail<T extends IMember> {
 
-	final String name;
 	protected final ZomboidAPIDoc document;
+	final String name;
 	private final List<T> entries;
 
 	public Detail(String name, ZomboidAPIDoc document) throws DetailParsingException {

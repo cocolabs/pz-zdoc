@@ -74,15 +74,13 @@ public class Main {
 				args.length, Arrays.toString(args)));
 
 		Command command = Command.parse(args);
-		if (command == null)
-		{
+		if (command == null) {
 			throw new ParseException("Missing or unknown command argument");
 		}
 		else if (command == Command.HELP)
 		{
 			Command info = Command.parse(args, 1);
-			if (info == null)
-			{
+			if (info == null) {
 				CommandLine.printHelp(Command.values());
 			}
 			else CommandLine.printHelp(info);
@@ -99,23 +97,20 @@ public class Main {
 			List<Path> paths = Files.walk(Paths.get(root.toString()))
 					.filter(Files::isRegularFile).collect(Collectors.toCollection(ArrayList::new));
 
-			if (paths.size() > 1)
-			{
+			if (paths.size() > 1) {
 				Logger.info("Parsing and documenting lua files found in " + root);
 			}
 			else if (paths.isEmpty()) {
 				Logger.warn("No files found under path " + root);
 			}
 			Properties luaProperties = new Properties();
-			try
-			{
+			try {
 				URL resource = CL.getResource("lua.properties");
 				File fLuaProperties = new File(Objects.requireNonNull(resource).toURI());
 				try (FileInputStream fis = new FileInputStream(fLuaProperties)) {
 					luaProperties.load(fis);
 				}
-			}
-			catch (URISyntaxException e) {
+			} catch (URISyntaxException e) {
 				throw new RuntimeException(e);
 			}
 			// process every file found under given root path
@@ -125,23 +120,20 @@ public class Main {
 				{
 					Logger.debug(String.format("Found lua file \"%s\"", path.getFileName()));
 					Path outputFilePath;
-					if (!root.toFile().exists())
-					{
+					if (!root.toFile().exists()) {
 						throw new FileNotFoundException(root.toString());
 					}
 					/* user did not specify output dir path */
 					else if (dir != null)
 					{
 						File outputDirFile = dir.toFile();
-						if (!outputDirFile.exists() && !outputDirFile.mkdirs())
-						{
+						if (!outputDirFile.exists() && !outputDirFile.mkdirs()) {
 							throw new IOException("Unable to create output directory: " + dir);
 						}
 						/* root path matches current path so there are no
 						 * subdirectories, just resolve the filename against root path
 						 */
-						if (root.compareTo(path) == 0)
-						{
+						if (root.compareTo(path) == 0) {
 							outputFilePath = dir.resolve(path.getFileName());
 						}
 						else outputFilePath = dir.resolve(root.relativize(path));
@@ -158,8 +150,7 @@ public class Main {
 					if (!outputFileExists)
 					{
 						File parentFile = outputFile.getParentFile();
-						if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile()))
-						{
+						if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
 							throw new IOException("Unable to create specified output file: " + outputFilePath);
 						}
 					}
@@ -217,13 +208,11 @@ public class Main {
 			File outputDir = userOutput.toFile();
 			if (!outputDir.exists())
 			{
-				if (!outputDir.mkdirs())
-				{
+				if (!outputDir.mkdirs()) {
 					throw new IOException("Unable to create output directory");
 				}
 			}
-			else if (!outputDir.isDirectory())
-			{
+			else if (!outputDir.isDirectory()) {
 				throw new IllegalArgumentException("Output path does not point to a directory");
 			}
 			else Logger.debug("Designated output path: " + userOutput);

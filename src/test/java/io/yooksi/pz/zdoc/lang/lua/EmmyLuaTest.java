@@ -55,7 +55,7 @@ public class EmmyLuaTest implements UnitTest {
 		Set<String> reserved = new HashSet<>(EmmyLua.RESERVED_KEYWORDS);
 		reserved.addAll(EmmyLua.BUILT_IN_TYPES);
 
-		for (String keyword :reserved)
+		for (String keyword : reserved)
 		{
 			String expected = '_' + keyword;
 			Assertions.assertEquals(expected, EmmyLua.getSafeLuaName(keyword));

@@ -33,36 +33,6 @@ import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
 public class DetailTest extends DetailTestFixture<DetailTest.TestDetail> implements UnitTest {
 
-	private static class TestMember implements IMember {
-
-		@Override
-		public String getName() {
-			return null;
-		}
-
-		@Override
-		public MemberModifier getModifier() {
-			return null;
-		}
-
-		@Override
-		public String getComment() {
-			return null;
-		}
-	}
-
-	static class TestDetail extends Detail<TestMember> {
-
-		public TestDetail() throws DetailParsingException {
-			super("test.detail", DocTest.document);
-		}
-
-		@Override
-		protected List<TestMember> parse() {
-			return List.of(new TestMember());
-		}
-	}
-
 	DetailTest() throws DetailParsingException {
 		super(new TestDetail());
 	}
@@ -99,7 +69,8 @@ public class DetailTest extends DetailTestFixture<DetailTest.TestDetail> impleme
 		Elements detail = this.detail.getDetail();
 		Assertions.assertEquals(qualifiedNames.size(), detail.size());
 
-		int i = -1; for (Map.Entry<String, String> entry : qualifiedNames.entrySet())
+		int i = -1;
+		for (Map.Entry<String, String> entry : qualifiedNames.entrySet())
 		{
 			Element blockList = detail.get(i += 1);
 			Element pre = blockList.getElementsByTag("pre").first();
@@ -114,5 +85,35 @@ public class DetailTest extends DetailTestFixture<DetailTest.TestDetail> impleme
 	void shouldThrowExceptionWhenModifyingDetailMembers() {
 		Assertions.assertThrows(UnsupportedOperationException.class,
 				() -> new TestDetail().getEntries().add(new TestMember()));
+	}
+
+	private static class TestMember implements IMember {
+
+		@Override
+		public String getName() {
+			return null;
+		}
+
+		@Override
+		public MemberModifier getModifier() {
+			return null;
+		}
+
+		@Override
+		public String getComment() {
+			return null;
+		}
+	}
+
+	static class TestDetail extends Detail<TestMember> {
+
+		public TestDetail() throws DetailParsingException {
+			super("test.detail", DocTest.document);
+		}
+
+		@Override
+		protected List<TestMember> parse() {
+			return List.of(new TestMember());
+		}
 	}
 }

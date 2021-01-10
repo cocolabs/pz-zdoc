@@ -102,13 +102,11 @@ public class LuaAnnotator {
 	 */
 	public static AnnotateResult annotate(File file, List<String> content, AnnotateRules rules) throws IOException {
 
-		if (!file.exists())
-		{
+		if (!file.exists()) {
 			throw new FileNotFoundException(file.getPath());
 		}
 		List<String> input = FileUtils.readLines(file, Charset.defaultCharset());
-		if (input.size() == 0)
-		{
+		if (input.size() == 0) {
 			return AnnotateResult.SKIPPED_FILE_EMPTY;
 		}
 		Set<String> include = new HashSet<>();
@@ -120,8 +118,7 @@ public class LuaAnnotator {
 		 */
 		if (includeValue != null)
 		{
-			if (!includeValue.isBlank())
-			{
+			if (!includeValue.isBlank()) {
 				include.addAll(Arrays.asList(includeValue.split(",")));
 			}
 			// if property value is blank the file is meant to be ignored
@@ -165,8 +162,7 @@ public class LuaAnnotator {
 						if (!rules.exclude.contains(luaClass.getName()))
 						{
 							// make sure we are not on the first line
-							if (i > 0 && EmmyLuaClass.isAnnotation(input.get(i - 1)))
-							{
+							if (i > 0 && EmmyLuaClass.isAnnotation(input.get(i - 1))) {
 								content.remove(i - 1);
 							}
 							/* take indentation in consideration just in case
@@ -188,20 +184,16 @@ public class LuaAnnotator {
 		Logger.debug(String.format("Annotation process finished - " +
 				"included (%d/%d), excluded %d", includeCount, includeCountMax, excludeCount)
 		);
-		if (!foundNonBlankLine)
-		{
+		if (!foundNonBlankLine) {
 			return AnnotateResult.SKIPPED_FILE_EMPTY;
 		}
-		else if (excludeCount == includeCountMax)
-		{
+		else if (excludeCount == includeCountMax) {
 			return AnnotateResult.ALL_EXCLUDED;
 		}
-		else if (includeCount == includeCountMax)
-		{
+		else if (includeCount == includeCountMax) {
 			return AnnotateResult.ALL_INCLUDED;
 		}
-		else if (excludeCount == 0 && includeCount == 0)
-		{
+		else if (excludeCount == 0 && includeCount == 0) {
 			return AnnotateResult.NO_MATCH;
 		}
 		else return AnnotateResult.PARTIAL_INCLUSION;
@@ -220,6 +212,27 @@ public class LuaAnnotator {
 	 */
 	static AnnotateResult annotate(File file, List<String> content) throws IOException {
 		return LuaAnnotator.annotate(file, content, new AnnotateRules());
+	}
+
+	public enum AnnotateResult {
+
+		/** Indicates that annotation process was skipped because target file was empty. */
+		SKIPPED_FILE_EMPTY,
+
+		/** Indicated that annotation process was skipped because target file is ignored. */
+		SKIPPED_FILE_IGNORED,
+
+		/** Indicates that all annotation elements were excluded. */
+		ALL_EXCLUDED,
+
+		/** Indicates that all annotation elements were included. */
+		ALL_INCLUDED,
+
+		/** Indicates that some elements were excluded. */
+		PARTIAL_INCLUSION,
+
+		/** Indicates that no elements were matched. */
+		NO_MATCH
 	}
 
 	/**
@@ -268,26 +281,5 @@ public class LuaAnnotator {
 			this.include = new Properties();
 			this.exclude = new HashSet<>();
 		}
-	}
-
-	public enum AnnotateResult {
-
-		/** Indicates that annotation process was skipped because target file was empty. */
-		SKIPPED_FILE_EMPTY,
-
-		/** Indicated that annotation process was skipped because target file is ignored. */
-		SKIPPED_FILE_IGNORED,
-
-		/** Indicates that all annotation elements were excluded. */
-		ALL_EXCLUDED,
-
-		/** Indicates that all annotation elements were included. */
-		ALL_INCLUDED,
-
-		/** Indicates that some elements were excluded. */
-		PARTIAL_INCLUSION,
-
-		/** Indicates that no elements were matched. */
-		NO_MATCH
 	}
 }

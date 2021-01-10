@@ -17,26 +17,6 @@
  */
 package io.yooksi.pz.zdoc;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-
-import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
-import io.yooksi.pz.zdoc.element.java.JavaClass;
-import io.yooksi.pz.zdoc.logger.Logger;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
-
-import io.yooksi.pz.zdoc.cmd.Command;
 //
 //public class MainTest extends TestWorkspace implements IntegrationTest {
 //

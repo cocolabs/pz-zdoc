@@ -43,6 +43,7 @@ public class ParseUtils {
 	public static String flushStringBuilder(StringBuilder sb) {
 
 		String result = sb.toString();
-		sb.setLength(0); return result;
+		sb.setLength(0);
+		return result;
 	}
 }

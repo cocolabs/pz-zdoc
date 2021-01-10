@@ -42,46 +42,6 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		this.javaDocs = Collections.unmodifiableSet(javaDocs);
 	}
 
-	public Set<ZomboidLuaDoc> compile() throws CompilerException {
-
-		Set<ZomboidLuaDoc> result = PredicatedSet.predicatedSet(
-			new HashSet<>(), PredicateUtils.notNullPredicate()
-		);
-		/* represents ? parameter type
-		 * since EmmyLua does not have a good format for notating parameterized types
-		 * this is the best way we can note an unknown parameter type
-		 */
-		result.add(new ZomboidLuaDoc(new LuaClass("Unknown")));
-		for (ZomboidJavaDoc javaDoc : javaDocs)
-		{
-			LuaClass luaClass = resolveLuaClass(javaDoc.getName());
-			GLOBAL_CLASSES.put(luaClass.getName(), luaClass);
-
-			List<LuaField> luaFields = new ArrayList<>();
-			for (IField field : javaDoc.getFields())
-			{
-				LuaType fieldType = resolveLuaType(field.getType());
-				luaFields.add(new LuaField(fieldType, field.getName(), field.getModifier()));
-			}
-			Set<LuaMethod> luaMethods = new HashSet<>();
-			for (IMethod method : javaDoc.getMethods())
-			{
-				LuaType returnType = resolveLuaType(method.getReturnType());
-
-				List<LuaParameter> parameters = new ArrayList<>();
-				for (IParameter param : method.getParams())
-				{
-					LuaType paramClass = resolveLuaType(param.getType());
-					parameters.add(new LuaParameter(paramClass, param.getName()));
-				}
-				luaMethods.add(new LuaMethod(method.getName(),
-						luaClass, method.getModifier(), returnType, parameters));
-			}
-			result.add(new ZomboidLuaDoc(luaClass, luaFields, luaMethods));
-		}
-		return result;
-	}
-
 	private static LuaType resolveLuaType(IClass iClass) throws CompilerException {
 
 		List<LuaType> otherTypes = new ArrayList<>();
@@ -148,5 +108,45 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		}
 		// class does not reside in a package
 		else return signature;
+	}
+
+	public Set<ZomboidLuaDoc> compile() throws CompilerException {
+
+		Set<ZomboidLuaDoc> result = PredicatedSet.predicatedSet(
+				new HashSet<>(), PredicateUtils.notNullPredicate()
+		);
+		/* represents ? parameter type
+		 * since EmmyLua does not have a good format for notating parameterized types
+		 * this is the best way we can note an unknown parameter type
+		 */
+		result.add(new ZomboidLuaDoc(new LuaClass("Unknown")));
+		for (ZomboidJavaDoc javaDoc : javaDocs)
+		{
+			LuaClass luaClass = resolveLuaClass(javaDoc.getName());
+			GLOBAL_CLASSES.put(luaClass.getName(), luaClass);
+
+			List<LuaField> luaFields = new ArrayList<>();
+			for (IField field : javaDoc.getFields())
+			{
+				LuaType fieldType = resolveLuaType(field.getType());
+				luaFields.add(new LuaField(fieldType, field.getName(), field.getModifier()));
+			}
+			Set<LuaMethod> luaMethods = new HashSet<>();
+			for (IMethod method : javaDoc.getMethods())
+			{
+				LuaType returnType = resolveLuaType(method.getReturnType());
+
+				List<LuaParameter> parameters = new ArrayList<>();
+				for (IParameter param : method.getParams())
+				{
+					LuaType paramClass = resolveLuaType(param.getType());
+					parameters.add(new LuaParameter(paramClass, param.getName()));
+				}
+				luaMethods.add(new LuaMethod(method.getName(),
+						luaClass, method.getModifier(), returnType, parameters));
+			}
+			result.add(new ZomboidLuaDoc(luaClass, luaFields, luaMethods));
+		}
+		return result;
 	}
 }

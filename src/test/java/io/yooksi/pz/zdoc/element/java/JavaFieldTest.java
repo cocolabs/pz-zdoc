@@ -30,12 +30,19 @@ import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 @SuppressWarnings("unused")
 public class JavaFieldTest implements UnitTest {
 
-	public Object publicField;
-	private Object privateField;
-	Object defaultField;
-
-	private static Object staticField;
 	private static final Object staticFinalField = null;
+	private static Object staticField;
+	public Object publicField;
+	Object defaultField;
+	private Object privateField;
+
+	@TestOnly
+	private static Field getDeclaredField(String name) {
+
+		return Arrays.stream(JavaFieldTest.class.getDeclaredFields())
+				.filter(f -> f.getName().equals(name)).findFirst()
+				.orElseThrow(RuntimeException::new);
+	}
 
 	@Test
 	void shouldConstructJavaFieldWithValidNameFromFieldObject() {
@@ -77,17 +84,9 @@ public class JavaFieldTest implements UnitTest {
 				MemberModifier modifier = new MemberModifier(declaredField.getModifiers());
 				Assertions.assertEquals(expected, new JavaField(clazz, fieldData[i], modifier).toString());
 			}
-			catch(ClassNotFoundException e) {
+			catch (ClassNotFoundException e) {
 				throw new RuntimeException(e);
 			}
 		}
-	}
-
-	@TestOnly
-	private static Field getDeclaredField(String name) {
-
-		return Arrays.stream(JavaFieldTest.class.getDeclaredFields())
-				.filter(f -> f.getName().equals(name)).findFirst()
-				.orElseThrow(RuntimeException::new);
 	}
 }

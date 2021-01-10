@@ -49,6 +49,27 @@ public class JavaMethodTest implements UnitTest {
 	private static final JavaMethod METHOD_WITHOUT_RETURN_TYPE =
 			new JavaMethod(getDeclaredMethod("testMethodWithoutParametersOrReturnType"));
 
+	@TestOnly
+	private static JavaMethod copyJavaMethod(JavaMethod method) {
+		return new JavaMethod(method.getName(), method.getReturnType().getClazz(),
+				method.getParams(), method.getModifier());
+	}
+
+	@TestOnly
+	private static void assertReadableForm(String form, JavaMethod method) {
+
+		Assertions.assertEquals(form, method.toString());
+		Assertions.assertEquals(form, copyJavaMethod(method).toString());
+	}
+
+	@TestOnly
+	private static Method getDeclaredMethod(String name) {
+
+		return Arrays.stream(JavaMethodTest.class.getDeclaredMethods())
+				.filter(m -> m.getName().equals(name)).findFirst()
+				.orElseThrow(RuntimeException::new);
+	}
+
 	@Test
 	void shouldCreateJavaMethodWithValidName() {
 
@@ -75,7 +96,7 @@ public class JavaMethodTest implements UnitTest {
 	@Test
 	void shouldCreateJavaMethodWithValidParameters() {
 
-		JavaMethod[] methods = new JavaMethod[] {
+		JavaMethod[] methods = new JavaMethod[]{
 				METHOD_WITH_PARAMETERS, copyJavaMethod(METHOD_WITH_PARAMETERS),
 		};
 		for (JavaMethod method : methods)
@@ -133,26 +154,5 @@ public class JavaMethodTest implements UnitTest {
 	@TestOnly
 	private Integer testMethodWithReturnType() {
 		return 0;
-	}
-
-	@TestOnly
-	private static JavaMethod copyJavaMethod(JavaMethod method) {
-		return new JavaMethod(method.getName(), method.getReturnType().getClazz(),
-				method.getParams(), method.getModifier());
-	}
-
-	@TestOnly
-	private static void assertReadableForm(String form, JavaMethod method) {
-
-		Assertions.assertEquals(form, method.toString());
-		Assertions.assertEquals(form, copyJavaMethod(method).toString());
-	}
-
-	@TestOnly
-	private static Method getDeclaredMethod(String name) {
-
-		return Arrays.stream(JavaMethodTest.class.getDeclaredMethods())
-				.filter(m -> m.getName().equals(name)).findFirst()
-				.orElseThrow(RuntimeException::new);
 	}
 }

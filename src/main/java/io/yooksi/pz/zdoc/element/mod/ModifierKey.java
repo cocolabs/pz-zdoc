@@ -44,7 +44,7 @@ public enum ModifierKey {
 		this.value = value;
 	}
 
-	public static SetUniqueList<ModifierKey> get(String...elements) {
+	public static SetUniqueList<ModifierKey> get(String... elements) {
 
 		List<ModifierKey> result = new ArrayList<>();
 		for (String element : elements)

@@ -49,7 +49,7 @@ public class MemberModifier {
 		}
 	}
 
-	public MemberModifier(AccessModifierKey accessKey, ModifierKey...modifierKeys) {
+	public MemberModifier(AccessModifierKey accessKey, ModifierKey... modifierKeys) {
 		this(accessKey, Arrays.stream(modifierKeys).collect(Collectors.toList()));
 	}
 
@@ -73,11 +73,11 @@ public class MemberModifier {
 		return modifiers.contains(ModifierKey.UNDECLARED);
 	}
 
-	public boolean hasModifiers(ModifierKey...keys) {
+	public boolean hasModifiers(ModifierKey... keys) {
 		return Arrays.stream(keys).allMatch(modifiers::contains);
 	}
 
-	public boolean matchesModifiers(ModifierKey...keys) {
+	public boolean matchesModifiers(ModifierKey... keys) {
 		return modifiers.equals(List.of(keys));
 	}
 

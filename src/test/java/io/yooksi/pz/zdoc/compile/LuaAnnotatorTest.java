@@ -39,7 +39,8 @@ public class LuaAnnotatorTest extends TestWorkspace {
 	private static final ClassLoader CL = LuaAnnotatorTest.class.getClassLoader();
 	private static final File INCLUSION_TEST, NO_MATCH_TEST, EXPECTED_INCLUSION;
 
-	static {
+	static
+	{
 		try {
 			INCLUSION_TEST = new File(
 					Objects.requireNonNull(CL.getResource("LuaInclusionTest.lua")).toURI()
@@ -115,7 +116,7 @@ public class LuaAnnotatorTest extends TestWorkspace {
 		Map<String, String> badLuaTableDeclarations = Map.of(
 				"new", "NewTestTable = ISTestTable:newly(\"TestTable\")",
 				"derive", "DerivedTestTable = ISTestTable:derived(\"TestTable\")"
-				);
+		);
 		for (Map.Entry<String, String> entry : badLuaTableDeclarations.entrySet())
 		{
 			Matcher matcher = LuaAnnotator.LUA_TABLE_DECLARATION.matcher(entry.getValue());

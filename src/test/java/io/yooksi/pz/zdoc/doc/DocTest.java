@@ -32,7 +32,8 @@ public abstract class DocTest {
 	protected static final ZomboidAPIDoc document;
 	protected static final Path documentPath;
 
-	static {
+	static
+	{
 		try {
 			URL resource = DocTest.class.getClassLoader().getResource("Test.html");
 			documentPath = new File(Objects.requireNonNull(resource).toURI()).toPath();
