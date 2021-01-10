@@ -48,11 +48,6 @@ public class JavaMethod implements IMethod {
 		this.comment = comment;
 	}
 
-	public JavaMethod(String name, Class<?> returnType,
-					  List<JavaParameter> params, MemberModifier modifier, String comment) {
-		this(name, new JavaClass(returnType), params, modifier, comment);
-	}
-
 	public JavaMethod(String name, JavaClass returnType,
 					  List<JavaParameter> params, MemberModifier modifier) {
 		this(name, returnType, params, modifier, "");

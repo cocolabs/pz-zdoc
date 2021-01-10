@@ -43,10 +43,6 @@ public class JavaField implements IField {
 		this(type, name, modifier, "");
 	}
 
-	public JavaField(Class<?> type, String name, MemberModifier modifier, String comment) {
-		this(new JavaClass(type), name, modifier, comment);
-	}
-
 	public JavaField(Class<?> type, String name, MemberModifier modifier) {
 		this(new JavaClass(type), name, modifier, "");
 	}

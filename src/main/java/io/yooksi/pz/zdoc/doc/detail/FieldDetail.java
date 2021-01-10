@@ -108,7 +108,7 @@ public class FieldDetail extends Detail<JavaField> {
 	}
 
 	@Override
-	protected List<JavaField> parse() throws DetailParsingException {
+	protected List<JavaField> parse() {
 
 		Elements detail = getDetail();
 		List<JavaField> result = new ArrayList<>();
