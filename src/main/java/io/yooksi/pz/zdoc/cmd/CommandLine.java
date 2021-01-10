@@ -73,6 +73,7 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	 */
 	public static void printHelp(Command[] commands) {
 
+		//noinspection UseOfSystemOutOrSystemErr
 		try (PrintWriter pw = new PrintWriter(System.out))
 		{
 			pw.println("See 'help <command>' to read about a specific command");
