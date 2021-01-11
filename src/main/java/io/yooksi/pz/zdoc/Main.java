@@ -217,12 +217,9 @@ public class Main {
 			}
 			else Logger.debug("Designated output path: " + userOutput);
 
-			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler().compile();
-			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile())
-			{
-				if (!exclude.contains(zLuaDoc.getName())) {
-					zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
-				}
+			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
+			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
+				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
 			}
 		}
 		Logger.debug("Finished processing command");

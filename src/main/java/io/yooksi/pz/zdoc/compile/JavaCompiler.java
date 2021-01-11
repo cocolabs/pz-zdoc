@@ -48,14 +48,16 @@ import zombie.core.Core;
 public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 
 	private final Set<Class<?>> exposedJavaClasses;
+	private final Set<String> excludedClasses;
 
-	public JavaCompiler() throws CompilerException {
+	public JavaCompiler(Set<String> excludedClasses) throws CompilerException {
 		try {
 			exposedJavaClasses = Collections.unmodifiableSet(getExposedJava());
 		}
 		catch (ReflectiveOperationException e) {
 			throw new CompilerException("Error occurred while reading exposed java", e);
 		}
+		this.excludedClasses = excludedClasses;
 	}
 
 	static List<JavaField> compileJavaFields(Class<?> clazz, @Nullable ZomboidAPIDoc doc) throws DetailParsingException {
@@ -176,6 +178,9 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 		Set<ZomboidJavaDoc> result = new HashSet<>();
 		for (Class<?> exposedClass : exposedJavaClasses)
 		{
+			if (excludedClasses.contains(exposedClass.getName())) {
+				continue;
+			}
 			String classPath = JavaClass.getPathForClass(exposedClass);
 			if (!classPath.isEmpty())
 			{
