@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class TestWorkspace {
 
 	protected final String filename;

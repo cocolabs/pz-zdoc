@@ -38,7 +38,7 @@ import zombie.characters.IsoPlayer;
 import zombie.core.Color;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
+class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	MethodDetailTest() throws DetailParsingException {
 	}
 

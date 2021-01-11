@@ -30,7 +30,7 @@ import io.yooksi.pz.zdoc.element.lua.*;
 import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
-public class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
+class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 
 	private static final LuaType LUA_ARRAY_LIST_OBJECT = new LuaType(
 			"ArrayList", List.of(new LuaType("Object"))

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.element.lua.LuaClass;
 
-public class EmmyLuaClassTest {
+class EmmyLuaClassTest {
 
 	@Test
 	void shouldCorrectlyFormatEmmyLuaClassAnnotation() {

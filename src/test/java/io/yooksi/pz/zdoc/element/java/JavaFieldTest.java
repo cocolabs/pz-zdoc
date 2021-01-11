@@ -28,7 +28,7 @@ import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
 @SuppressWarnings("unused")
-public class JavaFieldTest implements UnitTest {
+class JavaFieldTest implements UnitTest {
 
 	private static final Object staticFinalField = null;
 	private static Object staticField;

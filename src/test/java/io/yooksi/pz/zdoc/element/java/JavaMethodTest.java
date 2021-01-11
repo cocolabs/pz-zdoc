@@ -32,7 +32,7 @@ import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
 @SuppressWarnings("unused")
-public class JavaMethodTest implements UnitTest {
+class JavaMethodTest implements UnitTest {
 
 	private static final List<JavaParameter> DUMMY_PARAMS =
 			List.of(new JavaParameter(Object.class, "param1"));

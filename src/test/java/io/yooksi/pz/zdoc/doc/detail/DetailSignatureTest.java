@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
 
-public class DetailSignatureTest implements UnitTest {
+class DetailSignatureTest implements UnitTest {
 
 	@Test
 	void shouldParseClassTypeParametersFromSignature() {

@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.util.Utils;
 
-public class ZomboidAPIDocTest extends DocTest implements UnitTest {
+class ZomboidAPIDocTest extends DocTest implements UnitTest {
 
 	@Test
 	void shouldCorrectlyResolveZomboidDocApiURL() {

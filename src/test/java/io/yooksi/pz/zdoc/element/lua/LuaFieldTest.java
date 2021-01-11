@@ -24,7 +24,7 @@ import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
 
-public class LuaFieldTest implements UnitTest {
+class LuaFieldTest implements UnitTest {
 
 	@Test
 	void shouldCreateLuaFieldWithSafeLuaName() {

@@ -38,7 +38,7 @@ import zombie.characters.IsoPlayer;
 import zombie.core.Color;
 
 @Tag("compile")
-public class JavaCompilerTest extends DocTest {
+class JavaCompilerTest extends DocTest {
 
 	@Test
 	void shouldCompileDeclaredJavaFieldsFromClassWithNullDocument() throws DetailParsingException {

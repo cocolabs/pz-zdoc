@@ -34,7 +34,7 @@ import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.element.mod.ModifierKey;
 
-public class LuaCompilerTest {
+class LuaCompilerTest {
 
 	private static final MemberModifier MODIFIER = new MemberModifier(
 			AccessModifierKey.PUBLIC, ModifierKey.FINAL

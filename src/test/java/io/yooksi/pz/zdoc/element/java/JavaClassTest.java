@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.UnitTest;
 
-public class JavaClassTest implements UnitTest {
+class JavaClassTest implements UnitTest {
 
 	@TestOnly
 	private static void methodWithVoidReturnType() {

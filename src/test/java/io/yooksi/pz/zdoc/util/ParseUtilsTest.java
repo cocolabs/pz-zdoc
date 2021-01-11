@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.UnitTest;
 
-public class ParseUtilsTest implements UnitTest {
+class ParseUtilsTest implements UnitTest {
 
 	@Test
 	void shouldGetValidRegexMatchedGroups() {

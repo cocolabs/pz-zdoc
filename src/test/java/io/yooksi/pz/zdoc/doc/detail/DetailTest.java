@@ -31,7 +31,7 @@ import io.yooksi.pz.zdoc.doc.DocTest;
 import io.yooksi.pz.zdoc.element.IMember;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
-public class DetailTest extends DetailTestFixture<DetailTest.TestDetail> implements UnitTest {
+class DetailTest extends DetailTestFixture<DetailTest.TestDetail> implements UnitTest {
 
 	DetailTest() throws DetailParsingException {
 		super(new TestDetail());
@@ -107,7 +107,7 @@ public class DetailTest extends DetailTestFixture<DetailTest.TestDetail> impleme
 
 	static class TestDetail extends Detail<TestMember> {
 
-		public TestDetail() throws DetailParsingException {
+		TestDetail() throws DetailParsingException {
 			super("test.detail", DocTest.document);
 		}
 

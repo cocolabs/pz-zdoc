@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.UnitTest;
 
-public class CommandTest implements UnitTest {
+class CommandTest implements UnitTest {
 
 	private static final Command[] COMMANDS = Arrays.stream(Command.values())
 			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});

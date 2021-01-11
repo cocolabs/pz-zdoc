@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 import io.yooksi.pz.zdoc.UnitTest;
 
 @SuppressWarnings("unused")
-public class MemberModifierTest implements UnitTest {
+class MemberModifierTest implements UnitTest {
 
 	private static final AccessModifierKey PUBLIC = AccessModifierKey.PUBLIC;
 	private static final ModifierKey UNDECLARED = ModifierKey.UNDECLARED;

@@ -29,7 +29,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CommandLineTest {
+class CommandLineTest {
 
 	private static final Command[] COMMANDS = Arrays.stream(Command.values())
 			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});

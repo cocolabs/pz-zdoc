@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.element.lua.LuaType;
 
-public class EmmyLuaParamTest {
+class EmmyLuaParamTest {
 
 	@Test
 	void shouldCorrectlyFormatEmmyLuaParamAnnotation() {

@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import io.yooksi.pz.zdoc.UnitTest;
 
 @SuppressWarnings("unused")
-public class JavaParameterTest implements UnitTest {
+class JavaParameterTest implements UnitTest {
 
 	@Test
 	void shouldConstructValidJavaParameterFromParameterObject() throws NoSuchMethodException {

@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
 
-public class LuaClassTest implements UnitTest {
+class LuaClassTest implements UnitTest {
 
 	@Test
 	@SuppressWarnings("ConstantConditions")

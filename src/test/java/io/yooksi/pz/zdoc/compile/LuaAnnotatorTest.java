@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import io.yooksi.pz.zdoc.Main;
 import io.yooksi.pz.zdoc.TestWorkspace;
 
-public class LuaAnnotatorTest extends TestWorkspace {
+class LuaAnnotatorTest extends TestWorkspace {
 
 	private static final ClassLoader CL = LuaAnnotatorTest.class.getClassLoader();
 	private static final File INCLUSION_TEST, NO_MATCH_TEST, EXPECTED_INCLUSION;

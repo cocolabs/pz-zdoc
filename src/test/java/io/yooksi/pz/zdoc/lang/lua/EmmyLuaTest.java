@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import io.yooksi.pz.zdoc.UnitTest;
 
-public class EmmyLuaTest implements UnitTest {
+class EmmyLuaTest implements UnitTest {
 
 	@Test
 	void shouldCorrectlyValidateEmmyLuaBuiltInTypes() {

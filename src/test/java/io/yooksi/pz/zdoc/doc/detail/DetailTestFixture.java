@@ -39,8 +39,9 @@ abstract class DetailTestFixture<T extends Detail<?>> extends DocTest {
 			"boolean", "byte", "char", "short", "int",
 			"long", "float", "double", "void"
 	};
-	static final Set<Set<ModifierKey>> MODIFIER_KEY_COMBINATIONS =
+	private static final Set<Set<ModifierKey>> MODIFIER_KEY_COMBINATIONS =
 			Sets.powerSet(Set.of(ModifierKey.values()));
+
 	final T detail;
 
 	DetailTestFixture(@NotNull T detail) {

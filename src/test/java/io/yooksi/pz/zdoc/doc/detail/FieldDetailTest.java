@@ -34,7 +34,7 @@ import io.yooksi.pz.zdoc.element.mod.ModifierKey;
 import zombie.core.Color;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class FieldDetailTest extends FieldDetailTestFixture {
+class FieldDetailTest extends FieldDetailTestFixture {
 	FieldDetailTest() throws DetailParsingException {
 	}
 
