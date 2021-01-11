@@ -26,17 +26,18 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
-class JavaCompilerTest {
+class JavaCompilerIntTest {
 
 	private static final File EXPOSED_JAVA;
 
 	static
 	{
 		try {
-			ClassLoader cl = JavaCompilerTest.class.getClassLoader();
+			ClassLoader cl = JavaCompilerIntTest.class.getClassLoader();
 			EXPOSED_JAVA = new File(
 					Objects.requireNonNull(cl.getResource("exposed.txt")).toURI()
 			);
@@ -60,5 +61,7 @@ class JavaCompilerTest {
 				throw new AssertionFailedError(message, null, actualExposedElement);
 			}
 		}
+	}
+//		}
 	}
 }
