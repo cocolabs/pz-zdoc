@@ -100,7 +100,7 @@ public class Main {
 			else if (paths.isEmpty()) {
 				Logger.warn("No files found under path " + root);
 			}
-			Properties luaProperties = Utils.getProperties("lua.properties");
+			Properties properties = Utils.getProperties("lua.properties");
 			// process every file found under given root path
 			for (Path path : paths)
 			{
@@ -145,7 +145,7 @@ public class Main {
 					String fileName = path.getFileName().toString();
 					List<String> content = new ArrayList<>();
 
-					AnnotateRules rules = new AnnotateRules(luaProperties, exclude);
+					AnnotateRules rules = new AnnotateRules(properties, exclude);
 					AnnotateResult result = LuaAnnotator.annotate(path.toFile(), content, rules);
 
 					String addendum = outputFileExists ? " and overwriting" : "";
@@ -205,6 +205,18 @@ public class Main {
 			}
 			else Logger.debug("Designated output path: " + userOutput);
 
+			Properties properties = Utils.getProperties("zomboid.properties");
+			if (properties != null)
+			{
+				String excludeProp = properties.getProperty("exclude");
+				if (excludeProp != null)
+				{
+					if (!excludeProp.isBlank()) {
+						exclude.addAll(Arrays.asList(excludeProp.split(",")));
+					}
+				}
+				else Logger.warn("Unable to find exclude list in zomboid.properties");
+			}
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
 			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
 				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
