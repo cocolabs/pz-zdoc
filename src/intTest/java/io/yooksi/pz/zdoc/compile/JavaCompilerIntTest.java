@@ -62,4 +62,19 @@ class JavaCompilerIntTest {
 			}
 		}
 	}
+
+	/**
+	 * Ensure that {@link NoClassDefFoundError} and {@link ClassNotFoundException}
+	 * exceptions are not thrown, which happens when JDK classes are not found.
+	 */
+	@Test
+	void shouldNotThrowClassNotFoundExceptionWhenReadingExposedJavaClasses() throws ReflectiveOperationException {
+
+		for (Class<?> exposedClass : JavaCompiler.getExposedJava())
+		{
+			Assertions.assertDoesNotThrow(exposedClass::getDeclaredConstructors);
+			Assertions.assertDoesNotThrow(exposedClass::getDeclaredFields);
+			Assertions.assertDoesNotThrow(exposedClass::getDeclaredMethods);
+		}
+	}
 }
