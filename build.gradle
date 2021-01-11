@@ -21,7 +21,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
-apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotless.gradle"
+apply from: "https://gist.githubusercontent.com/yooksi/$spotlessRulesGistId/raw/spotless.gradle"
 apply from: 'zomboid.gradle'
 
 group 'io.yooksi'
