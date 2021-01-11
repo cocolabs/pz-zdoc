@@ -26,6 +26,9 @@ import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 import io.yooksi.pz.zdoc.element.java.JavaClass;
 import io.yooksi.pz.zdoc.element.java.JavaField;
 import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
@@ -41,7 +44,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	@Test
 	void shouldMatchAccessModifierInFieldSignature() throws DetailParsingException {
 
-		Map<AccessModifierKey, String> fieldsWithAccessKeyword = Map.of(
+		Map<AccessModifierKey, String> fieldsWithAccessKeyword = ImmutableMap.of(
 				AccessModifierKey.PUBLIC, "public int myField",
 				AccessModifierKey.PRIVATE, "private boolean myField",
 				AccessModifierKey.PROTECTED, "protected char myField",
@@ -57,7 +60,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	@Test
 	void shouldMatchNonAccessModifiersInFieldSignature() throws DetailParsingException {
 
-		Map<ModifierKey, String> fieldsWithNonAccessModifier = Map.of(
+		Map<ModifierKey, String> fieldsWithNonAccessModifier = ImmutableMap.of(
 				ModifierKey.STATIC, "static int myField",
 				ModifierKey.FINAL, "final char myField",
 				ModifierKey.ABSTRACT, "abstract java.lang.Object myField"
@@ -72,7 +75,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	@Test
 	void shouldMatchMixedModifiersInFieldSignature() throws DetailParsingException {
 
-		Map<MemberModifier, String> fieldsWithMixedModifiers = Map.of(
+		Map<MemberModifier, String> fieldsWithMixedModifiers = ImmutableMap.of(
 				new MemberModifier(AccessModifierKey.PUBLIC, ModifierKey.STATIC),
 				"public static float myField",
 
@@ -92,7 +95,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	@Test
 	void shouldMatchObjectTypeInFieldSignature() {
 
-		Map<String, String> fieldsWithObjectType = Map.of(
+		Map<String, String> fieldsWithObjectType = ImmutableMap.of(
 				"int", "int myField",
 				"boolean[]", "boolean[] myField",
 				"java.lang.String", "java.lang.String myField",
@@ -106,7 +109,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	@Test
 	void shouldMatchParameterizedObjectTypeInFieldSignature() {
 
-		Map<String, String> fieldsWithParameterizedObjectType = Map.of(
+		Map<String, String> fieldsWithParameterizedObjectType = ImmutableMap.of(
 				"java.util.ArrayList<java.lang.Class<?>,java.lang.Class<?>>",
 				"java.util.ArrayList<java.lang.Class<?>,java.lang.Class<?>> myField",
 
@@ -135,7 +138,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	@Test
 	void shouldMatchNameInFieldSignature() {
 
-		Map<String, String> fieldsWithNames = Map.of(
+		Map<String, String> fieldsWithNames = ImmutableMap.of(
 				"myField", "int myField",
 				"my_field", "char my_field",
 				"my$field", "java.lang.Integer my$field",
@@ -150,7 +153,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	@Test
 	void shouldMatchCommentInMethodSignature() {
 
-		Map<String, String> methodsWithComment = Map.of(
+		Map<String, String> methodsWithComment = ImmutableMap.of(
 				"// comment", "void myField // comment",
 				"onewordcomment", "int myField onewordcomment",
 				"multi word comment", "java.lang.ArrayList<Class<?>> myField multi word comment",
@@ -218,7 +221,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 				new JavaClass(Color.class),                         // black
 				new JavaClass(Color[].class),                       // blue
 				new JavaClass(ArrayList.class,                        // cyan
-						List.of(new JavaClass(Color.class)))
+						new JavaClass(Color.class))
 		};
 		Assertions.assertEquals(expectedTypes.length, entries.size());
 		for (int i = 0; i < expectedTypes.length; i++) {
@@ -244,7 +247,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	@Test
 	void shouldGetCorrectFieldDetailEntriesByName() {
 
-		List<JavaField> expectedJavaFieldEntries = List.of(
+		List<JavaField> expectedJavaFieldEntries = ImmutableList.of(
 				new JavaField(float.class, "a", new MemberModifier(
 						AccessModifierKey.PUBLIC, ModifierKey.UNDECLARED
 				)),
@@ -257,7 +260,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 				new JavaField(Color[].class, "blue", new MemberModifier(
 						AccessModifierKey.DEFAULT, ModifierKey.STATIC
 				)),
-				new JavaField(new JavaClass(ArrayList.class, List.of(new JavaClass(Color.class))),
+				new JavaField(new JavaClass(ArrayList.class, new JavaClass(Color.class)),
 						"cyan", new MemberModifier(AccessModifierKey.PUBLIC)
 				)
 		);

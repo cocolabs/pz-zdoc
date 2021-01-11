@@ -23,6 +23,9 @@ import java.util.Set;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
+
 import io.yooksi.pz.zdoc.element.lua.LuaType;
 
 /**
@@ -37,7 +40,7 @@ public abstract class EmmyLua {
 	 *
 	 * @see <a href="https://git.io/JLPWh">IntelliJ-EmmyLua - builtin.lua</a>
 	 */
-	static final Set<String> BUILT_IN_TYPES = Set.of(
+	static final Set<String> BUILT_IN_TYPES = Sets.newHashSet(
 			"boolean", "string", "number", "userdata",
 			"thread", "table", "any", "void", "self"
 	);
@@ -48,7 +51,7 @@ public abstract class EmmyLua {
 	 * @see <a href="https://www.lua.org/manual/5.1/manual.html#2.1">
 	 * 		Lexical Conventions - Lua 5.1 Reference Manual</a>
 	 */
-	static final Set<String> RESERVED_KEYWORDS = Set.of(
+	static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet(
 			"and", "break", "do", "else", "elseif", "end",
 			"false", "for", "function", "goto", "if", "in",
 			"local", "nil", "not", "or", "repeat", "return",
@@ -58,7 +61,7 @@ public abstract class EmmyLua {
 	private final String annotation;
 
 	protected EmmyLua(String keyword, String annotation, String comment) {
-		if (comment == null || comment.isBlank()) {
+		if (Strings.nullToEmpty(comment).trim().isEmpty()) {
 			this.annotation = String.format("---@%s %s", keyword, annotation);
 		}
 		else this.annotation = String.format("---@%s %s @%s", keyword, annotation, comment);

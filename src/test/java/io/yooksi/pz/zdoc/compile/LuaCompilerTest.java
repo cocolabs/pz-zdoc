@@ -23,6 +23,10 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+
 import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
@@ -40,28 +44,28 @@ class LuaCompilerTest {
 			AccessModifierKey.PUBLIC, ModifierKey.FINAL
 	);
 	private static final JavaClass JAVA_ARRAY_LIST_OBJECT = new JavaClass(
-			ArrayList.class, List.of(new JavaClass(java.lang.Object.class))
+			ArrayList.class, ImmutableList.of(new JavaClass(java.lang.Object.class))
 	);
 	private static final JavaClass JAVA_ARRAY_LIST_STRING_OBJECT = new JavaClass(
-			ArrayList.class, List.of(new JavaClass(java.lang.String.class),
+			ArrayList.class, ImmutableList.of(new JavaClass(java.lang.String.class),
 			new JavaClass(java.lang.Object.class))
 	);
 	private static final JavaClass JAVA_ARRAY_LIST_OBJECT_STRING = new JavaClass(
-			ArrayList.class, List.of(new JavaClass(Object.class), new JavaClass(String.class))
+			ArrayList.class, ImmutableList.of(new JavaClass(Object.class), new JavaClass(String.class))
 	);
 	private static final LuaType LUA_ARRAY_LIST_OBJECT = new LuaType(
-			"ArrayList", List.of(new LuaType("Object"))
+			"ArrayList", ImmutableList.of(new LuaType("Object"))
 	);
 	private static final LuaType LUA_ARRAY_LIST_STRING_OBJECT = new LuaType(
-			"ArrayList", List.of(new LuaType("String"), new LuaType("Object"))
+			"ArrayList", ImmutableList.of(new LuaType("String"), new LuaType("Object"))
 	);
 	private static final LuaType LUA_ARRAY_LIST_OBJECT_STRING = new LuaType(
-			"ArrayList", List.of(
+			"ArrayList", ImmutableList.of(
 			new LuaType("LuaCompilerTest.Object"),
 			new LuaType("LuaCompilerTest.String"))
 	);
 	private static final LuaType LUA_ARRAY_LIST_UNKNOWN = new LuaType(
-			"ArrayList", List.of(new LuaType("Unknown"))
+			"ArrayList", ImmutableList.of(new LuaType("Unknown"))
 	);
 	private static final JavaClass JAVA_ARRAY_LIST_NULL;
 
@@ -91,7 +95,7 @@ class LuaCompilerTest {
 
 	@TestOnly
 	private static Set<ZomboidLuaDoc> compileLua(ZomboidJavaDoc zDoc) throws CompilerException {
-		return compileLua(Set.of(zDoc));
+		return compileLua(ImmutableSet.of(zDoc));
 	}
 
 	@Test
@@ -107,14 +111,15 @@ class LuaCompilerTest {
 		for (Class<?> c : classObjects) {
 			zJavaDocs.add(new ZomboidJavaDoc(new JavaClass(c), new ArrayList<>(), new HashSet<>()));
 		}
-		Map<java.lang.String, java.lang.String> classData = Map.of(
-				"Object", "java.lang.Object",
-				"String", "java.lang.String",
-				"Integer", "java.lang.Integer",
-				"test_Object", "io.yooksi.pz.zdoc.compile.test.Object",
-				"test_String", "io.yooksi.pz.zdoc.compile.test.String",
-				"test_Integer", "io.yooksi.pz.zdoc.compile.test.Integer"
-		);
+		Map<java.lang.String, java.lang.String> classData =
+				ImmutableMap.<java.lang.String, java.lang.String>builder()
+						.put("Object", "java.lang.Object")
+						.put("String", "java.lang.String")
+						.put("Integer", "java.lang.Integer")
+						.put("test_Object", "io.yooksi.pz.zdoc.compile.test.Object")
+						.put("test_String", "io.yooksi.pz.zdoc.compile.test.String")
+						.put("test_Integer", "io.yooksi.pz.zdoc.compile.test.Integer").build();
+
 		Set<LuaClass> expectedLuaClasses = new LinkedHashSet<>();
 		classData.forEach((k, v) -> expectedLuaClasses.add(new LuaClass(k, v)));
 
@@ -134,7 +139,7 @@ class LuaCompilerTest {
 		for (Class<?> c : classObjects) {
 			zJavaDocs.add(new ZomboidJavaDoc(new JavaClass(c), new ArrayList<>(), new HashSet<>()));
 		}
-		Map<java.lang.String, java.lang.String> classData = Map.of(
+		Map<java.lang.String, java.lang.String> classData = ImmutableMap.of(
 				"LuaCompilerTest.Object", "io.yooksi.pz.zdoc.compile.LuaCompilerTest.Object",
 				"LuaCompilerTest.String", "io.yooksi.pz.zdoc.compile.LuaCompilerTest.String",
 				"LuaCompilerTest.Integer", "io.yooksi.pz.zdoc.compile.LuaCompilerTest.Integer"
@@ -166,12 +171,12 @@ class LuaCompilerTest {
 	@Test
 	void shouldCompileValidLuaFieldsFromZomboidJavaDocs() throws CompilerException {
 
-		List<JavaField> javaFields = List.of(
+		List<JavaField> javaFields = ImmutableList.of(
 				new JavaField(java.lang.Object.class, "object", MODIFIER),
 				new JavaField(java.lang.String.class, "text", MODIFIER),
 				new JavaField(java.lang.Integer.class, "num", MODIFIER)
 		);
-		List<LuaField> expectedFields = List.of(
+		List<LuaField> expectedFields = ImmutableList.of(
 				new LuaField(new LuaType("Object"), "object", MODIFIER),
 				new LuaField(new LuaType("String"), "text", MODIFIER),
 				new LuaField(new LuaType("Integer"), "num", MODIFIER)
@@ -189,12 +194,12 @@ class LuaCompilerTest {
 	@Test
 	void shouldCompileValidLuaArrayFieldsFromZomboidJavaDocs() throws CompilerException {
 
-		List<JavaField> javaFields = List.of(
+		List<JavaField> javaFields = ImmutableList.of(
 				new JavaField(java.lang.Object[].class, "object", MODIFIER),
 				new JavaField(java.lang.String[].class, "text", MODIFIER),
 				new JavaField(java.lang.Integer[].class, "num", MODIFIER)
 		);
-		List<LuaField> expectedFields = List.of(
+		List<LuaField> expectedFields = ImmutableList.of(
 				new LuaField(new LuaType("Object[]"), "object", MODIFIER),
 				new LuaField(new LuaType("String[]"), "text", MODIFIER),
 				new LuaField(new LuaType("Integer[]"), "num", MODIFIER)
@@ -212,13 +217,13 @@ class LuaCompilerTest {
 	@Test
 	void shouldCompileValidLuaParameterizedTypeFieldsFromZomboidJavaDocs() throws CompilerException {
 
-		List<JavaField> javaFields = List.of(
+		List<JavaField> javaFields = ImmutableList.of(
 				new JavaField(JAVA_ARRAY_LIST_OBJECT, "object", MODIFIER),
 				new JavaField(JAVA_ARRAY_LIST_STRING_OBJECT, "text", MODIFIER),
 				new JavaField(JAVA_ARRAY_LIST_OBJECT_STRING, "text", MODIFIER),
 				new JavaField(JAVA_ARRAY_LIST_NULL, "num", MODIFIER)
 		);
-		List<LuaField> expectedFields = List.of(
+		List<LuaField> expectedFields = ImmutableList.of(
 				new LuaField(LUA_ARRAY_LIST_OBJECT, "object", MODIFIER),
 				new LuaField(LUA_ARRAY_LIST_STRING_OBJECT, "text", MODIFIER),
 				new LuaField(LUA_ARRAY_LIST_OBJECT_STRING, "text", MODIFIER),
@@ -240,26 +245,26 @@ class LuaCompilerTest {
 		LuaClass ownerClass = new LuaClass(
 				LuaCompilerTest.class.getSimpleName(), LuaCompilerTest.class.getName()
 		);
-		Set<JavaMethod> javaMethods = Set.of(
-				new JavaMethod("getText", java.lang.String.class, List.of(
+		Set<JavaMethod> javaMethods = ImmutableSet.of(
+				new JavaMethod("getText", java.lang.String.class, ImmutableList.of(
 						new JavaParameter(java.lang.Integer.class, "iParam")), MODIFIER
 				),
-				new JavaMethod("getNumber", java.lang.Integer.class, List.of(
+				new JavaMethod("getNumber", java.lang.Integer.class, ImmutableList.of(
 						new JavaParameter(java.lang.Object.class, "oParam")), MODIFIER
 				),
-				new JavaMethod("getObject", java.lang.Object.class, List.of(
+				new JavaMethod("getObject", java.lang.Object.class, ImmutableList.of(
 						new JavaParameter(java.lang.String.class, "sParam")), MODIFIER
 				)
 		);
-		Set<LuaMethod> expectedMethods = Set.of(
+		Set<LuaMethod> expectedMethods = ImmutableSet.of(
 				new LuaMethod("getText", ownerClass, MODIFIER, new LuaType("String"),
-						List.of(new LuaParameter(new LuaType("Integer"), "iParam"))
+						ImmutableList.of(new LuaParameter(new LuaType("Integer"), "iParam"))
 				),
 				new LuaMethod("getNumber", ownerClass, MODIFIER, new LuaType("Integer"),
-						List.of(new LuaParameter(new LuaType("Object"), "oParam"))
+						ImmutableList.of(new LuaParameter(new LuaType("Object"), "oParam"))
 				),
 				new LuaMethod("getObject", ownerClass, MODIFIER, new LuaType("Object"),
-						List.of(new LuaParameter(new LuaType("String"), "sParam"))
+						ImmutableList.of(new LuaParameter(new LuaType("String"), "sParam"))
 				)
 		);
 		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(
@@ -278,26 +283,26 @@ class LuaCompilerTest {
 		LuaClass ownerClass = new LuaClass(
 				LuaCompilerTest.class.getSimpleName(), LuaCompilerTest.class.getName()
 		);
-		Set<JavaMethod> javaMethods = Set.of(
-				new JavaMethod("getText", java.lang.String[].class, List.of(
+		Set<JavaMethod> javaMethods = ImmutableSet.of(
+				new JavaMethod("getText", java.lang.String[].class, ImmutableList.of(
 						new JavaParameter(java.lang.Integer[].class, "iParam")), MODIFIER
 				),
-				new JavaMethod("getNumber", java.lang.Integer[].class, List.of(
+				new JavaMethod("getNumber", java.lang.Integer[].class, ImmutableList.of(
 						new JavaParameter(java.lang.Object[].class, "oParam")), MODIFIER
 				),
-				new JavaMethod("getObject", java.lang.Object[].class, List.of(
+				new JavaMethod("getObject", java.lang.Object[].class, ImmutableList.of(
 						new JavaParameter(java.lang.String[].class, "sParam")), MODIFIER
 				)
 		);
-		Set<LuaMethod> expectedMethods = Set.of(
+		Set<LuaMethod> expectedMethods = ImmutableSet.of(
 				new LuaMethod("getText", ownerClass, MODIFIER, new LuaType("String[]"),
-						List.of(new LuaParameter(new LuaType("Integer[]"), "iParam"))
+						ImmutableList.of(new LuaParameter(new LuaType("Integer[]"), "iParam"))
 				),
 				new LuaMethod("getNumber", ownerClass, MODIFIER, new LuaType("Integer[]"),
-						List.of(new LuaParameter(new LuaType("Object[]"), "oParam"))
+						ImmutableList.of(new LuaParameter(new LuaType("Object[]"), "oParam"))
 				),
 				new LuaMethod("getObject", ownerClass, MODIFIER, new LuaType("Object[]"),
-						List.of(new LuaParameter(new LuaType("String[]"), "sParam"))
+						ImmutableList.of(new LuaParameter(new LuaType("String[]"), "sParam"))
 				)
 		);
 		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(
@@ -316,26 +321,26 @@ class LuaCompilerTest {
 		LuaClass ownerClass = new LuaClass(
 				LuaCompilerTest.class.getSimpleName(), LuaCompilerTest.class.getName()
 		);
-		Set<JavaMethod> javaMethods = Set.of(
-				new JavaMethod("getText", JAVA_ARRAY_LIST_OBJECT, List.of(
+		Set<JavaMethod> javaMethods = ImmutableSet.of(
+				new JavaMethod("getText", JAVA_ARRAY_LIST_OBJECT, ImmutableList.of(
 						new JavaParameter(JAVA_ARRAY_LIST_STRING_OBJECT, "sParam")), MODIFIER
 				),
-				new JavaMethod("getNumber", JAVA_ARRAY_LIST_STRING_OBJECT, List.of(
+				new JavaMethod("getNumber", JAVA_ARRAY_LIST_STRING_OBJECT, ImmutableList.of(
 						new JavaParameter(JAVA_ARRAY_LIST_OBJECT_STRING, "nParam")), MODIFIER
 				),
-				new JavaMethod("getObject", JAVA_ARRAY_LIST_OBJECT_STRING, List.of(
+				new JavaMethod("getObject", JAVA_ARRAY_LIST_OBJECT_STRING, ImmutableList.of(
 						new JavaParameter(JAVA_ARRAY_LIST_NULL, "oParam")), MODIFIER
 				)
 		);
-		Set<LuaMethod> expectedMethods = Set.of(
+		Set<LuaMethod> expectedMethods = ImmutableSet.of(
 				new LuaMethod("getText", ownerClass, MODIFIER, LUA_ARRAY_LIST_OBJECT,
-						List.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "sParam"))
+						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "sParam"))
 				),
 				new LuaMethod("getNumber", ownerClass, MODIFIER, LUA_ARRAY_LIST_STRING_OBJECT,
-						List.of(new LuaParameter(LUA_ARRAY_LIST_OBJECT_STRING, "nParam"))
+						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_OBJECT_STRING, "nParam"))
 				),
 				new LuaMethod("getObject", ownerClass, MODIFIER, LUA_ARRAY_LIST_OBJECT_STRING,
-						List.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "oParam"))
+						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "oParam"))
 				)
 		);
 		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(

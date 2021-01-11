@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.jetbrains.annotations.UnmodifiableView;
 
+import com.google.common.collect.ImmutableList;
+
 import io.yooksi.pz.zdoc.element.IClass;
 
 public class LuaType implements IClass {
@@ -33,6 +35,11 @@ public class LuaType implements IClass {
 	public LuaType(String name, List<LuaType> otherTypes) {
 		this.name = name;
 		this.otherTypes = Collections.unmodifiableList(otherTypes);
+	}
+
+	public LuaType(String name, LuaType otherType) {
+		this.name = name;
+		this.otherTypes = ImmutableList.of(otherType);
 	}
 
 	public LuaType(String name) {

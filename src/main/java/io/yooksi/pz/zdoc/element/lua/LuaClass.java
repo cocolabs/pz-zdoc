@@ -18,6 +18,7 @@
 package io.yooksi.pz.zdoc.element.lua;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,7 +42,7 @@ public class LuaClass implements IClass, Annotated {
 
 		this.type = type;
 		this.parentType = parentType;
-		this.annotations = List.of(new EmmyLuaClass(this));
+		this.annotations = Collections.singletonList(new EmmyLuaClass(this));
 	}
 
 	public LuaClass(String type) {

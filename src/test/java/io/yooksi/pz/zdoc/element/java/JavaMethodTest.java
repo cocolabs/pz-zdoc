@@ -28,6 +28,8 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableList;
+
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
@@ -35,7 +37,7 @@ import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 class JavaMethodTest implements UnitTest {
 
 	private static final List<JavaParameter> DUMMY_PARAMS =
-			List.of(new JavaParameter(Object.class, "param1"));
+			ImmutableList.of(new JavaParameter(Object.class, "param1"));
 
 	private static final JavaMethod METHOD_WITH_PARAMETERS =
 			new JavaMethod(getDeclaredMethod("testMethodWithParameters"));

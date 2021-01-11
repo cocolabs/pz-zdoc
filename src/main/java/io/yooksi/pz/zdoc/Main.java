@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import io.yooksi.pz.zdoc.cmd.Command;
 import io.yooksi.pz.zdoc.cmd.CommandLine;
@@ -211,7 +212,7 @@ public class Main {
 				String excludeProp = properties.getProperty("exclude");
 				if (excludeProp != null)
 				{
-					if (!excludeProp.isBlank()) {
+					if (!StringUtils.isBlank(excludeProp)) {
 						exclude.addAll(Arrays.asList(excludeProp.split(",")));
 					}
 				}

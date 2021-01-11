@@ -55,7 +55,7 @@ public class JavaMethod implements IMethod {
 	}
 
 	public JavaMethod(String name, JavaClass returnType, MemberModifier modifier) {
-		this(name, returnType, List.of(), modifier, "");
+		this(name, returnType, new ArrayList<>(), modifier, "");
 	}
 
 	public JavaMethod(String name, Class<?> returnType,
@@ -63,8 +63,12 @@ public class JavaMethod implements IMethod {
 		this(name, new JavaClass(returnType), params, modifier, "");
 	}
 
+	public JavaMethod(String name, Class<?> returnType, JavaParameter param, MemberModifier modifier) {
+		this(name, new JavaClass(returnType), Collections.singletonList(param), modifier, "");
+	}
+
 	public JavaMethod(String name, Class<?> returnType, MemberModifier modifier) {
-		this(name, new JavaClass(returnType), List.of(), modifier, "");
+		this(name, new JavaClass(returnType), new ArrayList<>(), modifier, "");
 	}
 
 	public JavaMethod(Method method) {

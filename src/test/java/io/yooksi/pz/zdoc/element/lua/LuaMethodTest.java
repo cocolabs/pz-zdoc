@@ -23,6 +23,8 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableList;
+
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
@@ -34,7 +36,7 @@ class LuaMethodTest implements UnitTest {
 
 	private static final LuaMethod TEST_METHOD = new LuaMethod("test",
 			new LuaClass("TestClass"), MemberModifier.UNDECLARED,
-			new LuaType("void"), List.of(DUMMY_PARAM, DUMMY_PARAM)
+			new LuaType("void"), ImmutableList.of(DUMMY_PARAM, DUMMY_PARAM)
 	);
 
 	@Test

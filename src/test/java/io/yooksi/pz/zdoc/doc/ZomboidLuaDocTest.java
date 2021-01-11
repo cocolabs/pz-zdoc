@@ -24,6 +24,8 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableList;
+
 import io.yooksi.pz.zdoc.TestWorkspace;
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.lua.*;
@@ -33,16 +35,16 @@ import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 
 	private static final LuaType LUA_ARRAY_LIST_OBJECT = new LuaType(
-			"ArrayList", List.of(new LuaType("Object"))
+			"ArrayList", new LuaType("Object")
 	);
 	private static final LuaType LUA_ARRAY_LIST_STRING_OBJECT = new LuaType(
-			"ArrayList", List.of(new LuaType("String"), new LuaType("Object"))
+			"ArrayList", ImmutableList.of(new LuaType("String"), new LuaType("Object"))
 	);
 	private static final LuaType LUA_ARRAY_LIST_INNER_CLASS = new LuaType(
-			"ArrayList", List.of(new LuaType("ZomboidLuaDocTest.InnerClass"))
+			"ArrayList", new LuaType("ZomboidLuaDocTest.InnerClass")
 	);
 	private static final LuaType LUA_ARRAY_LIST_UNKNOWN = new LuaType(
-			"ArrayList", List.of(new LuaType("Unknown"))
+			"ArrayList", new LuaType("Unknown")
 	);
 	private static final LuaClass TEST_LUA_CLASS = new LuaClass(
 			ZomboidLuaDocTest.class.getSimpleName(), ZomboidLuaDocTest.class.getName()
@@ -55,7 +57,7 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 	@Test
 	void shouldWriteZomboidLuaDocClassNameToFile() throws IOException {
 
-		List<String> expectedResult = List.of(
+		List<String> expectedResult = ImmutableList.of(
 				"---@class ZomboidLuaDocTest : io.yooksi.pz.zdoc.doc.ZomboidLuaDocTest",
 				"ZomboidLuaDocTest = {}"
 		);
@@ -66,7 +68,7 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 	@Test
 	void shouldWriteZomboidLuaDocFieldsToFile() throws IOException {
 
-		List<LuaField> luaFields = List.of(
+		List<LuaField> luaFields = ImmutableList.of(
 				new LuaField(new LuaType(Object.class.getSimpleName()),
 						"object", new MemberModifier(AccessModifierKey.PUBLIC)
 				),
@@ -83,7 +85,7 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
 				TEST_LUA_CLASS, luaFields, new HashSet<>()
 		);
-		List<String> expectedResult = List.of(
+		List<String> expectedResult = ImmutableList.of(
 				"---@class ZomboidLuaDocTest : io.yooksi.pz.zdoc.doc.ZomboidLuaDocTest",
 				"---@field public object Object",
 				"---@field private text String",
@@ -97,7 +99,7 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 	@Test
 	void shouldWriteZomboidLuaDocParameterizedFieldsToFile() throws IOException {
 
-		List<LuaField> luaFields = List.of(
+		List<LuaField> luaFields = ImmutableList.of(
 				new LuaField(LUA_ARRAY_LIST_OBJECT,
 						"object", new MemberModifier(AccessModifierKey.PUBLIC)
 				),
@@ -114,7 +116,7 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
 				TEST_LUA_CLASS, luaFields, new HashSet<>()
 		);
-		List<String> expectedResult = List.of(
+		List<String> expectedResult = ImmutableList.of(
 				"---@class ZomboidLuaDocTest : io.yooksi.pz.zdoc.doc.ZomboidLuaDocTest",
 				"---@field public object ArrayList|Object",
 				"---@field private text ArrayList|String|Object",
@@ -131,28 +133,28 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
 		luaMethods.add(new LuaMethod("getText", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.PUBLIC), new LuaType("String"),
-				List.of(new LuaParameter(new LuaType("Object"), "param0"))
+				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param0"))
 		));
 		luaMethods.add(new LuaMethod("getNumber", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.PROTECTED), new LuaType("Integer"),
-				List.of(new LuaParameter(new LuaType("Object"), "param1"),
+				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
 						new LuaParameter(new LuaType("int"), "param2"))
 		));
 		luaMethods.add(new LuaMethod("getInnerClass", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.PRIVATE),
 				new LuaType("ZomboidLuaDocTest.InnerClass"),
-				List.of(new LuaParameter(new LuaType("Object"), "param1"),
+				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
 						new LuaParameter(new LuaType("boolean"), "param2"),
 						new LuaParameter(new LuaType("Object[]"), "param3"))
 		));
 		luaMethods.add(new LuaMethod("getArray", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.DEFAULT),
-				new LuaType("Object[]"), List.of()
-		));
+				new LuaType("Object[]"), ImmutableList.of())
+		);
 		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
 		);
-		List<String> expectedResult = List.of(
+		List<String> expectedResult = ImmutableList.of(
 				"---@class ZomboidLuaDocTest : io.yooksi.pz.zdoc.doc.ZomboidLuaDocTest",
 				"ZomboidLuaDocTest = {}",
 				"",
@@ -186,27 +188,27 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
 		luaMethods.add(new LuaMethod("getObjectList", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.PUBLIC), LUA_ARRAY_LIST_OBJECT,
-				List.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param0"))
+				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param0"))
 		));
 		luaMethods.add(new LuaMethod("getStringObjectList", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.PROTECTED), LUA_ARRAY_LIST_STRING_OBJECT,
-				List.of(new LuaParameter(new LuaType("Object"), "param1"),
+				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
 						new LuaParameter(LUA_ARRAY_LIST_OBJECT, "param2"))
 		));
 		luaMethods.add(new LuaMethod("getInnerClassList", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.PRIVATE), LUA_ARRAY_LIST_INNER_CLASS,
-				List.of(new LuaParameter(new LuaType("Object"), "param1"),
+				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
 						new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param2"),
 						new LuaParameter(new LuaType("Object[]"), "param3"))
 		));
 		luaMethods.add(new LuaMethod("getUnknownList", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.DEFAULT), LUA_ARRAY_LIST_UNKNOWN,
-				List.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "param1"))
+				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "param1"))
 		));
 		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
 		);
-		List<String> expectedResult = List.of(
+		List<String> expectedResult = ImmutableList.of(
 				"---@class ZomboidLuaDocTest : io.yooksi.pz.zdoc.doc.ZomboidLuaDocTest",
 				"ZomboidLuaDocTest = {}",
 				"",
@@ -247,7 +249,7 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 		);
 		Assertions.assertThrows(UnsupportedOperationException.class, () ->
 				zDoc.getMethods().add(new LuaMethod("testMethod",
-						MemberModifier.UNDECLARED, type, List.of()))
+						MemberModifier.UNDECLARED, type, ImmutableList.of()))
 		);
 	}
 

@@ -17,8 +17,6 @@
  */
 package io.yooksi.pz.zdoc.element.lua;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +26,7 @@ class LuaTypeTest {
 	@SuppressWarnings("ConstantConditions")
 	void shouldThrowExceptionWhenModifyingLuaTypeTypeParametersImmutableList() {
 
-		LuaType type = new LuaType("test1", List.of(new LuaType("test2")));
+		LuaType type = new LuaType("test1", new LuaType("test2"));
 		Assertions.assertThrows(UnsupportedOperationException.class, () ->
 				type.getTypeParameters().add(new LuaType("test3"))
 		);

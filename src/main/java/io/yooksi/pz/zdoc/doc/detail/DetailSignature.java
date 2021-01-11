@@ -18,6 +18,7 @@
 package io.yooksi.pz.zdoc.doc.detail;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -135,9 +136,11 @@ public abstract class DetailSignature {
 					for (String segment : new String[]{ sTypeParameters[0], sTypeParameters[1] }) {
 						typeParameters.addAll(internalParseClassSignature(segment));
 					}
-					return List.of(new JavaClass(targetClass, typeParameters));
+					return Collections.singletonList(new JavaClass(targetClass, typeParameters));
 				}
-				else return List.of(new JavaClass(targetClass, internalParseClassSignature(segments)));
+				else return Collections.singletonList(
+						new JavaClass(targetClass, internalParseClassSignature(segments))
+				);
 			}
 		}
 		List<JavaClass> result = new ArrayList<>();
