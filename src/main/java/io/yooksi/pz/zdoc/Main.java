@@ -21,11 +21,8 @@ import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
 import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.*;
@@ -48,7 +45,7 @@ import io.yooksi.pz.zdoc.util.Utils;
 public class Main {
 
 	public static final String CHARSET = Charset.defaultCharset().name();
-	private static final ClassLoader CL = Main.class.getClassLoader();
+	public static final ClassLoader CLASS_LOADER = Main.class.getClassLoader();
 
 	/**
 	 * <p>Application main entry point method.</p>
@@ -103,17 +100,7 @@ public class Main {
 			else if (paths.isEmpty()) {
 				Logger.warn("No files found under path " + root);
 			}
-			Properties luaProperties = new Properties();
-			try {
-				URL resource = CL.getResource("lua.properties");
-				File fLuaProperties = new File(Objects.requireNonNull(resource).toURI());
-				try (FileInputStream fis = new FileInputStream(fLuaProperties)) {
-					luaProperties.load(fis);
-				}
-			}
-			catch (URISyntaxException e) {
-				throw new RuntimeException(e);
-			}
+			Properties luaProperties = Utils.getProperties("lua.properties");
 			// process every file found under given root path
 			for (Path path : paths)
 			{
