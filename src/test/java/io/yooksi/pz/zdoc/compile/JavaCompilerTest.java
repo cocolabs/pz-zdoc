@@ -169,10 +169,10 @@ class JavaCompilerTest extends DocTest {
 	@SuppressWarnings("unused")
 	private static abstract class CompileTest {
 
+		public float a;
+		private final Integer b = null;
 		protected static final Color black = null;
 		static Color[] blue;
-		private final Integer b = null;
-		public float a;
 		public ArrayList<Color> cyan;
 
 		protected static boolean DoesInstantly(int number) {
