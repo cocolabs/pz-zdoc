@@ -110,7 +110,8 @@ public class Main {
 				try (FileInputStream fis = new FileInputStream(fLuaProperties)) {
 					luaProperties.load(fis);
 				}
-			} catch (URISyntaxException e) {
+			}
+			catch (URISyntaxException e) {
 				throw new RuntimeException(e);
 			}
 			// process every file found under given root path

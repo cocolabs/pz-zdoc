@@ -34,6 +34,29 @@ class CommandLineTest {
 	private static final Command[] COMMANDS = Arrays.stream(Command.values())
 			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
 
+	@TestOnly
+	private static String[] formatAppArgs(String command, String input, String output) {
+
+		List<String> args = new java.util.ArrayList<>();
+		args.add(command);
+		if (!input.isEmpty())
+		{
+			args.add("-i");
+			args.add(input);
+		}
+		if (!output.isEmpty())
+		{
+			args.add("-o");
+			args.add(output);
+		}
+		return args.toArray(new String[]{});
+	}
+
+	@TestOnly
+	private static String[] formatAppArgs(Command command, String input, String output) {
+		return formatAppArgs(command.getName(), input, output);
+	}
+
 	@Test
 	void shouldProperlyParseCommandInputPath() throws ParseException {
 
@@ -75,28 +98,5 @@ class CommandLineTest {
 			Assertions.assertThrows(InvalidPathException.class, () ->
 					CommandLine.parse(command.options, args2).getOutputPath());
 		}
-	}
-
-	@TestOnly
-	private static String[] formatAppArgs(String command, String input, String output) {
-
-		List<String> args = new java.util.ArrayList<>();
-		args.add(command);
-		if (!input.isEmpty())
-		{
-			args.add("-i");
-			args.add(input);
-		}
-		if (!output.isEmpty())
-		{
-			args.add("-o");
-			args.add(output);
-		}
-		return args.toArray(new String[]{});
-	}
-
-	@TestOnly
-	private static String[] formatAppArgs(Command command, String input, String output) {
-		return formatAppArgs(command.getName(), input, output);
 	}
 }
