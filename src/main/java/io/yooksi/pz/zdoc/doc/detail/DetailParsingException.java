@@ -19,11 +19,11 @@ package io.yooksi.pz.zdoc.doc.detail;
 
 public class DetailParsingException extends Exception {
 
-	protected DetailParsingException(String message) {
+	DetailParsingException(String message) {
 		super(message);
 	}
 
-	protected DetailParsingException(Detail<?> detail, String message) {
+	DetailParsingException(Detail<?> detail, String message) {
 		this(String.format("Failed to parse detail \"%s\". %s", detail.name, message));
 	}
 }

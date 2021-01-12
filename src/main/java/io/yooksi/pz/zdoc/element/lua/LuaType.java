@@ -30,7 +30,7 @@ import io.yooksi.pz.zdoc.element.IClass;
 public class LuaType implements IClass {
 
 	final String name;
-	final @UnmodifiableView List<LuaType> otherTypes;
+	private final @UnmodifiableView List<LuaType> otherTypes;
 
 	public LuaType(String name, List<LuaType> otherTypes) {
 		this.name = name;

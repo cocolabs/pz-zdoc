@@ -67,7 +67,7 @@ class JavaMethodTest implements UnitTest {
 	@TestOnly
 	private static Method getDeclaredMethod(String name) {
 
-		return Arrays.stream(JavaMethodTest.class.getDeclaredMethods())
+		return Arrays.stream(JavaMethodTest.InnerTest.class.getDeclaredMethods())
 				.filter(m -> m.getName().equals(name)).findFirst()
 				.orElseThrow(RuntimeException::new);
 	}
@@ -145,17 +145,21 @@ class JavaMethodTest implements UnitTest {
 				() -> copyJavaMethod(METHOD_WITH_PARAMETERS).getParams().addAll(DUMMY_PARAMS));
 	}
 
-	@TestOnly
-	private void testMethodWithParameters(int param1, String param2) {
-	}
+	@SuppressWarnings({ "WeakerAccess", "RedundantSuppression" })
+	private static class InnerTest {
 
-	@TestOnly
-	private void testMethodWithoutParametersOrReturnType() {
-	}
+		@TestOnly
+		private void testMethodWithParameters(int param1, String param2) {
+		}
 
-	@TestOnly
-	@SuppressWarnings("SameReturnValue")
-	private Integer testMethodWithReturnType() {
-		return 0;
+		@TestOnly
+		private void testMethodWithoutParametersOrReturnType() {
+		}
+
+		@TestOnly
+		@SuppressWarnings("SameReturnValue")
+		private Integer testMethodWithReturnType() {
+			return 0;
+		}
 	}
 }

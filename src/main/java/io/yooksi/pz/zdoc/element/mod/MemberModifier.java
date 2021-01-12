@@ -61,7 +61,7 @@ public class MemberModifier {
 		return access;
 	}
 
-	protected @Unmodifiable List<ModifierKey> getModifiers() {
+	@Unmodifiable List<ModifierKey> getModifiers() {
 		return Collections.unmodifiableList(modifiers);
 	}
 

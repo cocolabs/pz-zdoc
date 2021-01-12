@@ -35,17 +35,17 @@ import io.yooksi.pz.zdoc.element.IMember;
 
 public abstract class Detail<T extends IMember> {
 
-	protected final ZomboidAPIDoc document;
+	private final ZomboidAPIDoc document;
 	final String name;
 	private final List<T> entries;
 
-	public Detail(String name, ZomboidAPIDoc document) throws DetailParsingException {
+	Detail(String name, ZomboidAPIDoc document) throws DetailParsingException {
 		this.name = name;
 		this.document = document;
 		this.entries = Collections.unmodifiableList(parse());
 	}
 
-	protected Elements getDetail() {
+	Elements getDetail() {
 
 		Optional<Element> detailElement = document.getDocument().getElementsByTag("a")
 				.stream().filter(e -> e.hasAttr("name") &&
@@ -57,7 +57,7 @@ public abstract class Detail<T extends IMember> {
 		else return new Elements();
 	}
 
-	protected Element qualifyZomboidClassElements(Element element) throws DetailParsingException {
+	Element qualifyZomboidClassElements(Element element) throws DetailParsingException {
 
 		for (Element e : element.getElementsByTag("a"))
 		{

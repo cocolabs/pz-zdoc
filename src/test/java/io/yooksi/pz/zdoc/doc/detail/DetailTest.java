@@ -109,7 +109,7 @@ class DetailTest extends DetailTestFixture<DetailTest.TestDetail> implements Uni
 
 	static class TestDetail extends Detail<TestMember> {
 
-		TestDetail() throws DetailParsingException {
+		private TestDetail() throws DetailParsingException {
 			super("test.detail", DocTest.document);
 		}
 

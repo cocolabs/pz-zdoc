@@ -40,14 +40,9 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	/** Used to parse application arguments to find command options. */
 	private static final CommandParser PARSER = new CommandParser();
 
-	protected CommandLine(Option[] options, String[] args) {
-
-		Arrays.stream(options).forEach(this::addOption);
-		Arrays.stream(args).forEach(this::addArg);
-	}
-
-	protected CommandLine(org.apache.commons.cli.CommandLine cmdLine) {
-		this(cmdLine.getOptions(), cmdLine.getArgs());
+	CommandLine(org.apache.commons.cli.CommandLine cmdLine) {
+		Arrays.stream(cmdLine.getOptions()).forEach(this::addOption);
+		Arrays.stream(cmdLine.getArgs()).forEach(this::addArg);
 	}
 
 	public static CommandLine parse(Options options, String[] args) throws ParseException {

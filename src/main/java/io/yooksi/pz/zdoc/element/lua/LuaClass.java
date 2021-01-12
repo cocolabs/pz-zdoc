@@ -34,8 +34,8 @@ import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
  */
 public class LuaClass implements IClass, Annotated {
 
-	final String type;
-	final @Nullable String parentType;
+	private final String type;
+	private final @Nullable String parentType;
 	private final List<EmmyLua> annotations;
 
 	public LuaClass(String type, @Nullable String parentType) {

@@ -60,14 +60,14 @@ public abstract class EmmyLua {
 
 	private final String annotation;
 
-	protected EmmyLua(String keyword, String annotation, String comment) {
+	EmmyLua(String keyword, String annotation, String comment) {
 		if (Strings.nullToEmpty(comment).trim().isEmpty()) {
 			this.annotation = String.format("---@%s %s", keyword, annotation);
 		}
 		else this.annotation = String.format("---@%s %s @%s", keyword, annotation, comment);
 	}
 
-	protected EmmyLua(String keyword) {
+	EmmyLua(String keyword) {
 		Validate.notEmpty(keyword);
 		this.annotation = "---@" + keyword;
 	}
@@ -98,7 +98,7 @@ public abstract class EmmyLua {
 		return isReservedKeyword(safeName) || isBuiltInType(safeName) ? '_' + safeName : name;
 	}
 
-	protected static String formatType(LuaType type) {
+	static String formatType(LuaType type) {
 
 		String typeName = type.getName();
 		List<LuaType> typeParameters = type.getTypeParameters();

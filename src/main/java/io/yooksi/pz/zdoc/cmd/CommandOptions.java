@@ -22,7 +22,7 @@ import java.io.File;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
-public final class CommandOptions {
+final class CommandOptions {
 
 	static final Option INPUT_OPTION =
 			Option.builder("i").longOpt("input-path").desc("input directory path")

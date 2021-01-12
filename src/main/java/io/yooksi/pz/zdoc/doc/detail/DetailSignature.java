@@ -30,7 +30,7 @@ import io.yooksi.pz.zdoc.util.Utils;
 
 public abstract class DetailSignature {
 
-	protected final String signature;
+	final String signature;
 
 	DetailSignature(String signature) {
 		this.signature = normalizeSignature(signature);
@@ -81,7 +81,7 @@ public abstract class DetailSignature {
 	 *
 	 * @see Element#text()
 	 */
-	protected static String normalizeElement(Element element) {
+	static String normalizeElement(Element element) {
 		return normalizeSignature(element.text());
 	}
 

@@ -17,9 +17,9 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-public class SignatureParsingException extends DetailParsingException {
+class SignatureParsingException extends DetailParsingException {
 
-	protected SignatureParsingException(String signature, String message) {
+	SignatureParsingException(String signature, String message) {
 		super(String.format("Failed to parse signature \"%s\". %s", signature, message));
 	}
 }

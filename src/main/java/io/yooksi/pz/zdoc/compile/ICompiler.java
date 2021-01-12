@@ -21,8 +21,7 @@ import java.util.Set;
 
 import io.yooksi.pz.zdoc.doc.ZomboidDoc;
 
-public interface ICompiler<T extends ZomboidDoc> {
+interface ICompiler<T extends ZomboidDoc> {
 
-	/** */
 	Set<T> compile() throws CompilerException;
 }

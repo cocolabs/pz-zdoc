@@ -58,7 +58,7 @@ class MemberModifierTest implements UnitTest {
 	@TestOnly
 	private static Method getDeclaredMethod(String name) {
 
-		return Arrays.stream(MemberModifierTest.class.getDeclaredMethods())
+		return Arrays.stream(TestMember.class.getDeclaredMethods())
 				.filter(f -> f.getName().equals(name)).findFirst()
 				.orElseThrow(RuntimeException::new);
 	}
@@ -213,30 +213,31 @@ class MemberModifierTest implements UnitTest {
 		);
 	}
 
-	@TestOnly
-	public void publicMethod() {
-	}
-
-	@TestOnly
-	protected void protectedMethod() {
-	}
-
-	@TestOnly
-	private void privateMethod() {
-	}
-
-	@TestOnly
-	void defaultMethod() {
-	}
-
+	@SuppressWarnings({"WeakerAccess", "RedundantSuppression"})
 	private static class TestMember extends MemberModifier {
 
-		TestMember(Member member) {
+		private TestMember(Member member) {
 			super(member.getModifiers());
 		}
 
-		TestMember(AccessModifierKey accessKey, ModifierKey... modifierKeys) {
+		private TestMember(AccessModifierKey accessKey, ModifierKey... modifierKeys) {
 			super(accessKey, modifierKeys);
+		}
+
+		@TestOnly
+		public void publicMethod() {
+		}
+
+		@TestOnly
+		protected void protectedMethod() {
+		}
+
+		@TestOnly
+		private void privateMethod() {
+		}
+
+		@TestOnly
+		void defaultMethod() {
 		}
 	}
 }

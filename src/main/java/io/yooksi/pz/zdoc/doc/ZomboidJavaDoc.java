@@ -30,9 +30,9 @@ import io.yooksi.pz.zdoc.element.java.JavaMethod;
 
 public class ZomboidJavaDoc implements ZomboidDoc {
 
-	protected final JavaClass clazz;
-	protected final @UnmodifiableView List<JavaField> fields;
-	protected final @UnmodifiableView Set<JavaMethod> methods;
+	private final JavaClass clazz;
+	private final @UnmodifiableView List<JavaField> fields;
+	private final @UnmodifiableView Set<JavaMethod> methods;
 
 	public ZomboidJavaDoc(JavaClass clazz, List<JavaField> fields, Set<JavaMethod> methods) {
 		this.clazz = clazz;

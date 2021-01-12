@@ -32,9 +32,9 @@ import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
 
 public class ZomboidLuaDoc implements ZomboidDoc {
 
-	protected final LuaClass clazz;
-	protected final @UnmodifiableView List<LuaField> fields;
-	protected final @UnmodifiableView Set<LuaMethod> methods;
+	private final LuaClass clazz;
+	private final @UnmodifiableView List<LuaField> fields;
+	private final @UnmodifiableView Set<LuaMethod> methods;
 
 	public ZomboidLuaDoc(LuaClass clazz, List<LuaField> fields, Set<LuaMethod> methods) {
 		this.clazz = clazz;
