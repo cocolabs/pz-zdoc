@@ -169,11 +169,13 @@ class JavaCompilerTest extends DocTest {
 	@SuppressWarnings({ "unused", "SameReturnValue" })
 	private static abstract class CompileTest {
 
+		//@formatter:off
+		public float a;
+		private final Integer b = null;
 		protected static final Color black = null;
 		static Color[] blue;
-		private final Integer b = null;
-		public float a;
 		public ArrayList<Color> cyan;
+		//@formatter:on
 
 		protected static boolean DoesInstantly(int number) {
 			return false;
