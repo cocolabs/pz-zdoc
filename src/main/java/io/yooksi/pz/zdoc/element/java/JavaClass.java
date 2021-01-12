@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -61,7 +60,6 @@ public class JavaClass implements IClass {
 
 	static @UnmodifiableView List<JavaClass> getUnknownTypeParameterList(int size) {
 
-		Validate.inclusiveBetween(1, 2, size);
 		List<JavaClass> result = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			result.add(null);

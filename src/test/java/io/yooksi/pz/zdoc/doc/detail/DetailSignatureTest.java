@@ -20,11 +20,13 @@ package io.yooksi.pz.zdoc.doc.detail;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
@@ -32,7 +34,26 @@ import io.yooksi.pz.zdoc.element.java.JavaClass;
 class DetailSignatureTest implements UnitTest {
 
 	@Test
-	void shouldParseClassTypeParametersFromSignature() {
+	void shouldParseJavaClassFromSignature() {
+
+		Set<Class<?>> classSignatures = Sets.newHashSet(
+				java.lang.String.class,
+				java.lang.Object.class,
+				java.lang.Integer[].class,
+				int.class, int[].class
+		);
+		for (Class<?> signature : classSignatures)
+		{
+			JavaClass result = DetailSignature.parseClassSignature(signature.getName());
+			List<JavaClass> typeParameters = Objects.requireNonNull(result).getTypeParameters();
+
+			Assertions.assertEquals(0, typeParameters.size());
+			Assertions.assertEquals(signature.getTypeName(), result.getName());
+		}
+	}
+
+	@Test
+	void shouldParseJavaClassTypeParametersFromSignature() {
 
 		Map<String, String[]> classTypeParametersFromSignature = ImmutableMap.<String, String[]>builder()
 				.put("java.util.Map<java.lang.String>",
@@ -50,10 +71,21 @@ class DetailSignatureTest implements UnitTest {
 				.put("java.util.Map<java.lang.String, java.lang.Class<java.lang.Object<?>>>",
 						new String[]{ "java.lang.String", "java.lang.Class<java.lang.Object<?>>" })
 
-				.put("java.util.Map<java.lang.Class<java.lang.Object<?>>, java.lang.Class<java.lang" +
-								".Object<?>>>",
+				.put("java.util.Map<java.lang.Class<java.lang.Object<?>>, " +
+								"java.lang.Class<java.lang.Object<?>>>",
 						new String[]{ "java.lang.Class<java.lang.Object<?>>",
-								"java.lang.Class<java.lang.Object<?>>" }).build();
+								"java.lang.Class<java.lang.Object<?>>" })
+
+				.put("java.util.Map<java.lang.String, java.lang.Object, java.lang.Integer>",
+						new String[]{ "java.lang.String", "java.lang.Object", "java.lang.Integer" })
+
+				.put("java.util.Map<java.lang.Class<java.lang.Class<?>>, " +
+								"java.util.Map<java.lang.Class<?>, java.lang.Object>, " +
+								"java.util.Map<java.lang.Object, java.lang.Class<?>>>",
+
+						new String[]{ "java.lang.Class<java.lang.Class<?>>",
+								"java.util.Map<java.lang.Class<?>, java.lang.Object>",
+								"java.util.Map<java.lang.Object, java.lang.Class<?>>" }).build();
 
 		for (Map.Entry<String, String[]> entry : classTypeParametersFromSignature.entrySet())
 		{

@@ -18,13 +18,14 @@
 package io.yooksi.pz.zdoc.doc.detail;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Element;
 
 import io.yooksi.pz.zdoc.element.java.JavaClass;
+import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.util.ParseUtils;
 import io.yooksi.pz.zdoc.util.Utils;
 
@@ -86,75 +87,17 @@ public abstract class DetailSignature {
 	}
 
 	public static @Nullable JavaClass parseClassSignature(String signature) {
-		return internalParseClassSignature(signature).get(0);
+
+		List<JavaClass> result = new JavaClassBuilder(signature).build();
+		return !result.isEmpty() ? result.get(0) : null;
 	}
 
-	private static List<JavaClass> internalParseClassSignature(String signature) {
-
-		char[] charArray = signature.toCharArray();
-		for (int i1 = 0; i1 < charArray.length; i1++)
-		{
-			if (charArray[i1] == '<')
-			{
-				StringBuilder sb = new StringBuilder(charArray.length);
-				for (int i2 = i1 + 1; i2 < charArray.length; i2++)
-				{
-					char c = charArray[i2];
-					if (c != '>') sb.append(c);
-				}
-				String segments = ParseUtils.flushStringBuilder(sb);
-				String[] sTypeParameters = new String[2];
-
-				char[] _charArray = segments.toCharArray();
-				for (int i3 = 0; i3 < _charArray.length; i3++)
-				{
-					char c = _charArray[i3];
-					if (c == ',')
-					{
-						sTypeParameters[0] = ParseUtils.flushStringBuilder(sb);
-						boolean passedLeadingWhitespace = false;
-						for (int i4 = i3 + 1; i4 < _charArray.length; i4++)
-						{
-							c = _charArray[i4];
-							if (passedLeadingWhitespace) {
-								sb.append(_charArray[i4]);
-							}
-							else if (c != ' ')
-							{
-								sb.append(_charArray[i4]);
-								passedLeadingWhitespace = true;
-							}
-						}
-						sTypeParameters[1] = sb.toString();
-					}
-					else sb.append(c);
-				}
-				Class<?> targetClass = getClassForName(signature.substring(0, i1));
-				if (sTypeParameters[0] != null)
-				{
-					List<JavaClass> typeParameters = new ArrayList<>(2);
-					for (String segment : new String[]{ sTypeParameters[0], sTypeParameters[1] }) {
-						typeParameters.addAll(internalParseClassSignature(segment));
-					}
-					return Collections.singletonList(new JavaClass(targetClass, typeParameters));
-				}
-				else return Collections.singletonList(
-						new JavaClass(targetClass, internalParseClassSignature(segments))
-				);
-			}
-		}
-		List<JavaClass> result = new ArrayList<>();
-		Class<?> signatureClass = getClassForName(signature);
-		result.add(signature.length() > 1 && signatureClass != null ? new JavaClass(signatureClass) : null);
-		return result;
-	}
-
-	private static @Nullable Class<?> getClassForName(String name) {
+	private static @Nullable JavaClass getClassForName(String name) {
 		try {
-			return Utils.getClassForName(name);
+			return new JavaClass(Utils.getClassForName(name));
 		}
 		catch (ClassNotFoundException e) {
-//			Logger.error("Unable to get class for name: " + name);
+			Logger.debug("Failed to get class for name: " + name);
 		}
 		return null;
 	}
@@ -162,5 +105,69 @@ public abstract class DetailSignature {
 	@Override
 	public String toString() {
 		return signature;
+	}
+
+	private static class JavaClassBuilder {
+
+		private final String signature;
+		private final StringBuilder sb;
+		private final AtomicInteger index;
+		private final List<JavaClass> result;
+
+		private JavaClassBuilder(String signature, AtomicInteger index) {
+			this.signature = signature;
+			this.sb = new StringBuilder();
+			this.result = new ArrayList<>();
+			this.index = index;
+		}
+
+		private JavaClassBuilder(String signature) {
+			this(signature, new AtomicInteger());
+		}
+
+		private List<JavaClass> build() {
+
+			char[] charArray = signature.toCharArray();
+			for (; index.get() < charArray.length; index.getAndIncrement())
+			{
+				char c = charArray[index.get()];
+				if (c == '<')
+				{
+					JavaClass type = getClassForName(flush());
+					if (type == null) {
+						return result;
+					}
+					index.incrementAndGet();
+					List<JavaClass> params = new JavaClassBuilder(signature, index).build();
+					result.add(new JavaClass(type.getClazz(), params));
+				}
+				else if (c == ',') {
+					flushToResult();
+				}
+				else if (c == '>') {
+					return flushToResult();
+				}
+				else if (c != ' ') {
+					sb.append(c);
+				}
+			}
+			if (result.isEmpty() && sb.length() > 0) {
+				result.add(getClassForName(sb.toString()));
+			}
+			return result;
+		}
+
+		private String flush() {
+			return ParseUtils.flushStringBuilder(sb);
+		}
+
+		private List<JavaClass> flushToResult() {
+
+			String name = flush();
+			if (!name.isEmpty()) {
+				result.add(getClassForName(name));
+			}
+			return result;
+		}
 	}
 }
