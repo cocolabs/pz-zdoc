@@ -126,16 +126,6 @@ class JavaClassTest implements UnitTest {
 	}
 
 	@Test
-	void shouldThrowExceptionWhenGettingUnknownTypeParameterListWithIllegalSize() {
-
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> JavaClass.getUnknownTypeParameterList(0));
-
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> JavaClass.getUnknownTypeParameterList(3));
-	}
-
-	@Test
 	void shouldGetCorrectUnknownTypeParameterListForValidSize() {
 
 		for (int i = 1; i < 3; i++)
