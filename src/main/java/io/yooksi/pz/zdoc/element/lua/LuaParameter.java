@@ -17,6 +17,7 @@
  */
 package io.yooksi.pz.zdoc.element.lua;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.Unmodifiable;
@@ -35,7 +36,7 @@ public class LuaParameter implements IParameter, Annotated {
 
 		this.type = type;
 		this.name = EmmyLua.getSafeLuaName(name);
-		this.annotations = List.of(new EmmyLuaParam(name, type));
+		this.annotations = Collections.singletonList(new EmmyLuaParam(name, type));
 	}
 
 	@Override

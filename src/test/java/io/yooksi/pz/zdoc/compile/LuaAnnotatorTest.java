@@ -31,6 +31,9 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+
 import io.yooksi.pz.zdoc.Main;
 import io.yooksi.pz.zdoc.TestWorkspace;
 
@@ -60,7 +63,7 @@ class LuaAnnotatorTest extends TestWorkspace {
 	@Test
 	void shouldMatchLuaTableDeclarationIndentationWithRegex() {
 
-		Map<String, String> luaTableDeclarations = Map.of(
+		Map<String, String> luaTableDeclarations = ImmutableMap.of(
 				"   ", "   NewTestTable1 = ISTestTable:new(\"TestTable\")",
 				"		", "		NewTestTable1 = ISTestTable:new(\"TestTable\")"
 		);
@@ -80,17 +83,17 @@ class LuaAnnotatorTest extends TestWorkspace {
 	@Test
 	void shouldMatchLuaTableDeclarationWithRegex() {
 
-		Map<String, String> luaTableDeclarations = Map.of(
-				"NewTestTable0", "NewTestTable0 = ISTestTable:new()",
-				"NewTestTable1", "NewTestTable1 = ISTestTable:new(\"TestTable\")",
-				"NewTestTable2", "NewTestTable2=ISTestTable:new(\"TestTable\")",
-				"DerivedTestTable0", "DerivedTestTable0 = ISTestTable:derive()",
-				"DerivedTestTable1", "DerivedTestTable1 = ISTestTable:derive(\"TestTable\")",
-				"DerivedTestTable2", "DerivedTestTable2=ISTestTable:derive(\"TestTable\")",
-				"DeclaredTestTable0", "DeclaredTestTable0 = ISTestTable or {}",
-				"DeclaredTestTable1", "DeclaredTestTable1 = {}",
-				"DeclaredTestTable2", "DeclaredTestTable2={ }"
-		);
+		Map<String, String> luaTableDeclarations = ImmutableMap.<String, String>builder()
+				.put("NewTestTable0", "NewTestTable0 = ISTestTable:new()")
+				.put("NewTestTable1", "NewTestTable1 = ISTestTable:new(\"TestTable\")")
+				.put("NewTestTable2", "NewTestTable2=ISTestTable:new(\"TestTable\")")
+				.put("DerivedTestTable0", "DerivedTestTable0 = ISTestTable:derive()")
+				.put("DerivedTestTable1", "DerivedTestTable1 = ISTestTable:derive(\"TestTable\")")
+				.put("DerivedTestTable2", "DerivedTestTable2=ISTestTable:derive(\"TestTable\")")
+				.put("DeclaredTestTable0", "DeclaredTestTable0 = ISTestTable or {}")
+				.put("DeclaredTestTable1", "DeclaredTestTable1 = {}")
+				.put("DeclaredTestTable2", "DeclaredTestTable2={ }").build();
+
 		for (Map.Entry<String, String> entry : luaTableDeclarations.entrySet())
 		{
 			Matcher matcher = LuaAnnotator.LUA_TABLE_DECLARATION.matcher(entry.getValue());
@@ -102,7 +105,7 @@ class LuaAnnotatorTest extends TestWorkspace {
 	@Test
 	void shouldMatchLuaNewOrDerivedClassDeclarationWithRegex() {
 
-		Map<String, String> luaTableDeclarations = Map.of(
+		Map<String, String> luaTableDeclarations = ImmutableMap.of(
 				"new", "NewTestTable = ISTestTable:new(\"TestTable\")",
 				"derive", "DerivedTestTable = ISTestTable:derive(\"TestTable\")"
 		);
@@ -113,7 +116,7 @@ class LuaAnnotatorTest extends TestWorkspace {
 			Assertions.assertEquals("ISTestTable", matcher.group(3));
 			Assertions.assertEquals(entry.getKey(), matcher.group(4));
 		}
-		Map<String, String> badLuaTableDeclarations = Map.of(
+		Map<String, String> badLuaTableDeclarations = ImmutableMap.of(
 				"new", "NewTestTable = ISTestTable:newly(\"TestTable\")",
 				"derive", "DerivedTestTable = ISTestTable:derived(\"TestTable\")"
 		);
@@ -136,7 +139,7 @@ class LuaAnnotatorTest extends TestWorkspace {
 	@Test
 	void shouldThrowExceptionWhenTryingToAnnotateWithImmutableExcludeRules() {
 
-		AnnotateRules rules = new AnnotateRules(Set.of());
+		AnnotateRules rules = new AnnotateRules(ImmutableSet.of());
 		Assertions.assertThrows(UnsupportedOperationException.class, () ->
 				LuaAnnotator.annotate(INCLUSION_TEST, new ArrayList<>(), rules)
 		);
@@ -156,7 +159,7 @@ class LuaAnnotatorTest extends TestWorkspace {
 	void shouldSkipAnnotatingElementsWhenMatchedExcludeRules() throws IOException {
 
 		List<String> content = new ArrayList<>();
-		AnnotateRules rules = new AnnotateRules(Set.of("LuaInclusionTest"));
+		AnnotateRules rules = new AnnotateRules(ImmutableSet.of("LuaInclusionTest"));
 		AnnotateResult result = LuaAnnotator.annotate(INCLUSION_TEST, content, rules);
 
 		Assertions.assertEquals(AnnotateResult.ALL_EXCLUDED, result);

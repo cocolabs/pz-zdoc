@@ -17,8 +17,6 @@
  */
 package io.yooksi.pz.zdoc.lang.lua;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,14 +32,14 @@ class EmmyLuaParamTest {
 		Assertions.assertEquals("---@param apple Apple", annotation.toString());
 
 		// ---@param param_name TYPE[|other_type]
-		annotation = new EmmyLuaParam("apple", new LuaType("Apple",
-				List.of(new LuaType("Fruit")))
+		annotation = new EmmyLuaParam("apple",
+				new LuaType("Apple", new LuaType("Fruit"))
 		);
 		Assertions.assertEquals("---@param apple Apple|Fruit", annotation.toString());
 
 		// ---@param param_name TYPE[|other_type] [@comment]
 		annotation = new EmmyLuaParam("apple", new LuaType("Apple",
-				List.of(new LuaType("Fruit"))), "very healthy"
+				new LuaType("Fruit")), "very healthy"
 		);
 		Assertions.assertEquals("---@param apple Apple|Fruit @very healthy", annotation.toString());
 	}

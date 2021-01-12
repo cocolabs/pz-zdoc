@@ -19,13 +19,13 @@ package io.yooksi.pz.zdoc.doc.detail;
 
 import static io.yooksi.pz.zdoc.doc.detail.MethodDetail.Signature;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
@@ -45,7 +45,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	@Test
 	void shouldMatchAccessModifierInMethodSignature() throws DetailParsingException {
 
-		Map<AccessModifierKey, String> methodsWithAccessKeyword = Map.of(
+		Map<AccessModifierKey, String> methodsWithAccessKeyword = ImmutableMap.of(
 				AccessModifierKey.PUBLIC, "public void myMethod()",
 				AccessModifierKey.PRIVATE, "private void myMethod()",
 				AccessModifierKey.PROTECTED, "protected void myMethod()",
@@ -61,7 +61,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	@Test
 	void shouldMatchNonAccessModifiersInMethodSignature() throws DetailParsingException {
 
-		Map<ModifierKey, String> methodsWithNonAccessModifier = Map.of(
+		Map<ModifierKey, String> methodsWithNonAccessModifier = ImmutableMap.of(
 				ModifierKey.STATIC, "static void myMethod()",
 				ModifierKey.FINAL, "final void myMethod()",
 				ModifierKey.ABSTRACT, "abstract void myMethod()"
@@ -76,7 +76,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	@Test
 	void shouldMatchMixedModifiersInMethodSignature() throws DetailParsingException {
 
-		Map<MemberModifier, String> methodsWithMixedModifiers = Map.of(
+		Map<MemberModifier, String> methodsWithMixedModifiers = ImmutableMap.of(
 				new MemberModifier(AccessModifierKey.PUBLIC, ModifierKey.STATIC),
 				"public static void myMethod()",
 
@@ -96,7 +96,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	@Test
 	void shouldMatchReturnTypeInMethodSignature() {
 
-		Map<String, String> methodsWithReturnType = Map.of(
+		Map<String, String> methodsWithReturnType = ImmutableMap.of(
 				"void", "void myMethod()",
 				"int[]", "int[] myMethod(boolean param)",
 				"java.lang.String", "java.lang.String myMethod()",
@@ -111,7 +111,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	@Test
 	void shouldMatchParameterizedReturnTypeInMethodSignature() {
 
-		Map<String, String> methodsWithParameterizedReturnType = Map.of(
+		Map<String, String> methodsWithParameterizedReturnType = ImmutableMap.of(
 				"java.util.ArrayList<java.lang.Class<?>>",
 				"java.util.ArrayList<java.lang.Class<?>> myMethod()",
 
@@ -137,7 +137,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	@Test
 	void shouldMatchNameInMethodSignature() {
 
-		Map<String, String> methodsWithNames = Map.of(
+		Map<String, String> methodsWithNames = ImmutableMap.of(
 				"myMethod", "void myMethod(java.lang.Object param)",
 				"my_method", "void my_method(java.lang.Object param)",
 				"my$method", "java.lang.Integer my$method(java.lang.Object param)",
@@ -152,29 +152,30 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	@Test
 	void shouldMatchParametersInMethodSignature() {
 
-		Map<String, String> methodsWithParameters = Map.of(
-				"java.lang.Object param",
-				"void myMethod(java.lang.Object param)",
+		Map<String, String> methodsWithParameters = ImmutableMap.<String, String>builder()
+				.put("java.lang.Object param",
+						"void myMethod(java.lang.Object param)")
 
-				"java.lang.Object param1, java.lang.Object param2",
-				"void myMethod(java.lang.Object param1, java.lang.Object param2)",
+				.put("java.lang.Object param1, java.lang.Object param2",
+						"void myMethod(java.lang.Object param1, java.lang.Object param2)")
 
-				"java.lang.Object param1, java.lang.Object param2, java.lang.String param3",
-				"java.lang.Integer myMethod(java.lang.Object param1," +
-						" java.lang.Object param2, java.lang.String param3)",
+				.put("java.lang.Object param1, java.lang.Object param2, java.lang.String param3",
+						"java.lang.Integer myMethod(java.lang.Object param1," +
+								" java.lang.Object param2, java.lang.String param3)")
 
-				"java.lang.Object param1, java.lang.Object param2, java.lang.Integer param3",
-				"void myMethod(java.lang.Object param1, java.lang.Object param2, java.lang.Integer param3)",
+				.put("java.lang.Object param1, java.lang.Object param2, java.lang.Integer param3",
+						"void myMethod(java.lang.Object param1, java.lang.Object param2, java.lang.Integer " +
+								"param3)")
 
-				"java.lang.Object param0, java.lang.Object param1",
-				"void myMethod(java.lang.Object param0, java.lang.Object param1)",
+				.put("java.lang.Object param0, java.lang.Object param1",
+						"void myMethod(java.lang.Object param0, java.lang.Object param1)")
 
-				"java.lang.Object param1",
-				"void myMethod(java.lang.Object param1)",
+				.put("java.lang.Object param1",
+						"void myMethod(java.lang.Object param1)")
 
-				"java.lang.Object param0",
-				"java.util.ArrayList<java.lang.Class<?>> myMethod(java.lang.Object param0)"
-		);
+				.put("java.lang.Object param0",
+						"java.util.ArrayList<java.lang.Class<?>> myMethod(java.lang.Object param0)").build();
+
 		for (Map.Entry<String, String> entry : methodsWithParameters.entrySet()) {
 			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), ParamsSupplier.class);
 		}
@@ -216,29 +217,30 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	@Test
 	void shouldMatchVarArgParametersInMethodSignature() {
 
-		Map<String, String> methodsWithVarArgParameters = Map.of(
-				"java.lang.Object...params0",
-				"void myMethod(java.lang.Object...params0)",
+		Map<String, String> methodsWithVarArgParameters = ImmutableMap.<String, String>builder()
+				.put("java.lang.Object...params0",
+						"void myMethod(java.lang.Object...params0)")
 
-				"java.lang.Object param1, java.lang.Object...params",
-				"void myMethod(java.lang.Object param1, java.lang.Object...params)",
+				.put("java.lang.Object param1, java.lang.Object...params",
+						"void myMethod(java.lang.Object param1, java.lang.Object...params)")
 
-				"java.lang.Object param1, java.lang.Object param2, java.lang.String...params",
-				"java.lang.Integer myMethod(java.lang.Object param1," +
-						" java.lang.Object param2, java.lang.String...params)",
+				.put("java.lang.Object param1, java.lang.Object param2, java.lang.String...params",
+						"java.lang.Integer myMethod(java.lang.Object param1," +
+								" java.lang.Object param2, java.lang.String...params)")
 
-				"java.lang.Object param1, java.lang.Object param2, java.lang.Object...params",
-				"void myMethod(java.lang.Object param1, java.lang.Object param2, java.lang.Object...params)",
+				.put("java.lang.Object param1, java.lang.Object param2, java.lang.Object...params",
+						"void myMethod(java.lang.Object param1, java.lang.Object param2, java.lang.Object.." +
+								".params)")
 
-				"java.lang.Object param0, java.lang.Object...params",
-				"void myMethod(java.lang.Object param0, java.lang.Object...params)",
+				.put("java.lang.Object param0, java.lang.Object...params",
+						"void myMethod(java.lang.Object param0, java.lang.Object...params)")
 
-				"java.lang.Object...params1",
-				"void myMethod(java.lang.Object...params1)",
+				.put("java.lang.Object...params1",
+						"void myMethod(java.lang.Object...params1)")
 
-				"java.lang.Object...params2",
-				"java.util.ArrayList<java.lang.Class<?>> myMethod(java.lang.Object...params2)"
-		);
+				.put("java.lang.Object...params2",
+						"java.util.ArrayList<java.lang.Class<?>> myMethod(java.lang.Object...params2)").build();
+
 		for (Map.Entry<String, String> entry : methodsWithVarArgParameters.entrySet()) {
 			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), ParamsSupplier.class);
 		}
@@ -247,14 +249,14 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	@Test
 	void shouldMatchCommentInMethodSignature() {
 
-		Map<String, String> methodsWithComment = Map.of(
-				"// comment", "void myMethod() // comment",
-				"onewordcomment", "void myMethod() onewordcomment",
-				"multi word comment", "void myMethod()multi word comment",
-				"samplecomment", "void myMethod(int param) samplecomment",
-				"sample comment", "void myMethod(int param)sample comment",
-				"!@# $%^&*_ {()comment", "void myMethod()!@# $%^&*_ {()comment"
-		);
+		Map<String, String> methodsWithComment = ImmutableMap.<String, String>builder()
+				.put("// comment", "void myMethod() // comment")
+				.put("onewordcomment", "void myMethod() onewordcomment")
+				.put("multi word comment", "void myMethod()multi word comment")
+				.put("samplecomment", "void myMethod(int param) samplecomment")
+				.put("sample comment", "void myMethod(int param)sample comment")
+				.put("!@# $%^&*_ {()comment", "void myMethod()!@# $%^&*_ {()comment").build();
+
 		for (Map.Entry<String, String> entry : methodsWithComment.entrySet()) {
 			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), CommentSupplier.class);
 		}
@@ -328,7 +330,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				new JavaClass(Object[].class),                      // isFinished
 				new JavaClass(void.class),                          // update
 				new JavaClass(ArrayList.class,                      // getActivatedMods
-						List.of(new JavaClass(String.class))),
+						new JavaClass(String.class)),
 				new JavaClass(Color[].class),                        // getColor
 		};
 		Assertions.assertEquals(expectedMethodReturnTypes.length, entries.size());
@@ -373,7 +375,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				new JavaParameter[]{},                                      // isFinished
 				new JavaParameter[]{                                        // update
 						new JavaParameter(new JavaClass(ArrayList.class,
-								List.of(new JavaClass(String.class))), "params"),
+								new JavaClass(String.class)), "params"),
 				},
 				new JavaParameter[]{},                                      // getActivatedMods
 				new JavaParameter[]{                                        // getColor
@@ -384,23 +386,23 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 		for (int i = 0; i < entries.size(); i++)
 		{
 			JavaMethod entry = entries.get(i);
-			Assertions.assertEquals(List.of(expectedMethodParams[i]), entry.getParams());
+			Assertions.assertEquals(Arrays.asList(expectedMethodParams[i]), entry.getParams());
 		}
 	}
 
 	@Test
 	void shouldGetCorrectMethodDetailEntriesByName() {
 
-		List<JavaMethod> expectedJavaMethodEntries = List.of(
-				new JavaMethod("begin", int.class, List.of(
+		List<JavaMethod> expectedJavaMethodEntries = ImmutableList.of(
+				new JavaMethod("begin", int.class, ImmutableList.of(
 						new JavaParameter(Object.class, "param")
 				), new MemberModifier(AccessModifierKey.PUBLIC)
 				),
-				new JavaMethod("DoesInstantly", boolean.class, List.of(
+				new JavaMethod("DoesInstantly", boolean.class, ImmutableList.of(
 						new JavaParameter(int.class, "number")
 				), new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC)
 				),
-				new JavaMethod("init", String.class, List.of(
+				new JavaMethod("init", String.class, ImmutableList.of(
 						new JavaParameter(String.class, "object"),
 						new JavaParameter(String[].class, "params")
 				), new MemberModifier(
@@ -408,19 +410,19 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				)),
 				new JavaMethod("IsFinished", Object[].class, MemberModifier.UNDECLARED
 				),
-				new JavaMethod("update", void.class, List.of(
+				new JavaMethod("update", void.class, ImmutableList.of(
 						new JavaParameter(
-								new JavaClass(ArrayList.class,
-										List.of(new JavaClass(String.class))), "params"
+								new JavaClass(ArrayList.class, new JavaClass(String.class)),
+								"params"
 						)
 				), new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
 				),
 				new JavaMethod("getActivatedMods", new JavaClass(
-						ArrayList.class, List.of(new JavaClass(String.class))
-				), List.of(),
+						ArrayList.class, new JavaClass(String.class)
+				), ImmutableList.of(),
 						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
 				),
-				new JavaMethod("getColor", Color[].class, List.of(
+				new JavaMethod("getColor", Color[].class, ImmutableList.of(
 						new JavaParameter(new JavaClass(IsoPlayer.class), "player")
 				), new MemberModifier(AccessModifierKey.PUBLIC))
 		);

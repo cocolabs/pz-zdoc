@@ -30,6 +30,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.Nullable;
 
+import com.google.common.collect.Sets;
+
 /**
  * Apache Commons {@code CommandLine} wrapper providing additional methods.
  */
@@ -105,7 +107,7 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		if (hasOption(excludeOpt.getOpt()))
 		{
 			String value = getParsedValue(excludeOpt);
-			return Set.of(value.split(","));
+			return Sets.newHashSet(value.split(","));
 		}
 		return new HashSet<>();
 	}

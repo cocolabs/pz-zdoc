@@ -78,7 +78,7 @@ public class MemberModifier {
 	}
 
 	public boolean matchesModifiers(ModifierKey... keys) {
-		return modifiers.equals(List.of(keys));
+		return modifiers.equals(Arrays.asList(keys));
 	}
 
 	@Override

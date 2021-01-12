@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.jsoup.nodes.Element;
@@ -68,7 +69,7 @@ public abstract class Detail<T extends IMember> {
 			}
 			TextNode textNode = textNodes.get(0);
 			String absUrl = e.absUrl("href");
-			if (absUrl.isBlank())
+			if (StringUtils.isBlank(absUrl))
 			{
 				String format = "Missing href for node \"%s\"";
 				throw new DetailParsingException(this, String.format(format, textNode.text()));

@@ -18,12 +18,15 @@
 package io.yooksi.pz.zdoc.compile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.Sets;
 
 import io.yooksi.pz.zdoc.doc.DocTest;
 import io.yooksi.pz.zdoc.doc.detail.DetailParsingException;
@@ -43,7 +46,7 @@ class JavaCompilerTest extends DocTest {
 	@Test
 	void shouldCompileDeclaredJavaFieldsFromClassWithNullDocument() throws DetailParsingException {
 
-		List<JavaField> expectedJavaFields = List.of(
+		List<JavaField> expectedJavaFields = Arrays.asList(
 				new JavaField(float.class, "a", new MemberModifier(
 						AccessModifierKey.PUBLIC
 				)),
@@ -66,7 +69,7 @@ class JavaCompilerTest extends DocTest {
 	@Test
 	void shouldCompileDeclaredJavaFieldsFromClassWithDocument() throws DetailParsingException {
 
-		List<JavaField> expectedJavaFields = List.of(
+		List<JavaField> expectedJavaFields = Arrays.asList(
 				new JavaField(float.class, "a", new MemberModifier(
 						AccessModifierKey.PUBLIC
 				)),
@@ -79,7 +82,7 @@ class JavaCompilerTest extends DocTest {
 				new JavaField(Color[].class, "blue", new MemberModifier(
 						AccessModifierKey.DEFAULT, ModifierKey.STATIC
 				)),
-				new JavaField(new JavaClass(ArrayList.class, List.of(new JavaClass(Color.class))),
+				new JavaField(new JavaClass(ArrayList.class, new JavaClass(Color.class)),
 						"cyan", new MemberModifier(AccessModifierKey.PUBLIC))
 		);
 		List<JavaField> compiledFields = JavaCompiler.compileJavaFields(CompileTest.class, document);
@@ -89,17 +92,17 @@ class JavaCompilerTest extends DocTest {
 	@Test
 	void shouldCompileDeclaredJavaMethodsFromClassWithNullDocument() throws DetailParsingException {
 
-		Set<JavaMethod> expectedJavaMethods = Set.of(
+		Set<JavaMethod> expectedJavaMethods = Sets.newHashSet(
 				new JavaMethod("begin", int.class,
-						List.of(new JavaParameter(Object.class, "arg0")),
+						new JavaParameter(Object.class, "arg0"),
 						new MemberModifier(AccessModifierKey.PUBLIC)
 				),
 				new JavaMethod("DoesInstantly", boolean.class,
-						List.of(new JavaParameter(int.class, "arg0")),
+						new JavaParameter(int.class, "arg0"),
 						new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC)
 				),
 				new JavaMethod("init", String.class,
-						List.of(
+						Arrays.asList(
 								new JavaParameter(String.class, "arg0"),
 								new JavaParameter(String[].class, "arg1")
 						),
@@ -108,16 +111,14 @@ class JavaCompilerTest extends DocTest {
 				new JavaMethod("IsFinished", Object[].class, MemberModifier.UNDECLARED
 				),
 				new JavaMethod("update", void.class,
-						List.of(new JavaParameter(
-								new JavaClass(ArrayList.class, 1), "arg0"
-						)),
+						new JavaParameter(new JavaClass(ArrayList.class, 1), "arg0"),
 						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
 				),
 				new JavaMethod("getActivatedMods", new JavaClass(ArrayList.class, 1),
 						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
 				),
 				new JavaMethod("getColor", Color[].class,
-						List.of(new JavaParameter(IsoPlayer.class, "arg0")),
+						new JavaParameter(IsoPlayer.class, "arg0"),
 						new MemberModifier(AccessModifierKey.PUBLIC)
 				)
 		);
@@ -128,17 +129,17 @@ class JavaCompilerTest extends DocTest {
 	@Test
 	void shouldCompileDeclaredJavaMethodsFromClassWithDocument() throws DetailParsingException {
 
-		Set<JavaMethod> expectedJavaMethods = Set.of(
+		Set<JavaMethod> expectedJavaMethods = Sets.newHashSet(
 				new JavaMethod("begin", int.class,
-						List.of(new JavaParameter(Object.class, "param")),
+						new JavaParameter(Object.class, "param"),
 						new MemberModifier(AccessModifierKey.PUBLIC)
 				),
 				new JavaMethod("DoesInstantly", boolean.class,
-						List.of(new JavaParameter(int.class, "number")),
+						new JavaParameter(int.class, "number"),
 						new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC)
 				),
 				new JavaMethod("init", String.class,
-						List.of(
+						Arrays.asList(
 								new JavaParameter(String.class, "object"),
 								new JavaParameter(String[].class, "params")
 						),
@@ -147,18 +148,16 @@ class JavaCompilerTest extends DocTest {
 				new JavaMethod("IsFinished", Object[].class, MemberModifier.UNDECLARED
 				),
 				new JavaMethod("update", void.class,
-						List.of(new JavaParameter(
-								new JavaClass(ArrayList.class, List.of(new JavaClass(String.class))),
-								"params"
-						)),
+						new JavaParameter(new JavaClass(ArrayList.class, new JavaClass(String.class)),
+								"params"),
 						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
 				),
 				new JavaMethod("getActivatedMods",
-						new JavaClass(ArrayList.class, List.of(new JavaClass(String.class))),
+						new JavaClass(ArrayList.class, new JavaClass(String.class)),
 						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
 				),
 				new JavaMethod("getColor", Color[].class,
-						List.of(new JavaParameter(IsoPlayer.class, "player")),
+						new JavaParameter(IsoPlayer.class, "player"),
 						new MemberModifier(AccessModifierKey.PUBLIC)
 				)
 		);

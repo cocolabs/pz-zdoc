@@ -26,6 +26,8 @@ import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableList;
+
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.doc.DocTest;
 import io.yooksi.pz.zdoc.element.IMember;
@@ -113,7 +115,7 @@ class DetailTest extends DetailTestFixture<DetailTest.TestDetail> implements Uni
 
 		@Override
 		protected List<TestMember> parse() {
-			return List.of(new TestMember());
+			return ImmutableList.of(new TestMember());
 		}
 	}
 }

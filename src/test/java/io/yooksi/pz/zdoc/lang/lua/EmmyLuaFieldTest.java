@@ -17,8 +17,6 @@
  */
 package io.yooksi.pz.zdoc.lang.lua;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,26 +32,26 @@ class EmmyLuaFieldTest {
 		Assertions.assertEquals("---@field car Vehicle", annotation.toString());
 
 		// ---@field field_name FIELD_TYPE|OTHER_TYPE
-		annotation = new EmmyLuaField("car", new LuaType("Vehicle",
-				List.of(new LuaType("Object"))
-		));
+		annotation = new EmmyLuaField("car",
+				new LuaType("Vehicle", new LuaType("Object"))
+		);
 		Assertions.assertEquals("---@field car Vehicle|Object", annotation.toString());
 
 		// ---@field public field_name FIELD_TYPE|OTHER_TYPE
-		annotation = new EmmyLuaField("car", "public", new LuaType("Vehicle",
-				List.of(new LuaType("Object"))
-		));
+		annotation = new EmmyLuaField("car", "public",
+				new LuaType("Vehicle", new LuaType("Object")
+				));
 		Assertions.assertEquals("---@field public car Vehicle|Object", annotation.toString());
 
 		// ---@field field_name FIELD_TYPE|OTHER_TYPE [@comment]
 		annotation = new EmmyLuaField("car", new LuaType("Vehicle",
-				List.of(new LuaType("Object"))), "goes vroom"
+				new LuaType("Object")), "goes vroom"
 		);
 		Assertions.assertEquals("---@field car Vehicle|Object @goes vroom", annotation.toString());
 
 		// ---@field protected field_name FIELD_TYPE|OTHER_TYPE [@comment]
-		annotation = new EmmyLuaField("car", "protected", new LuaType("Vehicle",
-				List.of(new LuaType("Object"))), "goes vroom"
+		annotation = new EmmyLuaField("car", "protected",
+				new LuaType("Vehicle", new LuaType("Object")), "goes vroom"
 		);
 		Assertions.assertEquals("---@field protected car Vehicle|Object @goes vroom", annotation.toString());
 	}

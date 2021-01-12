@@ -26,6 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.commons.util.StringUtils;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class TestWorkspace {
@@ -46,7 +47,7 @@ public abstract class TestWorkspace {
 
 		this.dir = dir.toFile();
 		file = dir.resolve(filename).toFile();
-		if (!filename.isBlank()) {
+		if (!StringUtils.isBlank(filename)) {
 			Assertions.assertTrue(file.createNewFile());
 		}
 	}

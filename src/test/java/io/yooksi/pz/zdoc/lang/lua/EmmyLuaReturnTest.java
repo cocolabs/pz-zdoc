@@ -17,8 +17,6 @@
  */
 package io.yooksi.pz.zdoc.lang.lua;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +32,7 @@ class EmmyLuaReturnTest {
 		Assertions.assertEquals("---@return Dog", annotation.toString());
 
 		// ---@param TYPE|OTHER_TYPE
-		annotation = new EmmyLuaReturn(new LuaType("Dog", List.of(new LuaType("Animal"))));
+		annotation = new EmmyLuaReturn(new LuaType("Dog", new LuaType("Animal")));
 		Assertions.assertEquals("---@return Dog|Animal", annotation.toString());
 	}
 

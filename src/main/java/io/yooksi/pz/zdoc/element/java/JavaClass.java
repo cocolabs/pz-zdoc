@@ -43,6 +43,10 @@ public class JavaClass implements IClass {
 		);
 	}
 
+	public JavaClass(Class<?> clazz, JavaClass typeParameter) {
+		this(clazz, Collections.singletonList(typeParameter));
+	}
+
 	public JavaClass(Class<?> clazz, int typeParameterCount) {
 		this(clazz, getUnknownTypeParameterList(typeParameterCount));
 	}

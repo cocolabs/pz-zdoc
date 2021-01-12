@@ -17,6 +17,10 @@
  */
 package io.yooksi.pz.zdoc.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,10 +29,14 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.ClassUtils;
+
+import io.yooksi.pz.zdoc.Main;
 
 @SuppressWarnings("unused")
 public class Utils {
@@ -129,5 +137,24 @@ public class Utils {
 
 	public static Class<?> getClassForName(String name) throws ClassNotFoundException {
 		return ClassUtils.forName(name, null);
+	}
+
+	public static Properties getProperties(String path) throws IOException {
+
+		Properties properties = new Properties();
+		try {
+			URL resource = Main.CLASS_LOADER.getResource(path);
+			File fLuaProperties = new File(Objects.requireNonNull(resource).toURI());
+			try (FileInputStream fis = new FileInputStream(fLuaProperties)) {
+				properties.load(fis);
+			}
+		}
+		catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+		catch (FileNotFoundException e) {
+			return null;
+		}
+		return properties;
 	}
 }

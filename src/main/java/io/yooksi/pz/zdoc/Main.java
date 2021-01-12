@@ -21,11 +21,8 @@ import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
 import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.*;
@@ -33,6 +30,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import io.yooksi.pz.zdoc.cmd.Command;
 import io.yooksi.pz.zdoc.cmd.CommandLine;
@@ -48,7 +46,7 @@ import io.yooksi.pz.zdoc.util.Utils;
 public class Main {
 
 	public static final String CHARSET = Charset.defaultCharset().name();
-	private static final ClassLoader CL = Main.class.getClassLoader();
+	public static final ClassLoader CLASS_LOADER = Main.class.getClassLoader();
 
 	/**
 	 * <p>Application main entry point method.</p>
@@ -103,17 +101,7 @@ public class Main {
 			else if (paths.isEmpty()) {
 				Logger.warn("No files found under path " + root);
 			}
-			Properties luaProperties = new Properties();
-			try {
-				URL resource = CL.getResource("lua.properties");
-				File fLuaProperties = new File(Objects.requireNonNull(resource).toURI());
-				try (FileInputStream fis = new FileInputStream(fLuaProperties)) {
-					luaProperties.load(fis);
-				}
-			}
-			catch (URISyntaxException e) {
-				throw new RuntimeException(e);
-			}
+			Properties properties = Utils.getProperties("lua.properties");
 			// process every file found under given root path
 			for (Path path : paths)
 			{
@@ -158,7 +146,7 @@ public class Main {
 					String fileName = path.getFileName().toString();
 					List<String> content = new ArrayList<>();
 
-					AnnotateRules rules = new AnnotateRules(luaProperties, exclude);
+					AnnotateRules rules = new AnnotateRules(properties, exclude);
 					AnnotateResult result = LuaAnnotator.annotate(path.toFile(), content, rules);
 
 					String addendum = outputFileExists ? " and overwriting" : "";
@@ -218,6 +206,18 @@ public class Main {
 			}
 			else Logger.debug("Designated output path: " + userOutput);
 
+			Properties properties = Utils.getProperties("zomboid.properties");
+			if (properties != null)
+			{
+				String excludeProp = properties.getProperty("exclude");
+				if (excludeProp != null)
+				{
+					if (!StringUtils.isBlank(excludeProp)) {
+						exclude.addAll(Arrays.asList(excludeProp.split(",")));
+					}
+				}
+				else Logger.warn("Unable to find exclude list in zomboid.properties");
+			}
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
 			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
 				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());

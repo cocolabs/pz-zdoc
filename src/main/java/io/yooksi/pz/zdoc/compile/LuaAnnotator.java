@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
@@ -118,7 +119,7 @@ public class LuaAnnotator {
 		 */
 		if (includeValue != null)
 		{
-			if (!includeValue.isBlank()) {
+			if (!StringUtils.isBlank(includeValue)) {
 				include.addAll(Arrays.asList(includeValue.split(",")));
 			}
 			// if property value is blank the file is meant to be ignored
@@ -134,7 +135,7 @@ public class LuaAnnotator {
 		for (int i = 0; i < input.size(); i++)
 		{
 			String line = input.get(i);
-			if (line.isBlank())
+			if (StringUtils.isBlank(line))
 			{
 				content.add(line);
 				continue;

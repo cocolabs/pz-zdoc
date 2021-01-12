@@ -17,6 +17,7 @@
  */
 package io.yooksi.pz.zdoc.element.lua;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.Unmodifiable;
@@ -39,10 +40,12 @@ public class LuaField implements IField, Annotated {
 		this.type = type;
 		this.name = EmmyLua.getSafeLuaName(name);
 		this.modifier = modifier;
-		if (!modifier.hasAccess(AccessModifierKey.DEFAULT)) {
-			this.annotations = List.of(new EmmyLuaField(name, modifier.getAccess().name, type));
+		if (!modifier.hasAccess(AccessModifierKey.DEFAULT))
+		{
+			this.annotations = Collections.singletonList(
+					new EmmyLuaField(name, modifier.getAccess().name, type));
 		}
-		else this.annotations = List.of(new EmmyLuaField(name, type));
+		else this.annotations = Collections.singletonList(new EmmyLuaField(name, type));
 	}
 
 	@Override

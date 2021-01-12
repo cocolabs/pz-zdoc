@@ -24,6 +24,8 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableList;
+
 import io.yooksi.pz.zdoc.UnitTest;
 
 class JavaClassTest implements UnitTest {
@@ -91,7 +93,7 @@ class JavaClassTest implements UnitTest {
 		Assertions.assertEquals(new JavaClass(Object.class), new JavaClass(Object.class));
 		Assertions.assertNotEquals(new JavaClass(Object.class), new JavaClass(String.class));
 
-		List<JavaClass> simpleTypeParameters = List.of(
+		List<JavaClass> simpleTypeParameters = ImmutableList.of(
 				new JavaClass(String.class), new JavaClass(Boolean.class)
 		);
 		// compare classes with same type parameter objects
@@ -101,14 +103,14 @@ class JavaClassTest implements UnitTest {
 		);
 		// compare classes with different type parameters
 		Assertions.assertNotEquals(
-				jClassWithSimpleTypeParameters, new JavaClass(Object.class, List.of(
+				jClassWithSimpleTypeParameters, new JavaClass(Object.class, ImmutableList.of(
 						new JavaClass(String.class), new JavaClass(Integer.class)
 				))
 		);
 		// compare classes with different number of type parameters
 		Assertions.assertNotEquals(
 				jClassWithSimpleTypeParameters,
-				new JavaClass(Object.class, List.of(new JavaClass(String.class)))
+				new JavaClass(Object.class, new JavaClass(String.class))
 		);
 		Assertions.assertNotEquals(
 				jClassWithSimpleTypeParameters, new JavaClass(Object.class)

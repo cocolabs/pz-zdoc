@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.platform.commons.util.StringUtils;
 
 import com.google.common.collect.Sets;
 
@@ -40,7 +41,7 @@ abstract class DetailTestFixture<T extends Detail<?>> extends DocTest {
 			"long", "float", "double", "void"
 	};
 	private static final Set<Set<ModifierKey>> MODIFIER_KEY_COMBINATIONS =
-			Sets.powerSet(Set.of(ModifierKey.values()));
+			Sets.powerSet(Sets.newHashSet(ModifierKey.values()));
 
 	final T detail;
 
@@ -60,7 +61,7 @@ abstract class DetailTestFixture<T extends Detail<?>> extends DocTest {
 				MemberModifier modifier = new MemberModifier(access, keyArray);
 
 				String sModifier = modifier.toString();
-				String sSignature = (!sModifier.isBlank() ? sModifier + " " : "") + text;
+				String sSignature = (!StringUtils.isBlank(sModifier) ? sModifier + " " : "") + text;
 
 				try {
 					T signature = supplier.getDeclaredConstructor(String.class).newInstance(sSignature);
