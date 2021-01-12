@@ -154,6 +154,7 @@ class JavaMethodTest implements UnitTest {
 	}
 
 	@TestOnly
+	@SuppressWarnings("SameReturnValue")
 	private Integer testMethodWithReturnType() {
 		return 0;
 	}

@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -165,7 +166,7 @@ class JavaCompilerTest extends DocTest {
 		Assertions.assertEquals(expectedJavaMethods, compiledMethods);
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused", "SameReturnValue"})
 	private static abstract class CompileTest {
 
 		public float a;
@@ -183,6 +184,7 @@ class JavaCompilerTest extends DocTest {
 			return "";
 		}
 
+		@TestOnly
 		static void update(ArrayList<String> params) {
 		}
 
