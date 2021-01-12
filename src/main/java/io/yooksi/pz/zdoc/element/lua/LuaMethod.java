@@ -37,7 +37,6 @@ import io.yooksi.pz.zdoc.lang.lua.EmmyLuaReturn;
 /**
  * This class represents a parsed Lua method.
  */
-@SuppressWarnings("unused")
 public class LuaMethod implements IMethod, Annotated {
 
 	private final @Nullable LuaClass owner;

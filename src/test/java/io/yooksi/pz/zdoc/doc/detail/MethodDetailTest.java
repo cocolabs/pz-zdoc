@@ -164,8 +164,8 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 								" java.lang.Object param2, java.lang.String param3)")
 
 				.put("java.lang.Object param1, java.lang.Object param2, java.lang.Integer param3",
-						"void myMethod(java.lang.Object param1, java.lang.Object param2, java.lang.Integer " +
-								"param3)")
+						"void myMethod(java.lang.Object param1, java.lang.Object param2, " +
+								"java.lang.Integer param3)")
 
 				.put("java.lang.Object param0, java.lang.Object param1",
 						"void myMethod(java.lang.Object param0, java.lang.Object param1)")
@@ -229,8 +229,8 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 								" java.lang.Object param2, java.lang.String...params)")
 
 				.put("java.lang.Object param1, java.lang.Object param2, java.lang.Object...params",
-						"void myMethod(java.lang.Object param1, java.lang.Object param2, java.lang.Object.." +
-								".params)")
+						"void myMethod(java.lang.Object param1, java.lang.Object param2, " +
+								"java.lang.Object...params)")
 
 				.put("java.lang.Object param0, java.lang.Object...params",
 						"void myMethod(java.lang.Object param0, java.lang.Object...params)")

@@ -213,7 +213,7 @@ class MemberModifierTest implements UnitTest {
 		);
 	}
 
-	@SuppressWarnings({"WeakerAccess", "RedundantSuppression"})
+	@SuppressWarnings({ "WeakerAccess", "RedundantSuppression" })
 	private static class TestMember extends MemberModifier {
 
 		private TestMember(Member member) {

@@ -25,8 +25,7 @@ public enum LoggerType {
 	DEBUG("debug", "DebugLogger"),
 	DEV("dev", "DevLogger");
 
-	final String key;
-	final String name;
+	final String key, name;
 
 	LoggerType(String key, String name) {
 		this.key = key;

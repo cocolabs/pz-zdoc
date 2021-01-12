@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
@@ -38,7 +37,7 @@ import org.springframework.util.ClassUtils;
 
 import io.yooksi.pz.zdoc.Main;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("WeakerAccess")
 public class Utils {
 
 	/**
@@ -57,19 +56,6 @@ public class Utils {
 	 */
 	public static boolean isLuaFile(Path path) {
 		return isLuaFile(path.getFileName().toString());
-	}
-
-	/**
-	 * @return {@code true} if the given string can be parsed into a valid {@link Path} object.
-	 */
-	public static boolean isValidPath(String path) {
-		try {
-			Paths.get(path);
-		}
-		catch (InvalidPathException e) {
-			return false;
-		}
-		return true;
 	}
 
 	public static @Nullable Path getPathOrNull(String path) {
@@ -112,27 +98,6 @@ public class Utils {
 
 	public static URL getURLBase(URL url) {
 		return getURL(url.getProtocol() + "://" + url.getHost());
-	}
-
-	public static @Nullable URI getURIOrNull(String link) {
-		try {
-			return new URI(link);
-		}
-		catch (URISyntaxException e) {
-			return null;
-		}
-	}
-
-	/**
-	 * @return {@code true} if the given {@code Class} object is declared in Java JDK.
-	 * 		Note that this method only checks if the target class was loaded using the same
-	 *        {@link ClassLoader} used to load Java JDK, and cannot guarantee that the target
-	 * 		class is declared in Java JDK, but is good enough in most cases.
-	 *
-	 * @see <a href="https://stackoverflow.com/a/8703709/5759072">Code snippet on StackOverflow</a>
-	 */
-	public static boolean isJavaJDKClass(Class<?> clazz) {
-		return clazz.getClassLoader() == "".getClass().getClassLoader();
 	}
 
 	public static Class<?> getClassForName(String name) throws ClassNotFoundException {
