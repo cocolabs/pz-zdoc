@@ -86,7 +86,7 @@ class JavaCompilerTest extends DocTest {
 				new JavaField(new JavaClass(ArrayList.class, new JavaClass(Color.class)),
 						"cyan", new MemberModifier(AccessModifierKey.PUBLIC))
 		);
-		List<JavaField> compiledFields = JavaCompiler.compileJavaFields(CompileTest.class, document);
+		List<JavaField> compiledFields = JavaCompiler.compileJavaFields(CompileTest.class, DOCUMENT);
 		Assertions.assertEquals(expectedJavaFields, compiledFields);
 	}
 
@@ -162,7 +162,7 @@ class JavaCompilerTest extends DocTest {
 						new MemberModifier(AccessModifierKey.PUBLIC)
 				)
 		);
-		Set<JavaMethod> compiledMethods = JavaCompiler.compileJavaMethods(CompileTest.class, document);
+		Set<JavaMethod> compiledMethods = JavaCompiler.compileJavaMethods(CompileTest.class, DOCUMENT);
 		Assertions.assertEquals(expectedJavaMethods, compiledMethods);
 	}
 

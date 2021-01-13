@@ -29,16 +29,16 @@ import org.junit.jupiter.api.Tag;
 @Tag("doc")
 public abstract class DocTest {
 
-	protected static final ZomboidAPIDoc document;
-	protected static final Path documentPath;
+	protected static final ZomboidAPIDoc DOCUMENT;
+	protected static final Path DOCUMENT_PATH;
 
 	static
 	{
 		try {
 			URL resource = DocTest.class.getClassLoader().getResource("Test.html");
-			documentPath = new File(Objects.requireNonNull(resource).toURI()).toPath();
-			document = ZomboidAPIDoc.getLocalPage(documentPath);
-			document.getDocument().setBaseUri(ZomboidAPIDoc.resolveURL("zombie/Test.html").toString());
+			DOCUMENT_PATH = new File(Objects.requireNonNull(resource).toURI()).toPath();
+			DOCUMENT = ZomboidAPIDoc.getLocalPage(DOCUMENT_PATH);
+			DOCUMENT.getDocument().setBaseUri(ZomboidAPIDoc.resolveURL("zombie/Test.html").toString());
 		}
 		catch (URISyntaxException | IOException e) {
 			throw new RuntimeException(e);

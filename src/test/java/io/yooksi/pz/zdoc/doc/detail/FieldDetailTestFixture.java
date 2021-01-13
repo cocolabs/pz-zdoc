@@ -23,7 +23,7 @@ import io.yooksi.pz.zdoc.doc.detail.FieldDetail.Signature;
 class FieldDetailTestFixture extends DetailTestFixture<FieldDetail> {
 
 	FieldDetailTestFixture() throws DetailParsingException {
-		super(new FieldDetail(DocTest.document));
+		super(new FieldDetail(DocTest.DOCUMENT));
 	}
 
 	abstract static class FieldSignatureSupplier extends SignatureSupplier<Signature> {

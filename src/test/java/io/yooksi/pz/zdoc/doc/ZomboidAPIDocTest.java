@@ -118,7 +118,7 @@ class ZomboidAPIDocTest extends DocTest implements UnitTest {
 	@Test
 	void shouldConstructValidZomboidDocFromLocalAPIPage() {
 
-		ZomboidAPIDoc doc = DocTest.document;
+		ZomboidAPIDoc doc = DocTest.DOCUMENT;
 
 		Assertions.assertNotNull(doc.getDocument());
 		Assertions.assertEquals("Test.html", doc.getName());
