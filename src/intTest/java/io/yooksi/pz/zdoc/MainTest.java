@@ -23,7 +23,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import io.yooksi.pz.zdoc.cmd.Command;
 
-public class MainTest extends TestWorkspace implements IntegrationTest {
+class MainTest extends TestWorkspace implements IntegrationTest {
 
 	//	MainTest() {
 //		super("sampleLua.lua");

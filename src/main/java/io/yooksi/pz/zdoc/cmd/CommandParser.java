@@ -23,7 +23,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-public class CommandParser extends DefaultParser {
+class CommandParser extends DefaultParser {
 
 	@Override
 	public CommandLine parse(Options options, String[] arguments) throws ParseException {

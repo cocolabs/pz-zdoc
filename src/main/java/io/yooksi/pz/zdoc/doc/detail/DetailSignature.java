@@ -29,7 +29,7 @@ import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.util.ParseUtils;
 import io.yooksi.pz.zdoc.util.Utils;
 
-public abstract class DetailSignature {
+abstract class DetailSignature {
 
 	final String signature;
 
