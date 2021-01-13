@@ -21,15 +21,22 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.yooksi.pz.zdoc.element.java.JavaClass;
+import org.jetbrains.annotations.Nullable;
 
 class TypeSignatureParser extends SignatureParser<JavaClass> {
 
-	TypeSignatureParser(String signature) {
+	private TypeSignatureParser(String signature) {
 		super(signature);
 	}
 
-	TypeSignatureParser(String signature, AtomicInteger index) {
+	private TypeSignatureParser(String signature, AtomicInteger index) {
 		super(signature, index);
+	}
+
+	public static @Nullable JavaClass parse(String signature) {
+
+		List<JavaClass> result = new TypeSignatureParser(signature).parse();
+		return !result.isEmpty() ? result.get(0) : null;
 	}
 
 	@Override

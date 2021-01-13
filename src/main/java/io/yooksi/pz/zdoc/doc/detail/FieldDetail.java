@@ -63,7 +63,7 @@ public class FieldDetail extends Detail<JavaField> {
 				Logger.error(e.getMessage());
 				continue;
 			}
-			JavaClass type = DetailSignature.parseClassSignature(signature.type);
+			JavaClass type = TypeSignatureParser.parse(signature.type);
 			if (type != null) {
 				result.add(new JavaField(type, signature.name, signature.modifier, signature.comment));
 			}

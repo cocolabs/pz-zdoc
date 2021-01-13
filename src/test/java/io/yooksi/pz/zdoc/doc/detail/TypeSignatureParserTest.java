@@ -43,7 +43,7 @@ class TypeSignatureParserTest {
 		);
 		for (Class<?> signature : classSignatures)
 		{
-			JavaClass result = DetailSignature.parseClassSignature(signature.getName());
+			JavaClass result = TypeSignatureParser.parse(signature.getName());
 			List<JavaClass> typeParameters = Objects.requireNonNull(result).getTypeParameters();
 
 			Assertions.assertEquals(0, typeParameters.size());
@@ -91,7 +91,7 @@ class TypeSignatureParserTest {
 			String signature = entry.getKey();
 			String[] expected = entry.getValue();
 
-			JavaClass result = DetailSignature.parseClassSignature(signature);
+			JavaClass result = TypeSignatureParser.parse(signature);
 			List<JavaClass> typeParameters = Objects.requireNonNull(result).getTypeParameters();
 
 			Assertions.assertEquals(expected.length, typeParameters.size());

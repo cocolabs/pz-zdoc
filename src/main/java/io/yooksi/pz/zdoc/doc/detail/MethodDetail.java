@@ -59,7 +59,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 				continue;
 			}
 			Signature signature = new Signature(qualifyZomboidClassElements(eSignature));
-			JavaClass type = DetailSignature.parseClassSignature(signature.returnType);
+			JavaClass type = TypeSignatureParser.parse(signature.returnType);
 			if (type == null)
 			{
 				String msg = "Excluding method (%s) from detail, class %s does not exist";
@@ -84,7 +84,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 						}
 						className = paramElements[0] + "[]";
 					}
-					JavaClass paramType = DetailSignature.parseClassSignature(className);
+					JavaClass paramType = TypeSignatureParser.parse(className);
 					if (paramType == null)
 					{
 						String msg = "Excluding method (%s) from detail, class %s does not exist";

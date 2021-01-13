@@ -17,12 +17,7 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Element;
-
-import io.yooksi.pz.zdoc.element.java.JavaClass;
 
 abstract class DetailSignature {
 
@@ -79,12 +74,6 @@ abstract class DetailSignature {
 	 */
 	static String normalizeElement(Element element) {
 		return normalizeSignature(element.text());
-	}
-
-	public static @Nullable JavaClass parseClassSignature(String signature) {
-
-		List<JavaClass> result = new TypeSignatureParser(signature).parse();
-		return !result.isEmpty() ? result.get(0) : null;
 	}
 
 	@Override
