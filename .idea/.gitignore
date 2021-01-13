@@ -2,6 +2,10 @@
 /shelf/
 /workspace.xml
 
+# Dictionaries
+/dictionaries/*
+!dictionaries/project.xml
+
 # Other files
 /libraries/
 /modules/
