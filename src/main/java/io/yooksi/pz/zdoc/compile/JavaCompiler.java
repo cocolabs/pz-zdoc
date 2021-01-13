@@ -28,8 +28,10 @@ import java.util.*;
 import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.collections4.list.PredicatedList;
 import org.apache.commons.collections4.set.PredicatedSet;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.logging.log4j.core.util.ReflectionUtil;
 import org.jetbrains.annotations.Nullable;
 
 import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
@@ -42,8 +44,7 @@ import io.yooksi.pz.zdoc.element.java.JavaField;
 import io.yooksi.pz.zdoc.element.java.JavaMethod;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.logger.Logger;
-import zombie.Lua.LuaManager;
-import zombie.core.Core;
+import io.yooksi.pz.zdoc.util.Utils;
 
 public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 
@@ -144,7 +145,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 	}
 
 	/**
-	 * Initialize {@link LuaManager} and return a set of exposed Java classes.
+	 * Initialize {@code LuaManager} and return a set of exposed Java classes.
 	 *
 	 * @return a set of exposed Java classes.
 	 *
@@ -154,27 +155,41 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 	@SuppressWarnings("unchecked")
 	public static HashSet<Class<?>> getExposedJava() throws ReflectiveOperationException {
 
-		Class<?> exposerClass = Arrays.stream(LuaManager.class.getDeclaredClasses())
+		/* use exclusively reflection to define classes and interact
+		 * with class objects to allow CI workflow to compile project
+		 */
+		Class<?> luaManager = Utils.getClassForName("zombie.Lua.LuaManager");
+		Class<?> zombieCore = Utils.getClassForName("zombie.core.Core");
+
+		Class<?> j2SEPlatform = Utils.getClassForName("se.krka.kahlua.j2se.J2SEPlatform");
+		Class<?> kahluaConverterManager = Utils.getClassForName(
+				"se.krka.kahlua.converter.KahluaConverterManager"
+		);
+		Class<?> kahluaPlatform = Utils.getClassForName("se.krka.kahlua.vm.Platform");
+		Class<?> kahluaTable = Utils.getClassForName("se.krka.kahlua.vm.KahluaTable");
+
+		Class<?> exposerClass = Arrays.stream(luaManager.getDeclaredClasses())
 				.filter(c -> c.getName().equals("zombie.Lua.LuaManager$Exposer"))
 				.findFirst().orElseThrow(ClassNotFoundException::new);
 
-		se.krka.kahlua.j2se.J2SEPlatform platform =
-				new se.krka.kahlua.j2se.J2SEPlatform();
+		Object platform = ConstructorUtils.invokeConstructor(j2SEPlatform);
+		Method newEnvironment = j2SEPlatform.getDeclaredMethod("newEnvironment");
 
 		Constructor<?> constructor = exposerClass.getDeclaredConstructor(
-				se.krka.kahlua.converter.KahluaConverterManager.class,
-				se.krka.kahlua.vm.Platform.class,
-				se.krka.kahlua.vm.KahluaTable.class
+				kahluaConverterManager,    // se.krka.kahlua.converter.KahluaConverterManager
+				kahluaPlatform,            // se.krka.kahlua.vm.Platform
+				kahluaTable                // se.krka.kahlua.vm.KahluaTable
 		);
 		constructor.setAccessible(true);
 		Object exposer = constructor.newInstance(
-				new se.krka.kahlua.converter.KahluaConverterManager(),
-				platform, platform.newEnvironment()
+				ConstructorUtils.invokeConstructor(kahluaConverterManager),
+				j2SEPlatform.cast(platform), newEnvironment.invoke(platform)
 		);
 		Method exposeAll = MethodUtils.getMatchingMethod(exposerClass, "exposeAll");
 		exposeAll.setAccessible(true);
 		try {
-			Core.bDebug = true;
+			Field dDebug = zombieCore.getDeclaredField("bDebug");
+			ReflectionUtil.setStaticFieldValue(dDebug, true);
 			exposeAll.invoke(exposer);
 		}
 		catch (InvocationTargetException e) {

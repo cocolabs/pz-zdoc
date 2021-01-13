@@ -149,3 +149,7 @@ task luaDocJar(type: Jar) {
     from "$buildDir/generated/sources/lua"
 }
 jar.dependsOn(luaDocJar)
+
+boolean isCI = project.hasProperty("isCI")
+def integrationTasks = [zomboidJar, luaDocJar, compileIntTestJava, spotlessJava]
+integrationTasks.forEach({t -> t.onlyIf { !isCI }})
