@@ -151,5 +151,5 @@ task luaDocJar(type: Jar) {
 jar.dependsOn(luaDocJar)
 
 boolean isCI = project.hasProperty("isCI")
-def integrationTasks = [zomboidJar, luaDocJar, compileIntTestJava, spotlessJava]
+def integrationTasks = [zomboidJar, luaDocJar, compileIntTestJava, spotlessJava, spotlessJavaCheck]
 integrationTasks.forEach({t -> t.onlyIf { !isCI }})
