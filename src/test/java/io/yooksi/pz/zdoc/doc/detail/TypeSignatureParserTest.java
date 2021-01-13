@@ -33,6 +33,19 @@ import io.yooksi.pz.zdoc.element.java.JavaClass;
 class TypeSignatureParserTest {
 
 	@Test
+	void shouldParseUnknownClassAsNullElement() {
+		
+		Set<String> unknownClassSignatures = Sets.newHashSet(
+				"io.yooksi.unknownClass",
+				"io.yooksi.unknownClass<java.lang.Object>",
+				"io.yooksi.unknownClass<java.lang.Object, java.lang.String>"
+		);
+		for (String signature : unknownClassSignatures) {
+			Assertions.assertNull(TypeSignatureParser.parse(signature));
+		}
+	}
+
+	@Test
 	void shouldParseJavaClassFromSignature() {
 
 		Set<Class<?>> classSignatures = Sets.newHashSet(

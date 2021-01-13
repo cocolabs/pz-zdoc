@@ -48,13 +48,11 @@ class TypeSignatureParser extends SignatureParser<JavaClass> {
 			char c = charArray[index.get()];
 			if (c == '<')
 			{
-				JavaClass type = getClassForName(flush());
-				if (type == null) {
-					return result;
-				}
 				index.incrementAndGet();
+				String className = flush();
+				JavaClass type = getClassForName(className);
 				List<JavaClass> params = new TypeSignatureParser(signature, index).parse();
-				result.add(new JavaClass(type.getClazz(), params));
+				result.add(type != null ? new JavaClass(type.getClazz(), params) : null);
 			}
 			else if (c == ',') {
 				flushToResult();
