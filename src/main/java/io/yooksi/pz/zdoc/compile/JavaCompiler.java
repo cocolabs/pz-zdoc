@@ -68,6 +68,12 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 		FieldDetail fieldDetail = doc != null ? new FieldDetail(doc) : null;
 		for (Field field : clazz.getDeclaredFields())
 		{
+			/* this field is injected into class during runtime by
+			 * gradle jacoco plugin to generate code coverage data
+			 */
+			if (field.getName().equals("$jacocoData")) {
+				continue;
+			}
 			int typeParamCount = field.getType().getTypeParameters().length;
 			if (typeParamCount > 0)
 			{
@@ -116,6 +122,12 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 		MethodDetail methodDetail = doc != null ? new MethodDetail(doc) : null;
 		for (Method method : clazz.getDeclaredMethods())
 		{
+			/* this method is injected into class during runtime by
+			 * gradle jacoco plugin to generate code coverage data
+			 */
+			if (method.getName().equals("$jacocoInit")) {
+				continue;
+			}
 			JavaMethod jMethod = new JavaMethod(method);
 			if (doc != null)
 			{
