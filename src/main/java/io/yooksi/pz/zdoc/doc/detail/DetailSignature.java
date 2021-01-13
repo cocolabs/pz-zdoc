@@ -88,7 +88,7 @@ abstract class DetailSignature {
 
 	public static @Nullable JavaClass parseClassSignature(String signature) {
 
-		List<JavaClass> result = new JavaClassBuilder(signature).build();
+		List<JavaClass> result = new Parser(signature).parseJavaClass();
 		return !result.isEmpty() ? result.get(0) : null;
 	}
 
@@ -107,25 +107,25 @@ abstract class DetailSignature {
 		return signature;
 	}
 
-	private static class JavaClassBuilder {
+	private static class Parser {
 
 		private final String signature;
-		private final StringBuilder sb;
+		private final StringBuilder builder;
 		private final AtomicInteger index;
 		private final List<JavaClass> result;
 
-		private JavaClassBuilder(String signature, AtomicInteger index) {
+		private Parser(String signature, AtomicInteger index) {
 			this.signature = signature;
-			this.sb = new StringBuilder();
+			this.builder = new StringBuilder();
 			this.result = new ArrayList<>();
 			this.index = index;
 		}
 
-		private JavaClassBuilder(String signature) {
+		private Parser(String signature) {
 			this(signature, new AtomicInteger());
 		}
 
-		private List<JavaClass> build() {
+		private List<JavaClass> parse() {
 
 			char[] charArray = signature.toCharArray();
 			for (; index.get() < charArray.length; index.getAndIncrement())
@@ -138,7 +138,7 @@ abstract class DetailSignature {
 						return result;
 					}
 					index.incrementAndGet();
-					List<JavaClass> params = new JavaClassBuilder(signature, index).build();
+					List<JavaClass> params = new Parser(signature, index).parseJavaClass();
 					result.add(new JavaClass(type.getClazz(), params));
 				}
 				else if (c == ',') {
@@ -148,17 +148,17 @@ abstract class DetailSignature {
 					return flushToResult();
 				}
 				else if (c != ' ') {
-					sb.append(c);
+					builder.append(c);
 				}
 			}
-			if (result.isEmpty() && sb.length() > 0) {
-				result.add(getClassForName(sb.toString()));
+			if (result.isEmpty() && builder.length() > 0) {
+				result.add(getClassForName(builder.toString()));
 			}
 			return result;
 		}
 
 		private String flush() {
-			return ParseUtils.flushStringBuilder(sb);
+			return ParseUtils.flushStringBuilder(builder);
 		}
 
 		private List<JavaClass> flushToResult() {
