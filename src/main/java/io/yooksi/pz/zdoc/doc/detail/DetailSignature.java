@@ -17,17 +17,12 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Element;
 
 import io.yooksi.pz.zdoc.element.java.JavaClass;
-import io.yooksi.pz.zdoc.logger.Logger;
-import io.yooksi.pz.zdoc.util.ParseUtils;
-import io.yooksi.pz.zdoc.util.Utils;
 
 abstract class DetailSignature {
 
@@ -88,86 +83,12 @@ abstract class DetailSignature {
 
 	public static @Nullable JavaClass parseClassSignature(String signature) {
 
-		List<JavaClass> result = new Parser(signature).parseJavaClass();
+		List<JavaClass> result = new TypeSignatureParser(signature).parse();
 		return !result.isEmpty() ? result.get(0) : null;
-	}
-
-	private static @Nullable JavaClass getClassForName(String name) {
-		try {
-			return new JavaClass(Utils.getClassForName(name));
-		}
-		catch (ClassNotFoundException e) {
-			Logger.debug("Failed to get class for name: " + name);
-		}
-		return null;
 	}
 
 	@Override
 	public String toString() {
 		return signature;
-	}
-
-	private static class Parser {
-
-		private final String signature;
-		private final StringBuilder builder;
-		private final AtomicInteger index;
-		private final List<JavaClass> result;
-
-		private Parser(String signature, AtomicInteger index) {
-			this.signature = signature;
-			this.builder = new StringBuilder();
-			this.result = new ArrayList<>();
-			this.index = index;
-		}
-
-		private Parser(String signature) {
-			this(signature, new AtomicInteger());
-		}
-
-		private List<JavaClass> parse() {
-
-			char[] charArray = signature.toCharArray();
-			for (; index.get() < charArray.length; index.getAndIncrement())
-			{
-				char c = charArray[index.get()];
-				if (c == '<')
-				{
-					JavaClass type = getClassForName(flush());
-					if (type == null) {
-						return result;
-					}
-					index.incrementAndGet();
-					List<JavaClass> params = new Parser(signature, index).parseJavaClass();
-					result.add(new JavaClass(type.getClazz(), params));
-				}
-				else if (c == ',') {
-					flushToResult();
-				}
-				else if (c == '>') {
-					return flushToResult();
-				}
-				else if (c != ' ') {
-					builder.append(c);
-				}
-			}
-			if (result.isEmpty() && builder.length() > 0) {
-				result.add(getClassForName(builder.toString()));
-			}
-			return result;
-		}
-
-		private String flush() {
-			return ParseUtils.flushStringBuilder(builder);
-		}
-
-		private List<JavaClass> flushToResult() {
-
-			String name = flush();
-			if (!name.isEmpty()) {
-				result.add(getClassForName(name));
-			}
-			return result;
-		}
 	}
 }

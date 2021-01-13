@@ -20,8 +20,9 @@ package io.yooksi.pz.zdoc.element.java;
 import java.lang.reflect.Parameter;
 
 import io.yooksi.pz.zdoc.element.IParameter;
+import io.yooksi.pz.zdoc.element.SignatureToken;
 
-public class JavaParameter implements IParameter {
+public class JavaParameter implements IParameter, SignatureToken {
 
 	private final JavaClass type;
 	private final String name;

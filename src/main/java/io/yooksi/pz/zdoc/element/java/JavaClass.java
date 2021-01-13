@@ -26,11 +26,12 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import io.yooksi.pz.zdoc.element.IClass;
+import io.yooksi.pz.zdoc.element.SignatureToken;
 
 /**
  * This class represents a parsed Java class.
  */
-public class JavaClass implements IClass {
+public class JavaClass implements IClass, SignatureToken {
 
 	private final Class<?> clazz;
 	private final List<JavaClass> typeParameters;
