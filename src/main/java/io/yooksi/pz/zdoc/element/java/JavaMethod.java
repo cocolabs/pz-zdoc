@@ -95,7 +95,9 @@ public class JavaMethod implements IMethod {
 			params.forEach(p -> sb.append(p.toString()).append(", "));
 			sParams = sb.substring(0, sb.length() - 2).trim();
 		}
-		return String.format("%s %s %s(%s)", getModifier(), returnType, getName(), sParams);
+		String modifier = this.modifier.toString();
+		modifier = modifier.isEmpty() ? "" : modifier + " ";
+		return String.format("%s%s %s(%s)", modifier, returnType, getName(), sParams);
 	}
 
 	@Override

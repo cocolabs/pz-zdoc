@@ -77,10 +77,10 @@ class JavaMethodTest implements UnitTest {
 	@Test
 	void shouldCreateJavaMethodWithValidReadableForm() {
 
-		assertReadableForm("private void " +
+		assertReadableForm("public void " +
 				"testMethodWithParameters(int arg0, java.lang.String arg1)", METHOD_WITH_PARAMETERS);
 
-		assertReadableForm("private void " +
+		assertReadableForm("void " +
 				"testMethodWithoutParametersOrReturnType()", METHOD_WITHOUT_PARAMETERS);
 
 		assertReadableForm("private java.lang.Integer " +
@@ -129,11 +129,11 @@ class JavaMethodTest implements UnitTest {
 	private static class InnerTest {
 
 		@TestOnly
-		private void testMethodWithParameters(int param1, String param2) {
+		public void testMethodWithParameters(int param1, String param2) {
 		}
 
 		@TestOnly
-		private void testMethodWithoutParametersOrReturnType() {
+		void testMethodWithoutParametersOrReturnType() {
 		}
 
 		@TestOnly
