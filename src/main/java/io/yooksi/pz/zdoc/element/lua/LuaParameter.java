@@ -45,6 +45,11 @@ public class LuaParameter implements IParameter, Annotated {
 	}
 
 	@Override
+	public String getAsVarArg() {
+		return "...";
+	}
+
+	@Override
 	public LuaType getType() {
 		return type;
 	}

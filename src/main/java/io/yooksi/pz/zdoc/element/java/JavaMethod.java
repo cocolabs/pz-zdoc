@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.yooksi.pz.zdoc.logger.Logger;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -38,15 +39,32 @@ public class JavaMethod implements IMethod {
 	private final JavaClass returnType;
 	private final List<JavaParameter> params;
 	private final MemberModifier modifier;
+	private final boolean hasVarArg;
 	private final String comment;
 
-	public JavaMethod(String name, JavaClass returnType,
-					  List<JavaParameter> params, MemberModifier modifier, String comment) {
+	public JavaMethod(String name, JavaClass returnType, List<JavaParameter> params,
+					  MemberModifier modifier, boolean hasVarArg, String comment) {
 		this.name = name;
 		this.returnType = Validate.notNull(returnType);
 		this.params = Collections.unmodifiableList(params);
 		this.modifier = modifier;
+		if (hasVarArg && params.isEmpty())
+		{
+			hasVarArg = false;
+			Logger.error("Method %s marked with hasVarArg with no parameters", toString());
+		}
+		this.hasVarArg = hasVarArg;
 		this.comment = comment;
+	}
+
+	public JavaMethod(String name, JavaClass returnType, List<JavaParameter> params,
+					  MemberModifier modifier, boolean hasVarArg) {
+		this(name, returnType, params, modifier, hasVarArg, "");
+	}
+
+	private JavaMethod(String name, JavaClass returnType,
+					  List<JavaParameter> params, MemberModifier modifier, String comment) {
+		this(name, returnType, params, modifier,false, comment);
 	}
 
 	public JavaMethod(String name, JavaClass returnType,
@@ -82,6 +100,7 @@ public class JavaMethod implements IMethod {
 		}
 		this.params = Collections.unmodifiableList(params);
 		this.modifier = new MemberModifier(method.getModifiers());
+		this.hasVarArg = false;
 		this.comment = "";
 	}
 
@@ -92,8 +111,19 @@ public class JavaMethod implements IMethod {
 		if (this.params.size() > 0)
 		{
 			final StringBuilder sb = new StringBuilder();
-			params.forEach(p -> sb.append(p.toString()).append(", "));
-			sParams = sb.substring(0, sb.length() - 2).trim();
+			int lastElementIndex = params.size() - 1;
+			// method has 2 or more parameters
+			if (lastElementIndex > 0)
+			{
+				sb.append(params.get(0).toString());
+				for (int i = 1; i < lastElementIndex; i++) {
+					sb.append(", ").append(params.get(i).toString());
+				}
+				sb.append(", ");
+			}
+			JavaParameter lastParameter = params.get(lastElementIndex);
+			sb.append(!hasVarArg ? lastParameter.toString() : lastParameter.getAsVarArg());
+			sParams = sb.toString();
 		}
 		String modifier = this.modifier.toString();
 		modifier = modifier.isEmpty() ? "" : modifier + " ";
@@ -123,6 +153,11 @@ public class JavaMethod implements IMethod {
 	@Override
 	public @UnmodifiableView List<JavaParameter> getParams() {
 		return params;
+	}
+
+	@Override
+	public boolean hasVarArg() {
+		return hasVarArg;
 	}
 
 	public boolean equals(JavaMethod method, boolean shallow) {
@@ -171,6 +206,9 @@ public class JavaMethod implements IMethod {
 		if (name.equals(jMethod.name) && returnType.equals(jMethod.returnType)) {
 			return true;
 		}
+		if (hasVarArg != jMethod.hasVarArg) {
+			return false;
+		}
 		return params.equals(jMethod.params) && modifier.equals(jMethod.modifier);
 	}
 
@@ -179,6 +217,7 @@ public class JavaMethod implements IMethod {
 
 		int result = 31 * name.hashCode() + returnType.hashCode();
 		result = 31 * result + params.hashCode();
-		return 31 * result + modifier.hashCode();
+		result = 31 * result + modifier.hashCode();
+		return 31 * result + (hasVarArg ? 1 : 0);
 	}
 }

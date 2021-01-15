@@ -75,14 +75,7 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 			sb.append("function ").append(clazz.getName());
 			sb.append(':').append(method.getName()).append('(');
 
-			List<LuaParameter> methodParams = method.getParams();
-			if (methodParams.size() > 0)
-			{
-				sb.append(methodParams.get(0).getName());
-				for (int i = 1; i < methodParams.size(); i++) {
-					sb.append(", ").append(methodParams.get(i).getName());
-				}
-			}
+			method.appendParameterSignature(sb);
 			sb.append(") end\n\n");
 		}
 		sb.deleteCharAt(sb.length() - 1);

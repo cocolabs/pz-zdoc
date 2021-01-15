@@ -1,6 +1,6 @@
 /*
  * ZomboidDoc - Project Zomboid API parser and lua compiler.
- * Copyright (C) 2020 Matthew Cain
+ * Copyright (C) 2021 Matthew Cain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.yooksi.pz.zdoc.element;
+package io.yooksi.pz.zdoc.lang.lua;
 
-import java.util.List;
+import io.yooksi.pz.zdoc.element.lua.LuaType;
 
-import org.jetbrains.annotations.UnmodifiableView;
+/**
+ * Used to denote a variadic argument.
+ * <ul>
+ * <li>Full format:
+ * <pre>
+ * ---@vararg TYPE
+ * </pre></li>
+ * <li>Example:
+ * <pre>
+ * ---@vararg string
+ * ---@return string
+ * local function format(...)
+ *     local tbl = { ... } -- inferred as string[]
+ * end
+ * </pre>
+ * </li>
+ * </ul>
+ *
+ * @see <a href="https://git.io/JLPlm">EmmyLua Documentation</a>
+ */
+public class EmmyLuaVarArg extends EmmyLua {
 
-public interface IMethod extends IMember {
-
-	IClass getReturnType();
-
-	@UnmodifiableView List<? extends IParameter> getParams();
-
-	boolean hasVarArg();
+	public EmmyLuaVarArg(LuaType type) {
+		super("vararg", type.getName(), "");
+	}
 }

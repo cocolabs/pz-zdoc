@@ -25,6 +25,8 @@ import io.yooksi.pz.zdoc.util.Utils;
 
 public class MethodSignatureParser extends SignatureParser<JavaParameter> {
 
+	private boolean isVarArg = false;
+
 	MethodSignatureParser(String signature) {
 		super(signature);
 	}
@@ -46,7 +48,7 @@ public class MethodSignatureParser extends SignatureParser<JavaParameter> {
 					type = new JavaClass(typeClass, new TypeSignatureParser(signature, index).parse());
 				}
 				catch (ClassNotFoundException e) {
-					throw new SignatureParsingException(signature, "Unknown class: " + className);
+					throwExceptionUnknownClass(className);
 				}
 			}
 			else if (c == ',')
@@ -64,8 +66,25 @@ public class MethodSignatureParser extends SignatureParser<JavaParameter> {
 					try {
 						type = new JavaClass(Utils.getClassForName(className));
 					}
-					catch (ClassNotFoundException e) {
-						throw new SignatureParsingException(signature, "Unknown class: " + className);
+					catch (ClassNotFoundException e1)
+					{
+						// parameter is a variadic argument
+						if (className.endsWith("..."))
+						{
+							// skip if builder string was already consumed by type
+							if (className.length() != 3)
+							{
+								try {
+									className = className.substring(0, className.length() - 3);
+									type = new JavaClass(Utils.getClassForName(className));
+								}
+								catch (ClassNotFoundException e2) {
+									throwExceptionUnknownClass(className);
+								}
+							}
+							isVarArg = true;
+						}
+						else throwExceptionUnknownClass(className);
 					}
 				}
 			}
@@ -84,5 +103,13 @@ public class MethodSignatureParser extends SignatureParser<JavaParameter> {
 			result.add(new JavaParameter(type, param));
 		}
 		return result;
+	}
+
+	boolean isVarArg() {
+		return isVarArg;
+	}
+
+	private void throwExceptionUnknownClass(String className) throws SignatureParsingException {
+		throw new SignatureParsingException(signature, "Unknown class: " + className);
 	}
 }

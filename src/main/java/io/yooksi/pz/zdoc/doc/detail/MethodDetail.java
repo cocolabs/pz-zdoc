@@ -67,10 +67,13 @@ public class MethodDetail extends Detail<JavaMethod> {
 				continue;
 			}
 			List<JavaParameter> params = new ArrayList<>();
+			boolean isVarArgs = false;
 			if (!signature.params.isEmpty())
 			{
 				try {
-					params = new MethodSignatureParser(signature.params).parse();
+					MethodSignatureParser parser = new MethodSignatureParser(signature.params);
+					params = parser.parse();
+					isVarArgs = parser.isVarArg();
 				}
 				catch (SignatureParsingException e)
 				{
@@ -79,7 +82,9 @@ public class MethodDetail extends Detail<JavaMethod> {
 					continue;
 				}
 			}
-			result.add(new JavaMethod(signature.name, type, params, signature.modifier, signature.comment));
+			result.add(new JavaMethod(
+					signature.name, type, params, signature.modifier, isVarArgs, signature.comment)
+			);
 		}
 		return result;
 	}

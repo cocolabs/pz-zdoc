@@ -22,7 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLuaVarArg;
+import io.yooksi.pz.zdoc.logger.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -45,10 +46,11 @@ public class LuaMethod implements IMethod, Annotated {
 	private final LuaType returnType;
 	private final List<LuaParameter> params;
 	private final MemberModifier modifier;
+	private final boolean hasVarArg;
 	private final List<EmmyLua> annotations;
 
 	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
-					 LuaType returnType, List<LuaParameter> params) {
+					 LuaType returnType, List<LuaParameter> params, boolean hasVarArg) {
 
 		this.name = EmmyLua.getSafeLuaName(name);
 		this.owner = owner;
@@ -60,23 +62,67 @@ public class LuaMethod implements IMethod, Annotated {
 		if (!modifier.hasAccess(AccessModifierKey.DEFAULT)) {
 			annotations.add(new EmmyLuaAccess(modifier.getAccess()));
 		}
-		params.forEach(p -> annotations.addAll(p.getAnnotations()));
+		if (hasVarArg)
+		{
+			if (!params.isEmpty())
+			{
+				// annotate last parameter as variadic argument
+				for (int i = 0, size = params.size() - 1; i < size; i++) {
+					annotations.addAll(params.get(i).getAnnotations());
+				}
+				annotations.add(new EmmyLuaVarArg(params.get(params.size() - 1).getType()));
+			}
+			else {
+				hasVarArg = false;
+				Logger.error("Method %s marked with hasVarArg with no parameters", toString());
+			}
+		}
+		else params.forEach(p -> annotations.addAll(p.getAnnotations()));
+
 		annotations.add(new EmmyLuaReturn(returnType));
 		this.annotations = Collections.unmodifiableList(annotations);
+		this.hasVarArg = hasVarArg;
+	}
+
+	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
+					 LuaType returnType, List<LuaParameter> params) {
+		this(name, owner, modifier, returnType, params, false);
 	}
 
 	public LuaMethod(String name, MemberModifier modifier, LuaType returnType, List<LuaParameter> params) {
 		this(name, null, modifier, returnType, params);
 	}
 
+	public void appendParameterSignature(StringBuilder sb) {
+
+		if (params.size() > 0)
+		{
+			int lastElementIndex = params.size() - 1;
+			// method has 2 or more parameters
+			if (lastElementIndex > 0)
+			{
+				sb.append(params.get(0).getName());
+				for (int i = 1; i < lastElementIndex; i++) {
+					sb.append(", ").append(params.get(i).getName());
+				}
+				sb.append(", ");
+			}
+			if (!hasVarArg()) {
+				sb.append(params.get(lastElementIndex).getName());
+			}
+			// method has variadic argument
+			else sb.append("...");
+		}
+	}
+
 	@Override
 	public String toString() {
 
-		List<String> params = new ArrayList<>();
-		this.params.forEach(p -> params.add(p.getName()));
+		StringBuilder sb = new StringBuilder();
+		appendParameterSignature(sb);
 
-		return String.format("%s%s(%s)", owner != null ? owner.getName() + ':' : "",
-				getName(), StringUtils.join(params, ','));
+		return String.format("%s%s(%s)", owner != null ?
+				owner.getName() + ':' : "", getName(), sb.toString());
 	}
 
 	@Override
@@ -102,6 +148,11 @@ public class LuaMethod implements IMethod, Annotated {
 	@Override
 	public @UnmodifiableView List<LuaParameter> getParams() {
 		return params;
+	}
+
+	@Override
+	public boolean hasVarArg() {
+		return hasVarArg;
 	}
 
 	@Override
@@ -132,6 +183,9 @@ public class LuaMethod implements IMethod, Annotated {
 		if (!params.equals(luaMethod.params)) {
 			return false;
 		}
+		if (hasVarArg != luaMethod.hasVarArg) {
+			return false;
+		}
 		return modifier.equals(luaMethod.modifier);
 	}
 
@@ -142,6 +196,7 @@ public class LuaMethod implements IMethod, Annotated {
 		result = 31 * result + name.hashCode();
 		result = 31 * result + returnType.hashCode();
 		result = 31 * result + params.hashCode();
-		return 31 * result + modifier.hashCode();
+		result = 31 * result + modifier.hashCode();
+		return 31 * result + (hasVarArg ? 1 : 0);
 	}
 }

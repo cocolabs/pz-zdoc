@@ -22,4 +22,6 @@ public interface IParameter {
 	IClass getType();
 
 	String getName();
+
+	String getAsVarArg();
 }

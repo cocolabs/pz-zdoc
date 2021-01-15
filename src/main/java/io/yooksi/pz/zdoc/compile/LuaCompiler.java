@@ -142,8 +142,8 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 					LuaType paramClass = resolveLuaType(param.getType());
 					parameters.add(new LuaParameter(paramClass, param.getName()));
 				}
-				luaMethods.add(new LuaMethod(method.getName(),
-						luaClass, method.getModifier(), returnType, parameters));
+				luaMethods.add(new LuaMethod(method.getName(), luaClass,
+						method.getModifier(), returnType, parameters, method.hasVarArg()));
 			}
 			result.add(new ZomboidLuaDoc(luaClass, luaFields, luaMethods));
 		}
