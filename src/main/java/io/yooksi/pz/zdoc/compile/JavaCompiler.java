@@ -100,6 +100,8 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 							continue;
 						}
 					}
+					String format = "Didn't find matching field \"%s\" in document \"%s\"";
+					Logger.warn(String.format(format, field.getName(), doc.getName()));
 				}
 				/* when no matching field or API page was found, construct new JavaField
 				 * with same properties as declared field but make parameterized types null
@@ -138,6 +140,8 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 					result.add(docMethod);
 					continue;
 				}
+				String format = "Didn't find matching method \"%s\" in document \"%s\"";
+				Logger.warn(String.format(format, method.getName(), doc.getName()));
 			}
 			result.add(jMethod);
 		}
