@@ -1,6 +1,6 @@
 /*
  * ZomboidDoc - Project Zomboid API parser and lua compiler.
- * Copyright (C) 2020 Matthew Cain
+ * Copyright (C) 2021 Matthew Cain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,17 +19,14 @@ package io.yooksi.pz.zdoc.doc.detail;
 
 import org.apache.logging.log4j.Level;
 
-class SignatureParsingException extends DetailParsingException {
+class MalformedSignatureException extends SignatureParsingException {
 
-	SignatureParsingException(String signature, String message) {
-		super(String.format("Failed to parse signature \"%s\" (%s)", signature, message));
+	MalformedSignatureException(String signature, String message) {
+		super(String.format("Malformed signature \"%s\" (%s)", signature, message));
 	}
 
-	SignatureParsingException(String message) {
-		super(message);
-	}
-
+	@Override
 	Level getLogLevel() {
-		return Level.WARN;
+		return Level.ERROR;
 	}
 }

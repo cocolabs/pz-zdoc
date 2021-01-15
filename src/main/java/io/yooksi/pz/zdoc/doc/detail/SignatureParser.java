@@ -61,7 +61,5 @@ abstract class SignatureParser<T extends SignatureToken> {
 		return ParseUtils.flushStringBuilder(builder);
 	}
 
-	abstract List<T> parse();
-
-	abstract List<T> flushToResult();
+	abstract List<T> parse() throws SignatureParsingException;
 }

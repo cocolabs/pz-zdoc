@@ -29,11 +29,11 @@ class TypeSignatureParser extends SignatureParser<JavaClass> {
 		super(signature);
 	}
 
-	private TypeSignatureParser(String signature, AtomicInteger index) {
+	TypeSignatureParser(String signature, AtomicInteger index) {
 		super(signature, index);
 	}
 
-	public static @Nullable JavaClass parse(String signature) {
+	static @Nullable JavaClass parse(String signature) {
 
 		List<JavaClass> result = new TypeSignatureParser(signature).parse();
 		return !result.isEmpty() ? result.get(0) : null;
@@ -70,8 +70,7 @@ class TypeSignatureParser extends SignatureParser<JavaClass> {
 		return result;
 	}
 
-	@Override
-	List<JavaClass> flushToResult() {
+	private List<JavaClass> flushToResult() {
 
 		String name = flush();
 		if (!name.isEmpty()) {

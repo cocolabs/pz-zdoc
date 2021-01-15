@@ -69,29 +69,14 @@ public class MethodDetail extends Detail<JavaMethod> {
 			List<JavaParameter> params = new ArrayList<>();
 			if (!signature.params.isEmpty())
 			{
-				for (String param : signature.params.split("\\s*,\\s*"))
+				try {
+					params = new MethodSignatureParser(signature.params).parse();
+				}
+				catch (SignatureParsingException e)
 				{
-					String[] paramElements = param.split("\\s+");
-					String className = paramElements[0];
-
-					if (paramElements.length < 2)
-					{
-						paramElements = param.split("/././.");
-						if (paramElements.length < 2)
-						{
-							Logger.error("Unexpected parameter format: " + param);
-							continue;
-						}
-						className = paramElements[0] + "[]";
-					}
-					JavaClass paramType = TypeSignatureParser.parse(className);
-					if (paramType == null)
-					{
-						String msg = "Excluding method (%s) from detail, class %s does not exist";
-						Logger.warn(String.format(msg, signature.toString(), className));
-						continue;
-					}
-					params.add(new JavaParameter(paramType, paramElements[1]));
+					String msg = "Excluding method (%s) from detail - %s.";
+					Logger.printf(e.getLogLevel(), String.format(msg, signature.toString(), e.getMessage()));
+					continue;
 				}
 			}
 			result.add(new JavaMethod(signature.name, type, params, signature.modifier, signature.comment));
