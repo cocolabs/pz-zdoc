@@ -34,7 +34,7 @@ class TypeSignatureParserTest {
 
 	@Test
 	void shouldParseUnknownClassAsNullElement() {
-		
+
 		Set<String> unknownClassSignatures = Sets.newHashSet(
 				"io.yooksi.unknownClass",
 				"io.yooksi.unknownClass<java.lang.Object>",

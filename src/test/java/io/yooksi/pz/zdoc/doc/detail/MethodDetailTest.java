@@ -21,6 +21,7 @@ import static io.yooksi.pz.zdoc.doc.detail.MethodDetail.Signature;
 
 import java.util.*;
 
+import io.yooksi.pz.zdoc.JavaClassUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -288,6 +289,9 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				},
 				new ModifierKey[]{
 						ModifierKey.UNDECLARED           // getColor
+				},
+				new ModifierKey[]{
+						ModifierKey.UNDECLARED           // doTask
 				}
 		};
 		Assertions.assertEquals(expectedMethodModifierKeys.length, entries.size());
@@ -309,7 +313,8 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				AccessModifierKey.DEFAULT,                  // isFinished
 				AccessModifierKey.DEFAULT,                  // update
 				AccessModifierKey.DEFAULT,                  // getActivatedMods
-				AccessModifierKey.PUBLIC                    // getColor
+				AccessModifierKey.PUBLIC,                   // getColor
+				AccessModifierKey.PUBLIC                    // doTask
 		};
 		Assertions.assertEquals(expectedMethodAccessModifiers.length, entries.size());
 		for (int i = 0; i < entries.size(); i++)
@@ -331,7 +336,8 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				new JavaClass(void.class),                          // update
 				new JavaClass(ArrayList.class,                      // getActivatedMods
 						new JavaClass(String.class)),
-				new JavaClass(Color[].class),                        // getColor
+				new JavaClass(Color[].class),                       // getColor
+				new JavaClass(void.class),                        // doTask
 		};
 		Assertions.assertEquals(expectedMethodReturnTypes.length, entries.size());
 		for (int i = 0; i < entries.size(); i++)
@@ -347,7 +353,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 		List<JavaMethod> entries = detail.getEntries();
 		String[] expectedMethodNames = new String[]{
 				"begin", "DoesInstantly", "init", "IsFinished",
-				"update", "getActivatedMods", "getColor"
+				"update", "getActivatedMods", "getColor", "doTask"
 		};
 		Assertions.assertEquals(expectedMethodNames.length, entries.size());
 		for (int i = 0; i < entries.size(); i++)
@@ -381,6 +387,15 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				new JavaParameter[]{                                        // getColor
 						new JavaParameter(IsoPlayer.class, "player")
 				},
+				new JavaParameter[]{                                        // getColor
+						new JavaParameter(new JavaClass(Map.class, ImmutableList.of(
+								new JavaClass(Map.class, ImmutableList.of(
+										new JavaClass(Class.class, 1),
+										new JavaClass(Object.class)
+								)), new JavaClass(Object.class))), "map"
+						),
+						new JavaParameter(new JavaClass(Object.class), "obj")
+				}
 		};
 		Assertions.assertEquals(expectedMethodParams.length, entries.size());
 		for (int i = 0; i < entries.size(); i++)
@@ -424,6 +439,13 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				),
 				new JavaMethod("getColor", Color[].class, ImmutableList.of(
 						new JavaParameter(new JavaClass(IsoPlayer.class), "player")
+				), new MemberModifier(AccessModifierKey.PUBLIC)
+				),
+				new JavaMethod("doTask", void.class, ImmutableList.of(
+						new JavaParameter(JavaClassUtils.getMap(JavaClassUtils.getMap(
+								JavaClassUtils.CLASS, Object.class), Object.class), "map"
+						),
+						new JavaParameter(Object.class, "obj")
 				), new MemberModifier(AccessModifierKey.PUBLIC))
 		);
 		Assertions.assertEquals(expectedJavaMethodEntries.size(), detail.getEntries().size());
