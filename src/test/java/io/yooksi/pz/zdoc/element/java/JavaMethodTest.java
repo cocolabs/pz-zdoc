@@ -52,16 +52,8 @@ class JavaMethodTest implements UnitTest {
 			new JavaMethod(getDeclaredMethod("testMethodWithoutParametersOrReturnType"));
 
 	@TestOnly
-	private static JavaMethod copyJavaMethod(JavaMethod method) {
-		return new JavaMethod(method.getName(), method.getReturnType().getClazz(),
-				method.getParams(), method.getModifier());
-	}
-
-	@TestOnly
 	private static void assertReadableForm(String form, JavaMethod method) {
-
 		Assertions.assertEquals(form, method.toString());
-		Assertions.assertEquals(form, copyJavaMethod(method).toString());
 	}
 
 	@TestOnly
@@ -98,26 +90,19 @@ class JavaMethodTest implements UnitTest {
 	@Test
 	void shouldCreateJavaMethodWithValidParameters() {
 
-		JavaMethod[] methods = new JavaMethod[]{
-				METHOD_WITH_PARAMETERS, copyJavaMethod(METHOD_WITH_PARAMETERS),
-		};
-		for (JavaMethod method : methods)
-		{
-			List<JavaParameter> params = method.getParams();
+		List<JavaParameter> params = METHOD_WITH_PARAMETERS.getParams();
+		Assertions.assertEquals(2, params.size());
 
-			Assertions.assertEquals(2, params.size());
+		JavaParameter firstParam = params.get(0);
+		JavaParameter secondParam = params.get(1);
 
-			JavaParameter firstParam = params.get(0);
-			JavaParameter secondParam = params.get(1);
+		Assertions.assertEquals("int", firstParam.getType().toString());
+		Assertions.assertEquals("arg0", firstParam.getName());
 
-			Assertions.assertEquals("int", firstParam.getType().toString());
-			Assertions.assertEquals("arg0", firstParam.getName());
+		Assertions.assertEquals("java.lang.String", secondParam.getType().getName());
+		Assertions.assertEquals("arg1", secondParam.getName());
 
-			Assertions.assertEquals("java.lang.String", secondParam.getType().getName());
-			Assertions.assertEquals("arg1", secondParam.getName());
-		}
 		Assertions.assertEquals(0, METHOD_WITHOUT_PARAMETERS.getParams().size());
-		Assertions.assertEquals(0, copyJavaMethod(METHOD_WITHOUT_PARAMETERS).getParams().size());
 	}
 
 	@Test
@@ -125,9 +110,7 @@ class JavaMethodTest implements UnitTest {
 
 		MultiValuedMap<JavaMethod, String> map = new HashSetValuedHashMap<>();
 		map.put(METHOD_WITH_RETURN_TYPE, "java.lang.Integer");
-		map.put(copyJavaMethod(METHOD_WITH_RETURN_TYPE), "java.lang.Integer");
 		map.put(METHOD_WITHOUT_RETURN_TYPE, "void");
-		map.put(copyJavaMethod(METHOD_WITHOUT_RETURN_TYPE), "void");
 
 		for (Map.Entry<JavaMethod, String> entry : map.entries()) {
 			Assertions.assertEquals(entry.getValue(), entry.getKey().getReturnType().getName());
@@ -140,9 +123,6 @@ class JavaMethodTest implements UnitTest {
 
 		Assertions.assertThrows(UnsupportedOperationException.class,
 				() -> METHOD_WITH_PARAMETERS.getParams().addAll(DUMMY_PARAMS));
-
-		Assertions.assertThrows(UnsupportedOperationException.class,
-				() -> copyJavaMethod(METHOD_WITH_PARAMETERS).getParams().addAll(DUMMY_PARAMS));
 	}
 
 	@SuppressWarnings({ "WeakerAccess", "RedundantSuppression" })
