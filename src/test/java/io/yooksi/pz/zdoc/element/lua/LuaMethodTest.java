@@ -32,11 +32,11 @@ import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
 class LuaMethodTest implements UnitTest {
 
 	private static final LuaParameter DUMMY_PARAM =
-			new LuaParameter(new LuaType("dummy"), "param");
+			new LuaParameter(new LuaType("dummy"), "param1");
 
 	private static final LuaMethod TEST_METHOD = new LuaMethod("test",
-			new LuaClass("TestClass"), MemberModifier.UNDECLARED,
-			new LuaType("void"), ImmutableList.of(DUMMY_PARAM, DUMMY_PARAM)
+			new LuaClass("TestClass"), MemberModifier.UNDECLARED, new LuaType("void"),
+			ImmutableList.of(DUMMY_PARAM, new LuaParameter(new LuaType("dummy"), "param2"))
 	);
 
 	@Test
@@ -54,7 +54,7 @@ class LuaMethodTest implements UnitTest {
 
 	@Test
 	void shouldCorrectlyConvertLuaMethodToString() {
-		Assertions.assertEquals("TestClass:test(param,param)", TEST_METHOD.toString());
+		Assertions.assertEquals("TestClass:test(param1, param2)", TEST_METHOD.toString());
 	}
 
 	@Test
