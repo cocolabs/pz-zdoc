@@ -21,13 +21,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+
 import io.yooksi.pz.zdoc.JavaClassUtils;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
 import io.yooksi.pz.zdoc.element.java.JavaParameter;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 class MethodSignatureParserTest {
 
@@ -42,8 +44,7 @@ class MethodSignatureParserTest {
 				"java.lang.Object param0, io.yooksi.unknownClass<java.lang.Object> param",
 				"java.lang.Object param0, io.yooksi.unknownClass<java.lang.Object, java.lang.String> param"
 		);
-		for (String signature : unknownMethodSignatures)
-		{
+		for (String signature : unknownMethodSignatures) {
 			Assertions.assertThrows(SignatureParsingException.class,
 					() -> new MethodSignatureParser(signature).parse());
 		}
@@ -53,12 +54,11 @@ class MethodSignatureParserTest {
 	void shouldThrowExceptionWhenParsingMalformedSignature() {
 
 		Set<String> malformedSignatures = Sets.newHashSet(
-				"someParameterName",		// missing parameter type
-				"java.lang.Object",                	// missing parameter name
-				" ,"                                // missing parameter type and name
+				"someParameterName",        // missing parameter type
+				"java.lang.Object",                   // missing parameter name
+				" ,"                                  // missing parameter type and name
 		);
-		for (String signature : malformedSignatures)
-		{
+		for (String signature : malformedSignatures) {
 			Assertions.assertThrows(SignatureParsingException.class,
 					() -> new MethodSignatureParser(signature).parse());
 		}

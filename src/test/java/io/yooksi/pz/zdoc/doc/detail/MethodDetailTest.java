@@ -21,13 +21,13 @@ import static io.yooksi.pz.zdoc.doc.detail.MethodDetail.Signature;
 
 import java.util.*;
 
-import io.yooksi.pz.zdoc.JavaClassUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import io.yooksi.pz.zdoc.JavaClassUtils;
 import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
 import io.yooksi.pz.zdoc.element.java.JavaMethod;

@@ -20,8 +20,9 @@ package io.yooksi.pz.zdoc.doc.detail;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.yooksi.pz.zdoc.element.java.JavaClass;
 import org.jetbrains.annotations.Nullable;
+
+import io.yooksi.pz.zdoc.element.java.JavaClass;
 
 class TypeSignatureParser extends SignatureParser<JavaClass> {
 

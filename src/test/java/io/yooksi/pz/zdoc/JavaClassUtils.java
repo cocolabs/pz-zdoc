@@ -20,9 +20,11 @@ package io.yooksi.pz.zdoc;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableList;
-import io.yooksi.pz.zdoc.element.java.JavaClass;
 import org.jetbrains.annotations.TestOnly;
+
+import com.google.common.collect.ImmutableList;
+
+import io.yooksi.pz.zdoc.element.java.JavaClass;
 
 @TestOnly
 public class JavaClassUtils {

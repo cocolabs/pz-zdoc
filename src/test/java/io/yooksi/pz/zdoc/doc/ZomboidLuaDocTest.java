@@ -188,7 +188,7 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
 		luaMethods.add(new LuaMethod("getObjectList", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.PUBLIC), LUA_ARRAY_LIST_OBJECT,
-				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param0"))
+				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param"))
 		));
 		luaMethods.add(new LuaMethod("getStringObjectList", TEST_LUA_CLASS,
 				new MemberModifier(AccessModifierKey.PROTECTED), LUA_ARRAY_LIST_STRING_OBJECT,
@@ -213,9 +213,9 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 				"ZomboidLuaDocTest = {}",
 				"",
 				"---@public",
-				"---@param param0 ArrayList|String|Object",
+				"---@param param ArrayList|String|Object",
 				"---@return ArrayList|Object",
-				"function ZomboidLuaDocTest:getObjectList(param0) end",
+				"function ZomboidLuaDocTest:getObjectList(param) end",
 				"",
 				"---@protected",
 				"---@param param1 Object",

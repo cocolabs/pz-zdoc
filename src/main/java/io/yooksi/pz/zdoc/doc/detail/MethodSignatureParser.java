@@ -94,7 +94,7 @@ public class MethodSignatureParser extends SignatureParser<JavaParameter> {
 		}
 		if (builder.length() > 0)
 		{
-			String param =  flush();
+			String param = flush();
 			if (type == null)
 			{
 				String message = String.format("Parameter \"%s\" is missing type", param);

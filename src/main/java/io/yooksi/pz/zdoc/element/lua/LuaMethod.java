@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import io.yooksi.pz.zdoc.lang.lua.EmmyLuaVarArg;
-import io.yooksi.pz.zdoc.logger.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -34,6 +32,8 @@ import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaAccess;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaReturn;
+import io.yooksi.pz.zdoc.lang.lua.EmmyLuaVarArg;
+import io.yooksi.pz.zdoc.logger.Logger;
 
 /**
  * This class represents a parsed Lua method.

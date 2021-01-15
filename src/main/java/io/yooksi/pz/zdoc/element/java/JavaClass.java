@@ -43,7 +43,7 @@ public class JavaClass implements IClass, SignatureToken {
 		);
 	}
 
-	public JavaClass(Class<?> clazz, JavaClass typeParameter) {
+	public JavaClass(Class<?> clazz, @Nullable JavaClass typeParameter) {
 		this(clazz, Collections.singletonList(typeParameter));
 	}
 

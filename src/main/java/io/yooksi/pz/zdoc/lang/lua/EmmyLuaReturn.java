@@ -26,7 +26,7 @@ import io.yooksi.pz.zdoc.element.lua.LuaType;
  * <ul>
  * <li>Full format:
  * <pre>
- * 	---@return MY_TYPE[|OTHER_TYPE] [@comment]
+ * ---@return MY_TYPE[|OTHER_TYPE] [@comment]
  * </pre></li>
  * <li>Target:
  * <ul style="list-style-type:circle">
