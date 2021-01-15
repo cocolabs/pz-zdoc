@@ -18,6 +18,7 @@
 package io.yooksi.pz.zdoc.element.java;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,46 @@ class JavaMethodTest implements UnitTest {
 	}
 
 	@Test
+	void shouldCreateVarArgJavaMethodWithValidReadableForm() {
+
+		JavaClass returnType = new JavaClass(void.class);
+		MemberModifier modifier = MemberModifier.UNDECLARED;
+
+		List<JavaMethod> javaMethodsList = ImmutableList.of(
+				new JavaMethod("varArgMethod1", returnType,
+						ImmutableList.of(
+								new JavaParameter(String.class, "params")
+						),
+						modifier, true
+				),
+				new JavaMethod("varArgMethod2", returnType,
+						ImmutableList.of(
+								new JavaParameter(Integer.class, "param0"),
+								new JavaParameter(String.class, "params")
+						),
+						modifier, true
+				),
+				new JavaMethod("varArgMethod3", returnType,
+						ImmutableList.of(
+								new JavaParameter(Integer.class, "param0"),
+								new JavaParameter(Object.class, "param1"),
+								new JavaParameter(String.class, "params")
+						),
+						modifier, true
+				)
+		);
+		List<String> expectedReadableForm = ImmutableList.of(
+				"void varArgMethod1(java.lang.String... params)",
+				"void varArgMethod2(java.lang.Integer param0, java.lang.String... params)",
+				"void varArgMethod3(java.lang.Integer param0, " +
+						"java.lang.Object param1, java.lang.String... params)"
+		);
+		for (int i = 0; i < javaMethodsList.size(); i++) {
+			assertReadableForm(expectedReadableForm.get(i), javaMethodsList.get(i));
+		}
+	}
+
+	@Test
 	void shouldCreateJavaMethodWithValidParameters() {
 
 		List<JavaParameter> params = METHOD_WITH_PARAMETERS.getParams();
@@ -118,9 +159,19 @@ class JavaMethodTest implements UnitTest {
 	}
 
 	@Test
+	void shouldIgnoreJavaMethodHasVarArgWhenEmptyParamList() {
+
+		JavaClass returnType = new JavaClass(Object.class);
+		List<JavaParameter> params = new ArrayList<>();
+		MemberModifier modifier = MemberModifier.UNDECLARED;
+
+		JavaMethod method = new JavaMethod("test", returnType, params, modifier, true);
+		Assertions.assertFalse(method.hasVarArg());
+	}
+
+	@Test
 	@SuppressWarnings("ConstantConditions")
 	void shouldThrowExceptionWhenModifyingJavaMethodParameters() {
-
 		Assertions.assertThrows(UnsupportedOperationException.class,
 				() -> METHOD_WITH_PARAMETERS.getParams().addAll(DUMMY_PARAMS));
 	}

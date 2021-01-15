@@ -187,4 +187,55 @@ class MethodSignatureParserTest {
 			Assertions.assertEquals(expectedParameters.get(i), actual);
 		}
 	}
+
+	@Test
+	void shouldParseJavaParametersWithVariadicArgumentsFromSignature() throws SignatureParsingException {
+
+		List<String> parameterSignatures = ImmutableList.of(
+				"java.lang.Object param, java.lang.String... varargs0",
+				"java.lang.Object param, int... varargs1",
+				"java.lang.Object param0, java.lang.String param1, boolean... varargs2",
+				"java.util.ArrayList<java.lang.Class<?>> param0, char param1, java.lang.String... varargs3",
+				"boolean[] param0, java.lang.String[] param1, " +
+						"java.util.ArrayList<java.lang.Class<?>>... varargs4"
+		);
+		List<List<JavaParameter>> expectedParameters = ImmutableList.of(
+				// java.lang.Object param, java.lang.String... varargs
+				ImmutableList.of(
+						new JavaParameter(new JavaClass(Object.class), "param"),
+						new JavaParameter(new JavaClass(String.class), "varargs0")
+				),
+				// java.lang.Object param, int... varargs
+				ImmutableList.of(
+						new JavaParameter(new JavaClass(Object.class), "param"),
+						new JavaParameter(new JavaClass(int.class), "varargs1")
+				),
+				// java.lang.Object param0, java.lang.String param1, boolean... varargs
+				ImmutableList.of(
+						new JavaParameter(new JavaClass(Object.class), "param0"),
+						new JavaParameter(new JavaClass(String.class), "param1"),
+						new JavaParameter(new JavaClass(boolean.class), "varargs2")
+				),
+				// java.util.ArrayList<java.lang.Class<?>> param0, char param1, java.lang.String... varargs
+				ImmutableList.of(
+						new JavaParameter(JavaClassUtils.getList(JavaClassUtils.CLASS), "param0"),
+						new JavaParameter(new JavaClass(char.class), "param1"),
+						new JavaParameter(new JavaClass(String.class), "varargs3")
+				),
+				// boolean[] param0, java.lang.String[] param1, java.util.ArrayList<java.lang.Class<?>>...
+				// varargs
+				ImmutableList.of(
+						new JavaParameter(new JavaClass(boolean[].class), "param0"),
+						new JavaParameter(new JavaClass(String[].class), "param1"),
+						new JavaParameter(JavaClassUtils.getList(JavaClassUtils.CLASS), "varargs4")
+				)
+		);
+		for (int i = 0; i < parameterSignatures.size(); i++)
+		{
+			String signature = parameterSignatures.get(i);
+			MethodSignatureParser parser = new MethodSignatureParser(signature);
+			Assertions.assertEquals(expectedParameters.get(i), parser.parse());
+			Assertions.assertTrue(parser.isVarArg());
+		}
+	}
 }

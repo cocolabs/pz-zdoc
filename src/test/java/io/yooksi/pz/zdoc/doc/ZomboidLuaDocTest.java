@@ -238,6 +238,99 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 	}
 
 	@Test
+	void shouldWriteZomboidLuaDocMethodsWithVariadicArgumentsToFile() throws IOException {
+
+		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
+		luaMethods.add(new LuaMethod("getObject", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, new LuaType("Object"),
+				ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "varargs")
+				), true
+		));
+		luaMethods.add(new LuaMethod("getText", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, new LuaType("String"),
+				ImmutableList.of(
+						new LuaParameter(new LuaType("Object[]"), "param"),
+						new LuaParameter(new LuaType("String"), "varargs")
+				), true
+		));
+		luaMethods.add(new LuaMethod("getNumber", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, new LuaType("Integer"),
+				ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "param0"),
+						new LuaParameter(new LuaType("Integer"), "param1"),
+						new LuaParameter(new LuaType("String"), "varargs")
+				), true
+		));
+		luaMethods.add(new LuaMethod("getObjectList", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, LUA_ARRAY_LIST_OBJECT,
+				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "varargs")),
+				true
+		));
+		luaMethods.add(new LuaMethod("getStringObjectList", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, LUA_ARRAY_LIST_STRING_OBJECT,
+				ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "param1"),
+						new LuaParameter(LUA_ARRAY_LIST_OBJECT, "varargs")),
+				true
+		));
+		luaMethods.add(new LuaMethod("getInnerClassList", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, LUA_ARRAY_LIST_INNER_CLASS,
+				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
+						new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param2"),
+						new LuaParameter(new LuaType("Object[]"), "varargs")),
+				true
+		));
+		luaMethods.add(new LuaMethod("getUnknownList", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, LUA_ARRAY_LIST_UNKNOWN,
+				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "varargs")),
+				true
+		));
+		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
+				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
+		);
+		List<String> expectedResult = ImmutableList.of(
+				"---@class ZomboidLuaDocTest : io.yooksi.pz.zdoc.doc.ZomboidLuaDocTest",
+				"ZomboidLuaDocTest = {}",
+				"",
+				"---@vararg Object",
+				"---@return Object",
+				"function ZomboidLuaDocTest:getObject(...) end",
+				"",
+				"---@param param Object[]",
+				"---@vararg String",
+				"---@return String",
+				"function ZomboidLuaDocTest:getText(param, ...) end",
+				"",
+				"---@param param0 Object",
+				"---@param param1 Integer",
+				"---@vararg String",
+				"---@return Integer",
+				"function ZomboidLuaDocTest:getNumber(param0, param1, ...) end",
+				"",
+				"---@vararg ArrayList",
+				"---@return ArrayList|Object",
+				"function ZomboidLuaDocTest:getObjectList(...) end",
+				"",
+				"---@param param1 Object",
+				"---@vararg ArrayList",
+				"---@return ArrayList|String|Object",
+				"function ZomboidLuaDocTest:getStringObjectList(param1, ...) end",
+				"",
+				"---@param param1 Object",
+				"---@param param2 ArrayList|String|Object",
+				"---@vararg Object[]",
+				"---@return ArrayList|ZomboidLuaDocTest.InnerClass",
+				"function ZomboidLuaDocTest:getInnerClassList(param1, param2, ...) end",
+				"",
+				"---@vararg ArrayList",
+				"---@return ArrayList|Unknown",
+				"function ZomboidLuaDocTest:getUnknownList(...) end"
+		);
+		Assertions.assertEquals(expectedResult, writeToFileAndRead(zDoc));
+	}
+
+	@Test
 	@SuppressWarnings("ConstantConditions")
 	void shouldThrowExceptionWhenModifyingImmutableFields() {
 

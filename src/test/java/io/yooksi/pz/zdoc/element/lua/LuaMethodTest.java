@@ -54,7 +54,29 @@ class LuaMethodTest implements UnitTest {
 
 	@Test
 	void shouldCorrectlyConvertLuaMethodToString() {
+
 		Assertions.assertEquals("TestClass:test(param1, param2)", TEST_METHOD.toString());
+
+		MemberModifier modifier = MemberModifier.UNDECLARED;
+		LuaMethod varArgMethod = new LuaMethod("test",
+				new LuaClass("TestClass"), modifier, new LuaType("Object"),
+				ImmutableList.of(
+						new LuaParameter(new LuaType("String"), "param1"),
+						new LuaParameter(new LuaType("Integer"), "param2")
+				), true
+		);
+		Assertions.assertEquals("TestClass:test(param1, ...)", varArgMethod.toString());
+	}
+
+	@Test
+	void shouldIgnoreLuaMethodHasVarArgWhenEmptyParamList() {
+
+		LuaType type = new LuaType("Boolean");
+		List<LuaParameter> params = new ArrayList<>();
+		MemberModifier modifier = MemberModifier.UNDECLARED;
+
+		LuaMethod method = new LuaMethod("test", null, modifier, type, params, true);
+		Assertions.assertFalse(method.hasVarArg());
 	}
 
 	@Test
