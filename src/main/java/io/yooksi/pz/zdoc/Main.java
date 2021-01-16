@@ -192,8 +192,6 @@ public class Main {
 				userOutput = Paths.get(".");
 				Logger.debug("Output directory not specified, using root directory instead");
 			}
-			else Logger.debug("Output directory set to " + userOutput.toString());
-
 			File outputDir = userOutput.toFile();
 			if (!outputDir.exists())
 			{
