@@ -20,6 +20,8 @@ package io.yooksi.pz.zdoc.doc.detail;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.jsoup.nodes.Element;
@@ -87,6 +89,11 @@ public class MethodDetail extends Detail<JavaMethod> {
 			);
 		}
 		return result;
+	}
+
+	@Override
+	public Set<JavaMethod> getEntries(String name) {
+		return getEntries().stream().filter(e -> e.getName().equals(name)).collect(Collectors.toSet());
 	}
 
 	static class Signature extends DetailSignature {

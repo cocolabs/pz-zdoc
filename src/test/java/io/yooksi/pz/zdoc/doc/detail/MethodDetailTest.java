@@ -450,7 +450,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 		);
 		Assertions.assertEquals(expectedJavaMethodEntries.size(), detail.getEntries().size());
 		for (JavaMethod field : expectedJavaMethodEntries) {
-			Assertions.assertEquals(field, detail.getEntry(field.getName()));
+			Assertions.assertTrue(detail.getEntries(field.getName()).contains(field));
 		}
 	}
 }

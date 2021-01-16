@@ -20,10 +20,10 @@ package io.yooksi.pz.zdoc.doc.detail;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
@@ -90,13 +90,11 @@ public abstract class Detail<T extends IMember> {
 		return element;
 	}
 
-	public @Nullable T getEntry(String name) {
-		return entries.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
-	}
-
 	public @UnmodifiableView List<T> getEntries() {
 		return entries;
 	}
+
+	public abstract Set<T> getEntries(String name);
 
 	protected abstract List<T> parse() throws DetailParsingException;
 }

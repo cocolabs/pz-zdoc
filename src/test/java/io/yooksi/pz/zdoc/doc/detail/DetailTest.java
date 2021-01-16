@@ -17,9 +17,7 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -111,6 +109,11 @@ class DetailTest extends DetailTestFixture<DetailTest.TestDetail> implements Uni
 
 		private TestDetail() throws DetailParsingException {
 			super("test.detail", DocTest.DOCUMENT);
+		}
+
+		@Override
+		public Set<TestMember> getEntries(String name) {
+			return new HashSet<>();
 		}
 
 		@Override

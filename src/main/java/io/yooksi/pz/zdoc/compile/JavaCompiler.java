@@ -134,10 +134,19 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 			JavaMethod jMethod = new JavaMethod(method);
 			if (doc != null)
 			{
-				JavaMethod docMethod = methodDetail.getEntry(method.getName());
-				if (docMethod != null && docMethod.equals(jMethod, true))
+				JavaMethod matchedMethod = null;
+				Set<JavaMethod> methodEntries = methodDetail.getEntries(method.getName());
+				Iterator<JavaMethod> iterator = methodEntries.iterator();
+				while (matchedMethod == null && iterator.hasNext())
 				{
-					result.add(docMethod);
+					JavaMethod entry = iterator.next();
+					if (entry.equals(jMethod, true)) {
+						matchedMethod = entry;
+					}
+				}
+				if (matchedMethod != null)
+				{
+					result.add(matchedMethod);
 					continue;
 				}
 				String format = "Didn't find matching method \"%s\" in document \"%s\"";

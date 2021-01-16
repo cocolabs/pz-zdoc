@@ -20,10 +20,14 @@ package io.yooksi.pz.zdoc.doc.detail;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import com.google.common.collect.Sets;
 
 import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
@@ -71,6 +75,15 @@ public class FieldDetail extends Detail<JavaField> {
 					"class %s does not exist", signature.toString(), signature.type));
 		}
 		return result;
+	}
+
+	public @Nullable JavaField getEntry(String name) {
+		return getEntries().stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
+	}
+
+	@Override
+	public Set<JavaField> getEntries(String name) {
+		return Sets.newHashSet(getEntry(name));
 	}
 
 	static class Signature extends DetailSignature {
