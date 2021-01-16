@@ -91,13 +91,13 @@ public class FieldDetail extends Detail<JavaField> {
 		final MemberModifier modifier;
 		final String type, name, comment;
 
-		Signature(String signature) throws SignatureParsingException {
-			super(signature);
-			Logger.debug("Parsing field signature: " + this.signature);
+		Signature(String signatureText) throws SignatureParsingException {
+			super(signatureText);
+			Logger.debug("Parsing field signature: " + signature);
 
-			String[] elements = this.signature.split("\\s+");
+			String[] elements = signature.split("\\s+");
 			if (elements.length < 2) {
-				throw new SignatureParsingException(this.signature, "Missing one or more elements.");
+				throw new SignatureParsingException(signature, "Missing one or more elements.");
 			}
 			int index = 0;
 			/*

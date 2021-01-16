@@ -101,12 +101,11 @@ public class MethodDetail extends Detail<JavaMethod> {
 		final MemberModifier modifier;
 		final String returnType, name, params, comment;
 
-		Signature(String signature) throws SignatureParsingException {
-			super(signature);
-			Logger.debug("Parsing method signature: " +
-					this.signature.replaceAll("[\r\n]", ""));
+		Signature(String signatureText) throws SignatureParsingException {
+			super(signatureText);
+			Logger.debug("Parsing method signature: " + signature);
 
-			String[] elements = this.signature.split("\\s+");
+			String[] elements = signature.split("\\s+");
 			if (elements.length < 2) {
 				throw new SignatureParsingException(signature, "Missing one or more elements.");
 			}
