@@ -31,7 +31,7 @@ abstract class DetailSignature {
 	 * Normalize given signature text:
 	 * <ul>
 	 * <li>Convert non-breaking space ({@code &nbsp}) to whitespace.</li>
-	 * <li>Remove newlines.</li>
+	 * <li>Convert newlines to whitespace.</li>
 	 * <li>Remove consecutive whitespaces.</li>
 	 * </ul>
 	 *
@@ -44,16 +44,12 @@ abstract class DetailSignature {
 		char lastChar = 0;
 		for (char c : text.toCharArray())
 		{
-			// convert &nbsp to whitespace
-			if (c == 160) {
+			// convert &nbsp and newlines to whitespace
+			if (c == 160 || c == '\r' || c == '\n') {
 				c = ' ';
 			}
-			// remove newlines
-			else if (c == '\r' || c == '\n') {
-				continue;
-			}
 			// remove consecutive whitespaces
-			else if (lastChar == ' ' && c == ' ') {
+			if (lastChar == ' ' && c == ' ') {
 				continue;
 			}
 			sb.append(c);
@@ -65,7 +61,7 @@ abstract class DetailSignature {
 	/**
 	 * Gets the combined text of the given element and all its children.
 	 * Whitespace is normalized and trimmed. The normalization process also
-	 * includes converting non-breaking space ({@code &nbsp}) to whitespace.
+	 * includes converting non-breaking space ({@code &nbsp}) and newlines to whitespace.
 	 *
 	 * @param element {@code Element} text to normalize.
 	 * @return normalized and trimmed text or empty text if none.
