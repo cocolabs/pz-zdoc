@@ -47,7 +47,12 @@ public class JavaParameter implements IParameter, SignatureToken {
 
 	@Override
 	public String getAsVarArg() {
-		return (type.toString() + "... " + getName()).trim();
+
+		String sType = type.toString();
+		if (sType.endsWith("[]")) {
+			sType = sType.substring(0, sType.length() - 2);
+		}
+		return (sType + "... " + getName()).trim();
 	}
 
 	@Override

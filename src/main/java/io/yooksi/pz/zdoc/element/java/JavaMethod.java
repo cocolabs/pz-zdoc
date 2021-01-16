@@ -17,6 +17,7 @@
  */
 package io.yooksi.pz.zdoc.element.java;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -46,13 +47,40 @@ public class JavaMethod implements IMethod {
 					  MemberModifier modifier, boolean hasVarArg, String comment) {
 		this.name = name;
 		this.returnType = Validate.notNull(returnType);
-		this.params = Collections.unmodifiableList(params);
 		this.modifier = modifier;
-		if (hasVarArg && params.isEmpty())
+		if (hasVarArg)
 		{
-			hasVarArg = false;
-			Logger.error("Method %s marked with hasVarArg with no parameters", toString());
+			if (!params.isEmpty())
+			{
+				List<JavaParameter> tParams = new ArrayList<>();
+				/*
+				 * copy every element in params list except last one,
+				 * which has to be copied separately below
+				 */
+				int lastIndex = params.size() - 1;
+				for (int i = 0; i < lastIndex; i++) {
+					tParams.add(params.get(i));
+				}
+				JavaParameter lastParam = params.get(lastIndex);
+				JavaClass paramType = lastParam.getType();
+				/*
+				 * copy last parameter with an array of the original
+				 * class to match variadic argument in bytecode
+				 */
+				Class<?> arrayClass = Array.newInstance(paramType.getClazz(), 0).getClass();
+				JavaClass newJClass = new JavaClass(arrayClass, paramType.getTypeParameters());
+
+				tParams.add(new JavaParameter(newJClass, lastParam.getName()));
+				this.params = Collections.unmodifiableList(tParams);
+			}
+			else {
+				hasVarArg = false;
+				// initialize params before logging error with toString() to avoid NPE
+				this.params = Collections.unmodifiableList(params);
+				Logger.error("Method %s marked with hasVarArg with no parameters", toString());
+			}
 		}
+		else this.params = Collections.unmodifiableList(params);
 		this.hasVarArg = hasVarArg;
 		this.comment = comment;
 	}

@@ -159,6 +159,25 @@ class JavaMethodTest implements UnitTest {
 	}
 
 	@Test
+	void shouldMatchMethodsWithVarArgAndArrayParameter() {
+
+		MemberModifier modifier = MemberModifier.UNDECLARED;
+		JavaMethod method1 = new JavaMethod("method1", new JavaClass(Object.class),
+				ImmutableList.of(
+						new JavaParameter(new JavaClass(String.class), "param"),
+						new JavaParameter(new JavaClass(Integer.class), "params")
+				), modifier, true
+		);
+		JavaMethod method2 = new JavaMethod("method1", new JavaClass(Object.class),
+				ImmutableList.of(
+						new JavaParameter(new JavaClass(String.class), "param"),
+						new JavaParameter(new JavaClass(Integer[].class), "params")
+				), modifier, false
+		);
+		Assertions.assertEquals(method1, method2);
+	}
+
+	@Test
 	void shouldIgnoreJavaMethodHasVarArgWhenEmptyParamList() {
 
 		JavaClass returnType = new JavaClass(Object.class);
