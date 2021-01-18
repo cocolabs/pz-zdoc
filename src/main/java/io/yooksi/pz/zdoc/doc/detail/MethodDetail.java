@@ -107,23 +107,23 @@ public class MethodDetail extends Detail<JavaMethod> {
 
 			String[] elements = signature.split("\\s+");
 			if (elements.length < 2) {
-				throw new SignatureParsingException(signature, "Missing one or more elements.");
+				throw new SignatureParsingException(signature, "missing one or more elements");
 			}
 			int index = 0;
 			/*
-			 * parse signature annotation
+			 * parse signature annotation (optional)
 			 */
 			String element = elements[index];
 			String annotation = element.charAt(0) == '@' ? element.substring(index++) : "";
 			/*
-			 * parse signature access modifier
+			 * parse signature access modifier (optional)
 			 */
 			AccessModifierKey access = AccessModifierKey.get(elements[index]);
 			if (access != AccessModifierKey.DEFAULT) {
 				index += 1;
 			}
 			/*
-			 * parse signature non-access modifier
+			 * parse signature non-access modifier (optional)
 			 */
 			SetUniqueList<ModifierKey> modifierKeys = SetUniqueList.setUniqueList(new ArrayList<>());
 			for (; index < elements.length; index++)
@@ -145,7 +145,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 			if (index < elements.length) {
 				type = elements[index];
 			}
-			else throw new SignatureParsingException(signature, "Missing element type.");
+			else throw new SignatureParsingException(signature, "missing element type");
 			this.returnType = type;
 
 			String name = null;
@@ -158,7 +158,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 				else sb.append(c);
 			}
 			if (name == null) {
-				throw new SignatureParsingException(signature, "Missing element name.");
+				throw new SignatureParsingException(signature, "missing element name");
 			}
 			this.name = name;
 			/*
@@ -185,7 +185,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 					if (paramsSegment.endsWith(")")) {
 						params = ParseUtils.flushStringBuilder(sb.deleteCharAt(sb.length() - 1));
 					}
-					else throw new SignatureParsingException(signature, "Malformed element params.");
+					else throw new SignatureParsingException(signature, "malformed element params");
 				}
 				this.params = params;
 			}
@@ -195,7 +195,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 				this.params = "";
 			}
 			/*
-			 * parse signature comment
+			 * parse signature comment (optional)
 			 */
 			for (; index < elements.length; index++) {
 				sb.append(" ").append(elements[index]);

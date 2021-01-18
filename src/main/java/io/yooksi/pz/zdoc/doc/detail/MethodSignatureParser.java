@@ -54,7 +54,7 @@ public class MethodSignatureParser extends SignatureParser<JavaParameter> {
 			else if (c == ',')
 			{
 				if (type == null) {
-					throw new MalformedSignatureException(signature, "Expected type to not be null");
+					throw new MalformedSignatureException(signature, "expected type to not be null");
 				}
 				result.add(new JavaParameter(type, flush()));
 			}
@@ -110,6 +110,6 @@ public class MethodSignatureParser extends SignatureParser<JavaParameter> {
 	}
 
 	private void throwExceptionUnknownClass(String className) throws SignatureParsingException {
-		throw new SignatureParsingException(signature, "Unknown class: " + className);
+		throw new SignatureParsingException(signature, "unknown class: " + className);
 	}
 }

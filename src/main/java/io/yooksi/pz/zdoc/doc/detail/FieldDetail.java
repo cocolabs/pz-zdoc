@@ -97,18 +97,18 @@ public class FieldDetail extends Detail<JavaField> {
 
 			String[] elements = signature.split("\\s+");
 			if (elements.length < 2) {
-				throw new SignatureParsingException(signature, "Missing one or more elements.");
+				throw new SignatureParsingException(signature, "missing one or more elements");
 			}
 			int index = 0;
 			/*
-			 * parse signature access modifier
+			 * parse signature access modifier (optional)
 			 */
 			AccessModifierKey access = AccessModifierKey.get(elements[0]);
 			if (access != AccessModifierKey.DEFAULT) {
 				index = 1;
 			}
 			/*
-			 * parse signature non-access modifier
+			 * parse signature non-access modifier (optional)
 			 */
 			SetUniqueList<ModifierKey> modifierKeys = SetUniqueList.setUniqueList(new ArrayList<>());
 			for (; index < elements.length; index++)
@@ -132,12 +132,12 @@ public class FieldDetail extends Detail<JavaField> {
 				if (index < elements.length) {
 					data[i] = elements[index];
 				}
-				else throw new SignatureParsingException(signature, "Missing element " + data[0] + ".");
+				else throw new SignatureParsingException(signature, "missing element " + data[0]);
 			}
 			this.type = data[0];
 			this.name = data[1];
 			/*
-			 * parse signature comment
+			 * parse signature comment (optional)
 			 */
 			if (index < elements.length)
 			{
