@@ -353,6 +353,32 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedMethods, zLuaDoc.getMethods());
 	}
 
+	@Test
+	void shouldIncludeCommentsWhenCompilingLua() throws CompilerException {
+
+		List<JavaField> fieldsWithComment = ImmutableList.of(
+				new JavaField(new JavaClass(java.lang.Object.class), "object",
+						MODIFIER, "this field has a comment")
+		);
+		Set<JavaMethod> methodsWithComment = ImmutableSet.of(
+				new JavaMethod("getText", new JavaClass(java.lang.String.class), ImmutableList.of(),
+						MODIFIER, false, "this method has a comment"
+				)
+		);
+		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(
+				new JavaClass(LuaCompilerTest.class), fieldsWithComment, methodsWithComment
+		);
+		Set<ZomboidLuaDoc> zLuaDocs = compileLua(zJavaDoc);
+		Assertions.assertEquals(1, zLuaDocs.size());
+		ZomboidLuaDoc zLuaDoc = zLuaDocs.iterator().next();
+
+		java.lang.String actual = zLuaDoc.getFields().iterator().next().getComment();
+		Assertions.assertEquals("this field has a comment", actual);
+
+		actual = zLuaDoc.getMethods().iterator().next().getComment();
+		Assertions.assertEquals("this method has a comment", actual);
+	}
+
 	@TestOnly
 	private static class Object {
 	}

@@ -48,9 +48,10 @@ public class LuaMethod implements IMethod, Annotated {
 	private final MemberModifier modifier;
 	private final boolean hasVarArg;
 	private final List<EmmyLua> annotations;
+	private final String comment;
 
 	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
-					 LuaType returnType, List<LuaParameter> params, boolean hasVarArg) {
+					 LuaType returnType, List<LuaParameter> params, boolean hasVarArg, String comment) {
 
 		this.name = EmmyLua.getSafeLuaName(name);
 		this.owner = owner;
@@ -82,11 +83,18 @@ public class LuaMethod implements IMethod, Annotated {
 		annotations.add(new EmmyLuaReturn(returnType));
 		this.annotations = Collections.unmodifiableList(annotations);
 		this.hasVarArg = hasVarArg;
+		this.comment = comment;
 	}
 
 	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
+					 LuaType returnType, List<LuaParameter> params, boolean hasVarArg) {
+		this(name, owner, modifier, returnType, params, hasVarArg, "");
+	}
+
+
+	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
 					 LuaType returnType, List<LuaParameter> params) {
-		this(name, owner, modifier, returnType, params, false);
+		this(name, owner, modifier, returnType, params, false, "");
 	}
 
 	public LuaMethod(String name, MemberModifier modifier, LuaType returnType, List<LuaParameter> params) {
@@ -137,7 +145,7 @@ public class LuaMethod implements IMethod, Annotated {
 
 	@Override
 	public String getComment() {
-		return "";
+		return comment;
 	}
 
 	@Override

@@ -129,7 +129,9 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 			for (IField field : javaDoc.getFields())
 			{
 				LuaType fieldType = resolveLuaType(field.getType());
-				luaFields.add(new LuaField(fieldType, field.getName(), field.getModifier()));
+				luaFields.add(new LuaField(fieldType,
+						field.getName(), field.getModifier(), field.getComment())
+				);
 			}
 			Set<LuaMethod> luaMethods = new HashSet<>();
 			for (IMethod method : javaDoc.getMethods())
@@ -143,7 +145,7 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 					parameters.add(new LuaParameter(paramClass, param.getName()));
 				}
 				luaMethods.add(new LuaMethod(method.getName(), luaClass,
-						method.getModifier(), returnType, parameters, method.hasVarArg()));
+						method.getModifier(), returnType, parameters, method.hasVarArg(), method.getComment()));
 			}
 			result.add(new ZomboidLuaDoc(luaClass, luaFields, luaMethods));
 		}

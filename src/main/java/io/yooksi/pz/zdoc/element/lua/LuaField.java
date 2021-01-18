@@ -33,19 +33,25 @@ public class LuaField implements IField, Annotated {
 	private final String name;
 	private final LuaType type;
 	private final MemberModifier modifier;
+	private final String comment;
 
 	private final List<EmmyLua> annotations;
 
-	public LuaField(LuaType type, String name, MemberModifier modifier) {
+	public LuaField(LuaType type, String name, MemberModifier modifier, String comment) {
 		this.type = type;
 		this.name = EmmyLua.getSafeLuaName(name);
 		this.modifier = modifier;
 		if (!modifier.hasAccess(AccessModifierKey.DEFAULT))
 		{
 			this.annotations = Collections.singletonList(
-					new EmmyLuaField(name, modifier.getAccess().name, type));
+					new EmmyLuaField(name, modifier.getAccess().name, type, comment));
 		}
-		else this.annotations = Collections.singletonList(new EmmyLuaField(name, type));
+		else this.annotations = Collections.singletonList(new EmmyLuaField(name, type, comment));
+		this.comment = comment;
+	}
+
+	public LuaField(LuaType type, String name, MemberModifier modifier) {
+		this(type, name, modifier, "");
 	}
 
 	@Override
@@ -70,7 +76,7 @@ public class LuaField implements IField, Annotated {
 
 	@Override
 	public String getComment() {
-		return "";
+		return comment;
 	}
 
 	@Override
