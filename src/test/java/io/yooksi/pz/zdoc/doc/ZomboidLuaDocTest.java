@@ -183,6 +183,71 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 	}
 
 	@Test
+	void shouldWriteZomboidLuaDocMethodsWithCommentsToFile() throws IOException {
+
+		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
+		luaMethods.add(new LuaMethod("getText", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, new LuaType("String"),
+				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param0")),
+				false, "this method has a single-line comment"
+		));
+		luaMethods.add(new LuaMethod("getNumber", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, new LuaType("Integer"),
+				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
+						new LuaParameter(new LuaType("int"), "param2")),
+				false, "this method has a\nmulti-line comment"
+		));
+		luaMethods.add(new LuaMethod("getInnerClass", TEST_LUA_CLASS,
+				MemberModifier.UNDECLARED, new LuaType("ZomboidLuaDocTest.InnerClass"),
+				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
+						new LuaParameter(new LuaType("boolean"), "param2"),
+						new LuaParameter(new LuaType("Object[]"), "param3")),
+				false, "this method has a\rmulti-line comment"
+		));
+		luaMethods.add(new LuaMethod("getArray", TEST_LUA_CLASS,
+				new MemberModifier(AccessModifierKey.DEFAULT),
+				new LuaType("Object[]"), ImmutableList.of(),
+				false, "this method has a\r\nmulti-line comment"
+		));
+		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
+				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
+		);
+		List<String> expectedResult = ImmutableList.of(
+				"---@class ZomboidLuaDocTest : io.yooksi.pz.zdoc.doc.ZomboidLuaDocTest",
+				"ZomboidLuaDocTest = {}",
+				"",
+				"---this method has a single-line comment",
+				"---@param param0 Object",
+				"---@return String",
+				"function ZomboidLuaDocTest:getText(param0) end",
+				"",
+				"---this method has a",
+				"---",
+				"---multi-line comment",
+				"---@param param1 Object",
+				"---@param param2 int",
+				"---@return Integer",
+				"function ZomboidLuaDocTest:getNumber(param1, param2) end",
+				"",
+				"---this method has a",
+				"---",
+				"---multi-line comment",
+				"---@param param1 Object",
+				"---@param param2 boolean",
+				"---@param param3 Object[]",
+				"---@return ZomboidLuaDocTest.InnerClass",
+				"function ZomboidLuaDocTest:getInnerClass(param1, param2, param3) end",
+				"",
+				"---this method has a",
+				"---",
+				"---multi-line comment",
+				"---@return Object[]",
+				"function ZomboidLuaDocTest:getArray() end"
+		);
+		Assertions.assertEquals(expectedResult, writeToFileAndRead(zDoc));
+	}
+
+	@Test
 	void shouldWriteZomboidLuaDocMethodsWithParameterizedTypesToFile() throws IOException {
 
 		Set<LuaMethod> luaMethods = new LinkedHashSet<>();

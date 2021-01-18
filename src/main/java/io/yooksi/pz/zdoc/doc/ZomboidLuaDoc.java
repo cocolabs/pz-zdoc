@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import io.yooksi.pz.zdoc.element.IMember;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -59,17 +61,41 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 		}
 	}
 
+	private static void appendComments(StringBuilder sb, IMember member) {
+
+		String comment = member.getComment();
+		if (!StringUtils.isBlank(comment))
+		{
+			String[] comments = comment.split("(\\r\\n|\\r|\\n)");
+			int commentCount = comments.length;
+			if (commentCount > 0)
+			{
+				sb.append("---").append(comments[0]);
+				for (int i = 1; i < commentCount; i++) {
+					sb.append("\n---\n---").append(comments[i]);
+				}
+				sb.append('\n');
+			}
+		}
+	}
+
 	public void writeToFile(File file) throws IOException {
 
 		StringBuilder sb = new StringBuilder();
 
 		ZomboidLuaDoc.appendAnnotations(sb, clazz);
-		fields.forEach(f -> ZomboidLuaDoc.appendAnnotations(sb, f));
-
+		// TODO: static fields should be written as actual fields (not just annotations)
+		for (LuaField field : fields)
+		{
+//			ZomboidLuaDoc.appendComments(sb, field);
+			ZomboidLuaDoc.appendAnnotations(sb, field);
+		}
+		// TODO: newlines should be platform independent
 		sb.append(clazz.getName()).append(" = {}\n\n");
 
 		for (LuaMethod method : methods)
 		{
+			ZomboidLuaDoc.appendComments(sb, method);
 			ZomboidLuaDoc.appendAnnotations(sb, method);
 
 			sb.append("function ").append(clazz.getName());
