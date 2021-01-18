@@ -51,7 +51,7 @@ abstract class DetailTestFixture<T extends Detail<?>> extends DocTest {
 
 	@TestOnly
 	static <T extends SignatureSupplier<?>>
-	void assertMatchInFieldSignature(String text, String expected, Class<T> supplier) {
+	void assertMatchInSignature(String text, String expected, Class<T> supplier) {
 
 		for (AccessModifierKey access : AccessModifierKey.values())
 		{

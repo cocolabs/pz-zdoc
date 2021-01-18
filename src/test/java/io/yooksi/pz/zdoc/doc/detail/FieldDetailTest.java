@@ -102,7 +102,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 				"java.lang.Object[]", "final java.lang.Object[] myField"
 		);
 		for (Map.Entry<String, String> entry : fieldsWithObjectType.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), TypeSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), TypeSupplier.class);
 		}
 	}
 
@@ -123,7 +123,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 				"java.util.ArrayList<T> myField"
 		);
 		for (Map.Entry<String, String> entry : fieldsWithParameterizedObjectType.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), TypeSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), TypeSupplier.class);
 		}
 	}
 
@@ -131,7 +131,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	void shouldMatchPrimitiveReturnTypeInFieldSignature() {
 
 		for (String type : PRIMITIVE_TYPES) {
-			assertMatchInFieldSignature(type + " myField", type, TypeSupplier.class);
+			assertMatchInSignature(type + " myField", type, TypeSupplier.class);
 		}
 	}
 
@@ -146,7 +146,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 				"field", "my.Test<my_Class<?>> field"
 		);
 		for (Map.Entry<String, String> entry : fieldsWithNames.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), NameSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), NameSupplier.class);
 		}
 	}
 
@@ -160,7 +160,7 @@ class FieldDetailTest extends FieldDetailTestFixture {
 				"!@# $%^&*_ {()comment", "char[] myField !@# $%^&*_ {()comment"
 		);
 		for (Map.Entry<String, String> entry : methodsWithComment.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), CommentSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), CommentSupplier.class);
 		}
 	}
 

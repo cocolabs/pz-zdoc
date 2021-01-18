@@ -105,7 +105,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				"java.lang.Object[]", "java.lang.Object[] myMethod()"
 		);
 		for (Map.Entry<String, String> entry : methodsWithReturnType.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), ReturnTypeSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), ReturnTypeSupplier.class);
 		}
 	}
 
@@ -123,7 +123,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				"java.util.ArrayList<T> myMethod()"
 		);
 		for (Map.Entry<String, String> entry : methodsWithParameterizedReturnType.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), ReturnTypeSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), ReturnTypeSupplier.class);
 		}
 	}
 
@@ -131,7 +131,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	void shouldMatchPrimitiveReturnTypeInMethodSignature() {
 
 		for (String type : PRIMITIVE_TYPES) {
-			assertMatchInFieldSignature(type + " myMethod()", type, ReturnTypeSupplier.class);
+			assertMatchInSignature(type + " myMethod()", type, ReturnTypeSupplier.class);
 		}
 	}
 
@@ -146,7 +146,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				"method", "my.Test<my.Class<?>> method(java.lang.Object param)"
 		);
 		for (Map.Entry<String, String> entry : methodsWithNames.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), NameSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), NameSupplier.class);
 		}
 	}
 
@@ -178,7 +178,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 						"java.util.ArrayList<java.lang.Class<?>> myMethod(java.lang.Object param0)").build();
 
 		for (Map.Entry<String, String> entry : methodsWithParameters.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), ParamsSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), ParamsSupplier.class);
 		}
 	}
 
@@ -210,7 +210,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 					param1, String.format("void myMethod(%s)", param1)
 			);
 			for (Map.Entry<String, String> entry : methodsWithPrimitiveTypeParameters.entrySet()) {
-				assertMatchInFieldSignature(entry.getValue(), entry.getKey(), ParamsSupplier.class);
+				assertMatchInSignature(entry.getValue(), entry.getKey(), ParamsSupplier.class);
 			}
 		}
 	}
@@ -243,7 +243,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 						"java.util.ArrayList<java.lang.Class<?>> myMethod(java.lang.Object...params2)").build();
 
 		for (Map.Entry<String, String> entry : methodsWithVarArgParameters.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), ParamsSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), ParamsSupplier.class);
 		}
 	}
 
@@ -259,7 +259,7 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 				.put("!@# $%^&*_ {()comment", "void myMethod()!@# $%^&*_ {()comment").build();
 
 		for (Map.Entry<String, String> entry : methodsWithComment.entrySet()) {
-			assertMatchInFieldSignature(entry.getValue(), entry.getKey(), CommentSupplier.class);
+			assertMatchInSignature(entry.getValue(), entry.getKey(), CommentSupplier.class);
 		}
 	}
 
