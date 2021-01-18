@@ -17,18 +17,17 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
+import io.yooksi.pz.zdoc.JavaClassUtils;
 import io.yooksi.pz.zdoc.doc.DocTest;
 import io.yooksi.pz.zdoc.doc.detail.DetailParsingException;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
@@ -121,7 +120,11 @@ class JavaCompilerTest extends DocTest {
 				new JavaMethod("getColor", Color[].class,
 						new JavaParameter(IsoPlayer.class, "arg0"),
 						new MemberModifier(AccessModifierKey.PUBLIC)
-				)
+				),
+				new JavaMethod("doTask", void.class, ImmutableList.of(
+						new JavaParameter(new JavaClass(Map.class, 2), "arg0"),
+						new JavaParameter(Object.class, "arg1")
+				), new MemberModifier(AccessModifierKey.PUBLIC))
 		);
 		Set<JavaMethod> compiledMethods = JavaCompiler.compileJavaMethods(CompileTest.class, null);
 		Assertions.assertEquals(expectedJavaMethods, compiledMethods);
@@ -160,7 +163,13 @@ class JavaCompilerTest extends DocTest {
 				new JavaMethod("getColor", Color[].class,
 						new JavaParameter(IsoPlayer.class, "player"),
 						new MemberModifier(AccessModifierKey.PUBLIC)
-				)
+				),
+				new JavaMethod("doTask", void.class, ImmutableList.of(
+						new JavaParameter(JavaClassUtils.getMap(
+							JavaClassUtils.getMap(JavaClassUtils.CLASS, Object.class), Object.class
+						), "map"),
+						new JavaParameter(Object.class, "obj")
+				), new MemberModifier(AccessModifierKey.PUBLIC))
 		);
 		Set<JavaMethod> compiledMethods = JavaCompiler.compileJavaMethods(CompileTest.class, DOCUMENT);
 		Assertions.assertEquals(expectedJavaMethods, compiledMethods);
@@ -204,6 +213,9 @@ class JavaCompilerTest extends DocTest {
 
 		public Color[] getColor(IsoPlayer player) {
 			return new Color[0];
+		}
+
+		public void doTask(Map<Map<Class<?>, Object>, Object> map, Object obj) {
 		}
 	}
 }
