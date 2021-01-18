@@ -264,6 +264,24 @@ class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
 	}
 
 	@Test
+	void shouldIncludeAnnotationInMethodSignatureComment() throws SignatureParsingException {
+
+		Map<String, String> annotatedMethods = ImmutableMap.<String, String>builder()
+				.put("%s @Deprecated", "@Deprecated\nvoid myMethod()")
+				.put("comment\n%s @Deprecated", "@Deprecated\rvoid myMethod() comment")
+				.put("%s @Immutable", "@Immutable\r\njava.lang.Object myMethod()")
+				.put("\\\\ comment\n%s @Immutable", "@Immutable int myMethod()\\\\ comment")
+				.put("\\\\ some comment\n%s @TestOnly", "@TestOnly void myMethod() \\\\ some comment").build();
+
+		for (Map.Entry<String, String> entry : annotatedMethods.entrySet())
+		{
+			String expected = String.format(entry.getKey(), "This method is annotated as");
+			String actual = new Signature(entry.getValue()).comment;
+			Assertions.assertEquals(actual, expected);
+		}
+	}
+
+	@Test
 	void shouldParseValidModifierKeyFromMethodDetail() {
 
 		List<JavaMethod> entries = detail.getEntries();

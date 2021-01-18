@@ -111,11 +111,16 @@ public class MethodDetail extends Detail<JavaMethod> {
 			}
 			int index = 0;
 			/*
+			 * parse signature annotation
+			 */
+			String element = elements[index];
+			String annotation = element.charAt(0) == '@' ? element.substring(index++) : "";
+			/*
 			 * parse signature access modifier
 			 */
-			AccessModifierKey access = AccessModifierKey.get(elements[0]);
+			AccessModifierKey access = AccessModifierKey.get(elements[index]);
 			if (access != AccessModifierKey.DEFAULT) {
-				index = 1;
+				index += 1;
 			}
 			/*
 			 * parse signature non-access modifier
@@ -195,7 +200,13 @@ public class MethodDetail extends Detail<JavaMethod> {
 			for (; index < elements.length; index++) {
 				sb.append(" ").append(elements[index]);
 			}
-			this.comment = sb.toString().trim();
+			String tComment = sb.toString().trim();
+			if (!annotation.isEmpty())
+			{
+				String commentSuffix = "This method is annotated as " + annotation;
+				tComment = tComment.isEmpty() ? commentSuffix : tComment + '\n' + commentSuffix;
+			}
+			this.comment = tComment;
 		}
 
 		private Signature(Element element) throws SignatureParsingException {
