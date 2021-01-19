@@ -34,9 +34,9 @@ import io.yooksi.pz.zdoc.element.lua.*;
 
 public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 
-	private static final Map<String, String> CACHED_LUA_TYPES = new HashMap<>();
 	private static final Map<String, LuaClass> GLOBAL_CLASSES = new HashMap<>();
-	private static final Set<LuaClass> GLOBAL_TYPES = new HashSet<>();
+	private static final Map<String, LuaClass> GLOBAL_TYPES = new HashMap<>();
+	private static final Map<String, LuaType> CACHED_TYPES = new HashMap<>();
 
 	private final @UnmodifiableView Set<ZomboidJavaDoc> javaDocs;
 
@@ -49,42 +49,62 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		List<LuaType> otherTypes = new ArrayList<>();
 		for (IClass typeParam : iClass.getTypeParameters())
 		{
+			String typeName = "Unknown";
 			if (typeParam != null)
 			{
 				String paramName = typeParam.getName();
-				String typeName = CACHED_LUA_TYPES.get(paramName);
-				if (typeName == null)
+				LuaType cachedType = CACHED_TYPES.get(paramName);
+				if (cachedType == null)
 				{
-					typeName = resolveClassName(paramName, false);
-					cacheLuaType(typeParam, typeName);
+					LuaClass globalClass = GLOBAL_CLASSES.get(paramName);
+					if (globalClass == null)
+					{
+						typeName = resolveClassName(paramName);
+						registerGlobalType(typeParam, typeName);
+					}
+					else typeName = cacheType(typeParam, globalClass.getName()).getName();
 				}
-				otherTypes.add(new LuaType(typeName));
+				else typeName = cachedType.getName();
 			}
-			else otherTypes.add(new LuaType("Unknown"));
+			otherTypes.add(new LuaType(typeName));
 		}
-		String luaType = CACHED_LUA_TYPES.get(iClass.getName());
-		if (luaType == null)
+		String luaType, className = iClass.getName();
+		LuaType cachedType = CACHED_TYPES.get(className);
+		if (cachedType == null)
 		{
-			luaType = resolveClassName(iClass.getName(), false);
-			cacheLuaType(iClass, luaType);
+			LuaClass globalClass = GLOBAL_CLASSES.get(className);
+			if (globalClass == null)
+			{
+				luaType = resolveClassName(className);
+				registerGlobalType(iClass, luaType);
+			}
+			else luaType = cacheType(iClass, globalClass.getName()).getName();
 		}
+		else luaType = cachedType.getName();
 		return new LuaType(luaType, otherTypes);
 	}
 
-	private static void cacheLuaType(IClass clazz, String type) {
+	private static LuaType cacheType(IClass clazz, String type) {
 
-		CACHED_LUA_TYPES.put(clazz.getName(), type);
+		LuaType result = new LuaType(type);
+		CACHED_TYPES.put(clazz.getName(), result);
+		return result;
+	}
+
+	private static void registerGlobalType(IClass clazz, String type) {
+
+		CACHED_TYPES.put(clazz.getName(), new LuaType(type));
 
 		Class<?> typeClass = ((JavaClass) clazz).getClazz();
 		if (typeClass.isArray())
 		{
 			typeClass = typeClass.getComponentType();
-			String cachedType = CACHED_LUA_TYPES.get(typeClass.getName());
+			LuaType cachedType = CACHED_TYPES.get(typeClass.getName());
 			if (cachedType != null) {
-				type = cachedType;
+				type = cachedType.getName();
 			}
 		}
-		GLOBAL_TYPES.add(new LuaClass(type, typeClass.getCanonicalName()));
+		GLOBAL_TYPES.put(type, new LuaClass(type, typeClass.getCanonicalName()));
 	}
 
 	private static LuaClass resolveLuaClass(String name) throws CompilerException {
@@ -93,14 +113,14 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		if (cachedClass == null)
 		{
 			String parentType = name.replace('$', '.');
-			LuaClass result = new LuaClass(resolveClassName(name, true), parentType);
+			LuaClass result = new LuaClass(resolveClassName(name), parentType);
 			GLOBAL_CLASSES.put(name, result);
 			return result;
 		}
 		else return cachedClass;
 	}
 
-	private static String resolveClassName(String signature, boolean global) throws CompilerException {
+	private static String resolveClassName(String signature) throws CompilerException {
 
 		String[] packages = signature.split("\\.");
 		if (packages.length > 1)
@@ -112,20 +132,21 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 				sb.append(c == '$' ? '.' : c);
 			}
 			result = sb.toString();
-			if (global)
-			{
-				for (int i = packages.length - 2; i >= 0 && GLOBAL_CLASSES.containsKey(result); i--) {
-					result = packages[i] + '_' + result;
-				}
-				if (GLOBAL_CLASSES.containsKey(result)) {
-					throw new CompilerException(String.format("Unexpected class name (%s) " +
-							"duplicate detected - %s", result, GLOBAL_CLASSES.toString()));
-				}
+			for (int i = packages.length - 2; i >= 0 && isRegisteredGlobal(result); i--) {
+				result = packages[i] + '_' + result;
+			}
+			if (GLOBAL_CLASSES.containsKey(result)) {
+				throw new CompilerException(String.format("Unexpected class name (%s) " +
+						"duplicate detected - %s", result, GLOBAL_CLASSES.toString()));
 			}
 			return result;
 		}
 		// class does not reside in a package
 		else return signature;
+	}
+
+	private static boolean isRegisteredGlobal(String name) {
+		return GLOBAL_CLASSES.containsKey(name) || GLOBAL_TYPES.containsKey(name);
 	}
 
 	public static @UnmodifiableView Set<LuaClass> getGlobalTypes() {
@@ -135,10 +156,13 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		 * filter out types that are already defined as global classes,
 		 * they have their own declaration in dedicated files
 		 */
-		Collection<LuaClass> globalClasses = GLOBAL_CLASSES.values();
-		GLOBAL_TYPES.stream().filter(t -> !globalClasses.contains(t)).forEach(result::add);
-		/*
-		 * represents ? parameter type
+		for (Map.Entry<String, LuaClass> entry : GLOBAL_TYPES.entrySet())
+		{
+			if (!GLOBAL_CLASSES.containsKey(entry.getKey())) {
+				result.add(entry.getValue());
+			}
+		}
+		/* represents ? parameter type
 		 * since EmmyLua does not have a good format for notating parameterized types
 		 * this is the best way we can note an unknown parameter type
 		 */

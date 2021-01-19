@@ -20,9 +20,7 @@ package io.yooksi.pz.zdoc.compile;
 import java.util.*;
 
 import org.jetbrains.annotations.TestOnly;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -40,8 +38,12 @@ import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.element.mod.ModifierKey;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LuaCompilerTest {
 
+	private static final LuaClass OWNER_CLASS = new LuaClass(
+			LuaCompilerTest.class.getSimpleName(), LuaCompilerTest.class.getName()
+	);
 	private static final MemberModifier MODIFIER = new MemberModifier(
 			AccessModifierKey.PUBLIC, ModifierKey.FINAL
 	);
@@ -85,41 +87,10 @@ class LuaCompilerTest {
 
 	@TestOnly
 	private static Set<ZomboidLuaDoc> compileLua(ZomboidJavaDoc zDoc) throws CompilerException {
-		return compileLua(ImmutableSet.of(zDoc));
+		return compileLua(Collections.singleton(zDoc));
 	}
 
-	@Test
-	void shouldAvoidDuplicateClassNamesWhenCompilingLua() throws CompilerException {
-
-		final Class<?>[] classObjects = {
-				java.lang.Object.class, java.lang.String.class, java.lang.Integer.class,
-				io.yooksi.pz.zdoc.compile.test.Object.class,
-				io.yooksi.pz.zdoc.compile.test.String.class,
-				io.yooksi.pz.zdoc.compile.test.Integer.class
-		};
-		Set<ZomboidJavaDoc> zJavaDocs = new LinkedHashSet<>();
-		for (Class<?> c : classObjects) {
-			zJavaDocs.add(new ZomboidJavaDoc(new JavaClass(c), new ArrayList<>(), new HashSet<>()));
-		}
-		Map<java.lang.String, java.lang.String> classData =
-				ImmutableMap.<java.lang.String, java.lang.String>builder()
-						.put("Object", "java.lang.Object")
-						.put("String", "java.lang.String")
-						.put("Integer", "java.lang.Integer")
-						.put("test_Object", "io.yooksi.pz.zdoc.compile.test.Object")
-						.put("test_String", "io.yooksi.pz.zdoc.compile.test.String")
-						.put("test_Integer", "io.yooksi.pz.zdoc.compile.test.Integer").build();
-
-		Set<LuaClass> expectedLuaClasses = new LinkedHashSet<>();
-		classData.forEach((k, v) -> expectedLuaClasses.add(new LuaClass(k, v)));
-
-		Set<LuaClass> actualLuaClasses = new HashSet<>();
-		compileLua(zJavaDocs).forEach(doc -> actualLuaClasses.add((LuaClass) doc.getClazz()));
-
-		Assertions.assertEquals(expectedLuaClasses, actualLuaClasses);
-	}
-
-	@Test
+	@Test @Order(1)
 	void shouldCorrectlyFormatInnerClassNamesWhenCompilingLua() throws CompilerException {
 
 		final Class<?>[] classObjects = {
@@ -143,7 +114,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedLuaClasses, actualLuaClasses);
 	}
 
-	@Test
+	@Test @Order(2)
 	void shouldCompileLuaDocsWithValidClassFromZomboidJavaDocs() throws CompilerException {
 
 		LuaClass expectedClass = new LuaClass(
@@ -158,7 +129,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedClass, zLuaDocs.iterator().next().getClazz());
 	}
 
-	@Test
+	@Test @Order(3)
 	void shouldCompileValidLuaFieldsFromZomboidJavaDocs() throws CompilerException {
 
 		List<JavaField> javaFields = ImmutableList.of(
@@ -181,7 +152,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedFields, zLuaDoc.getFields());
 	}
 
-	@Test
+	@Test @Order(4)
 	void shouldCompileValidLuaArrayFieldsFromZomboidJavaDocs() throws CompilerException {
 
 		List<JavaField> javaFields = ImmutableList.of(
@@ -204,7 +175,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedFields, zLuaDoc.getFields());
 	}
 
-	@Test
+	@Test @Order(5)
 	void shouldCompileValidLuaParameterizedTypeFieldsFromZomboidJavaDocs() throws CompilerException {
 
 		List<JavaField> javaFields = ImmutableList.of(
@@ -225,16 +196,13 @@ class LuaCompilerTest {
 		Set<ZomboidLuaDoc> zLuaDocs = compileLua(zJavaDoc);
 		Assertions.assertEquals(1, zLuaDocs.size());
 
-		ZomboidLuaDoc zLuaDoc = zLuaDocs.iterator().next();
-		Assertions.assertEquals(expectedFields, zLuaDoc.getFields());
+		List<LuaField> actualFields = zLuaDocs.iterator().next().getFields();
+		Assertions.assertEquals(expectedFields, actualFields);
 	}
 
-	@Test
+	@Test @Order(6)
 	void shouldCompileValidLuaMethodsFromZomboidJavaDocs() throws CompilerException {
 
-		LuaClass ownerClass = new LuaClass(
-				LuaCompilerTest.class.getSimpleName(), LuaCompilerTest.class.getName()
-		);
 		Set<JavaMethod> javaMethods = ImmutableSet.of(
 				new JavaMethod("getText", java.lang.String.class, ImmutableList.of(
 						new JavaParameter(java.lang.Integer.class, "iParam")), MODIFIER
@@ -247,13 +215,13 @@ class LuaCompilerTest {
 				)
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
-				new LuaMethod("getText", ownerClass, MODIFIER, new LuaType("String"),
+				new LuaMethod("getText", OWNER_CLASS, MODIFIER, new LuaType("String"),
 						ImmutableList.of(new LuaParameter(new LuaType("Integer"), "iParam"))
 				),
-				new LuaMethod("getNumber", ownerClass, MODIFIER, new LuaType("Integer"),
+				new LuaMethod("getNumber", OWNER_CLASS, MODIFIER, new LuaType("Integer"),
 						ImmutableList.of(new LuaParameter(new LuaType("Object"), "oParam"))
 				),
-				new LuaMethod("getObject", ownerClass, MODIFIER, new LuaType("Object"),
+				new LuaMethod("getObject", OWNER_CLASS, MODIFIER, new LuaType("Object"),
 						ImmutableList.of(new LuaParameter(new LuaType("String"), "sParam"))
 				)
 		);
@@ -267,12 +235,9 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedMethods, zLuaDoc.getMethods());
 	}
 
-	@Test
+	@Test @Order(7)
 	void shouldCompileValidLuaMethodsWithArraysFromZomboidJavaDocs() throws CompilerException {
 
-		LuaClass ownerClass = new LuaClass(
-				LuaCompilerTest.class.getSimpleName(), LuaCompilerTest.class.getName()
-		);
 		Set<JavaMethod> javaMethods = ImmutableSet.of(
 				new JavaMethod("getText", java.lang.String[].class, ImmutableList.of(
 						new JavaParameter(java.lang.Integer[].class, "iParam")), MODIFIER
@@ -285,13 +250,13 @@ class LuaCompilerTest {
 				)
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
-				new LuaMethod("getText", ownerClass, MODIFIER, new LuaType("String[]"),
+				new LuaMethod("getText", OWNER_CLASS, MODIFIER, new LuaType("String[]"),
 						ImmutableList.of(new LuaParameter(new LuaType("Integer[]"), "iParam"))
 				),
-				new LuaMethod("getNumber", ownerClass, MODIFIER, new LuaType("Integer[]"),
+				new LuaMethod("getNumber", OWNER_CLASS, MODIFIER, new LuaType("Integer[]"),
 						ImmutableList.of(new LuaParameter(new LuaType("Object[]"), "oParam"))
 				),
-				new LuaMethod("getObject", ownerClass, MODIFIER, new LuaType("Object[]"),
+				new LuaMethod("getObject", OWNER_CLASS, MODIFIER, new LuaType("Object[]"),
 						ImmutableList.of(new LuaParameter(new LuaType("String[]"), "sParam"))
 				)
 		);
@@ -305,12 +270,9 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedMethods, zLuaDoc.getMethods());
 	}
 
-	@Test
+	@Test @Order(8)
 	void shouldCompileValidLuaMethodsWithParameterizedTypesFromZomboidJavaDocs() throws CompilerException {
 
-		LuaClass ownerClass = new LuaClass(
-				LuaCompilerTest.class.getSimpleName(), LuaCompilerTest.class.getName()
-		);
 		Set<JavaMethod> javaMethods = ImmutableSet.of(
 				new JavaMethod("getText", JAVA_ARRAY_LIST_OBJECT, ImmutableList.of(
 						new JavaParameter(JAVA_ARRAY_LIST_STRING_OBJECT, "sParam")), MODIFIER
@@ -323,13 +285,13 @@ class LuaCompilerTest {
 				)
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
-				new LuaMethod("getText", ownerClass, MODIFIER, LUA_ARRAY_LIST_OBJECT,
+				new LuaMethod("getText", OWNER_CLASS, MODIFIER, LUA_ARRAY_LIST_OBJECT,
 						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "sParam"))
 				),
-				new LuaMethod("getNumber", ownerClass, MODIFIER, LUA_ARRAY_LIST_STRING_OBJECT,
+				new LuaMethod("getNumber", OWNER_CLASS, MODIFIER, LUA_ARRAY_LIST_STRING_OBJECT,
 						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_OBJECT_STRING, "nParam"))
 				),
-				new LuaMethod("getObject", ownerClass, MODIFIER, LUA_ARRAY_LIST_OBJECT_STRING,
+				new LuaMethod("getObject", OWNER_CLASS, MODIFIER, LUA_ARRAY_LIST_OBJECT_STRING,
 						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "oParam"))
 				)
 		);
@@ -343,7 +305,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedMethods, zLuaDoc.getMethods());
 	}
 
-	@Test
+	@Test @Order(9)
 	void shouldIncludeCommentsWhenCompilingLua() throws CompilerException {
 
 		List<JavaField> fieldsWithComment = ImmutableList.of(
@@ -369,15 +331,94 @@ class LuaCompilerTest {
 		Assertions.assertEquals("this method has a comment", actual);
 	}
 
-	@AfterAll
-	static void shouldGatherAllGlobalTypesWhenCompilingLua() {
+	@Test @Order(10)
+	void shouldGatherAllGlobalTypesWhenCompilingLua() {
 
 		Set<LuaClass> expectedGlobalTypes = Sets.newHashSet(
+				new LuaClass("Object", "java.lang.Object"),
+				new LuaClass("String", "java.lang.String"),
+				new LuaClass("Integer", "java.lang.Integer"),
 				new LuaClass("ArrayList", "java.util.ArrayList"),
 				new LuaClass("Unknown")
 		);
 		Set<LuaClass> actualGlobalTypes = LuaCompiler.getGlobalTypes();
 		Assertions.assertEquals(expectedGlobalTypes, actualGlobalTypes);
+	}
+
+	@Test @Order(11)
+	void shouldAvoidDuplicateClassNamesWhenCompilingLua() throws CompilerException {
+
+		final Class<?>[] classObjects = {
+				java.lang.Object.class, java.lang.String.class, java.lang.Integer.class,
+				io.yooksi.pz.zdoc.compile.test.Object.class,
+				io.yooksi.pz.zdoc.compile.test.String.class,
+				io.yooksi.pz.zdoc.compile.test.Integer.class
+		};
+		Set<ZomboidJavaDoc> zJavaDocs = new LinkedHashSet<>();
+		for (Class<?> c : classObjects) {
+			zJavaDocs.add(new ZomboidJavaDoc(new JavaClass(c), new ArrayList<>(), new HashSet<>()));
+		}
+		Map<java.lang.String, java.lang.String> classData =
+				ImmutableMap.<java.lang.String, java.lang.String>builder()
+						.put("lang_Object", "java.lang.Object")
+						.put("lang_String", "java.lang.String")
+						.put("lang_Integer", "java.lang.Integer")
+						.put("test_Object", "io.yooksi.pz.zdoc.compile.test.Object")
+						.put("test_String", "io.yooksi.pz.zdoc.compile.test.String")
+						.put("test_Integer", "io.yooksi.pz.zdoc.compile.test.Integer").build();
+
+		Set<LuaClass> expectedLuaClasses = new LinkedHashSet<>();
+		classData.forEach((k, v) -> expectedLuaClasses.add(new LuaClass(k, v)));
+
+		Set<LuaClass> actualLuaClasses = new HashSet<>();
+		compileLua(zJavaDocs).forEach(doc -> actualLuaClasses.add((LuaClass) doc.getClazz()));
+
+		Assertions.assertEquals(expectedLuaClasses, actualLuaClasses);
+	}
+
+	@Test @Order(12)
+	void shouldAvoidDuplicateTypeNamesWhenCompilingLua() throws CompilerException {
+
+		MemberModifier modifier = MemberModifier.UNDECLARED;
+		List<JavaField> javaFields = ImmutableList.of(
+				new JavaField(new JavaClass(java.lang.Object.class),
+						"object1", modifier
+				),
+				new JavaField(new JavaClass(java.lang.String.class),
+						"string1", modifier
+				),
+				new JavaField(new JavaClass(java.lang.Integer.class),
+						"integer1", modifier
+				),
+				new JavaField(new JavaClass(io.yooksi.pz.zdoc.compile.test.Object.class),
+						"object2", modifier
+				),
+				new JavaField(new JavaClass(io.yooksi.pz.zdoc.compile.test.String.class),
+						"string2", modifier
+				),
+				new JavaField(new JavaClass(io.yooksi.pz.zdoc.compile.test.Integer.class),
+						"integer2", modifier)
+		);
+		List<LuaField> luaFields = ImmutableList.of(
+				new LuaField(new LuaType("Object"), "object1", modifier
+				),
+				new LuaField(new LuaType("String"), "string1", modifier
+				),
+				new LuaField(new LuaType("Integer"), "integer1", modifier
+				),
+				new LuaField(new LuaType("test_Object"), "object2", modifier
+				),
+				new LuaField(new LuaType("test_String"), "string2", modifier
+				),
+				new LuaField(new LuaType("test_Integer"), "integer2", modifier)
+		);
+		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(
+				new JavaClass(LuaCompilerTest.class), javaFields, new HashSet<>()
+		);
+		Set<ZomboidLuaDoc> zLuaDocs = compileLua(zJavaDoc);
+		Assertions.assertEquals(1, zLuaDocs.size());
+
+		Assertions.assertEquals(luaFields, zLuaDocs.iterator().next().getFields());
 	}
 
 	@TestOnly
