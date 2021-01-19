@@ -20,12 +20,14 @@ package io.yooksi.pz.zdoc.compile;
 import java.util.*;
 
 import org.jetbrains.annotations.TestOnly;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
 import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
@@ -78,19 +80,7 @@ class LuaCompilerTest {
 
 	@TestOnly
 	private static Set<ZomboidLuaDoc> compileLua(Set<ZomboidJavaDoc> zJavaDocs) throws CompilerException {
-
-		Set<ZomboidLuaDoc> result = new LuaCompiler(zJavaDocs).compile();
-		Iterator<ZomboidLuaDoc> iterator = result.iterator();
-		while (iterator.hasNext())
-		{
-			ZomboidLuaDoc doc = iterator.next();
-			if (doc.getClazz().getName().equals("Unknown"))
-			{
-				iterator.remove();
-				break;
-			}
-		}
-		return result;
+		return new LuaCompiler(zJavaDocs).compile();
 	}
 
 	@TestOnly
@@ -377,6 +367,17 @@ class LuaCompilerTest {
 
 		actual = zLuaDoc.getMethods().iterator().next().getComment();
 		Assertions.assertEquals("this method has a comment", actual);
+	}
+
+	@AfterAll
+	static void shouldGatherAllGlobalTypesWhenCompilingLua() {
+
+		Set<LuaClass> expectedGlobalTypes = Sets.newHashSet(
+				new LuaClass("ArrayList", "java.util.ArrayList"),
+				new LuaClass("Unknown")
+		);
+		Set<LuaClass> actualGlobalTypes = LuaCompiler.getGlobalTypes();
+		Assertions.assertEquals(expectedGlobalTypes, actualGlobalTypes);
 	}
 
 	@TestOnly

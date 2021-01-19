@@ -220,6 +220,8 @@ public class Main {
 			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
 				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
 			}
+			File file = userOutput.resolve("Types.lua").toFile();
+			ZomboidLuaDoc.writeGlobalTypesToFile(userOutput.resolve("Types.lua").toFile());
 		}
 		Logger.debug("Finished processing command");
 	}

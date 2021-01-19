@@ -21,14 +21,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import io.yooksi.pz.zdoc.element.IMember;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import io.yooksi.pz.zdoc.Main;
+import io.yooksi.pz.zdoc.compile.LuaCompiler;
 import io.yooksi.pz.zdoc.element.IClass;
+import io.yooksi.pz.zdoc.element.IMember;
 import io.yooksi.pz.zdoc.element.lua.*;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
 
@@ -105,7 +106,18 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 			sb.append(") end\n\n");
 		}
 		sb.deleteCharAt(sb.length() - 1);
-		FileUtils.write(file, sb.toString(), Main.CHARSET);
+		FileUtils.write(file, sb.toString(), Main.CHARSET, false);
+	}
+
+	public static void writeGlobalTypesToFile(File file) throws IOException {
+
+		StringBuilder sb = new StringBuilder();
+		for (LuaClass globalType : LuaCompiler.getGlobalTypes())
+		{
+			ZomboidLuaDoc.appendAnnotations(sb, globalType);
+			sb.append(globalType.getName()).append(" = {}\n\n");
+		}
+		FileUtils.write(file, sb.toString(), Main.CHARSET, false);
 	}
 
 	@Override

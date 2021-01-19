@@ -29,12 +29,14 @@ import io.yooksi.pz.zdoc.element.IClass;
 import io.yooksi.pz.zdoc.element.IField;
 import io.yooksi.pz.zdoc.element.IMethod;
 import io.yooksi.pz.zdoc.element.IParameter;
+import io.yooksi.pz.zdoc.element.java.JavaClass;
 import io.yooksi.pz.zdoc.element.lua.*;
 
 public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 
 	private static final Map<String, String> CACHED_LUA_TYPES = new HashMap<>();
 	private static final Map<String, LuaClass> GLOBAL_CLASSES = new HashMap<>();
+	private static final Set<LuaClass> GLOBAL_TYPES = new HashSet<>();
 
 	private final @UnmodifiableView Set<ZomboidJavaDoc> javaDocs;
 
@@ -54,19 +56,35 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 				if (typeName == null)
 				{
 					typeName = resolveClassName(paramName, false);
-					CACHED_LUA_TYPES.put(paramName, typeName);
+					cacheLuaType(typeParam, typeName);
 				}
 				otherTypes.add(new LuaType(typeName));
 			}
 			else otherTypes.add(new LuaType("Unknown"));
 		}
-		String className = CACHED_LUA_TYPES.get(iClass.getName());
-		if (className == null)
+		String luaType = CACHED_LUA_TYPES.get(iClass.getName());
+		if (luaType == null)
 		{
-			className = resolveClassName(iClass.getName(), false);
-			CACHED_LUA_TYPES.put(iClass.getName(), className);
+			luaType = resolveClassName(iClass.getName(), false);
+			cacheLuaType(iClass, luaType);
 		}
-		return new LuaType(className, otherTypes);
+		return new LuaType(luaType, otherTypes);
+	}
+
+	private static void cacheLuaType(IClass clazz, String type) {
+
+		CACHED_LUA_TYPES.put(clazz.getName(), type);
+
+		Class<?> typeClass = ((JavaClass) clazz).getClazz();
+		if (typeClass.isArray())
+		{
+			typeClass = typeClass.getComponentType();
+			String cachedType = CACHED_LUA_TYPES.get(typeClass.getName());
+			if (cachedType != null) {
+				type = cachedType;
+			}
+		}
+		GLOBAL_TYPES.add(new LuaClass(type, typeClass.getCanonicalName()));
 	}
 
 	private static LuaClass resolveLuaClass(String name) throws CompilerException {
@@ -110,16 +128,29 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		else return signature;
 	}
 
+	public static @UnmodifiableView Set<LuaClass> getGlobalTypes() {
+
+		Set<LuaClass> result = new HashSet<>();
+		/*
+		 * filter out types that are already defined as global classes,
+		 * they have their own declaration in dedicated files
+		 */
+		Collection<LuaClass> globalClasses = GLOBAL_CLASSES.values();
+		GLOBAL_TYPES.stream().filter(t -> !globalClasses.contains(t)).forEach(result::add);
+		/*
+		 * represents ? parameter type
+		 * since EmmyLua does not have a good format for notating parameterized types
+		 * this is the best way we can note an unknown parameter type
+		 */
+		result.add(new LuaClass("Unknown"));
+		return Collections.unmodifiableSet(result);
+	}
+
 	public Set<ZomboidLuaDoc> compile() throws CompilerException {
 
 		Set<ZomboidLuaDoc> result = PredicatedSet.predicatedSet(
 				new HashSet<>(), PredicateUtils.notNullPredicate()
 		);
-		/* represents ? parameter type
-		 * since EmmyLua does not have a good format for notating parameterized types
-		 * this is the best way we can note an unknown parameter type
-		 */
-		result.add(new ZomboidLuaDoc(new LuaClass("Unknown")));
 		for (ZomboidJavaDoc javaDoc : javaDocs)
 		{
 			LuaClass luaClass = resolveLuaClass(javaDoc.getName());
@@ -144,8 +175,8 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 					LuaType paramClass = resolveLuaType(param.getType());
 					parameters.add(new LuaParameter(paramClass, param.getName()));
 				}
-				luaMethods.add(new LuaMethod(method.getName(), luaClass,
-						method.getModifier(), returnType, parameters, method.hasVarArg(), method.getComment()));
+				luaMethods.add(new LuaMethod(method.getName(), luaClass, method.getModifier(),
+						returnType, parameters, method.hasVarArg(), method.getComment()));
 			}
 			result.add(new ZomboidLuaDoc(luaClass, luaFields, luaMethods));
 		}
