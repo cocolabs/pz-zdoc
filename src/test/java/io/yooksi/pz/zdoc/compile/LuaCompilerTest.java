@@ -421,6 +421,17 @@ class LuaCompilerTest {
 		Assertions.assertEquals(luaFields, zLuaDocs.iterator().next().getFields());
 	}
 
+	@Test @Order(13)
+	void shouldFilterGlobalClassTypesFromGlobalTypesWhenCompilingLua() {
+
+		Set<LuaClass> expectedGlobalTypes = Sets.newHashSet(
+				new LuaClass("ArrayList", "java.util.ArrayList"),
+				new LuaClass("Unknown")
+		);
+		Set<LuaClass> actualGlobalTypes = LuaCompiler.getGlobalTypes();
+		Assertions.assertEquals(expectedGlobalTypes, actualGlobalTypes);
+	}
+
 	@TestOnly
 	private static class Object {
 	}
