@@ -41,6 +41,6 @@ class LuaParameterTest implements UnitTest {
 
 		LuaParameter param = new LuaParameter(new LuaType("string"), "test");
 		Assertions.assertThrows(UnsupportedOperationException.class,
-				() -> param.getAnnotations().add(new EmmyLuaClass(new LuaClass("TestType"))));
+				() -> param.getAnnotations().add(new EmmyLuaClass("TestType", null)));
 	}
 }

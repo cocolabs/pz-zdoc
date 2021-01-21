@@ -20,6 +20,7 @@ package io.yooksi.pz.zdoc.lang.lua;
 import java.util.regex.Pattern;
 
 import io.yooksi.pz.zdoc.element.lua.LuaClass;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * EmmyLua use {@code @class} to simulate classes in OOP, supporting inheritance and fields.
@@ -48,22 +49,19 @@ public class EmmyLuaClass extends EmmyLua {
 			"^---\\s*@class\\s+(\\w+)(?:\\s*:\\s*(\\w+))?(?:\\s*@\\s*(.*))?\\s*$?"
 	);
 
-	public EmmyLuaClass(LuaClass type, String comment) {
-		super("class", formatType(type), comment);
+	public EmmyLuaClass(String type, @Nullable String parentType, String comment) {
+		super("class", formatType(type, parentType), comment);
 	}
 
-	public EmmyLuaClass(LuaClass type) {
-		this(type, "");
+	public EmmyLuaClass(String type, @Nullable String parentType) {
+		this(type, parentType, "");
 	}
 
 	public static boolean isAnnotation(String text) {
 		return REGEX.matcher(text).find();
 	}
 
-	private static String formatType(LuaClass type) {
-
-		String sType = type.getName();
-		String pType = type.getParentType();
-		return pType != null ? sType + " : " + pType : sType;
+	private static String formatType(String type, @Nullable String parentType) {
+		return parentType != null ? type + " : " + parentType : type;
 	}
 }

@@ -170,7 +170,7 @@ public class LuaAnnotator {
 							 * the table declaration is indented (should not normally be the case)
 							 */
 							String indentation = ParseUtils.getOptionalMatchedGroup(match, 1);
-							content.add(indentation + new EmmyLuaClass(luaClass));
+							content.add(indentation + luaClass.getAnnotations().get(0));
 							rules.exclude.add(luaClass.getName());
 
 							include.remove(matchedName);

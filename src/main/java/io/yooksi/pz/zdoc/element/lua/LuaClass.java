@@ -46,7 +46,7 @@ public class LuaClass implements IClass, Annotated {
 		 * can be handled elsewhere but we should do it here to ensure safety
 		 */
 		this.parentType = !type.equals(parentType) ? parentType : null;
-		this.annotations = Collections.singletonList(new EmmyLuaClass(this));
+		this.annotations = Collections.singletonList(new EmmyLuaClass(type, getParentType()));
 	}
 
 	public LuaClass(String type) {

@@ -31,6 +31,6 @@ class LuaClassTest implements UnitTest {
 
 		LuaClass luaClass = new LuaClass("test", "type");
 		Assertions.assertThrows(UnsupportedOperationException.class,
-				() -> luaClass.getAnnotations().add(new EmmyLuaClass(new LuaClass("TestType"))));
+				() -> luaClass.getAnnotations().add(new EmmyLuaClass("TestType", null)));
 	}
 }

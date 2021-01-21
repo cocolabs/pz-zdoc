@@ -20,23 +20,21 @@ package io.yooksi.pz.zdoc.lang.lua;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.element.lua.LuaClass;
-
 class EmmyLuaClassTest {
 
 	@Test
 	void shouldCorrectlyFormatEmmyLuaClassAnnotation() {
 
 		// ---@class TYPE
-		EmmyLuaClass annotation = new EmmyLuaClass(new LuaClass("Car"));
+		EmmyLuaClass annotation = new EmmyLuaClass("Car", null);
 		Assertions.assertEquals("---@class Car", annotation.toString());
 
 		// ---@class TYPE[:PARENT_TYPE]
-		annotation = new EmmyLuaClass(new LuaClass("Car", "Vehicle"));
+		annotation = new EmmyLuaClass("Car", "Vehicle");
 		Assertions.assertEquals("---@class Car : Vehicle", annotation.toString());
 
 		// ---@class TYPE[:PARENT_TYPE] [@comment]
-		annotation = new EmmyLuaClass(new LuaClass("Car", "Vehicle"), "goes vroom");
+		annotation = new EmmyLuaClass("Car", "Vehicle", "goes vroom");
 		Assertions.assertEquals("---@class Car : Vehicle @goes vroom", annotation.toString());
 	}
 

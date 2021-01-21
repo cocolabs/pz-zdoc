@@ -42,6 +42,6 @@ class LuaFieldTest implements UnitTest {
 
 		LuaField field = new LuaField(new LuaType("test"), "type", MemberModifier.UNDECLARED);
 		Assertions.assertThrows(UnsupportedOperationException.class,
-				() -> field.getAnnotations().add(new EmmyLuaClass(new LuaClass("TestType"))));
+				() -> field.getAnnotations().add(new EmmyLuaClass("TestType", null)));
 	}
 }

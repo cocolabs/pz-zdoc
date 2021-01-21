@@ -83,7 +83,7 @@ class LuaMethodTest implements UnitTest {
 	@SuppressWarnings("ConstantConditions")
 	void shouldThrowExceptionWhenModifyingLuaMethodAnnotations() {
 		Assertions.assertThrows(UnsupportedOperationException.class,
-				() -> TEST_METHOD.getAnnotations().add(new EmmyLuaClass(new LuaClass("TestType"))));
+				() -> TEST_METHOD.getAnnotations().add(new EmmyLuaClass("TestType", null)));
 	}
 
 	@Test
