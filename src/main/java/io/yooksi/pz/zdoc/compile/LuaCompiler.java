@@ -35,6 +35,7 @@ import io.yooksi.pz.zdoc.element.lua.*;
 public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 
 	private static final Map<String, LuaClass> GLOBAL_CLASSES = new HashMap<>();
+	private static final Map<String, LuaClass> CACHED_CLASSES = new HashMap<>();
 	private static final Map<String, LuaClass> GLOBAL_TYPES = new HashMap<>();
 	private static final Map<String, LuaType> CACHED_TYPES = new HashMap<>();
 
@@ -109,12 +110,14 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 
 	private static LuaClass resolveLuaClass(String name) throws CompilerException {
 
-		LuaClass cachedClass = GLOBAL_CLASSES.get(name);
+		LuaClass cachedClass = CACHED_CLASSES.get(name);
 		if (cachedClass == null)
 		{
 			String parentType = name.replace('$', '.');
 			LuaClass result = new LuaClass(resolveClassName(name), parentType);
-			GLOBAL_CLASSES.put(name, result);
+			GLOBAL_CLASSES.put(result.getName(), result);
+			CACHED_CLASSES.put(name, result);
+			CACHED_TYPES.put(name, new LuaType(result.getName()));
 			return result;
 		}
 		else return cachedClass;
@@ -135,9 +138,10 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 			for (int i = packages.length - 2; i >= 0 && isRegisteredGlobal(result); i--) {
 				result = packages[i] + '_' + result;
 			}
-			if (GLOBAL_CLASSES.containsKey(result)) {
-				throw new CompilerException(String.format("Unexpected class name (%s) " +
-						"duplicate detected - %s", result, GLOBAL_CLASSES.toString()));
+			if (isRegisteredGlobal(result))
+			{
+				String msg = "Unexpected class name (%s) duplicate detected!";
+				throw new CompilerException(String.format(msg, result));
 			}
 			return result;
 		}
@@ -146,7 +150,7 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 	}
 
 	private static boolean isRegisteredGlobal(String name) {
-		return GLOBAL_CLASSES.containsKey(name) || GLOBAL_TYPES.containsKey(name);
+		return GLOBAL_CLASSES.containsKey(name);
 	}
 
 	public static @UnmodifiableView Set<LuaClass> getGlobalTypes() {
@@ -178,7 +182,6 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		for (ZomboidJavaDoc javaDoc : javaDocs)
 		{
 			LuaClass luaClass = resolveLuaClass(javaDoc.getName());
-			GLOBAL_CLASSES.put(luaClass.getName(), luaClass);
 
 			List<LuaField> luaFields = new ArrayList<>();
 			for (IField field : javaDoc.getFields())
