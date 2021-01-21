@@ -166,7 +166,7 @@ class JavaCompilerTest extends DocTest {
 				),
 				new JavaMethod("doTask", void.class, ImmutableList.of(
 						new JavaParameter(JavaClassUtils.getMap(
-							JavaClassUtils.getMap(JavaClassUtils.CLASS, Object.class), Object.class
+								JavaClassUtils.getMap(JavaClassUtils.CLASS, Object.class), Object.class
 						), "map"),
 						new JavaParameter(Object.class, "obj")
 				), new MemberModifier(AccessModifierKey.PUBLIC))

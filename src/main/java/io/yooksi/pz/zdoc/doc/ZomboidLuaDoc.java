@@ -30,7 +30,10 @@ import io.yooksi.pz.zdoc.Main;
 import io.yooksi.pz.zdoc.compile.LuaCompiler;
 import io.yooksi.pz.zdoc.element.IClass;
 import io.yooksi.pz.zdoc.element.IMember;
-import io.yooksi.pz.zdoc.element.lua.*;
+import io.yooksi.pz.zdoc.element.lua.Annotated;
+import io.yooksi.pz.zdoc.element.lua.LuaClass;
+import io.yooksi.pz.zdoc.element.lua.LuaField;
+import io.yooksi.pz.zdoc.element.lua.LuaMethod;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
 
 public class ZomboidLuaDoc implements ZomboidDoc {
@@ -80,6 +83,17 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 		}
 	}
 
+	public static void writeGlobalTypesToFile(File file) throws IOException {
+
+		StringBuilder sb = new StringBuilder();
+		for (LuaClass globalType : LuaCompiler.getGlobalTypes())
+		{
+			ZomboidLuaDoc.appendAnnotations(sb, globalType);
+			sb.append(globalType.getName()).append(" = {}\n\n");
+		}
+		FileUtils.write(file, sb.toString(), Main.CHARSET, false);
+	}
+
 	public void writeToFile(File file) throws IOException {
 
 		StringBuilder sb = new StringBuilder();
@@ -106,17 +120,6 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 			sb.append(") end\n\n");
 		}
 		sb.deleteCharAt(sb.length() - 1);
-		FileUtils.write(file, sb.toString(), Main.CHARSET, false);
-	}
-
-	public static void writeGlobalTypesToFile(File file) throws IOException {
-
-		StringBuilder sb = new StringBuilder();
-		for (LuaClass globalType : LuaCompiler.getGlobalTypes())
-		{
-			ZomboidLuaDoc.appendAnnotations(sb, globalType);
-			sb.append(globalType.getName()).append(" = {}\n\n");
-		}
 		FileUtils.write(file, sb.toString(), Main.CHARSET, false);
 	}
 

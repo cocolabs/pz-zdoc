@@ -91,7 +91,6 @@ public class LuaMethod implements IMethod, Annotated {
 		this(name, owner, modifier, returnType, params, hasVarArg, "");
 	}
 
-
 	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
 					 LuaType returnType, List<LuaParameter> params) {
 		this(name, owner, modifier, returnType, params, false, "");
