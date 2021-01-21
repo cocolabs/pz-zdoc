@@ -17,6 +17,8 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import org.jetbrains.annotations.TestOnly;
@@ -175,8 +177,33 @@ class JavaCompilerTest extends DocTest {
 		Assertions.assertEquals(expectedJavaMethods, compiledMethods);
 	}
 
+	@Test
+	void shouldNotCompileSyntheticConstructsFromClass() throws DetailParsingException {
+
+		Class<?> nestedClass = CompileSyntheticTest.NestedClass.class;
+
+		Method[] nestedMethods = nestedClass.getDeclaredMethods();
+		Assertions.assertEquals(2, nestedMethods.length);
+
+		for (Method declaredMethod : nestedMethods) {
+			Assertions.assertTrue(declaredMethod.isSynthetic());
+		}
+		Set<JavaMethod> compiledMethods =  JavaCompiler.compileJavaMethods(nestedClass, null);
+		Assertions.assertEquals(0, compiledMethods.size());
+
+		Field[] nestedFields = nestedClass.getDeclaredFields();
+		Assertions.assertEquals(2, nestedFields.length);
+
+		Assertions.assertFalse(nestedFields[0].isSynthetic());
+		Assertions.assertTrue(nestedFields[1].isSynthetic());
+
+		List<JavaField> compiledFields =  JavaCompiler.compileJavaFields(nestedClass, null);
+		Assertions.assertEquals(1, compiledFields.size());
+		Assertions.assertEquals("nestedField", compiledFields.get(0).getName());
+	}
+
 	@SuppressWarnings({ "unused", "SameReturnValue" })
-	private static abstract class CompileTest {
+	private static final class CompileTest {
 
 		//@formatter:off
 		public float a;
@@ -216,6 +243,22 @@ class JavaCompilerTest extends DocTest {
 		}
 
 		public void doTask(Map<Map<Class<?>, Object>, Object> map, Object obj) {
+		}
+	}
+
+	private static class CompileSyntheticTest {
+
+		@SuppressWarnings({ "WeakerAccess", "InnerClassMayBeStatic" })
+		class NestedClass {
+			private String nestedField;
+		}
+
+		public String getNestedField() {
+			return new NestedClass().nestedField;
+		}
+
+		public void setNestedField(String nestedField) {
+			new NestedClass().nestedField = nestedField;
 		}
 	}
 }
