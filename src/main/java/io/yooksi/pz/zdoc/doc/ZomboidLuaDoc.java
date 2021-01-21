@@ -89,7 +89,7 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 		for (LuaClass globalType : LuaCompiler.getGlobalTypes())
 		{
 			ZomboidLuaDoc.appendAnnotations(sb, globalType);
-			sb.append(globalType.getName()).append(" = {}\n\n");
+			sb.append(globalType.getConventionalName()).append(" = {}\n\n");
 		}
 		FileUtils.write(file, sb.toString(), Main.CHARSET, false);
 	}
@@ -106,14 +106,14 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 			ZomboidLuaDoc.appendAnnotations(sb, field);
 		}
 		// TODO: newlines should be platform independent
-		sb.append(clazz.getName()).append(" = {}\n\n");
+		sb.append(clazz.getConventionalName()).append(" = {}\n\n");
 
 		for (LuaMethod method : methods)
 		{
 			ZomboidLuaDoc.appendComments(sb, method);
 			ZomboidLuaDoc.appendAnnotations(sb, method);
 
-			sb.append("function ").append(clazz.getName());
+			sb.append("function ").append(clazz.getConventionalName());
 			sb.append(':').append(method.getName()).append('(');
 
 			method.appendParameterSignature(sb);
@@ -130,7 +130,7 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 
 	@Override
 	public String getName() {
-		return clazz.getName();
+		return clazz.getConventionalName();
 	}
 
 	@Override

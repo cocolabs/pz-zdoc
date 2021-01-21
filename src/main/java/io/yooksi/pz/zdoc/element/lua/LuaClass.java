@@ -35,12 +35,14 @@ import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
 public class LuaClass implements IClass, Annotated {
 
 	private final String type;
+	private final String conventional;
 	private final @Nullable String parentType;
 	private final List<EmmyLua> annotations;
 
 	public LuaClass(String type, @Nullable String parentType) {
 
 		this.type = type;
+		this.conventional = getConventionalName(type);
 		/*
 		 * ensure that parent type is different then base type, this check
 		 * can be handled elsewhere but we should do it here to ensure safety
@@ -53,6 +55,27 @@ public class LuaClass implements IClass, Annotated {
 		this(type, null);
 	}
 
+	/**
+	 * {@code LuaClass} type names follow official Lua lexical conventions:
+	 * <blockquote>
+	 * Names (also called identifiers) in Lua can be any string of Latin letters,
+	 * Arabic-Indic digits, and underscores, not beginning with a digit and not being a
+	 * reserved word. Identifiers are used to name variables, table fields, and labels.
+	 * </blockquote>
+	 * @see <a href="https://www.lua.org/manual/5.4/manual.html#3.1">Lua Lexical Conventions</a>
+	 */
+	private static String getConventionalName(String name) {
+
+		String result = name;
+		if (result.contains(".")) {
+			result = result.replace('.', '_');
+		}
+		if (Character.isDigit(result.charAt(0))) {
+			result = '_' + result.substring(1);
+		}
+		return EmmyLua.getSafeLuaName(result);
+	}
+
 	public @Nullable String getParentType() {
 		return parentType;
 	}
@@ -60,6 +83,10 @@ public class LuaClass implements IClass, Annotated {
 	@Override
 	public String getName() {
 		return type;
+	}
+
+	public String getConventionalName() {
+		return conventional;
 	}
 
 	@Override

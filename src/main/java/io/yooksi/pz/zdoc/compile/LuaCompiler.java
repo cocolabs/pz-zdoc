@@ -105,9 +105,11 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 			if (isRegisteredGlobal(typeName)) {
 				return;
 			}
-			type = resolveClassName(typeName).replaceAll("\\[]", "");
+			String className = resolveClassName(typeName);
+			className = className.replaceAll("\\[]", "");
 			String typeClassName = typeClass.getCanonicalName().replaceAll("\\[]", "");
-			GLOBAL_TYPES.put(type, new LuaClass(type, typeClassName));
+			LuaClass luaClass = new LuaClass(className, typeClassName);
+			GLOBAL_TYPES.put(luaClass.getName(), luaClass);
 		}
 		else GLOBAL_TYPES.put(type, new LuaClass(type, typeClass.getCanonicalName()));
 	}
