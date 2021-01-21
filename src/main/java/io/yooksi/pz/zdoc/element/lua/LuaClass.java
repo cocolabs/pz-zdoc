@@ -41,7 +41,11 @@ public class LuaClass implements IClass, Annotated {
 	public LuaClass(String type, @Nullable String parentType) {
 
 		this.type = type;
-		this.parentType = parentType;
+		/*
+		 * ensure that parent type is different then base type, this check
+		 * can be handled elsewhere but we should do it here to ensure safety
+		 */
+		this.parentType = !type.equals(parentType) ? parentType : null;
 		this.annotations = Collections.singletonList(new EmmyLuaClass(this));
 	}
 
