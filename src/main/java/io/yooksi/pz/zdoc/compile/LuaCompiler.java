@@ -92,7 +92,7 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		return result;
 	}
 
-	private static void registerGlobalType(IClass clazz, String type) {
+	private static void registerGlobalType(IClass clazz, String type) throws CompilerException {
 
 		CACHED_TYPES.put(clazz.getName(), new LuaType(type));
 
@@ -100,12 +100,16 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		if (typeClass.isArray())
 		{
 			typeClass = typeClass.getComponentType();
-			LuaType cachedType = CACHED_TYPES.get(typeClass.getName());
-			if (cachedType != null) {
-				type = cachedType.getName();
+			String typeName = typeClass.getTypeName();
+			// don't register if already registered
+			if (isRegisteredGlobal(typeName)) {
+				return;
 			}
+			type = resolveClassName(typeName).replaceAll("\\[]", "");
+			String typeClassName = typeClass.getCanonicalName().replaceAll("\\[]", "");
+			GLOBAL_TYPES.put(type, new LuaClass(type, typeClassName));
 		}
-		GLOBAL_TYPES.put(type, new LuaClass(type, typeClass.getCanonicalName()));
+		else GLOBAL_TYPES.put(type, new LuaClass(type, typeClass.getCanonicalName()));
 	}
 
 	private static LuaClass resolveLuaClass(String name) throws CompilerException {

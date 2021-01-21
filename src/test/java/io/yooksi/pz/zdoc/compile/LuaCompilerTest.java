@@ -156,14 +156,32 @@ class LuaCompilerTest {
 	void shouldCompileValidLuaArrayFieldsFromZomboidJavaDocs() throws CompilerException {
 
 		List<JavaField> javaFields = ImmutableList.of(
-				new JavaField(java.lang.Object[].class, "object", MODIFIER),
-				new JavaField(java.lang.String[].class, "text", MODIFIER),
-				new JavaField(java.lang.Integer[].class, "num", MODIFIER)
+				new JavaField(java.lang.Object[].class, "objectArray1", MODIFIER),
+				new JavaField(java.lang.String[].class, "textArray1", MODIFIER),
+				new JavaField(java.lang.Integer[].class, "numArray1", MODIFIER),
+				new JavaField(java.lang.Object[][].class, "objectArray2", MODIFIER),
+				new JavaField(java.lang.String[][][].class, "textArray2", MODIFIER),
+				new JavaField(java.lang.Integer[][][][].class, "numArray2", MODIFIER),
+				new JavaField(int[].class, "intArray1", MODIFIER),
+				new JavaField(boolean[].class, "booleanArray1", MODIFIER),
+				new JavaField(char[].class, "charArray1", MODIFIER),
+				new JavaField(int[][].class, "intArray2", MODIFIER),
+				new JavaField(boolean[][][].class, "booleanArray2", MODIFIER),
+				new JavaField(char[][][][].class, "charArray2", MODIFIER)
 		);
 		List<LuaField> expectedFields = ImmutableList.of(
-				new LuaField(new LuaType("Object[]"), "object", MODIFIER),
-				new LuaField(new LuaType("String[]"), "text", MODIFIER),
-				new LuaField(new LuaType("Integer[]"), "num", MODIFIER)
+				new LuaField(new LuaType("Object[]"), "objectArray1", MODIFIER),
+				new LuaField(new LuaType("String[]"), "textArray1", MODIFIER),
+				new LuaField(new LuaType("Integer[]"), "numArray1", MODIFIER),
+				new LuaField(new LuaType("Object[][]"), "objectArray2", MODIFIER),
+				new LuaField(new LuaType("String[][][]"), "textArray2", MODIFIER),
+				new LuaField(new LuaType("Integer[][][][]"), "numArray2", MODIFIER),
+				new LuaField(new LuaType("int[]"), "intArray1", MODIFIER),
+				new LuaField(new LuaType("boolean[]"), "booleanArray1", MODIFIER),
+				new LuaField(new LuaType("char[]"), "charArray1", MODIFIER),
+				new LuaField(new LuaType("int[][]"), "intArray2", MODIFIER),
+				new LuaField(new LuaType("boolean[][][]"), "booleanArray2", MODIFIER),
+				new LuaField(new LuaType("char[][][][]"), "charArray2", MODIFIER)
 		);
 		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(
 				new JavaClass(LuaCompilerTest.class), javaFields, new HashSet<>()
@@ -271,6 +289,14 @@ class LuaCompilerTest {
 	}
 
 	@Test @Order(8)
+	void shouldNotRegisterArrayGlobalTypesWhenCompilingLuaMethodsFromZomboidJavaDocs() {
+
+		for (LuaClass globalType : LuaCompiler.getGlobalTypes()) {
+			Assertions.assertFalse(globalType.getName().contains("[]"));
+		}
+	}
+
+	@Test @Order(9)
 	void shouldCompileValidLuaMethodsWithParameterizedTypesFromZomboidJavaDocs() throws CompilerException {
 
 		Set<JavaMethod> javaMethods = ImmutableSet.of(
