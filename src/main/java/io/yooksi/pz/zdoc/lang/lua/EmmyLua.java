@@ -89,13 +89,10 @@ public abstract class EmmyLua {
 	/**
 	 * @return {@code String} that is safe to use as member name in Lua.
 	 * 		If the given string matches (non-case-sensitive) a reserved or built-in Lua keyword,
-	 * 		the result will be lower-cased variant of given name to match the reserved or built-in keyword,
-	 * 		and prepended with {@code '_'} character to avoid clashing with reserved or built-in keyword.
+	 * 		the result will be prepended with {@code '_'} character to avoid keyword clashing.
 	 */
 	public static String getSafeLuaName(String name) {
-
-		String safeName = name.toLowerCase();
-		return isReservedKeyword(safeName) || isBuiltInType(safeName) ? '_' + safeName : name;
+		return isReservedKeyword(name) || isBuiltInType(name) ? '_' + name : name;
 	}
 
 	static String formatType(LuaType type) {

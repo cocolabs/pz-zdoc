@@ -52,14 +52,12 @@ class EmmyLuaTest implements UnitTest {
 	@Test
 	void shouldEnsureLuaMemberNameSafety() {
 
-		Set<String> reserved = new HashSet<>(EmmyLua.RESERVED_KEYWORDS);
+		Set<String> reserved = new HashSet<>();
+		reserved.addAll(EmmyLua.RESERVED_KEYWORDS);
 		reserved.addAll(EmmyLua.BUILT_IN_TYPES);
 
-		for (String keyword : reserved)
-		{
-			String expected = '_' + keyword;
-			Assertions.assertEquals(expected, EmmyLua.getSafeLuaName(keyword));
-			Assertions.assertEquals(expected, EmmyLua.getSafeLuaName(keyword.toUpperCase()));
+		for (String keyword : reserved) {
+			Assertions.assertEquals('_' + keyword, EmmyLua.getSafeLuaName(keyword));
 		}
 		Assertions.assertNotEquals("type", EmmyLua.getSafeLuaName("Type"));
 	}
