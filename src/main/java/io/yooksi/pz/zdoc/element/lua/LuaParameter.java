@@ -36,7 +36,7 @@ public class LuaParameter implements IParameter, Annotated {
 
 		this.type = type;
 		this.name = EmmyLua.getSafeLuaName(name);
-		this.annotations = Collections.singletonList(new EmmyLuaParam(name, type));
+		this.annotations = Collections.singletonList(new EmmyLuaParam(this.name, type));
 	}
 
 	@Override

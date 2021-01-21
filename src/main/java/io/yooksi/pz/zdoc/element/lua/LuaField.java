@@ -44,9 +44,9 @@ public class LuaField implements IField, Annotated {
 		if (!modifier.hasAccess(AccessModifierKey.DEFAULT))
 		{
 			this.annotations = Collections.singletonList(
-					new EmmyLuaField(name, modifier.getAccess().name, type, comment));
+					new EmmyLuaField(this.name, modifier.getAccess().name, type, comment));
 		}
-		else this.annotations = Collections.singletonList(new EmmyLuaField(name, type, comment));
+		else this.annotations = Collections.singletonList(new EmmyLuaField(this.name, type, comment));
 		this.comment = comment;
 	}
 
