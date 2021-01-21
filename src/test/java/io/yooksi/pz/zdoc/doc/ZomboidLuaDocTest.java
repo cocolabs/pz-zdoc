@@ -89,7 +89,7 @@ class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
 				"---@class ZomboidLuaDocTest : io.yooksi.pz.zdoc.doc.ZomboidLuaDocTest",
 				"---@field public object Object",
 				"---@field private text String",
-				"---@field protected number Integer",
+				"---@field protected _number Integer",
 				"---@field clazz Class",
 				"ZomboidLuaDocTest = {}"
 		);
