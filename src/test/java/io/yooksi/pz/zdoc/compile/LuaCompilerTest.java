@@ -360,9 +360,9 @@ class LuaCompilerTest {
 		}
 		Map<java.lang.String, java.lang.String> classData =
 				ImmutableMap.<java.lang.String, java.lang.String>builder()
-						.put("lang_Object", "java.lang.Object")
-						.put("lang_String", "java.lang.String")
-						.put("lang_Integer", "java.lang.Integer")
+						.put("Object", "java.lang.Object")
+						.put("String", "java.lang.String")
+						.put("Integer", "java.lang.Integer")
 						.put("test_Object", "io.yooksi.pz.zdoc.compile.test.Object")
 						.put("test_String", "io.yooksi.pz.zdoc.compile.test.String")
 						.put("test_Integer", "io.yooksi.pz.zdoc.compile.test.Integer").build();
