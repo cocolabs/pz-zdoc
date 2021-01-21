@@ -257,24 +257,24 @@ class LuaCompilerTest {
 	void shouldCompileValidLuaMethodsWithArraysFromZomboidJavaDocs() throws CompilerException {
 
 		Set<JavaMethod> javaMethods = ImmutableSet.of(
-				new JavaMethod("getText", java.lang.String[].class, ImmutableList.of(
+				new JavaMethod("getFloat", java.lang.Float[].class, ImmutableList.of(
 						new JavaParameter(java.lang.Integer[].class, "iParam")), MODIFIER
 				),
-				new JavaMethod("getNumber", java.lang.Integer[].class, ImmutableList.of(
+				new JavaMethod("getDouble", java.lang.Double[].class, ImmutableList.of(
 						new JavaParameter(java.lang.Object[].class, "oParam")), MODIFIER
 				),
-				new JavaMethod("getObject", java.lang.Object[].class, ImmutableList.of(
+				new JavaMethod("getByte", java.lang.Byte[].class, ImmutableList.of(
 						new JavaParameter(java.lang.String[].class, "sParam")), MODIFIER
 				)
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
-				new LuaMethod("getText", OWNER_CLASS, MODIFIER, new LuaType("String[]"),
+				new LuaMethod("getFloat", OWNER_CLASS, MODIFIER, new LuaType("Float[]"),
 						ImmutableList.of(new LuaParameter(new LuaType("Integer[]"), "iParam"))
 				),
-				new LuaMethod("getNumber", OWNER_CLASS, MODIFIER, new LuaType("Integer[]"),
+				new LuaMethod("getDouble", OWNER_CLASS, MODIFIER, new LuaType("Double[]"),
 						ImmutableList.of(new LuaParameter(new LuaType("Object[]"), "oParam"))
 				),
-				new LuaMethod("getObject", OWNER_CLASS, MODIFIER, new LuaType("Object[]"),
+				new LuaMethod("getByte", OWNER_CLASS, MODIFIER, new LuaType("Byte[]"),
 						ImmutableList.of(new LuaParameter(new LuaType("String[]"), "sParam"))
 				)
 		);
@@ -331,7 +331,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedMethods, zLuaDoc.getMethods());
 	}
 
-	@Test @Order(9)
+	@Test @Order(10)
 	void shouldIncludeCommentsWhenCompilingLua() throws CompilerException {
 
 		List<JavaField> fieldsWithComment = ImmutableList.of(
@@ -357,13 +357,19 @@ class LuaCompilerTest {
 		Assertions.assertEquals("this method has a comment", actual);
 	}
 
-	@Test @Order(10)
+	@Test @Order(11)
 	void shouldGatherAllGlobalTypesWhenCompilingLua() {
 
 		Set<LuaClass> expectedGlobalTypes = Sets.newHashSet(
 				new LuaClass("Object", "java.lang.Object"),
 				new LuaClass("String", "java.lang.String"),
 				new LuaClass("Integer", "java.lang.Integer"),
+				new LuaClass("Double", "java.lang.Double"),
+				new LuaClass("Float", "java.lang.Float"),
+				new LuaClass("Byte", "java.lang.Byte"),
+				new LuaClass("int"),
+				new LuaClass("boolean"),
+				new LuaClass("char"),
 				new LuaClass("ArrayList", "java.util.ArrayList"),
 				new LuaClass("Unknown")
 		);
@@ -371,7 +377,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedGlobalTypes, actualGlobalTypes);
 	}
 
-	@Test @Order(11)
+	@Test @Order(12)
 	void shouldAvoidDuplicateClassNamesWhenCompilingLua() throws CompilerException {
 
 		final Class<?>[] classObjects = {
@@ -402,7 +408,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(expectedLuaClasses, actualLuaClasses);
 	}
 
-	@Test @Order(12)
+	@Test @Order(13)
 	void shouldAvoidDuplicateTypeNamesWhenCompilingLua() throws CompilerException {
 
 		MemberModifier modifier = MemberModifier.UNDECLARED;
@@ -451,6 +457,12 @@ class LuaCompilerTest {
 	void shouldFilterGlobalClassTypesFromGlobalTypesWhenCompilingLua() {
 
 		Set<LuaClass> expectedGlobalTypes = Sets.newHashSet(
+				new LuaClass("int"),
+				new LuaClass("boolean"),
+				new LuaClass("char"),
+				new LuaClass("Double", "java.lang.Double"),
+				new LuaClass("Float", "java.lang.Float"),
+				new LuaClass("Byte", "java.lang.Byte"),
 				new LuaClass("ArrayList", "java.util.ArrayList"),
 				new LuaClass("Unknown")
 		);
