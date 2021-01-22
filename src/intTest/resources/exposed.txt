@@ -497,3 +497,4 @@ zombie.scripting.objects.Item$Type
 zombie.core.skinnedmodel.population.HairStyle
 zombie.randomizedWorld.randomizedBuilding.RBKateAndBaldspot
 zombie.core.GameVersion
+zombie.ai.states.ZombieGetDownState
