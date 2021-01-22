@@ -1,15 +1,16 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Integration Tests" type="JUnit" factoryName="JUnit">
     <log_file alias="TestLog" path="$PROJECT_DIR$/logs/test.log" />
-    <module name="pz-zdoc.test" />
+    <module name="pz-zdoc.intTest" />
     <useClassPathOnly />
-    <option name="PACKAGE_NAME" value="io.yooksi.pz.zdoc" />
-    <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.zdoc.MainTest" />
+    <option name="PACKAGE_NAME" value="" />
+    <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
-    <option name="TEST_OBJECT" value="tags" />
+    <option name="TEST_OBJECT" value="package" />
     <option name="VM_PARAMETERS" value="-ea -Dzdoc.logger=&quot;dev&quot;" />
     <option name="PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="$STEAM_DIR$/steamapps/common/ProjectZomboid" />
+    <dir value="$PROJECT_DIR$/src/intTest" />
     <tag value="integration" />
     <method v="2">
       <option name="Make" enabled="true" />
