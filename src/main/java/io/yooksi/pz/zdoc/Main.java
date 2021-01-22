@@ -205,22 +205,19 @@ public class Main {
 			else Logger.debug("Designated output path: " + userOutput);
 
 			Properties properties = Utils.getProperties("zomboid.properties");
-			if (properties != null)
+			String excludeProp = properties.getProperty("exclude");
+			if (excludeProp != null)
 			{
-				String excludeProp = properties.getProperty("exclude");
-				if (excludeProp != null)
-				{
-					if (!StringUtils.isBlank(excludeProp)) {
-						exclude.addAll(Arrays.asList(excludeProp.split(",")));
-					}
+				if (!StringUtils.isBlank(excludeProp)) {
+					exclude.addAll(Arrays.asList(excludeProp.split(",")));
 				}
-				else Logger.warn("Unable to find exclude list in zomboid.properties");
 			}
+			else Logger.warn("Unable to find exclude list in zomboid.properties");
+
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
 			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
 				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
 			}
-			File file = userOutput.resolve("Types.lua").toFile();
 			ZomboidLuaDoc.writeGlobalTypesToFile(userOutput.resolve("Types.lua").toFile());
 		}
 		Logger.debug("Finished processing command");

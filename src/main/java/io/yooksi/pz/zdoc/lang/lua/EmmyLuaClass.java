@@ -19,8 +19,8 @@ package io.yooksi.pz.zdoc.lang.lua;
 
 import java.util.regex.Pattern;
 
-import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import org.jetbrains.annotations.Nullable;
+
 
 /**
  * EmmyLua use {@code @class} to simulate classes in OOP, supporting inheritance and fields.
