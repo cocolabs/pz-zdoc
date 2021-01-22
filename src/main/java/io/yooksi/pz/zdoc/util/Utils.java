@@ -17,18 +17,14 @@
  */
 package io.yooksi.pz.zdoc.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
@@ -107,18 +103,12 @@ public class Utils {
 	public static Properties getProperties(String path) throws IOException {
 
 		Properties properties = new Properties();
-		try {
-			URL resource = Main.CLASS_LOADER.getResource(path);
-			File fLuaProperties = new File(Objects.requireNonNull(resource).toURI());
-			try (FileInputStream fis = new FileInputStream(fLuaProperties)) {
-				properties.load(fis);
+		try (InputStream iStream = Main.CLASS_LOADER.getResourceAsStream(path))
+		{
+			if (iStream == null) {
+				throw new IllegalStateException("Unable to find resource for path " + path);
 			}
-		}
-		catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-		catch (FileNotFoundException e) {
-			return null;
+			properties.load(iStream);
 		}
 		return properties;
 	}
