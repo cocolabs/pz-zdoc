@@ -28,6 +28,9 @@ group 'io.yooksi'
 version '1.0.2'
 
 sourceSets {
+    zombie {
+        java.srcDir 'src/zombie/java'
+    }
     intTest {
         java.srcDir 'src/intTest/java'
         resources.srcDir 'src/intTest/resources'
