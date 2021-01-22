@@ -1,6 +1,6 @@
 /*
- * ZomboidDoc - Project Zomboid API parser and lua compiler.
  * Copyright (C) 2020 Matthew Cain
+ * ZomboidDoc - Lua library compiler for Project Zomboid
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
