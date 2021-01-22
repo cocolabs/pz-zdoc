@@ -32,22 +32,23 @@ sourceSets {
     zombie {
         java.srcDir 'src/zombie/java'
     }
+    test {
+        java.srcDir 'src/test/java'
+        resources.srcDir 'src/test/resources'
+
+        // empty zomboid classes are needed only when game directory
+        // is not available such as when running tests on CI server
+        if (isCI) {
+            compileClasspath += sourceSets.zombie.output
+            runtimeClasspath += sourceSets.zombie.output
+        }
+    }
     intTest {
         java.srcDir 'src/intTest/java'
         resources.srcDir 'src/intTest/resources'
 
         compileClasspath += sourceSets.main.output + sourceSets.test.output
         runtimeClasspath += sourceSets.main.output + sourceSets.test.output
-    }
-    test {
-        java.srcDir 'src/test/java'
-        resources.srcDir 'src/test/resources'
-
-        // empty zomboid classes are needed only when game directory
-        // is not available such as when compiling on CI server
-        if (isCI) {
-            compileClasspath += sourceSets.zombie.output
-        }
     }
 }
 
@@ -61,6 +62,8 @@ idea {
 }
 
 configurations {
+    zombieCompile.extendsFrom compileOnly
+    testCompile.extendsFrom compileOnly
     intTestCompile.extendsFrom testCompile
     intTestImplementation.extendsFrom testImplementation
     intTestRuntimeOnly.extendsFrom testRuntimeOnly
@@ -103,7 +106,7 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
 
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
-    compile group: 'org.jetbrains', name: 'annotations', version: '20.1.0'
+    compileOnly group: 'org.jetbrains', name: 'annotations', version: '20.1.0'
 
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     compile group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
