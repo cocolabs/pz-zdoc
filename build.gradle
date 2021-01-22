@@ -26,6 +26,7 @@ apply from: 'zomboid.gradle'
 
 group 'io.yooksi'
 version '1.0.2'
+boolean isCI = project.hasProperty("isCI")
 
 sourceSets {
     zombie {
@@ -34,12 +35,19 @@ sourceSets {
     intTest {
         java.srcDir 'src/intTest/java'
         resources.srcDir 'src/intTest/resources'
+
         compileClasspath += sourceSets.main.output + sourceSets.test.output
         runtimeClasspath += sourceSets.main.output + sourceSets.test.output
     }
     test {
         java.srcDir 'src/test/java'
         resources.srcDir 'src/test/resources'
+
+        // empty zomboid classes are needed only when game directory
+        // is not available such as when compiling on CI server
+        if (isCI) {
+            compileClasspath += sourceSets.zombie.output
+        }
     }
 }
 
@@ -153,6 +161,5 @@ task luaDocJar(type: Jar) {
 }
 jar.dependsOn(luaDocJar)
 
-boolean isCI = project.hasProperty("isCI")
 def integrationTasks = [zomboidJar, luaDocJar, compileIntTestJava, spotlessJava, spotlessJavaCheck]
 integrationTasks.forEach({t -> t.onlyIf { !isCI }})
