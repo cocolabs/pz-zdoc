@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2020 Matthew Cain
  * ZomboidDoc - Lua library compiler for Project Zomboid
+ * Copyright (C) 2021 Matthew Cain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
