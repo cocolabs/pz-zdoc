@@ -24,11 +24,10 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
 @SuppressWarnings("unused")
-class JavaFieldTest implements UnitTest {
+class JavaFieldTest {
 
 	private static final Object staticFinalField = null;
 	private static Object staticField;

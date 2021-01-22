@@ -26,10 +26,8 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import io.yooksi.pz.zdoc.UnitTest;
-
 @SuppressWarnings("SameReturnValue")
-class JavaClassTest implements UnitTest {
+class JavaClassTest {
 
 	@TestOnly
 	private static void methodWithVoidReturnType() {

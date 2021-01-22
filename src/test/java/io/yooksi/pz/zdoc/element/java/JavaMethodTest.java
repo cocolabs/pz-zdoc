@@ -31,11 +31,10 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
 @SuppressWarnings("unused")
-class JavaMethodTest implements UnitTest {
+class JavaMethodTest {
 
 	private static final List<JavaParameter> DUMMY_PARAMS =
 			ImmutableList.of(new JavaParameter(Object.class, "param1"));

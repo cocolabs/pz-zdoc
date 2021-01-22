@@ -17,8 +17,6 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import io.yooksi.pz.zdoc.UnitTest;
-
-class DetailSignatureTest implements UnitTest {
+class DetailSignatureTest {
 
 }

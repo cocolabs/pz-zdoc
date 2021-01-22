@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import io.yooksi.pz.zdoc.JavaClassUtils;
-import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
 import io.yooksi.pz.zdoc.element.java.JavaMethod;
 import io.yooksi.pz.zdoc.element.java.JavaParameter;
@@ -39,7 +38,7 @@ import zombie.characters.IsoPlayer;
 import zombie.core.Color;
 
 @SuppressWarnings("SpellCheckingInspection")
-class MethodDetailTest extends MethodDetailTestFixture implements UnitTest {
+class MethodDetailTest extends MethodDetailTestFixture {
 	MethodDetailTest() throws DetailParsingException {
 	}
 

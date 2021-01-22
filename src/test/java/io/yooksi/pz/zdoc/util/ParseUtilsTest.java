@@ -23,9 +23,7 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.UnitTest;
-
-class ParseUtilsTest implements UnitTest {
+class ParseUtilsTest {
 
 	@Test
 	void shouldGetValidRegexMatchedGroups() {

@@ -23,9 +23,7 @@ import java.net.URL;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.UnitTest;
-
-class UtilsTest implements UnitTest {
+class UtilsTest {
 
 	@Test
 	void shouldResolveUrlWithMultipleDirectories() throws MalformedURLException {

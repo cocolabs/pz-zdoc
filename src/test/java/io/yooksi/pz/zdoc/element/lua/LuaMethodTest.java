@@ -25,11 +25,10 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
 
-class LuaMethodTest implements UnitTest {
+class LuaMethodTest {
 
 	private static final LuaParameter DUMMY_PARAM =
 			new LuaParameter(new LuaType("dummy"), "param1");

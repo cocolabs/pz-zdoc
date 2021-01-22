@@ -29,10 +29,8 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.UnitTest;
-
 @SuppressWarnings("unused")
-class MemberModifierTest implements UnitTest {
+class MemberModifierTest {
 
 	private static final AccessModifierKey PUBLIC = AccessModifierKey.PUBLIC;
 	private static final ModifierKey UNDECLARED = ModifierKey.UNDECLARED;

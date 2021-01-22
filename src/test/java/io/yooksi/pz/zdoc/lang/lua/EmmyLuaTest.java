@@ -23,9 +23,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.UnitTest;
-
-class EmmyLuaTest implements UnitTest {
+class EmmyLuaTest {
 
 	@Test
 	void shouldCorrectlyValidateEmmyLuaBuiltInTypes() {

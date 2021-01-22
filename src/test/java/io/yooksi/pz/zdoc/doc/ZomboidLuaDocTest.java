@@ -27,12 +27,11 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.ImmutableList;
 
 import io.yooksi.pz.zdoc.TestWorkspace;
-import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.element.lua.*;
 import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
-class ZomboidLuaDocTest extends TestWorkspace implements UnitTest {
+class ZomboidLuaDocTest extends TestWorkspace {
 
 	private static final LuaType LUA_ARRAY_LIST_OBJECT = new LuaType(
 			"ArrayList", new LuaType("Object")

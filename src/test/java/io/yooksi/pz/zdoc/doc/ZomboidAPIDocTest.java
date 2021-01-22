@@ -25,10 +25,9 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.util.Utils;
 
-class ZomboidAPIDocTest extends DocTest implements UnitTest {
+class ZomboidAPIDocTest extends DocTest {
 
 	@Test
 	void shouldCorrectlyResolveZomboidDocApiURL() {

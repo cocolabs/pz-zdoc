@@ -26,12 +26,11 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.doc.DocTest;
 import io.yooksi.pz.zdoc.element.IMember;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 
-class DetailTest extends DetailTestFixture<DetailTest.TestDetail> implements UnitTest {
+class DetailTest extends DetailTestFixture<DetailTest.TestDetail> {
 
 	DetailTest() throws DetailParsingException {
 		super(new TestDetail());

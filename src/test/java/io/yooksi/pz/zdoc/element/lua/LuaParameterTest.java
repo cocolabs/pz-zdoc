@@ -20,10 +20,9 @@ package io.yooksi.pz.zdoc.element.lua;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.UnitTest;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
 
-class LuaParameterTest implements UnitTest {
+class LuaParameterTest {
 
 	@Test
 	void shouldCreateLuaParameterWithSafeLuaName() {
