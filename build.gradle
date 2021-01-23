@@ -165,5 +165,13 @@ task luaDocJar(type: Jar) {
 }
 jar.dependsOn(luaDocJar)
 
-def integrationTasks = [zomboidJar, luaDocJar, compileIntTestJava, spotlessJava, spotlessJavaCheck]
+def integrationTasks = [
+        distTar,
+        distZip,
+        zomboidJar,
+        luaDocJar,
+        compileIntTestJava,
+        spotlessJava,
+        spotlessJavaCheck
+]
 integrationTasks.forEach({t -> t.onlyIf { !isCI }})
