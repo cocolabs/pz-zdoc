@@ -31,7 +31,6 @@ import org.apache.commons.collections4.set.PredicatedSet;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.apache.logging.log4j.core.util.ReflectionUtil;
 import org.jetbrains.annotations.Nullable;
 
 import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
@@ -198,7 +197,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 		exposeAll.setAccessible(true);
 		try {
 			Field dDebug = zombieCore.getDeclaredField("bDebug");
-			ReflectionUtil.setStaticFieldValue(dDebug, true);
+			FieldUtils.writeStaticField(dDebug, true);
 			exposeAll.invoke(exposer);
 		}
 		catch (InvocationTargetException e) {
