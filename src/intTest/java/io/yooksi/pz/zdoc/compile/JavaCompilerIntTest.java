@@ -30,7 +30,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
-class JavaCompilerIntTest {
+import io.yooksi.pz.zdoc.IntegrationTest;
+
+class JavaCompilerIntTest implements IntegrationTest {
 
 	private static final File EXPOSED_JAVA;
 

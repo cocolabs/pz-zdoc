@@ -17,9 +17,40 @@
  */
 package io.yooksi.pz.zdoc;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 
 @Tag("integration")
 public interface IntegrationTest {
 
+	@BeforeAll
+	static void initializeIntegrationTest() throws IOException {
+
+		File targetFile = new File("serialize.lua");
+		if (!targetFile.exists())
+		{
+			try (InputStream iStream = Main.CLASS_LOADER.getResourceAsStream("serialize.lua"))
+			{
+				if (iStream == null) {
+					throw new IllegalStateException("Unable to find serialize.lua resource file");
+				}
+				FileUtils.copyToFile(iStream, targetFile);
+			}
+		}
+	}
+
+	@AfterAll
+	static void finalizeIntegrationTest() {
+
+		File targetFile = new File("serialize.lua");
+		if (!targetFile.delete()) {
+			targetFile.deleteOnExit();
+		}
+	}
 }
