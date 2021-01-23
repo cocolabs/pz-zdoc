@@ -63,9 +63,12 @@ idea {
 
 configurations {
     zomboidImplementation
+    zombieCompileOnly.extendsFrom compileOnly
     runtimeOnly.extendsFrom zomboidImplementation
     testImplementation.extendsFrom zomboidImplementation
+    testCompileOnly.extendsFrom compileOnly
     intTestImplementation.extendsFrom testImplementation
+    intTestCompileOnly.extendsFrom compileOnly
     intTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
@@ -106,7 +109,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.14.0'
 
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
-    implementation 'org.jetbrains:annotations:20.1.0'
+    compileOnly 'org.jetbrains:annotations:20.1.0'
 
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     implementation 'org.jsoup:jsoup:1.13.1'
