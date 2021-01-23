@@ -17,7 +17,9 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -28,11 +30,13 @@ import java.util.*;
 import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.collections4.list.PredicatedList;
 import org.apache.commons.collections4.set.PredicatedSet;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jetbrains.annotations.Nullable;
 
+import io.yooksi.pz.zdoc.Main;
 import io.yooksi.pz.zdoc.doc.ZomboidAPIDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.detail.DetailParsingException;
@@ -47,12 +51,41 @@ import io.yooksi.pz.zdoc.util.Utils;
 
 public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 
+	private static final File SERIALIZE_LUA = new File("serialize.lua");
+
 	private final Set<Class<?>> exposedJavaClasses;
 	private final Set<String> excludedClasses;
 
 	public JavaCompiler(Set<String> excludedClasses) throws CompilerException {
 		try {
+			/* serialize.lua file is required by J2SEPlatform when setting up environment,
+			 * it is searched in project root directory and it will not be available there
+			 * when running from IDE, so we have to make it available for runtime session
+			 */
+			if (!SERIALIZE_LUA.exists())
+			{
+				try (InputStream iStream = Main.CLASS_LOADER.getResourceAsStream(SERIALIZE_LUA.getPath()))
+				{
+					if (iStream == null) {
+						throw new IllegalStateException("Unable to find serialize.lua file");
+					}
+					FileUtils.copyToFile(iStream, SERIALIZE_LUA);
+					if (!SERIALIZE_LUA.exists()) {
+						throw new IOException("Unable to copy serialize.lua to root directory");
+					}
+				}
+				catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
 			exposedJavaClasses = Collections.unmodifiableSet(getExposedJava());
+			/*
+			 * delete serialize.lua file, we don't need it anymore,
+			 * use deleteOnExit() only as a last resort if we can't delete right now
+			 */
+			if (!SERIALIZE_LUA.delete()) {
+				SERIALIZE_LUA.deleteOnExit();
+			}
 		}
 		catch (ReflectiveOperationException e) {
 			throw new CompilerException("Error occurred while reading exposed java", e);
@@ -161,7 +194,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 	 * 		holding the set of exposed Java classes could not be found.
 	 */
 	@SuppressWarnings("unchecked")
-	public static HashSet<Class<?>> getExposedJava() throws ReflectiveOperationException {
+	static HashSet<Class<?>> getExposedJava() throws ReflectiveOperationException {
 
 		/* use exclusively reflection to define classes and interact
 		 * with class objects to allow CI workflow to compile project
