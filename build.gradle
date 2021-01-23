@@ -65,6 +65,7 @@ configurations {
     zombieCompile.extendsFrom compileOnly
     testCompile.extendsFrom compileOnly
     intTestCompile.extendsFrom testCompile
+    zomboidImplementation
     intTestImplementation.extendsFrom testImplementation
     intTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
@@ -114,7 +115,8 @@ dependencies {
     // Project Zomboid libraries
     runtimeOnly fileTree(dir: gameDir, include: ['*.jar'])
 
-    compile files("$buildDir/libs/zomboid.jar")
+    // Project Zomboid classes
+    zomboidImplementation files(gameDir)
 }
 
 test {
