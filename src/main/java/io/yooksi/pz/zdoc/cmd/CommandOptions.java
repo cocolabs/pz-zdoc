@@ -31,7 +31,7 @@ final class CommandOptions {
 
 	static final Option OUTPUT_OPTION =
 			Option.builder("o").longOpt("output-path").desc("output directory path")
-					.type(File.class).required(false).hasArg().argName("path")
+					.type(File.class).required(true).hasArg().argName("path")
 					.valueSeparator(' ').build();
 
 	static final Option EXCLUDE_CLASS_OPTION =

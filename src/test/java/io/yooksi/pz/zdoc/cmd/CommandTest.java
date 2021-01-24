@@ -77,7 +77,7 @@ class CommandTest {
 	void shouldThrowExceptionWhenMissingCommandArguments() {
 
 		String[][] missingArgs = new String[][]{
-//				new String[] { "-i", "input/path" },	 // missing output path
+				new String[]{ "-i", "input/path" },		// missing output path
 				new String[]{ "-o", "output/path" }    // missing input path
 		};
 		for (String[] args : missingArgs) {
