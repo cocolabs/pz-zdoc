@@ -184,6 +184,11 @@ task luaDocJar(type: Jar) {
 }
 jar.dependsOn(luaDocJar)
 
+task cleanMedia(type: Delete) {
+    delete 'media/lua'
+}
+clean.dependsOn(cleanMedia)
+
 def integrationTasks = [
         distTar,
         distZip,
