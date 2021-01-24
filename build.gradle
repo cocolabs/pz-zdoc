@@ -180,7 +180,7 @@ task luaDocJar(type: Jar) {
     classifier('lib')
     extension('zip')
 
-    from "$buildDir/generated/sources/lua"
+    from "media/lua"
 }
 jar.dependsOn(luaDocJar)
 
