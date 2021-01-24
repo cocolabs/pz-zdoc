@@ -32,7 +32,8 @@ import org.junit.jupiter.api.Test;
 class CommandLineTest {
 
 	private static final Command[] COMMANDS = Arrays.stream(Command.values())
-			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
+			.filter(c -> c != Command.HELP && c != Command.VERSION)
+			.collect(Collectors.toSet()).toArray(new Command[]{});
 
 	@TestOnly
 	private static String[] formatAppArgs(String command, String input, String output) {

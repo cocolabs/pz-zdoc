@@ -28,7 +28,8 @@ import org.junit.jupiter.api.Test;
 class CommandTest {
 
 	private static final Command[] COMMANDS = Arrays.stream(Command.values())
-			.filter(c -> c != Command.HELP).collect(Collectors.toSet()).toArray(new Command[]{});
+			.filter(c -> c != Command.HELP && c != Command.VERSION)
+			.collect(Collectors.toSet()).toArray(new Command[]{});
 
 	@Test
 	void shouldReturnAllMatchingCommands() {
