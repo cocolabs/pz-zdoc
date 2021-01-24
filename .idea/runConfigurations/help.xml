@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Help (Lua)" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="help" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -11,12 +11,14 @@
       <option name="taskNames">
         <list>
           <option value="run" />
-          <option value="--args=&quot;help lua&quot;" />
+          <option value="--args=&quot;help&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />
     </ExternalSystemSettings>
-    <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <DebugAllEnabled>false</DebugAllEnabled>
     <method v="2" />
   </configuration>
 </component>
