@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
@@ -176,12 +178,38 @@ application {
     mainClassName = 'io.yooksi.pz.zdoc.Main'
 }
 
-task luaDocJar(type: Jar) {
-    classifier('lib')
-    extension('zip')
+task readGameVersion(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = application.mainClassName
+    args 'version'
 
-    from "media/lua"
+    OutputStream oStream = new ByteArrayOutputStream()
+    setStandardOutput(oStream)
+
+    doLast {
+        // get application command output from stream
+        // ex. game version 41.50 - IWBUMS
+        def versionText = oStream.toString()
+        print(versionText)
+
+        // manipulate text to get just version information
+        // ex. 41.50-IWBUMS
+        project.ext.gameVersion = versionText.substring(13).replaceAll(" ", "")
+    }
 }
+
+task luaDocJar(type: Jar) {
+    dependsOn readGameVersion
+    archiveFileName = "zdoc-lua.jar"
+    from 'media/lua'
+
+    doLast {
+        java.nio.file.Path destPath = Paths.get("$buildDir/libs/", getArchiveFileName().get())
+        def finalJarName = "zdoc-lua-$project.ext.gameVersion".trim() + ".zip"
+        destPath.renameTo(destPath.parent.resolve(finalJarName).toString())
+    }
+}
+luaDocJar.dependsOn(readGameVersion)
 jar.dependsOn(luaDocJar)
 
 task cleanMedia(type: Delete) {
