@@ -77,7 +77,7 @@ public class Main {
 		}
 		else if (command == Command.HELP)
 		{
-			Command info = Command.parse(args, 1);
+			Command info = args.length > 1 ? Command.parse(args, 1) : null;
 			if (info == null) {
 				CommandLine.printHelp(Command.values());
 			}
