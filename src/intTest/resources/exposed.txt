@@ -1,3 +1,4 @@
+zombie.Lua.LuaManager$GlobalObject
 zombie.input.GameKeyboard
 zombie.randomizedWorld.randomizedDeadSurvivor.RDSSkeletonPsycho
 zombie.iso.objects.IsoTree

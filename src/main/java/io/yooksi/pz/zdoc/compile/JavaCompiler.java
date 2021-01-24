@@ -236,9 +236,12 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 		catch (InvocationTargetException e) {
 			// this is expected
 		}
-		return (HashSet<Class<?>>) FieldUtils.readDeclaredField(
+		HashSet<Class<?>> result = (HashSet<Class<?>>) FieldUtils.readDeclaredField(
 				exposer, "exposed", true
 		);
+		// class containing global exposed methods
+		result.add(Utils.getClassForName("zombie.Lua.LuaManager.GlobalObject"));
+		return result;
 	}
 
 	public Set<ZomboidJavaDoc> compile() {
