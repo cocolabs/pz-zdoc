@@ -42,6 +42,7 @@ import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
 import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.util.Utils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 public class Main {
 
@@ -83,6 +84,21 @@ public class Main {
 			}
 			else CommandLine.printHelp(info);
 			return;
+		}
+		else if (command == Command.VERSION)
+		{
+			try {
+				Class<?> coreClass = Utils.getClassForName("zombie.core.Core");
+				Object core = MethodUtils.invokeStaticMethod(coreClass, "getInstance");
+
+				Object gameVersion = MethodUtils.invokeExactMethod(core, "getGameVersion");
+				Object sGameVersion = MethodUtils.invokeExactMethod(gameVersion, "toString");
+
+				Logger.info("game version " + sGameVersion);
+			}
+			catch (ReflectiveOperationException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		CommandLine cmdLine = CommandLine.parse(command.getOptions(), args);
 		Set<String> exclude = cmdLine.getExcludedClasses();
