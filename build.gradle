@@ -210,6 +210,11 @@ task cleanMedia(type: Delete) {
 }
 clean.dependsOn(cleanMedia)
 
+wrapper {
+    gradleVersion = '6.7.1'
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 def integrationTasks = [
         distTar,
         distZip,
