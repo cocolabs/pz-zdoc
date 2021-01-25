@@ -220,7 +220,6 @@ clean.dependsOn(cleanMedia)
 def integrationTasks = [
         distTar,
         distZip,
-        zomboidJar,
         luaDocJar,
         compileIntTestJava,
         spotlessJava,

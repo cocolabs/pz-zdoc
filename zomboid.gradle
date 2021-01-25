@@ -1,4 +1,3 @@
-import java.nio.file.Files
 import java.nio.file.Paths
 
 Properties properties = new Properties()
@@ -20,25 +19,3 @@ if (project.ext.gameDir == null)
     else throw new RuntimeException("Game directory path not specified")
 }
 
-task zomboidJar(type: Jar) {
-    onlyIf {
-        !project.ext.gameDir.empty
-    }
-    description('Assembles a jar archive containing game classes.')
-    setGroup('build')
-
-    archiveFileName = "zomboid.jar"
-    includeEmptyDirs = false
-
-    from project.ext.gameDir
-
-    HashSet<String> excludePaths = new HashSet<>()
-    Files.walk(project.ext.gameDir as java.nio.file.Path).withCloseable
-    {
-        it.filter({Files.isRegularFile(it) &&
-                !it.fileName.toString().endsWith('class') && it.fileName.toString() != "stdlib.lbc"
-        }).collect().forEach({ excludePaths.add(gameDir.relativize(it as java.nio.file.Path).toString()) })
-    }
-    setExcludes(excludePaths)
-}
-jar.dependsOn(zomboidJar)
