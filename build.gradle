@@ -48,6 +48,7 @@ configurations {
 sourceSets {
     main {
         java.srcDir 'src/main/java'
+        compileClasspath += configurations.zomboidImplementation
         runtimeClasspath += configurations.zomboidRuntimeOnly
     }
     zombie {
