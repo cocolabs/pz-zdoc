@@ -234,8 +234,6 @@ wrapper {
 }
 
 def integrationTasks = [
-        distTar,
-        distZip,
         compileIntTestJava,
         spotlessJava,
         spotlessJavaCheck
