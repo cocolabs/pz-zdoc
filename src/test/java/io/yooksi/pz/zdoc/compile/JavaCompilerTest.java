@@ -188,7 +188,7 @@ class JavaCompilerTest extends DocTest {
 		for (Method declaredMethod : nestedMethods) {
 			Assertions.assertTrue(declaredMethod.isSynthetic());
 		}
-		Set<JavaMethod> compiledMethods =  JavaCompiler.compileJavaMethods(nestedClass, null);
+		Set<JavaMethod> compiledMethods = JavaCompiler.compileJavaMethods(nestedClass, null);
 		Assertions.assertEquals(0, compiledMethods.size());
 
 		Field[] nestedFields = nestedClass.getDeclaredFields();
@@ -198,7 +198,7 @@ class JavaCompilerTest extends DocTest {
 		Assertions.assertFalse(nestedFields[0].isSynthetic());
 		Assertions.assertTrue(nestedFields[1].isSynthetic());
 
-		List<JavaField> compiledFields =  JavaCompiler.compileJavaFields(nestedClass, null);
+		List<JavaField> compiledFields = JavaCompiler.compileJavaFields(nestedClass, null);
 		Assertions.assertEquals(1, compiledFields.size());
 		Assertions.assertEquals("nestedField", compiledFields.get(0).getName());
 	}
@@ -249,17 +249,17 @@ class JavaCompilerTest extends DocTest {
 
 	private static class CompileSyntheticTest {
 
-		@SuppressWarnings({ "WeakerAccess", "InnerClassMayBeStatic" })
-		class NestedClass {
-			private String nestedField;
-		}
-
 		public String getNestedField() {
 			return new NestedClass().nestedField;
 		}
 
 		public void setNestedField(String nestedField) {
 			new NestedClass().nestedField = nestedField;
+		}
+
+		@SuppressWarnings({ "WeakerAccess", "InnerClassMayBeStatic" })
+		class NestedClass {
+			private String nestedField;
 		}
 	}
 }

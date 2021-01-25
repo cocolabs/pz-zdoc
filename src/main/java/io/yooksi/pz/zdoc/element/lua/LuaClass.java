@@ -62,6 +62,7 @@ public class LuaClass implements IClass, Annotated {
 	 * Arabic-Indic digits, and underscores, not beginning with a digit and not being a
 	 * reserved word. Identifiers are used to name variables, table fields, and labels.
 	 * </blockquote>
+	 *
 	 * @see <a href="https://www.lua.org/manual/5.4/manual.html#3.1">Lua Lexical Conventions</a>
 	 */
 	private static String getConventionalName(String name) {

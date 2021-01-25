@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * EmmyLua use {@code @class} to simulate classes in OOP, supporting inheritance and fields.
  * <ul>

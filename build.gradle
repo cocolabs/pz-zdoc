@@ -34,6 +34,7 @@ apply from: 'zomboid.gradle'
 
 group 'io.yooksi'
 version '1.0.2'
+
 boolean isCI = project.hasProperty("isCI")
 
 configurations {

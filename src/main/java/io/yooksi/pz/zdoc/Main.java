@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 import io.yooksi.pz.zdoc.cmd.Command;
 import io.yooksi.pz.zdoc.cmd.CommandLine;
@@ -42,7 +43,6 @@ import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
 import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.util.Utils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 
 public class Main {
 
