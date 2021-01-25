@@ -51,21 +51,7 @@ public class Main {
 
 	/**
 	 * <p>Application main entry point method.</p>
-	 * <p>Supports the following command forms:</p>
-	 * <ul>
-	 *     <li>
-	 *         <i>Annotate existing lua files under given path:</i>
-	 *         <pre>{@code -lua <path_to_files> <output_dir_path>}</pre>
-	 *     </li>
-	 *     <li>
-	 *         <i>Parse java doc under given <i>path/url</i> and convert to lua file:</i>
-	 *         <pre>{@code -java [--api|<java_doc_location>] <output_dir_path>}</pre>
-	 *     </li>
-	 * </ul>
-	 *
-	 * @throws InvalidPathException if malformed path passed as argument
-	 * @throws NoSuchFileException if unable to find file under argument path
-	 * @throws IndexOutOfBoundsException if no path argument supplied
+	 * <p>Accepts {@link Command} enums as application argument</p>
 	 */
 	public static void main(String[] args) throws IOException, ParseException, CompilerException {
 
