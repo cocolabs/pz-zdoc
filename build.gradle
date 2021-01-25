@@ -178,15 +178,15 @@ application {
     mainClassName = 'io.yooksi.pz.zdoc.Main'
 }
 
-task readGameVersion(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    main = application.mainClassName
-    args 'version'
+tasks.register("readGameVersion", JavaExec.class) {
+    it.classpath = sourceSets.main.runtimeClasspath
+    it.main = application.mainClassName
+    it.args 'version'
 
     OutputStream oStream = new ByteArrayOutputStream()
-    setStandardOutput(oStream)
+    it.setStandardOutput(oStream)
 
-    doLast {
+    it.doLast {
         // get application command output from stream
         // ex. game version 41.50 - IWBUMS
         def versionText = oStream.toString()
@@ -198,10 +198,10 @@ task readGameVersion(type: JavaExec) {
     }
 }
 
-task luaDocJar(type: ZDocJar) {
-    description("Assembles a jar archive containing compiled lua classes.")
-    getArchiveAppendix().set("lua")
-    from 'media/lua'
+tasks.register("luaDocJar", ZDocJar.class) {
+    it.description("Assembles a jar archive containing compiled lua classes.")
+    it.getArchiveAppendix().set("lua")
+    it.from 'media/lua'
 }
 
 task cleanMedia(type: Delete) {
@@ -212,7 +212,6 @@ clean.dependsOn(cleanMedia)
 def integrationTasks = [
         distTar,
         distZip,
-        luaDocJar,
         compileIntTestJava,
         spotlessJava,
         spotlessJavaCheck
