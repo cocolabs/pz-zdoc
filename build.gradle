@@ -1,4 +1,5 @@
 import java.nio.file.Paths
+import com.github.jk1.license.render.*
 
 plugins {
     // Apply the java plugin to add support for Java
@@ -24,6 +25,8 @@ plugins {
 
     // https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
     id "com.github.johnrengelman.shadow" version "6.1.0"
+    // https://plugins.gradle.org/plugin/com.github.jk1.dependency-license-report
+    id "com.github.jk1.dependency-license-report" version "1.16"
 }
 
 apply from: "https://gist.githubusercontent.com/yooksi/$spotlessRulesGistId/raw/spotless.gradle"
@@ -203,6 +206,10 @@ tasks.register("luaDocJar", ZDocJar.class) {
     it.description("Assembles a jar archive containing compiled lua classes.")
     it.getArchiveAppendix().set("lua")
     it.from 'media/lua'
+}
+
+licenseReport {
+    renderers = [new InventoryHtmlReportRenderer()]
 }
 
 task cleanMedia(type: Delete) {
