@@ -143,6 +143,27 @@ dependencies {
     zomboidImplementation files(gameDir)
 }
 
+distributions.main.contents.exclude {
+    File file = it.file
+    String filename = file.getName()
+    /*
+     * there is a bug that occurs when running distribution tasks on Github CI
+     * where the distribution archive tries to add itself to archive
+     * @see https://github.com/yooksi/pz-zdoc/issues/21
+     */
+    if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.jar', '.zip', '.tar')) {
+        return true
+    }
+    try {
+        java.nio.file.Path gameDirPath = project.ext.gameDir
+        gameDirPath.relativize(Paths.get(file.path as String))
+        return true
+    }
+    catch (IllegalArgumentException ignored) {
+        return false
+    }
+}
+
 test {
     // Clean the old test-results first
     dependsOn cleanTest
@@ -223,8 +244,6 @@ wrapper {
 }
 
 def integrationTasks = [
-        distTar,
-        distZip,
         compileIntTestJava,
         spotlessJava,
         spotlessJavaCheck
