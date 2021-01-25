@@ -143,6 +143,17 @@ dependencies {
     zomboidImplementation files(gameDir)
 }
 
+distributions.main.contents.exclude {
+    try {
+        Path gameDirPath = project.ext.gameDir
+        gameDirPath.relativize(Paths.get(it.file.path as String))
+        return true
+    }
+    catch (IllegalArgumentException ignored) {
+        return false
+    }
+}
+
 test {
     // Clean the old test-results first
     dependsOn cleanTest
