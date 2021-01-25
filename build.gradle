@@ -198,19 +198,11 @@ task readGameVersion(type: JavaExec) {
     }
 }
 
-task luaDocJar(type: Jar) {
-    dependsOn readGameVersion
-    archiveFileName = "zdoc-lua.jar"
+task luaDocJar(type: ZDocJar) {
+    description("Assembles a jar archive containing compiled lua classes.")
+    getArchiveAppendix().set("lua")
     from 'media/lua'
-
-    doLast {
-        java.nio.file.Path destPath = Paths.get("$buildDir/libs/", getArchiveFileName().get())
-        def finalJarName = "zdoc-lua-$project.ext.gameVersion".trim() + ".zip"
-        destPath.renameTo(destPath.parent.resolve(finalJarName).toString())
-    }
 }
-luaDocJar.dependsOn(readGameVersion)
-jar.dependsOn(luaDocJar)
 
 task cleanMedia(type: Delete) {
     delete 'media/lua'
