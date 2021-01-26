@@ -147,7 +147,7 @@ distributions.main.contents.exclude {
      * where the distribution archive tries to add itself to archive
      * @see https://github.com/yooksi/pz-zdoc/issues/21
      */
-    if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.jar', '.zip', '.tar')) {
+    if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.zip', '.tar')) {
         return true
     }
     try {
