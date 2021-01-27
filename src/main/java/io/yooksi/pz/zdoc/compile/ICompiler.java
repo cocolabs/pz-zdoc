@@ -23,5 +23,12 @@ import io.yooksi.pz.zdoc.doc.ZomboidDoc;
 
 interface ICompiler<T extends ZomboidDoc> {
 
+	/**
+	 * Compile code represented by {@code ZomboidDoc} documents.
+	 *
+	 * @return {@code Set} of compiled documents.
+	 *
+	 * @throws CompilerException if an error occurred during compilation.
+	 */
 	Set<T> compile() throws CompilerException;
 }

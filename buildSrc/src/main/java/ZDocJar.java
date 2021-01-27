@@ -17,15 +17,17 @@
  */
 import java.util.NoSuchElementException;
 import java.util.Objects;
+
 import javax.annotation.Nullable;
 
-import groovy.lang.Closure;
 import org.gradle.api.NonNullApi;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.plugins.ExtraPropertiesExtension;
 import org.gradle.jvm.tasks.Jar;
 import org.gradle.util.GUtil;
+
+import groovy.lang.Closure;
 
 @NonNullApi
 public class ZDocJar extends Jar {
@@ -66,8 +68,7 @@ public class ZDocJar extends Jar {
 		 */
 		setGroup(TASK_GROUP);
 		dependsOn(DEPENDENCY_TASKS);
-		for (String taskName : DEPENDANT_TASKS)
-		{
+		for (String taskName : DEPENDANT_TASKS) {
 			getTaskByName(taskName).dependsOn(this);
 		}
 		return configure;
