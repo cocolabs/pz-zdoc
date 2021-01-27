@@ -25,12 +25,12 @@ plugins {
 }
 
 apply from: "https://gist.githubusercontent.com/yooksi/$spotlessRulesGistId/raw/spotless.gradle"
+apply from: 'setup.gradle'
 apply from: 'zomboid.gradle'
 
 group 'io.yooksi'
 version '1.0.2'
 
-boolean isCI = project.hasProperty("isCI")
 
 configurations {
     zomboidRuntimeOnly
