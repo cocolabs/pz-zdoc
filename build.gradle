@@ -159,6 +159,11 @@ distributions.main.contents.exclude {
     }
 }
 
+startScripts {
+    // do not add provided files to classpath, they are not included in distribution
+    classpath -= configurations.zomboidImplementation
+}
+
 test {
     // Clean the old test-results first
     dependsOn cleanTest
