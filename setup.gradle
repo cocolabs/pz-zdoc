@@ -14,3 +14,6 @@ void registerBooleanProjectProperty(String name, boolean defaultValue) {
 }
 // is the build being run on a CI server?
 registerBooleanProjectProperty("isCI", false)
+
+// should gradle run spotless tasks?
+registerBooleanProjectProperty("makeSpotless", true)

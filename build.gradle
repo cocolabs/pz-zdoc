@@ -23,9 +23,8 @@ plugins {
     // https://plugins.gradle.org/plugin/com.github.jk1.dependency-license-report
     id "com.github.jk1.dependency-license-report" version "1.16"
 }
-
-apply from: "https://gist.githubusercontent.com/yooksi/$spotlessRulesGistId/raw/spotless.gradle"
 apply from: 'setup.gradle'
+apply from: 'spotless.gradle'
 apply from: 'zomboid.gradle'
 
 group 'io.yooksi'
@@ -240,8 +239,6 @@ wrapper {
 }
 
 def integrationTasks = [
-        compileIntTestJava,
-        spotlessJava,
-        spotlessJavaCheck
+        compileIntTestJava
 ]
 integrationTasks.forEach({t -> t.onlyIf { !isCI }})
