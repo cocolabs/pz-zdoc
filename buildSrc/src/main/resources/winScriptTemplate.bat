@@ -79,4 +79,4 @@ set CLASSPATH=%!classpath!%
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %PZ_ZDOC_OPTS% -classpath "%CLASSPATH%" %!mainClassName!% %*
 
 :finish
-exit /b 1
+exit /b 0
