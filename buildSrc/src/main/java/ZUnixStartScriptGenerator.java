@@ -29,42 +29,44 @@ import org.gradle.api.NonNullApi;
 import org.gradle.api.Transformer;
 import org.gradle.api.UncheckedIOException;
 import org.gradle.api.internal.plugins.StartScriptTemplateBindingFactory;
-import org.gradle.api.internal.plugins.WindowsStartScriptGenerator;
-import org.gradle.internal.io.IoUtils;
 import org.gradle.jvm.application.scripts.JavaAppStartScriptGenerationDetails;
+import org.gradle.jvm.application.scripts.ScriptGenerator;
 import org.gradle.util.TextUtil;
 
 @NonNullApi
-public class ZWindowsScriptGenerator extends WindowsStartScriptGenerator {
+public class ZUnixStartScriptGenerator implements ScriptGenerator {
 
 	private static final Charset CHARSET = Charset.defaultCharset();
-	private static final ClassLoader CL = ZWindowsScriptGenerator.class.getClassLoader();
+	private static final ClassLoader CL = ZUnixStartScriptGenerator.class.getClassLoader();
 
 	private static final String[] CLASSPATH_ADDENDUM = new String[]{
-			"%INPUT_PATH%",                // Project Zomboid game classes
-			"%INPUT_PATH%\\*"              // Project Zomboid libraries
+			"$PZ_DIR_PATH",                // Project Zomboid game classes
+			"$PZ_DIR_PATH/*"               // Project Zomboid libraries
 	};
 	private static final Pattern REGEX_TOKEN = Pattern.compile("%!(.*)!%");
-	private static final String SCRIPT_TEMPLATE;
 
-	static
-	{
-		final String scriptFilename = "winScriptTemplate.bat";
-		try (InputStream iStream = CL.getResourceAsStream(scriptFilename))
+	private final String scriptTemplate, lineSeparator;
+	private final Transformer<Map<String, String>, JavaAppStartScriptGenerationDetails> bindingFactory;
+
+	public ZUnixStartScriptGenerator() {
+		this.lineSeparator = TextUtil.getUnixLineSeparator();
+		this.scriptTemplate = readScriptResourceFile("unixScriptTemplate");
+		this.bindingFactory = StartScriptTemplateBindingFactory.unix();
+	}
+
+	private static String readScriptResourceFile(String filename) {
+
+		try (InputStream iStream = CL.getResourceAsStream(filename))
 		{
 			if (iStream == null) {
-				throw new IllegalStateException("Unable to find file \"" + scriptFilename + "\"");
+				throw new IllegalStateException("Unable to find file \"" + filename + "\"");
 			}
-			SCRIPT_TEMPLATE = IOUtils.toString(iStream, CHARSET);
+			return IOUtils.toString(iStream, CHARSET);
 		}
 		catch (IOException e) {
 			throw new ExceptionInInitializerError(e);
 		}
 	}
-
-	private final String lineSeparator = TextUtil.getWindowsLineSeparator();
-	private final Transformer<Map<String, String>, JavaAppStartScriptGenerationDetails>
-			bindingFactory = StartScriptTemplateBindingFactory.windows();
 
 	@Override
 	public void generateScript(JavaAppStartScriptGenerationDetails details, Writer destination) {
@@ -74,7 +76,7 @@ public class ZWindowsScriptGenerator extends WindowsStartScriptGenerator {
 			StringBuilder sb = new StringBuilder();
 			sb.append(binding.get("classpath"));
 			for (String entry : CLASSPATH_ADDENDUM) {
-				sb.append(';').append(entry);
+				sb.append(':').append(entry);
 			}
 			binding.put("classpath", sb.toString());
 			destination.write(generateStartScriptContentFromTemplate(binding));
@@ -86,25 +88,18 @@ public class ZWindowsScriptGenerator extends WindowsStartScriptGenerator {
 
 	private String generateStartScriptContentFromTemplate(final Map<String, String> binding) {
 
-		return IoUtils.get(this.getTemplate().asReader(), reader ->
+		Matcher matcher = REGEX_TOKEN.matcher(scriptTemplate);
+		StringBuffer sb = new StringBuffer();
+		/*
+		 * all matched tokens will be replaced with binding params that match token name
+		 * see: StartScriptTemplateBindingFactory#ScriptBindingParameter
+		 */
+		while (matcher.find())
 		{
-			Matcher matcher = REGEX_TOKEN.matcher(SCRIPT_TEMPLATE);
-			StringBuffer sb = new StringBuffer();
-			/*
-			 * all matched tokens will be replaced with binding params that match token name
-			 * see: StartScriptTemplateBindingFactory#ScriptBindingParameter
-			 */
-			while (matcher.find())
-			{
-				String bindingParam = binding.get(matcher.group(1));
-				/*
-				 * make sure to escape backslashes because they are recognized by regex
-				 * as being used to escape literal characters in the replacement string
-				 */
-				matcher.appendReplacement(sb, bindingParam.replace("\\", "\\\\"));
-			}
-			matcher.appendTail(sb);
-			return Objects.requireNonNull(TextUtil.convertLineSeparators(sb.toString(), lineSeparator));
-		});
+			String bindingParam = binding.get(matcher.group(1));
+			matcher.appendReplacement(sb, Matcher.quoteReplacement(bindingParam));
+		}
+		matcher.appendTail(sb);
+		return Objects.requireNonNull(TextUtil.convertLineSeparators(sb.toString(), lineSeparator));
 	}
 }

@@ -160,7 +160,8 @@ distributions.main.contents.exclude {
 }
 
 startScripts {
-    setWindowsStartScriptGenerator(new ZWindowsScriptGenerator())
+    setWindowsStartScriptGenerator(new ZWindowsStartScriptGenerator())
+    setUnixStartScriptGenerator(new ZUnixStartScriptGenerator())
 
     // do not add provided files to classpath, they are not included in distribution
     classpath -= configurations.zomboidImplementation
