@@ -8,6 +8,7 @@
     <option name="PARAMETERS" value="compile -i &quot;$STEAM_DIR$/steamapps/common/ProjectZomboid&quot; -o media/lua/shared/Library" />
     <method v="2">
       <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="cleanMedia" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
       <option name="Gradle.BeforeRunTask" enabled="true" tasks="installDist" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
     </method>
   </configuration>
