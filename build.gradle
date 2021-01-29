@@ -159,6 +159,13 @@ distributions.main.contents.exclude {
     }
 }
 
+def cleanScripts = tasks.register("cleanScripts", Delete.class) {
+    it.delete("$buildDir/scripts")
+}
+tasks.named("installDist").configure{
+    it.dependsOn(cleanScripts)
+}
+
 tasks.named("startScripts").configure {
     it.setWindowsStartScriptGenerator(new ZWindowsStartScriptGenerator())
     it.setUnixStartScriptGenerator(new ZUnixStartScriptGenerator())
