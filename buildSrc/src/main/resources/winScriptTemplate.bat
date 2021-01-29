@@ -5,6 +5,8 @@
 @rem
 @rem ##########################################################################
 
+echo Preparing to launch ZomboidDoc...
+
 @rem Set local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" setlocal
 
@@ -36,7 +38,7 @@ set PZ_DIR_ABS_PATH=%CD%
 popd
 
 @rem Turn directory path into absolute path
-set PZ_DIR_PATH="%PZ_DIR_ABS_PATH%"
+set PZ_DIR_PATH=%PZ_DIR_ABS_PATH%
 
 if exist %PZ_DIR_PATH% goto findJava
 
@@ -51,6 +53,9 @@ set PZ_DIR_PATH="%APP_HOME%"
 
 @rem Find java.exe
 :findJava
+
+echo Project Zomboid directory path:
+echo.%PZ_DIR_PATH%
 
 set JAVA_EXE=%INPUT_PATH%\jre64\bin\java.exe
 if exist JAVA_EXE goto execute
@@ -106,6 +111,7 @@ goto finish
 @rem Setup the command line
 set CLASSPATH=%!classpath!%
 
+echo Launching ZomboidDoc...
 @rem Execute pz-zdoc
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %PZ_ZDOC_OPTS% -classpath "%CLASSPATH%" %!mainClassName!% %*
 

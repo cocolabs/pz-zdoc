@@ -21,6 +21,9 @@
 ##  pz-zdoc start up script for UN*X
 ##
 ##############################################################################
+# shellcheck disable=SC2034
+
+echo Preparing to launch ZomboidDoc...
 
 # Attempt to set APP_HOME
 # Resolve links: $0 may be a link
@@ -94,6 +97,8 @@ else
         die "ERROR: PZ_DIR_PATH points to a non-existing directory: $PZ_DIR_PATH"
     fi
 fi
+printf "Project Zomboid directory path:\n-> %s\n" $PZ_DIR_PATH
+
 CLASSPATH=%!classpath!%
 
 # Determine the Java command to use to start the JVM.
@@ -190,6 +195,7 @@ save () {
     for i do printf %s\\n "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/' \\\\/" ; done
     echo " "
 }
+echo "Launching ZomboidDoc..."
 APP_ARGS=`save "$@"`
 
 # Collect all arguments for the java command, following the shell quoting and substitution rules
