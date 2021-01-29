@@ -159,12 +159,12 @@ distributions.main.contents.exclude {
     }
 }
 
-startScripts {
-    setWindowsStartScriptGenerator(new ZWindowsStartScriptGenerator())
-    setUnixStartScriptGenerator(new ZUnixStartScriptGenerator())
+tasks.named("startScripts").configure {
+    it.setWindowsStartScriptGenerator(new ZWindowsStartScriptGenerator())
+    it.setUnixStartScriptGenerator(new ZUnixStartScriptGenerator())
 
     // do not add provided files to classpath, they are not included in distribution
-    classpath -= configurations.zomboidImplementation
+    it.classpath -= configurations.zomboidImplementation
 }
 
 test {
