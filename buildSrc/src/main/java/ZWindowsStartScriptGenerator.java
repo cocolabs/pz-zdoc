@@ -40,8 +40,8 @@ public class ZWindowsStartScriptGenerator implements ScriptGenerator {
 	private static final ClassLoader CL = ZWindowsStartScriptGenerator.class.getClassLoader();
 
 	private static final String[] CLASSPATH_ADDENDUM = new String[]{
-			"%INPUT_PATH%",                // Project Zomboid game classes
-			"%INPUT_PATH%\\*"              // Project Zomboid libraries
+			"%PZ_DIR_PATH%",                // Project Zomboid game classes
+			"%PZ_DIR_PATH%\\*"              // Project Zomboid libraries
 	};
 	private static final Pattern REGEX_TOKEN = Pattern.compile("%!(.*)!%");
 

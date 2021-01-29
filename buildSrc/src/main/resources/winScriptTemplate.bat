@@ -12,7 +12,6 @@ set DIRNAME=%~dp0
 if "%DIRNAME%" == "" set DIRNAME=.
 set APP_BASE_NAME=%~n0
 set APP_HOME=%DIRNAME%..
-set INPUT_PATH=%~3
 
 @rem Resolve any "." and ".." in APP_HOME to make it shorter.
 for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
@@ -20,7 +19,39 @@ for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
 @rem Add default JVM options here. You can also use JAVA_OPTS and PZ_ZDOC_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS=
 
+@rem Set game directory path to APP_HOME if env var not set
+if "%PZ_DIR_PATH%"=="" goto setDirPathToHome
+
+@rem Ensure path is Windows-style path
+set PZ_DIR_PATH=%PZ_DIR_PATH:/=\%
+
+@rem Save current directory and change to target directory
+pushd %PZ_DIR_PATH% 2>nul
+if %ERRORLEVEL% == 1 goto dirNotFoundError
+
+@rem Save value of current directory
+set PZ_DIR_ABS_PATH=%CD%
+
+@rem Restore original directory
+popd
+
+@rem Turn directory path into absolute path
+set PZ_DIR_PATH="%PZ_DIR_ABS_PATH%"
+
+if exist %PZ_DIR_PATH% goto findJava
+
+:dirNotFoundError
+echo.
+echo ERROR: directory %PZ_DIR_PATH% does not exist or is not accessible
+echo.
+goto finish
+
+:setDirPathToHome
+set PZ_DIR_PATH="%APP_HOME%"
+
 @rem Find java.exe
+:findJava
+
 set JAVA_EXE=%INPUT_PATH%\jre64\bin\java.exe
 if exist JAVA_EXE goto execute
 
