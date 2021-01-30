@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 #
 # ZomboidDoc - Lua library compiler for Project Zomboid
 # Copyright (C) 2021 Matthew Cain
