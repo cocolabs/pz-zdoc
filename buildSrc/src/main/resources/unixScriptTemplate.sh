@@ -122,9 +122,15 @@ if [ ! -x "$JAVACMD" ] ; then
       which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.\nPlease set the JAVA_HOME variable in your environment to match the location of your Java installation."
   fi
 fi
+# This is the Java version we want
+JAVA_TARGET_VERSION="1.8"
 
-Please set the JAVA_HOME variable in your environment to match the
-location of your Java installation."
+# Determine which Java version is used
+JAVA_VERSION_INFO=$("$JAVACMD" -version 2>&1 | awk -F '"' '/version/ {print $2}')
+JAVA_VERSION=$(echo $JAVA_VERSION_INFO | cut -d '.' -f -2)
+
+if [ $JAVA_VERSION != $JAVA_TARGET_VERSION ] ; then
+  die "ERROR: JAVA_HOME points to a wrong Java version ($JAVA_VERSION).\nPlease set your JAVA_HOME variable in your environment to match the location of Java version $JAVA_TARGET_VERSION installation."
 fi
 
 # Increase the maximum file descriptors if we can.
