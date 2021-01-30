@@ -4,7 +4,7 @@
     <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
     <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.zdoc.Main" />
     <module name="pz-zdoc.main" />
-    <option name="PROGRAM_PARAMETERS" value="annotate -i &quot;$STEAM_DIR$/steamapps/common/ProjectZomboid/media/lua&quot; -o media/lua" />
+    <option name="PROGRAM_PARAMETERS" value="annotate -i &quot;$PZ_DIR_PATH$/media/lua&quot; -o media/lua" />
     <option name="VM_PARAMETERS" value="-Dzdoc.logger=&quot;dev&quot;" />
     <method v="2">
       <option name="Make" enabled="true" />

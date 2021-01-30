@@ -4,7 +4,7 @@
     <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
     <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.zdoc.Main" />
     <module name="pz-zdoc.main" />
-    <option name="PROGRAM_PARAMETERS" value="compile -i &quot;$STEAM_DIR$/steamapps/common/ProjectZomboid&quot; -o media/lua/shared/Library" />
+    <option name="PROGRAM_PARAMETERS" value="compile -i &quot;$PZ_DIR_PATH$&quot; -o media/lua/shared/Library" />
     <option name="VM_PARAMETERS" value="-Dzdoc.logger=&quot;dev&quot;" />
     <method v="2">
       <option name="Make" enabled="true" />

@@ -2,7 +2,7 @@
   <configuration default="false" name="AnnotateLuaOnUnix" type="ShConfigurationType">
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="$PROJECT_DIR$/build/install/pz-zdoc/bin/pz-zdoc" />
-    <option name="SCRIPT_OPTIONS" value="annotate -i &quot;$STEAM_DIR$/steamapps/common/ProjectZomboid/media/lua&quot; -o media/lua" />
+    <option name="SCRIPT_OPTIONS" value="annotate -i &quot;$PZ_DIR_PATH$/media/lua&quot; -o media/lua" />
     <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
     <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
@@ -10,7 +10,7 @@
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="EXECUTE_IN_TERMINAL" value="true" />
     <envs>
-      <env name="PZ_DIR_PATH" value="$STEAM_DIR$/steamapps/common/ProjectZomboid" />
+      <env name="PZ_DIR_PATH" value="$PZ_DIR_PATH$" />
     </envs>
     <method v="2" />
   </configuration>

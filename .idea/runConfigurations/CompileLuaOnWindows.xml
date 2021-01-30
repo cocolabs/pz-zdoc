@@ -4,11 +4,11 @@
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
-      <env name="PZ_DIR_PATH" value="$STEAM_DIR$/steamapps/common/ProjectZomboid" />
+      <env name="PZ_DIR_PATH" value="$PZ_DIR_PATH$" />
     </envs>
     <module name="" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/build/install/pz-zdoc/bin/pz-zdoc.bat" />
-    <option name="PARAMETERS" value="compile -i &quot;$STEAM_DIR$/steamapps/common/ProjectZomboid&quot; -o media/lua/shared/Library" />
+    <option name="PARAMETERS" value="compile -i &quot;$PZ_DIR_PATH$&quot; -o media/lua/shared/Library" />
     <method v="2">
       <option name="Make" enabled="true" />
       <option name="Gradle.BeforeRunTask" enabled="true" tasks="cleanMedia" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
