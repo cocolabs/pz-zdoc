@@ -93,7 +93,9 @@ else
     # Turn directory path into absolute path
     PZ_DIR_PATH=$(realpath "$PZ_DIR_PATH")
 
-    if [ ! -d $PZ_DIR_PATH ]; then
+    if [ $? != 0 ]; then
+      die "ERROR: An error occurred while resolving game directory path"
+    elif [ ! -d $PZ_DIR_PATH ]; then
         die "ERROR: PZ_DIR_PATH points to a non-existing directory: $PZ_DIR_PATH"
     fi
 fi
