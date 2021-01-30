@@ -99,6 +99,9 @@ else
         die "ERROR: PZ_DIR_PATH points to a non-existing directory: $PZ_DIR_PATH"
     fi
 fi
+if [ ! -f "$PZ_DIR_PATH/projectzomboid" ]  ; then
+  die "ERROR: PZ_DIR_PATH points to an invalid or corrupt game directory: $PZ_DIR_PATH"
+fi
 printf "Project Zomboid directory path:\n%s\n" $PZ_DIR_PATH
 
 CLASSPATH=%!classpath!%

@@ -40,11 +40,18 @@ popd
 @rem Turn directory path into absolute path
 set PZ_DIR_PATH=%PZ_DIR_ABS_PATH%
 
-if exist %PZ_DIR_PATH% goto findJava
+if exist %PZ_DIR_PATH% goto checkValidDir
 
 :dirNotFoundError
 echo.
 echo ERROR: directory %PZ_DIR_PATH% does not exist or is not accessible
+echo.
+goto finish
+
+:checkValidDir
+if exist "%PZ_DIR_PATH%\ProjectZomboid32.exe" goto findJava
+echo.
+echo ERROR: PZ_DIR_PATH points to an invalid or corrupt game directory: %PZ_DIR_PATH%
 echo.
 goto finish
 
