@@ -57,8 +57,8 @@ set PZ_DIR_PATH="%APP_HOME%"
 echo Project Zomboid directory path:
 echo.%PZ_DIR_PATH%
 
-set JAVA_EXE=%INPUT_PATH%\jre64\bin\java.exe
-if exist JAVA_EXE goto execute
+set JAVA_EXE=%PZ_DIR_PATH%\jre64\bin\java.exe
+if exist %JAVA_EXE% goto validateJavaVersion
 
 if defined JAVA_HOME goto findJavaFromJavaHome
 
@@ -72,7 +72,7 @@ goto finish
 
 :findJavaFromJavaHome
 set JAVA_HOME=%JAVA_HOME:"=%
-set JAVA_EXE=%JAVA_HOME%/bin/java.exe
+set JAVA_EXE=%JAVA_HOME%\bin\java.exe
 
 if exist "%JAVA_EXE%" goto validateJavaVersion
 
@@ -89,9 +89,9 @@ goto finish
 set TARGET_JAVA_VERSION=18
 
 for /f "tokens=3" %%g in ('java -version 2^>^&1 ^| findstr /i "version"') do (
-    set JAVA_VERSION=%%g
+    set JAVA_VERSION_INFO=%%g
 )
-set JAVA_VERSION=%JAVA_VERSION:"=%
+set JAVA_VERSION=%JAVA_VERSION_INFO:"=%
 for /f "delims=. tokens=1-3" %%v in ("%JAVA_VERSION%") do (
 	@rem Only valid version is java 1.8
     if not %%v%%w == %TARGET_JAVA_VERSION% goto wrongJavaVersion
@@ -108,6 +108,9 @@ echo location of Java version %TARGET_JAVA_VERSION% installation.
 goto finish
 
 :execute
+echo Executing with Java version: %JAVA_VERSION_INFO:"=%
+echo %JAVA_EXE%
+
 @rem Setup the command line
 set CLASSPATH=%!classpath!%
 
