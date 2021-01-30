@@ -103,23 +103,25 @@ printf "Project Zomboid directory path:\n-> %s\n" $PZ_DIR_PATH
 
 CLASSPATH=%!classpath!%
 
-# Determine the Java command to use to start the JVM.
-if [ -n "$JAVA_HOME" ] ; then
-    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
-        # IBM's JDK on AIX uses strange locations for the executables
-        JAVACMD="$JAVA_HOME/jre/sh/java"
-    else
-        JAVACMD="$JAVA_HOME/bin/java"
-    fi
-    if [ ! -x "$JAVACMD" ] ; then
-        die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
+JAVACMD="$PZ_DIR_PATH/jre/bin/java"
 
-Please set the JAVA_HOME variable in your environment to match the
-location of your Java installation."
-    fi
+if [ ! -x "$JAVACMD" ] ; then
+  # Determine the Java command to use to start the JVM.
+  if [ -n "$JAVA_HOME" ] ; then
+      if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+          # IBM's JDK on AIX uses strange locations for the executables
+          JAVACMD="$JAVA_HOME/jre/sh/java"
+      else
+          JAVACMD="$JAVA_HOME/bin/java"
+      fi
+      if [ ! -x "$JAVACMD" ] ; then
+          die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME.\nPlease set the JAVA_HOME variable in your environment to match the location of your Java installation."
+      fi
   else
-    JAVACMD="java"
-    which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+      JAVACMD="java"
+      which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.\nPlease set the JAVA_HOME variable in your environment to match the location of your Java installation."
+  fi
+fi
 
 Please set the JAVA_HOME variable in your environment to match the
 location of your Java installation."
