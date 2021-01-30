@@ -50,7 +50,7 @@ public class ZUnixStartScriptGenerator implements ScriptGenerator {
 
 	public ZUnixStartScriptGenerator() {
 		this.lineSeparator = TextUtil.getUnixLineSeparator();
-		this.scriptTemplate = readScriptResourceFile("unixScriptTemplate");
+		this.scriptTemplate = readScriptResourceFile("unixScriptTemplate.sh");
 		this.bindingFactory = StartScriptTemplateBindingFactory.unix();
 	}
 
