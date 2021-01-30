@@ -57,6 +57,7 @@ set PZ_DIR_PATH="%APP_HOME%"
 echo Project Zomboid directory path:
 echo.%PZ_DIR_PATH%
 
+@rem Search for Java executable in game directory first
 set JAVA_EXE=%PZ_DIR_PATH%\jre\bin\java.exe
 if exist %JAVA_EXE% goto validateJavaVersion
 
@@ -86,7 +87,7 @@ goto finish
 
 :validateJavaVersion
 @rem Validate java version
-set TARGET_JAVA_VERSION=18
+set JAVA_TARGET_VERSION=18
 
 for /f "tokens=3" %%g in ('java -version 2^>^&1 ^| findstr /i "version"') do (
     set JAVA_VERSION_INFO=%%g
@@ -94,7 +95,7 @@ for /f "tokens=3" %%g in ('java -version 2^>^&1 ^| findstr /i "version"') do (
 set JAVA_VERSION=%JAVA_VERSION_INFO:"=%
 for /f "delims=. tokens=1-3" %%v in ("%JAVA_VERSION%") do (
 	@rem Only valid version is java 1.8
-    if not %%v%%w == %TARGET_JAVA_VERSION% goto wrongJavaVersion
+    if not %%v%%w == %JAVA_TARGET_VERSION% goto wrongJavaVersion
 )
 if "%ERRORLEVEL%" == "0" goto execute
 
@@ -103,7 +104,7 @@ echo.
 echo ERROR: JAVA_HOME points to a wrong Java version (%JAVA_VERSION%).
 echo.
 echo Please set your JAVA_HOME variable in your environment to match the
-echo location of Java version %TARGET_JAVA_VERSION% installation.
+echo location of Java version %JAVA_TARGET_VERSION% installation.
 
 goto finish
 

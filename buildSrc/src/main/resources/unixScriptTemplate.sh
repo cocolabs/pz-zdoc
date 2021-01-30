@@ -99,7 +99,7 @@ else
         die "ERROR: PZ_DIR_PATH points to a non-existing directory: $PZ_DIR_PATH"
     fi
 fi
-printf "Project Zomboid directory path:\n-> %s\n" $PZ_DIR_PATH
+printf "Project Zomboid directory path:\n%s\n" $PZ_DIR_PATH
 
 CLASSPATH=%!classpath!%
 
