@@ -12,6 +12,8 @@
     <envs>
       <env name="PZ_DIR_PATH" value="$PZ_DIR_PATH$" />
     </envs>
-    <method v="2" />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="cleanMedia" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+    </method>
   </configuration>
 </component>
