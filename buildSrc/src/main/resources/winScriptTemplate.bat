@@ -57,7 +57,7 @@ set PZ_DIR_PATH="%APP_HOME%"
 echo Project Zomboid directory path:
 echo.%PZ_DIR_PATH%
 
-set JAVA_EXE=%PZ_DIR_PATH%\jre64\bin\java.exe
+set JAVA_EXE=%PZ_DIR_PATH%\jre\bin\java.exe
 if exist %JAVA_EXE% goto validateJavaVersion
 
 if defined JAVA_HOME goto findJavaFromJavaHome
