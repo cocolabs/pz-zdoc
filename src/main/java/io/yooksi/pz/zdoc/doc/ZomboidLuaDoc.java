@@ -124,7 +124,7 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 	}
 
 	@Override
-	public IClass getClazz() {
+	public LuaClass getClazz() {
 		return clazz;
 	}
 
