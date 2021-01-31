@@ -215,8 +215,18 @@ public class Main {
 				}
 			}
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
-			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
-				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
+			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile())
+			{
+				String luaDocName = zLuaDoc.getName();
+				String luaDocProp = properties.getProperty(luaDocName);
+				if (luaDocProp != null)
+				{
+					// use property value instead of document name
+					if (!StringUtils.isBlank(luaDocProp)) {
+						zLuaDoc.writeToFile(userOutput.resolve(luaDocProp + ".lua").toFile());
+					}
+				}
+				else zLuaDoc.writeToFile(userOutput.resolve(luaDocName + ".lua").toFile());
 			}
 			ZomboidLuaDoc.writeGlobalTypesToFile(userOutput.resolve("Types.lua").toFile());
 			for (String excludedClass : exclude) {
