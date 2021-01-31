@@ -30,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -220,9 +221,14 @@ public class Main {
 				String luaDocProp = properties.getProperty(luaDocName);
 				if (luaDocProp != null)
 				{
-					// use property value instead of document name
-					if (!StringUtils.isBlank(luaDocProp)) {
-						zLuaDoc.writeToFile(userOutput.resolve(luaDocProp + ".lua").toFile());
+					// override lua document name with property value
+					if (!StringUtils.isBlank(luaDocProp))
+					{
+						ZomboidLuaDoc overrideDoc = new ZomboidLuaDoc(
+								new LuaClass(luaDocProp, zLuaDoc.getClazz().getParentType()),
+								zLuaDoc.getFields(), zLuaDoc.getMethods()
+						);
+						overrideDoc.writeToFile(userOutput.resolve(luaDocProp + ".lua").toFile());
 					}
 				}
 				else zLuaDoc.writeToFile(userOutput.resolve(luaDocName + ".lua").toFile());
