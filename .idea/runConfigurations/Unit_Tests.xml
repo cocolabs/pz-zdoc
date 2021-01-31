@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Unit Tests" type="JUnit" factoryName="JUnit">
+    <log_file alias="TestLog" path="$PROJECT_DIR$/logs/test.log" />
+    <module name="pz-zdoc.test" />
+    <useClassPathOnly />
+    <option name="PACKAGE_NAME" value="" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <option name="VM_PARAMETERS" value="-ea -Dzdoc.logger=&quot;dev&quot;" />
+    <option name="PARAMETERS" value="" />
+    <dir value="$PROJECT_DIR$/src/test" />
+    <tag value="unit" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

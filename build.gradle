@@ -1,7 +1,7 @@
-plugins {
-    // Apply the java plugin to add support for Java
-    id 'java'
+import java.nio.file.Paths
+import com.github.jk1.license.render.*
 
+plugins {
     // Apply the application plugin to add support for building a CLI application.
     id 'application'
 
@@ -14,49 +14,89 @@ plugins {
     // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
 
+    // https://plugins.gradle.org/plugin/net.ltgt.errorprone
+    id "net.ltgt.errorprone" version "1.3.0"
+
     // https://plugins.gradle.org/plugin/com.diffplug.spotless
     id "com.diffplug.spotless" version "5.8.2"
 
-    // https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
-    id "com.github.johnrengelman.shadow" version "6.1.0"
+    // https://plugins.gradle.org/plugin/com.github.jk1.dependency-license-report
+    id "com.github.jk1.dependency-license-report" version "1.16"
 }
-
-apply from: "https://gist.githubusercontent.com/raw/$spotlessRulesGistId/spotless.gradle"
+apply from: 'setup.gradle'
+apply from: 'spotless.gradle'
+apply from: 'zomboid.gradle'
 
 group 'io.yooksi'
 version '1.0.2'
 
-idea {
-    project {
-        languageLevel = '1.8'
-    }
-    module {
-        inheritOutputDirs = true
-        excludeDirs += [file("media"), file("logs"), file("build")]
-    }
+
+configurations {
+    zomboidRuntimeOnly
+    zomboidImplementation
+    zombieCompileOnly.extendsFrom compileOnly
+    runtimeOnly.extendsFrom zomboidImplementation
+    testImplementation.extendsFrom zomboidImplementation
+    testCompileOnly.extendsFrom compileOnly
+    intTestImplementation.extendsFrom testImplementation
+    intTestCompileOnly.extendsFrom compileOnly
+    intTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 sourceSets {
-     media { java { srcDirs 'media/lua' } }
+    main {
+        java.srcDir 'src/main/java'
+        compileClasspath += configurations.zomboidImplementation
+        runtimeClasspath += configurations.zomboidRuntimeOnly
+    }
+    zombie {
+        java.srcDir 'src/zombie/java'
+    }
+    test {
+        java.srcDir 'src/test/java'
+        resources.srcDir 'src/test/resources'
+
+        // empty zomboid classes are needed only when game directory
+        // is not available such as when running tests on CI server
+        if (isCI) {
+            compileClasspath += sourceSets.zombie.output
+            runtimeClasspath += sourceSets.zombie.output
+        }
+    }
+    intTest {
+        java.srcDir 'src/intTest/java'
+        resources.srcDir 'src/intTest/resources'
+
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += configurations.zomboidRuntimeOnly
+    }
+}
+
+idea {
+    module {
+        inheritOutputDirs = true
+        excludeDirs += [file("logs"), file("build")]
+        sourceDirs -= project.sourceSets.intTest.java.srcDirs
+        testSourceDirs += project.sourceSets.intTest.java.srcDirs
+    }
 }
 
 repositories {
     // Use jcenter for resolving dependencies.
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    // https://mvnrepository.com/artifact/com.google.errorprone/error_prone_core
+    compileOnly 'com.google.errorprone:error_prone_core:2.5.1'
 
-    // https://mvnrepository.com/artifact/commons-io/commons-io
-    compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
+    // https://mvnrepository.com/artifact/com.google.errorprone/javac
+    errorproneJavac("com.google.errorprone:javac:9+181-r4173-1")
 
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
-    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-
-    // https://mvnrepository.com/artifact/commons-cli/commons-cli
-    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation 'com.google.guava:guava:30.1-jre'
 
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
@@ -64,17 +104,74 @@ dependencies {
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation 'org.apache.commons:commons-lang3:3.11'
+
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation 'commons-io:commons-io:2.8.0'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+    implementation 'org.apache.commons:commons-collections4:4.4'
+
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    implementation 'commons-cli:commons-cli:1.4'
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-core
+    implementation 'org.springframework:spring-core:5.3.2'
+
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'
+    runtimeOnly 'org.apache.logging.log4j:log4j-core:2.14.0'
 
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
+    compileOnly 'org.apache.logging.log4j:log4j-api:2.14.0'
 
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
-    compile group: 'org.jetbrains', name: 'annotations', version: '20.1.0'
+    compileOnly 'org.jetbrains:annotations:20.1.0'
 
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
+    implementation 'org.jsoup:jsoup:1.13.1'
+
+    // Project Zomboid libraries
+    zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
+
+    // Project Zomboid classes
+    zomboidImplementation files(gameDir)
+}
+
+distributions.main.contents.exclude {
+    File file = it.file
+    String filename = file.getName()
+    /*
+     * there is a bug that occurs when running distribution tasks on Github CI
+     * where the distribution archive tries to add itself to archive
+     * @see https://github.com/yooksi/pz-zdoc/issues/21
+     */
+    if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.zip', '.tar')) {
+        return true
+    }
+    try {
+        java.nio.file.Path gameDirPath = project.ext.gameDir
+        gameDirPath.relativize(Paths.get(file.path as String))
+        return true
+    }
+    catch (IllegalArgumentException ignored) {
+        return false
+    }
+}
+
+def cleanScripts = tasks.register("cleanScripts", Delete.class) {
+    it.delete("$buildDir/scripts")
+}
+tasks.named("installDist").configure{
+    it.dependsOn(cleanScripts)
+}
+
+tasks.named("startScripts").configure {
+    it.setWindowsStartScriptGenerator(new ZWindowsStartScriptGenerator())
+    it.setUnixStartScriptGenerator(new ZUnixStartScriptGenerator())
+
+    // do not add provided files to classpath, they are not included in distribution
+    it.classpath -= configurations.zomboidImplementation
 }
 
 test {
@@ -116,10 +213,47 @@ application {
     mainClassName = 'io.yooksi.pz.zdoc.Main'
 }
 
-task luaLibJar(type: Jar) {
-    archiveClassifier = 'lib'
-    archiveExtension = 'zip'
+tasks.register("readGameVersion", JavaExec.class) {
+    it.classpath = sourceSets.main.runtimeClasspath
+    it.main = application.mainClassName
+    it.args 'version'
 
-    from sourceSets.media.allSource
+    OutputStream oStream = new ByteArrayOutputStream()
+    it.setStandardOutput(oStream)
+
+    it.doLast {
+        // get application command output from stream
+        // ex. game version 41.50 - IWBUMS
+        def versionText = oStream.toString()
+        print(versionText)
+
+        // manipulate text to get just version information
+        // ex. 41.50-IWBUMS
+        project.ext.gameVersion = versionText.substring(13).replaceAll(" ", "")
+    }
 }
-jar.dependsOn(luaLibJar)
+
+tasks.register("luaDocJar", ZDocJar.class) {
+    it.description("Assembles a jar archive containing compiled lua classes.")
+    it.getArchiveAppendix().set("lua")
+    it.from 'media/lua'
+}
+
+licenseReport {
+    renderers = [new InventoryHtmlReportRenderer()]
+}
+
+task cleanMedia(type: Delete) {
+    delete 'media/lua'
+}
+clean.dependsOn(cleanMedia)
+
+wrapper {
+    gradleVersion = '6.7.1'
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+def integrationTasks = [
+        compileIntTestJava
+]
+integrationTasks.forEach({t -> t.onlyIf { !isCI }})

@@ -1,6 +1,6 @@
 /*
- * ZomboidDoc - Project Zomboid API parser and lua compiler.
- * Copyright (C) 2020 Matthew Cain
+ * ZomboidDoc - Lua library compiler for Project Zomboid
+ * Copyright (C) 2021 Matthew Cain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,54 @@
  */
 package io.yooksi.pz.zdoc.cmd;
 
-import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
+import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.yooksi.pz.zdoc.MainTest;
-import io.yooksi.pz.zdoc.doc.JavaDoc;
+class CommandLineTest {
 
-public class CommandLineTest {
+	private static final Command[] COMMANDS = Arrays.stream(Command.values())
+			.filter(c -> c != Command.HELP && c != Command.VERSION)
+			.collect(Collectors.toSet()).toArray(new Command[]{});
+
+	@TestOnly
+	private static String[] formatAppArgs(String command, String input, String output) {
+
+		List<String> args = new java.util.ArrayList<>();
+		args.add(command);
+		if (!input.isEmpty())
+		{
+			args.add("-i");
+			args.add(input);
+		}
+		if (!output.isEmpty())
+		{
+			args.add("-o");
+			args.add(output);
+		}
+		return args.toArray(new String[]{});
+	}
+
+	@TestOnly
+	private static String[] formatAppArgs(Command command, String input, String output) {
+		return formatAppArgs(command.getName(), input, output);
+	}
 
 	@Test
 	void shouldProperlyParseCommandInputPath() throws ParseException {
 
 		String path = Paths.get("input/path").toString();
-		for (Command command : Command.WORK_COMMANDS)
+		for (Command command : COMMANDS)
 		{
-			String[] args = MainTest.formatAppArgs(command, path, "output/path");
+			String[] args = formatAppArgs(command, path, "output/path");
 			CommandLine cmdLIne = CommandLine.parse(command.options, args);
 
 			Assertions.assertEquals(path, cmdLIne.getInputPath().toString());
@@ -48,9 +75,9 @@ public class CommandLineTest {
 	void shouldProperlyParseCommandOutputPath() throws ParseException {
 
 		String path = Paths.get("output/path").toString();
-		for (Command command : Command.WORK_COMMANDS)
+		for (Command command : COMMANDS)
 		{
-			String[] args = MainTest.formatAppArgs(command, "input/path", path);
+			String[] args = formatAppArgs(command, "input/path", path);
 			CommandLine cmdLIne = CommandLine.parse(command.options, args);
 
 			Object outputPath = Objects.requireNonNull(cmdLIne.getOutputPath());
@@ -62,33 +89,15 @@ public class CommandLineTest {
 	void shouldThrowExceptionWhenParsingMalformedCommandPath() {
 
 		String path = '\u0000' + "/p*!h";
-		for (Command command : Command.WORK_COMMANDS)
+		for (Command command : COMMANDS)
 		{
-			final String[] args1 = MainTest.formatAppArgs(command, path, "output/path");
+			final String[] args1 = formatAppArgs(command, path, "output/path");
 			Assertions.assertThrows(InvalidPathException.class, () ->
 					CommandLine.parse(command.options, args1).getInputPath());
 
-			final String[] args2 = MainTest.formatAppArgs(command, "input/path", path);
+			final String[] args2 = formatAppArgs(command, "input/path", path);
 			Assertions.assertThrows(InvalidPathException.class, () ->
 					CommandLine.parse(command.options, args2).getOutputPath());
-		}
-	}
-
-	@Test
-	void shouldProperlyParseCommandInputURL() throws ParseException {
-
-		String[] targets = {
-				"zombie/inventory/InventoryItem.html",
-				JavaDoc.resolveApiURL("zombie/inventory/InventoryItem.html").toString()
-		};
-		for (String target : targets)
-		{
-			URL expected = JavaDoc.resolveApiURL(target);
-
-			String[] args = new String[]{ Command.JAVA.name, "-a", target, "-o", "output/path" };
-			CommandLine cmdLIne = CommandLine.parse(Command.JAVA.options, args);
-
-			Assertions.assertEquals(expected, cmdLIne.getInputUrl());
 		}
 	}
 }

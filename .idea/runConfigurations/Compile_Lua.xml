@@ -1,13 +1,15 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Compile Lua" type="Application" factoryName="Application">
-    <log_file alias="Main" path="$PROJECT_DIR$/logs/main.log" />
+    <log_file checked="false" alias="Main" path="$PROJECT_DIR$/logs/main.log" />
     <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
     <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.zdoc.Main" />
     <module name="pz-zdoc.main" />
-    <option name="PROGRAM_PARAMETERS" value="java --api-docs zombie/Lua/LuaManager.GlobalObject.html -o media/lua/shared/Library -e Recipe,Vector2" />
-    <option name="VM_PARAMETERS" value="-Dld.logger=&quot;dev&quot;" />
+    <option name="PROGRAM_PARAMETERS" value="compile -i &quot;$PZ_DIR_PATH$&quot; -o media/lua/shared/Library" />
+    <option name="VM_PARAMETERS" value="-Dzdoc.logger=&quot;dev&quot;" />
     <method v="2">
       <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="cleanMedia" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Annotate Lua" run_configuration_type="Application" />
     </method>
   </configuration>
 </component>

@@ -1,5 +1,8 @@
-# Game asset files
-media/
+# User data
+local.properties
+
+# Generated Lua
+/media/
 
 ### IntelliJ ###
 

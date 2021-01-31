@@ -1,0 +1,19 @@
+/**
+ * Register a project property of a given name as a {@code boolean} value.
+ *
+ * @param name name of the property to register.
+ * @param defaultValue value to register with if property is {@code null}.
+ * @see Boolean#parseBoolean(String)
+ */
+void registerBooleanProjectProperty(String name, boolean defaultValue) {
+    def property = project.findProperty(name)
+    if (property != null) {
+        project.ext.setProperty(name, Boolean.parseBoolean(property as String))
+    }
+    else project.ext.setProperty(name, defaultValue)
+}
+// is the build being run on a CI server?
+registerBooleanProjectProperty("isCI", false)
+
+// should gradle run spotless tasks?
+registerBooleanProjectProperty("makeSpotless", true)

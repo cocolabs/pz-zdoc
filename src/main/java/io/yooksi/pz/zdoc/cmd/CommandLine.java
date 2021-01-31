@@ -1,6 +1,6 @@
 /*
- * ZomboidDoc - Project Zomboid API parser and lua compiler.
- * Copyright (C) 2020 Matthew Cain
+ * ZomboidDoc - Lua library compiler for Project Zomboid
+ * Copyright (C) 2021 Matthew Cain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,10 @@ package io.yooksi.pz.zdoc.cmd;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
@@ -31,26 +30,31 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.Nullable;
 
-import io.yooksi.pz.zdoc.doc.JavaDoc;
+import com.google.common.collect.Sets;
 
+/**
+ * Apache Commons {@code CommandLine} wrapper providing additional methods.
+ */
 public class CommandLine extends org.apache.commons.cli.CommandLine {
 
+	/** Used to parse application arguments to find command options. */
 	private static final CommandParser PARSER = new CommandParser();
 
-	protected CommandLine(Option[] options, String[] args) {
-
-		Arrays.stream(options).forEach(this::addOption);
-		Arrays.stream(args).forEach(this::addArg);
-	}
-
-	protected CommandLine(org.apache.commons.cli.CommandLine cmdLine) {
-		this(cmdLine.getOptions(), cmdLine.getArgs());
+	CommandLine(org.apache.commons.cli.CommandLine cmdLine) {
+		Arrays.stream(cmdLine.getOptions()).forEach(this::addOption);
+		Arrays.stream(cmdLine.getArgs()).forEach(this::addArg);
 	}
 
 	public static CommandLine parse(Options options, String[] args) throws ParseException {
 		return PARSER.parse(options, args);
 	}
 
+	/**
+	 * Prints help text for the given {@code Command}.
+	 *
+	 * @see HelpFormatter#printHelp(String cmdLineSyntax, String header,
+	 *        Options options, String footer, boolean autoUsage) HelpFormatter.printHelp(...)
+	 */
 	public static void printHelp(Command command) {
 
 		HelpFormatter formatter = new HelpFormatter();
@@ -59,8 +63,16 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		formatter.printHelp(command.name, command.help, command.options, "", true);
 	}
 
+	/**
+	 * Prints help text for the given array of commands.
+	 *
+	 * @see HelpFormatter#printHelp(PrintWriter pw, int width, String cmdLineSyntax, String header,
+	 *        Options options, int leftPad, int descPad, String footer, boolean autoUsage)
+	 * 		HelpFormatter.printHelp(...)
+	 */
 	public static void printHelp(Command[] commands) {
 
+		//noinspection UseOfSystemOutOrSystemErr
 		try (PrintWriter pw = new PrintWriter(System.out))
 		{
 			pw.println("See 'help <command>' to read about a specific command");
@@ -78,40 +90,34 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		}
 	}
 
-	public boolean isInputApi() {
-		return hasOption(CommandOptions.API_OPTION.getOpt());
-	}
-
-	public List<String> getExcludedClasses() {
+	/**
+	 * @return {@code Set} of class names specified in command options to exclude from
+	 * 		compilation process or an empty list if exclude option has not been set.
+	 *
+	 * @see CommandOptions#EXCLUDE_CLASS_OPTION
+	 */
+	public Set<String> getExcludedClasses() {
 
 		Option excludeOpt = CommandOptions.EXCLUDE_CLASS_OPTION;
 		if (hasOption(excludeOpt.getOpt()))
 		{
 			String value = getParsedValue(excludeOpt);
-			return Arrays.asList(value.split(","));
+			return Sets.newHashSet(value.split(","));
 		}
-		return new ArrayList<>();
+		return new HashSet<>();
 	}
 
-	public @Nullable URL getInputUrl() {
-
-		if (isInputApi())
-		{
-			Option option = CommandOptions.API_OPTION;
-			try {
-				return getParsedValue(option);
-			}
-			catch (IllegalArgumentException e) {
-				return JavaDoc.resolveApiURL(getOptionValue(option.getOpt()));
-			}
-		}
-		return null;
-	}
-
+	/**
+	 * @return input path specified in command options.
+	 */
 	public Path getInputPath() {
 		return ((File) getParsedValue(CommandOptions.INPUT_OPTION)).toPath();
 	}
 
+	/**
+	 * @return output path specified in command options or {@code null} if
+	 * 		output command option was not specified.
+	 */
 	public @Nullable Path getOutputPath() {
 
 		File outputFile = getParsedValue(CommandOptions.OUTPUT_OPTION);

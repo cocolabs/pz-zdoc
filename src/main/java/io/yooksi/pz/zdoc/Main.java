@@ -1,6 +1,6 @@
 /*
- * ZomboidDoc - Project Zomboid API parser and lua compiler.
- * Copyright (C) 2020 Matthew Cain
+ * ZomboidDoc - Lua library compiler for Project Zomboid
+ * Copyright (C) 2021 Matthew Cain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,46 +17,46 @@
  */
 package io.yooksi.pz.zdoc;
 
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 import io.yooksi.pz.zdoc.cmd.Command;
 import io.yooksi.pz.zdoc.cmd.CommandLine;
-import io.yooksi.pz.zdoc.doc.JavaDoc;
-import io.yooksi.pz.zdoc.doc.LuaDoc;
-import io.yooksi.pz.zdoc.element.JavaClass;
-import io.yooksi.pz.zdoc.element.LuaClass;
-import io.yooksi.pz.zdoc.element.Method;
+import io.yooksi.pz.zdoc.compile.CompilerException;
+import io.yooksi.pz.zdoc.compile.JavaCompiler;
+import io.yooksi.pz.zdoc.compile.LuaAnnotator;
+import io.yooksi.pz.zdoc.compile.LuaCompiler;
+import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
+import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
+import io.yooksi.pz.zdoc.logger.Logger;
+import io.yooksi.pz.zdoc.util.Utils;
 
 public class Main {
 
+	public static final String CHARSET = Charset.defaultCharset().name();
+	public static final ClassLoader CLASS_LOADER = Main.class.getClassLoader();
+
 	/**
 	 * <p>Application main entry point method.</p>
-	 * <p>Supports the following command forms:</p>
-	 * <ul>
-	 *     <li>
-	 *         <i>Annotate existing lua files under given path:</i>
-	 *         <pre>{@code -lua <path_to_files> <output_dir_path>}</pre>
-	 *     </li>
-	 *     <li>
-	 *         <i>Parse java doc under given <i>path/url</i> and convert to lua file:</i>
-	 *         <pre>{@code -java [--api|<java_doc_location>] <output_dir_path>}</pre>
-	 *     </li>
-	 * </ul>
-	 *
-	 * @throws InvalidPathException if malformed path passed as argument
-	 * @throws NoSuchFileException if unable to find file under argument path
-	 * @throws IndexOutOfBoundsException if no path argument supplied
+	 * <p>Accepts {@link Command} enums as application argument</p>
 	 */
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) throws IOException, ParseException, CompilerException {
 
 		Logger.debug(String.format("Started application with %d args: %s",
 				args.length, Arrays.toString(args)));
@@ -67,22 +67,37 @@ public class Main {
 		}
 		else if (command == Command.HELP)
 		{
-			Command info = Command.parse(args, 1);
+			Command info = args.length > 1 ? Command.parse(args, 1) : null;
 			if (info == null) {
 				CommandLine.printHelp(Command.values());
 			}
 			else CommandLine.printHelp(info);
 			return;
 		}
+		else if (command == Command.VERSION)
+		{
+			try {
+				Class<?> coreClass = Utils.getClassForName("zombie.core.Core");
+				Object core = MethodUtils.invokeStaticMethod(coreClass, "getInstance");
+
+				Object gameVersion = MethodUtils.invokeExactMethod(core, "getGameVersion");
+				Object sGameVersion = MethodUtils.invokeExactMethod(gameVersion, "toString");
+
+				Logger.info("game version " + sGameVersion);
+			}
+			catch (ReflectiveOperationException e) {
+				throw new RuntimeException(e);
+			}
+		}
 		CommandLine cmdLine = CommandLine.parse(command.getOptions(), args);
-		// parse and document LUA files
-		if (command == Command.LUA)
+		Set<String> exclude = cmdLine.getExcludedClasses();
+		if (command == Command.ANNOTATE)
 		{
 			Logger.debug("Preparing to parse and document lua files...");
 
 			Path root = cmdLine.getInputPath();
 			Path dir = cmdLine.getOutputPath();
-			java.util.List<Path> paths = Files.walk(Paths.get(root.toString()))
+			List<Path> paths = Files.walk(Paths.get(root.toString()))
 					.filter(Files::isRegularFile).collect(Collectors.toCollection(ArrayList::new));
 
 			if (paths.size() > 1) {
@@ -91,38 +106,90 @@ public class Main {
 			else if (paths.isEmpty()) {
 				Logger.warn("No files found under path " + root);
 			}
+			Properties properties = Utils.getProperties("annotate.properties");
 			// process every file found under given root path
-			Set<String> excludedMembers = new java.util.HashSet<>();
 			for (Path path : paths)
 			{
 				if (Utils.isLuaFile(path))
 				{
 					Logger.debug(String.format("Found lua file \"%s\"", path.getFileName()));
-					Path outputFilePath = validateLuaOutputPath(path, root, dir);
-
-					LuaDoc doc = LuaDoc.Parser.create(path.toFile(), excludedMembers).parse();
-					if (!doc.getMembers().isEmpty()) {
-						doc.writeToFile(outputFilePath);
+					Path outputFilePath;
+					if (!root.toFile().exists()) {
+						throw new FileNotFoundException(root.toString());
 					}
+					/* user did not specify output dir path */
+					else if (dir != null)
+					{
+						File outputDirFile = dir.toFile();
+						if (!outputDirFile.exists() && !outputDirFile.mkdirs()) {
+							throw new IOException("Unable to create output directory: " + dir);
+						}
+						/* root path matches current path so there are no
+						 * subdirectories, just resolve the filename against root path
+						 */
+						if (root.compareTo(path) == 0) {
+							outputFilePath = dir.resolve(path.getFileName());
+						}
+						else outputFilePath = dir.resolve(root.relativize(path));
+					}
+					/* overwrite file when unspecified output directory */
+					else
+					{
+						outputFilePath = path;
+						Logger.warn("Unspecified output directory, overwriting files");
+					}
+					/* make sure output file exists before we try to write to it */
+					File outputFile = outputFilePath.toFile();
+					boolean outputFileExists = outputFile.exists();
+					if (!outputFileExists)
+					{
+						File parentFile = outputFile.getParentFile();
+						if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
+							throw new IOException("Unable to create specified output file: " + outputFilePath);
+						}
+					}
+					String fileName = path.getFileName().toString();
+					List<String> content = new ArrayList<>();
+
+					AnnotateRules rules = new AnnotateRules(properties, exclude);
+					AnnotateResult result = LuaAnnotator.annotate(path.toFile(), content, rules);
+
+					String addendum = outputFileExists ? " and overwriting" : "";
+					Logger.debug(String.format("Annotating%s file %s...", addendum, fileName));
+					switch (result)
+					{
+						case ALL_INCLUDED:
+							Logger.info(String.format("Finished annotating file \"%s\", " +
+									"all elements matched.", fileName));
+							break;
+						case PARTIAL_INCLUSION:
+							Logger.error(String.format("Failed annotating file \"%s\", " +
+									"some elements were not matched.", fileName));
+							break;
+						case NO_MATCH:
+							Logger.error(String.format("Failed annotating file \"%s\", " +
+									"no elements were matched", fileName));
+							break;
+						case SKIPPED_FILE_IGNORED:
+							Logger.info(String.format("Skipped annotating file \"%s\", " +
+									"file was ignored.", fileName));
+							break;
+						case SKIPPED_FILE_EMPTY:
+							Logger.warn(String.format("Skipped annotating file \"%s\", " +
+									"file was empty.", fileName));
+							break;
+						case ALL_EXCLUDED:
+							Logger.warn(String.format("Skipped annotating file \"%s\", " +
+									"all elements were excluded.", fileName));
+							break;
+					}
+					FileUtils.writeLines(outputFile, content, false);
 				}
 			}
 		}
-		// parse JAVA docs and document LUA files
-		else if (command == Command.JAVA)
+		else if (command == Command.COMPILE)
 		{
 			Logger.debug("Preparing to parse java doc...");
-
-			Object source;
-			if (cmdLine.isInputApi())
-			{
-				Logger.debug("Reading from online api");
-				source = cmdLine.getInputUrl();
-				if (source == null) {
-					source = JavaDoc.API_GLOBAL_OBJECT;
-				}
-			}
-			else source = cmdLine.getInputPath();
-			Logger.debug("Reading from source " + source);
 
 			Path userOutput = cmdLine.getOutputPath();
 			if (userOutput == null)
@@ -130,104 +197,47 @@ public class Main {
 				userOutput = Paths.get(".");
 				Logger.debug("Output directory not specified, using root directory instead");
 			}
-			else Logger.debug("Output directory set to " + userOutput.toString());
-
 			File outputDir = userOutput.toFile();
 			if (!outputDir.exists())
 			{
 				if (!outputDir.mkdirs()) {
 					throw new IOException("Unable to create output directory");
 				}
-			} else if (!outputDir.isDirectory()) {
+			}
+			else if (!outputDir.isDirectory()) {
 				throw new IllegalArgumentException("Output path does not point to a directory");
 			}
 			else Logger.debug("Designated output path: " + userOutput);
 
-			if (source instanceof URL)
+			Properties properties = Utils.getProperties("compile.properties");
+			String excludeProp = properties.getProperty("exclude");
+			if (!StringUtils.isBlank(excludeProp)) {
+				exclude.addAll(Arrays.asList(excludeProp.split(",")));
+			}
+			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
+			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile())
 			{
-				List<String> userExclude = cmdLine.getExcludedClasses();
-				Set<String> exclude = new HashSet<>(userExclude);
-
-				JavaDoc.WebParser parser = JavaDoc.WebParser.create((URL) source);
-				JavaDoc<URL> javaDoc = parser.parse();
-
-				Path output = userOutput.resolve(parser.getOutputFilePath("lua"));
-				LuaDoc luaDoc = javaDoc.convertToLuaDoc(true, false);
-				exclude.add(luaDoc.getName());
-
-				List<Method> methods = new ArrayList<>(luaDoc.getMethods());
-				luaDoc.writeToFile(output);
-
-				for (Map.Entry<String, JavaClass<URL>> entry : javaDoc.getMembers().entrySet())
+				String luaDocName = zLuaDoc.getName();
+				String luaDocProp = properties.getProperty(luaDocName);
+				if (luaDocProp != null)
 				{
-					JavaClass<URL> javaClass = entry.getValue();
-					if (userExclude.contains(javaClass.getName())) {
-						continue;
+					// override lua document name with property value
+					if (!StringUtils.isBlank(luaDocProp))
+					{
+						ZomboidLuaDoc overrideDoc = new ZomboidLuaDoc(
+								new LuaClass(luaDocProp, zLuaDoc.getClazz().getParentType()),
+								zLuaDoc.getFields(), zLuaDoc.getMethods()
+						);
+						overrideDoc.writeToFile(userOutput.resolve(luaDocProp + ".lua").toFile());
 					}
-					String memberUrl = javaClass.getLocation().toString();
-					JavaDoc.WebParser memberParser = JavaDoc.WebParser.create(memberUrl);
-
-					output = userOutput.resolve(memberParser.getOutputFilePath("lua"));
-					luaDoc = memberParser.parse().convertToLuaDoc(true, true);
-					exclude.add(luaDoc.getName());
-
-					methods.addAll(luaDoc.getMethods());
-					luaDoc.writeToFile(output);
 				}
-				File membersFile = userOutput.resolve("Members.lua").toFile();
-				if (!membersFile.exists() && !membersFile.createNewFile()) {
-					throw new IOException("Unable to create Members.lua");
-				}
-				List<String> memberDoc = LuaClass.documentMembers(methods, exclude);
-				FileUtils.writeLines(membersFile, memberDoc, false);
+				else zLuaDoc.writeToFile(userOutput.resolve(luaDocName + ".lua").toFile());
 			}
-			else if (source != null)
-			{
-				JavaDoc.FileParser parser = JavaDoc.FileParser.create((Path) source);
-				Path output = userOutput.resolve(((Path) source).getFileName());
-				parser.parse().convertToLuaDoc(true, false).writeToFile(output);
+			ZomboidLuaDoc.writeGlobalTypesToFile(userOutput.resolve("Types.lua").toFile());
+			for (String excludedClass : exclude) {
+				Logger.warn("Class " + excludedClass + " was designated but not excluded from compilation.");
 			}
-			else throw new IllegalArgumentException("Unable to parse input path/url");
 		}
 		Logger.debug("Finished processing command");
-	}
-
-	private static Path validateLuaOutputPath(Path path, Path root, Path dir) throws IOException {
-
-		Path outputPath;
-		if (!root.toFile().exists()) {
-			throw new FileNotFoundException(root.toString());
-		}
-		/* user did not specify output dir path */
-		else if (dir != null)
-		{
-			File outputDirFile = dir.toFile();
-			if (!outputDirFile.exists() && !outputDirFile.mkdir()) {
-				throw new IOException("Unable to create output directory: " + dir);
-			}
-			/* root path matches current path so there are no
-			 * subdirectories, just resolve the filename against root path
-			 */
-			if (root.compareTo(path) == 0) {
-				outputPath = dir.resolve(path.getFileName());
-			}
-			else outputPath = dir.resolve(root.relativize(path));
-		}
-		/* overwrite file when unspecified output directory */
-		else
-		{
-			outputPath = path;
-			Logger.warn("Unspecified output directory, overwriting files");
-		}
-		/* make sure output file exists before we try to write to it */
-		File outputFile = outputPath.toFile();
-		if (!outputFile.exists())
-		{
-			File parentFile = outputFile.getParentFile();
-			if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
-				throw new IOException("Unable to create specified output file: " + outputPath);
-			}
-		}
-		return outputPath;
 	}
 }

@@ -2,6 +2,10 @@
 /shelf/
 /workspace.xml
 
+# Dictionaries
+/dictionaries/*
+!dictionaries/project.xml
+
 # Other files
 /libraries/
 /modules/
@@ -12,3 +16,4 @@
 /encodings.xml
 /jarRepositories.xml
 /misc.xml
+/codeStyles/codeStyleConfig.xml
