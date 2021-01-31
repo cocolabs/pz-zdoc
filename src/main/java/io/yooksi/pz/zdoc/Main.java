@@ -103,7 +103,7 @@ public class Main {
 			else if (paths.isEmpty()) {
 				Logger.warn("No files found under path " + root);
 			}
-			Properties properties = Utils.getProperties("lua.properties");
+			Properties properties = Utils.getProperties("annotate.properties");
 			// process every file found under given root path
 			for (Path path : paths)
 			{
@@ -206,7 +206,7 @@ public class Main {
 			}
 			else Logger.debug("Designated output path: " + userOutput);
 
-			Properties properties = Utils.getProperties("zomboid.properties");
+			Properties properties = Utils.getProperties("compile.properties");
 			String excludeProp = properties.getProperty("exclude");
 			if (excludeProp != null)
 			{
@@ -214,7 +214,7 @@ public class Main {
 					exclude.addAll(Arrays.asList(excludeProp.split(",")));
 				}
 			}
-			else Logger.warn("Unable to find exclude list in zomboid.properties");
+			else Logger.warn("Unable to find exclude list in compile.properties");
 
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
 			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
