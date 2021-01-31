@@ -214,8 +214,6 @@ public class Main {
 					exclude.addAll(Arrays.asList(excludeProp.split(",")));
 				}
 			}
-			else Logger.warn("Unable to find exclude list in compile.properties");
-
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
 			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
 				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
