@@ -24,10 +24,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -103,7 +106,7 @@ public class Main {
 			else if (paths.isEmpty()) {
 				Logger.warn("No files found under path " + root);
 			}
-			Properties properties = Utils.getProperties("lua.properties");
+			Properties properties = Utils.getProperties("annotate.properties");
 			// process every file found under given root path
 			for (Path path : paths)
 			{
@@ -206,21 +209,34 @@ public class Main {
 			}
 			else Logger.debug("Designated output path: " + userOutput);
 
-			Properties properties = Utils.getProperties("zomboid.properties");
+			Properties properties = Utils.getProperties("compile.properties");
 			String excludeProp = properties.getProperty("exclude");
-			if (excludeProp != null)
-			{
-				if (!StringUtils.isBlank(excludeProp)) {
-					exclude.addAll(Arrays.asList(excludeProp.split(",")));
-				}
+			if (!StringUtils.isBlank(excludeProp)) {
+				exclude.addAll(Arrays.asList(excludeProp.split(",")));
 			}
-			else Logger.warn("Unable to find exclude list in zomboid.properties");
-
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
-			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile()) {
-				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
+			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile())
+			{
+				String luaDocName = zLuaDoc.getName();
+				String luaDocProp = properties.getProperty(luaDocName);
+				if (luaDocProp != null)
+				{
+					// override lua document name with property value
+					if (!StringUtils.isBlank(luaDocProp))
+					{
+						ZomboidLuaDoc overrideDoc = new ZomboidLuaDoc(
+								new LuaClass(luaDocProp, zLuaDoc.getClazz().getParentType()),
+								zLuaDoc.getFields(), zLuaDoc.getMethods()
+						);
+						overrideDoc.writeToFile(userOutput.resolve(luaDocProp + ".lua").toFile());
+					}
+				}
+				else zLuaDoc.writeToFile(userOutput.resolve(luaDocName + ".lua").toFile());
 			}
 			ZomboidLuaDoc.writeGlobalTypesToFile(userOutput.resolve("Types.lua").toFile());
+			for (String excludedClass : exclude) {
+				Logger.warn("Class " + excludedClass + " was designated but not excluded from compilation.");
+			}
 		}
 		Logger.debug("Finished processing command");
 	}
