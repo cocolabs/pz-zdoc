@@ -24,7 +24,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -208,11 +210,8 @@ public class Main {
 
 			Properties properties = Utils.getProperties("compile.properties");
 			String excludeProp = properties.getProperty("exclude");
-			if (excludeProp != null)
-			{
-				if (!StringUtils.isBlank(excludeProp)) {
-					exclude.addAll(Arrays.asList(excludeProp.split(",")));
-				}
+			if (!StringUtils.isBlank(excludeProp)) {
+				exclude.addAll(Arrays.asList(excludeProp.split(",")));
 			}
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
 			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile())
