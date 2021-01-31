@@ -221,6 +221,9 @@ public class Main {
 				zLuaDoc.writeToFile(userOutput.resolve(zLuaDoc.getName() + ".lua").toFile());
 			}
 			ZomboidLuaDoc.writeGlobalTypesToFile(userOutput.resolve("Types.lua").toFile());
+			for (String excludedClass : exclude) {
+				Logger.warn("Class " + excludedClass + " was designated but not excluded from compilation.");
+			}
 		}
 		Logger.debug("Finished processing command");
 	}

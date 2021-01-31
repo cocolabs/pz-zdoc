@@ -249,7 +249,8 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 		Set<ZomboidJavaDoc> result = new HashSet<>();
 		for (Class<?> exposedClass : exposedJavaClasses)
 		{
-			if (excludedClasses.contains(exposedClass.getName())) {
+			String exposedClassName = exposedClass.getName();
+			if (excludedClasses.removeIf(ec -> ec.equals(exposedClassName))) {
 				continue;
 			}
 			String classPath = JavaClass.getPathForClass(exposedClass);
