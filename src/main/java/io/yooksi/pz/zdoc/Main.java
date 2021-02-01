@@ -30,7 +30,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +43,7 @@ import io.yooksi.pz.zdoc.compile.LuaAnnotator;
 import io.yooksi.pz.zdoc.compile.LuaCompiler;
 import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
+import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.util.Utils;
 
@@ -62,8 +62,10 @@ public class Main {
 				args.length, Arrays.toString(args)));
 
 		Command command = Command.parse(args);
-		if (command == null) {
-			throw new ParseException("Missing or unknown command argument");
+		if (command == null)
+		{
+			String format = "Missing or unknown command argument (%s)";
+			throw new ParseException(String.format(format, Arrays.toString(args)));
 		}
 		else if (command == Command.HELP)
 		{

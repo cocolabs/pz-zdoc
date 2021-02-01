@@ -28,7 +28,6 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 import io.yooksi.pz.zdoc.Main;
 import io.yooksi.pz.zdoc.compile.LuaCompiler;
-import io.yooksi.pz.zdoc.element.IClass;
 import io.yooksi.pz.zdoc.element.IMember;
 import io.yooksi.pz.zdoc.element.lua.Annotated;
 import io.yooksi.pz.zdoc.element.lua.LuaClass;

@@ -109,7 +109,7 @@ class LuaCompilerTest {
 		classData.forEach((k, v) -> expectedLuaClasses.add(new LuaClass(k, v)));
 
 		Set<LuaClass> actualLuaClasses = new HashSet<>();
-		compileLua(zJavaDocs).forEach(doc -> actualLuaClasses.add((LuaClass) doc.getClazz()));
+		compileLua(zJavaDocs).forEach(doc -> actualLuaClasses.add(doc.getClazz()));
 
 		Assertions.assertEquals(expectedLuaClasses, actualLuaClasses);
 	}
@@ -403,7 +403,7 @@ class LuaCompilerTest {
 		classData.forEach((k, v) -> expectedLuaClasses.add(new LuaClass(k, v)));
 
 		Set<LuaClass> actualLuaClasses = new HashSet<>();
-		compileLua(zJavaDocs).forEach(doc -> actualLuaClasses.add((LuaClass) doc.getClazz()));
+		compileLua(zJavaDocs).forEach(doc -> actualLuaClasses.add(doc.getClazz()));
 
 		Assertions.assertEquals(expectedLuaClasses, actualLuaClasses);
 	}
