@@ -96,7 +96,7 @@ goto finish
 @rem Validate java version
 set JAVA_TARGET_VERSION=18
 
-for /f "tokens=3" %%g in ('java -version 2^>^&1 ^| findstr /i "version"') do (
+for /f "tokens=3" %%g in ('%JAVA_EXE% -version 2^>^&1 ^| findstr /i "version"') do (
     set JAVA_VERSION_INFO=%%g
 )
 set JAVA_VERSION=%JAVA_VERSION_INFO:"=%
