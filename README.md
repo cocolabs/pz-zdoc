@@ -1,6 +1,6 @@
 # ZomboidDoc
 
-![Java CI](https://github.com/yooksi/pz-zdoc/workflows/Java%20CI/badge.svg?branch=dev)![release](https://img.shields.io/github/v/release/yooksi/pz-zdoc)[![codecov](https://codecov.io/gh/yooksi/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/yooksi/pz-zdoc) [![License](https://img.shields.io/github/license/yooksi/pz-zdoc)](https://www.gnu.org/licenses/)
+![Java CI](https://github.com/yooksi/pz-zdoc/workflows/Java%20CI/badge.svg?branch=dev) ![release](https://img.shields.io/github/v/release/yooksi/pz-zdoc) [![codecov](https://codecov.io/gh/yooksi/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/yooksi/pz-zdoc) [![License](https://img.shields.io/github/license/yooksi/pz-zdoc)](https://www.gnu.org/licenses/)
 
 ZomboidDoc is an API parser and Lua library compiler for Project Zomboid.
 
