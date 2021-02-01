@@ -8,8 +8,6 @@
     <option name="VM_PARAMETERS" value="-Dzdoc.logger=&quot;dev&quot;" />
     <method v="2">
       <option name="Make" enabled="true" />
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="cleanMedia" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Annotate Lua" run_configuration_type="Application" />
     </method>
   </configuration>
 </component>
