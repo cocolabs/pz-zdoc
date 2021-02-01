@@ -85,7 +85,7 @@ esac
 
 # Set game directory path to APP_HOME if env var not set
 if [ -z "${PZ_DIR_PATH}" ]; then
-    PZ_DIR_PATH=$APP_HOME
+    PZ_DIR_PATH="$APP_HOME/.."
 else
     # Ensure directory path is a valid unix path
     PZ_DIR_PATH=$(echo $PZ_DIR_PATH | sed -e 's#^J:##' -e 's#\\#/#g')
