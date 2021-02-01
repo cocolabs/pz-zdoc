@@ -139,6 +139,7 @@ dependencies {
 }
 
 distributions.main.contents {
+    it.from (files('README.md', 'LICENSE.txt'))
     it.exclude {
         File file = it.file
         String filename = file.getName()
