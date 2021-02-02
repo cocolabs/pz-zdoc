@@ -111,6 +111,33 @@ sh pz-zdoc compile -i $PZ_DIR_PATH -o ../media/lua/shared/Library
 cd ../media/lua && ls
 ```
 
+### Lua library
+
+#### Standalone
+
+After compiling the library no additional steps are *required* and you can use it as-is with your favorite text editor.
+
+Note that although the compiled Lua library can be used without any additional software integration it is intended to be used with IntelliJ IDEA to provide advanced [features](#features) only available when using IDE.
+
+#### IDE integration
+
+Follow these steps to create a new mod project and enable IDE integration:
+
+- Download and install [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
+- Install [EmmyLua](https://plugins.jetbrains.com/plugin/9768-emmylua) IDEA plugin
+- Create a new Lua project from IDEA.
+  `File -> New -> Project... -> Lua`
+- Create a new Lua project module called `media`.
+  `File -> New -> Module... -> Lua`
+- Create `lua` directory inside `media` module.
+- Mark `lua` directory as source folder.
+  `Right click directory in project view -> Mark Directory as -> Sources Root`
+- Package the compiled library directory in an archive (to make it read-only).
+- Add the library as a `media` module dependency.
+  `File -> Project Structure... -> Modules -> media -> Dependencies -> Add (Alt + Insert) -> Library... (Lua Zip Library)` 
+
+That's it, everything should be setup! You can now start creating awesome mods with full confidence that everything you need to know is right at your fingertips. If you have any questions, suggestions or just want to talk about modding feel free to join [Coco Labs](https://discord.gg/P634g4gjka) on Discord.
+
 ## Credits
 
 - The Indie Stone for developing Project Zomboid.
