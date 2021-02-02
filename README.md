@@ -12,7 +12,7 @@ This is where ZomboidDoc comes in. Powered by [IntelliJ IDEA](https://www.jetbra
 
 ## Features
 
-- Creates a fully documented, readable and always up-to-date modding Lua library. 
+- Creates a fully documented, readable and always up-to-date modding Lua library.
 - Parses online API documentation to include information not available from decompiled code.
 - Uses [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua) annotations to enable a high degree of interactive code feedback in IDEA:
 	- **Syntax highlighting** for Lua language to help you navigate your code.
@@ -31,9 +31,6 @@ This is where ZomboidDoc comes in. Powered by [IntelliJ IDEA](https://www.jetbra
 - Download the [latest release](https://github.com/yooksi/pz-zdoc/releases/latest) from the repository releases section.
 - Extract the release archive to your game installation directory <i>or</i> anywhere on your computer.
 
-- Run the application via command line using command-appropriate syntax.
-  `java -jar <jar filename> <command> <args>`
-- Use `help` command to print command usage info for all available commands. 
 ## How to use
 
 ### Distribution
@@ -114,4 +111,5 @@ sh pz-zdoc compile -i $PZ_DIR_PATH -o ../media/lua/shared/Library
 - [FWolfe](https://github.com/FWolfe/) for writing [Zomboid-Modding-Guide](https://github.com/FWolfe/Zomboid-Modding-Guide).
 
 ## License
+
 This project is licensed under [GNU General Public License v3.0](https://github.com/yooksi/pz-zdoc/blob/master/LICENSE.txt).
