@@ -21,8 +21,15 @@ This is where ZomboidDoc comes in. Powered by [IntelliJ IDEA](https://www.jetbra
 	- Much more features to discover as you create your mods.
 
 ## Installation
+
+### Requirements
+
+- Up-to-date installation of Project Zomboid.
+
+### Setup
+
 - Download the [latest release](https://github.com/yooksi/pz-zdoc/releases/latest) from the repository releases section.
-- Place the jar in `media\lua` relative to your game installation directory <i>or</i>i anywhere on your computer.
+- Extract the release archive to your game installation directory <i>or</i> anywhere on your computer.
 
 ## How to use?
 - Run the application via command line using command-appropriate syntax.
