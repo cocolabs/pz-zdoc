@@ -139,7 +139,10 @@ That's it, everything should be setup!
 
 You can now continue modding with full confidence that everything you need to know to create an amazing mod is right at your fingertips. See list of [features](#features) to remind yourself what to expect.
 
+## Discussion
 
+- Chat about ZomboidDoc on [Discord](https://discord.gg/P634g4gjka) - feel free to join if you have any problems, questions or suggestions regarding the project, or just want to talk about Project Zomboid modding in general.
+- Chat about anything related to Project Zomboid on [Discord](https://discord.gg/PmDeBy5e).
 
 ## Credits
 
