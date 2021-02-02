@@ -12,9 +12,13 @@ This is where ZomboidDoc comes in. Powered by [IntelliJ IDEA](https://www.jetbra
 
 ## Features
 
-- Documents local Lua files with [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua/) annotations, making it much easier to write code by providing on the fly code inspection and completion when using IntelliJ IDEA.
-- Parses available online API documentation and compiles it into annotated Lua code.
-- Creates a fully documented and readable modding Lua library.
+- Creates a fully documented, readable and always up-to-date modding Lua library. 
+- Parses online API documentation to include information not available from decompiled code.
+- Uses [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua) annotations to enable a high degree of interactive code feedback in IDEA:
+	- **Syntax highlighting** for Lua language to help you navigate your code.
+	- On the fly **code inspection** to identify problems and offer solutions.
+	- **Smart completion** that gives you a list of relevant symbols applicable in current context.
+	- Much more features to discover as you create your mods.
 
 ## Installation
 - Download the [latest release](https://github.com/yooksi/pz-zdoc/releases/latest) from the repository releases section.
