@@ -35,6 +35,10 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 
 ## How to use
 
+> - *Little question marks are hyperlinks that reveal more information on mouse hover and click.*
+>
+> - *Content captured in angled brackets represents substitution. For example if the path to game directory was `/home/projectzomboid/` then `PZ_DIR_PATH=<path_to_game_dir>` should be substituted with `PZ_DIR_PATH=/home/projectzomboid/`* 
+
 ### Distribution
 
 The release distribution archive contains two directories:
@@ -122,8 +126,6 @@ After compiling the library no additional steps are *required* and you can use i
 Note that although the compiled Lua library can be used without any additional software integration it is intended to be used with IntelliJ IDEA to provide advanced [features](#features) only available when using IDE.
 
 #### IDE integration
-
-*Note: little question marks are hyperlinks that reveal more information on mouse hover and click.*
 
 Follow these steps to create a new mod project and enable IDE integration:
 
