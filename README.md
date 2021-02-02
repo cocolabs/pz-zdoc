@@ -31,10 +31,10 @@ This is where ZomboidDoc comes in. Powered by [IntelliJ IDEA](https://www.jetbra
 - Download the [latest release](https://github.com/yooksi/pz-zdoc/releases/latest) from the repository releases section.
 - Extract the release archive to your game installation directory <i>or</i> anywhere on your computer.
 
-## How to use?
 - Run the application via command line using command-appropriate syntax.
   `java -jar <jar filename> <command> <args>`
 - Use `help` command to print command usage info for all available commands. 
+## How to use
 
 ### Annotate Lua
 
