@@ -124,17 +124,13 @@ Note that although the compiled Lua library can be used without any additional s
 Follow these steps to create a new mod project and enable IDE integration:
 
 - Download and install [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
-- Install [EmmyLua](https://plugins.jetbrains.com/plugin/9768-emmylua) IDEA plugin
-- Create a new Lua project from IDEA.
-  `File -> New -> Project... -> Lua`
-- Create a new Lua project module called `media`.
-  `File -> New -> Module... -> Lua`
+- Install [EmmyLua](https://plugins.jetbrains.com/plugin/9768-emmylua) IDEA plugin.
+- Create a new Lua project from IDEA.[<sup>?</sup>](#ide-integration "File -> New -> Project... -> Lua")
+- Create a new Lua project module called `media`.[<sup>?</sup>](#ide-integration "File -> New -> Module... -> Lua")
 - Create `lua` directory inside `media` module.
-- Mark `lua` directory as source folder.
-  `Right click directory in project view -> Mark Directory as -> Sources Root`
+- Mark `lua` directory as source folder.[<sup>?</sup>](#ide-integration "Right click directory in project view -> Mark Directory as -> Sources Root")
 - Package the compiled library directory in an archive (to make it read-only).
-- Add the library as a `media` module dependency.
-  `File -> Project Structure... -> Modules -> media -> Dependencies -> Add (Alt + Insert) -> Library... (Lua Zip Library)` 
+- Add the library as a `media` module dependency.[<sup>?</sup>](#ide-integration "File -> Project Structure... -> Modules -> media -> Dependencies -> Add (Alt + Insert) -> Library... (Lua Zip Library)")
 
 That's it, everything should be setup! You can now start creating awesome mods with full confidence that everything you need to know is right at your fingertips. If you have any questions, suggestions or just want to talk about modding feel free to join [Coco Labs](https://discord.gg/P634g4gjka) on Discord.
 
