@@ -44,13 +44,13 @@ The release distribution archive contains two directories:
 
 Follow these steps in order to launch the application:
 
-1. Open the terminal and navigate to application bin directory.
+1. Open the terminal and navigate to application bin directory.  
    `$ cd <absoulte_path_to_app_dir>/bin`
-2. Set environment variable `PZ_DIR_PATH` to point to game installation directory.
-   `$ set PZ_DIR_PATH=<path_to_game_dir>` - on Windows.
+2. Set environment variable `PZ_DIR_PATH` to point to game installation directory.  
+   `$ set PZ_DIR_PATH=<path_to_game_dir>` - on Windows.  
    `$ export PZ_DIR_PATH=<path_to_game_dir>` - on Unix.
-3. Launch the application with an appropriate launch script.
-   `$ start pz-zdoc.bat <command> <args>` - on Windows.
+3. Launch the application with an appropriate launch script.  
+   `$ start pz-zdoc.bat <command> <args>` - on Windows.  
    `$ sh pz-zdoc <command> <args>` - on Unix.
 
 Read [Commands](#commands) and [Examples](#examples) section for more information.
