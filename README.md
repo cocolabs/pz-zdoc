@@ -123,18 +123,23 @@ Note that although the compiled Lua library can be used without any additional s
 
 #### IDE integration
 
+*Note: little question marks are hyperlinks that reveal more information on mouse hover and click.*
+
 Follow these steps to create a new mod project and enable IDE integration:
 
 - Download and install [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
 - Install [EmmyLua](https://plugins.jetbrains.com/plugin/9768-emmylua) IDEA plugin.
 - Create a new Lua project from IDEA.[<sup>?</sup>](#ide-integration "File -> New -> Project... -> Lua")
-- Create a new Lua project module called `media`.[<sup>?</sup>](#ide-integration "File -> New -> Module... -> Lua")
-- Create `lua` directory inside `media` module.
-- Mark `lua` directory as source folder.[<sup>?</sup>](#ide-integration "Right click directory in project view -> Mark Directory as -> Sources Root")
 - Package the compiled library directory in an archive (to make it read-only).
-- Add the library as a `media` module dependency.[<sup>?</sup>](#ide-integration "File -> Project Structure... -> Modules -> media -> Dependencies -> Add (Alt + Insert) -> Library... (Lua Zip Library)")
+- Create `libs` directory inside mod root directory and move the library archive inside it.
+- Add the library archive as a main module dependency.[<sup>?</sup>](https://www.jetbrains.com/help/idea/working-with-module-dependencies.html#add-a-new-dependency "File -> Project Structure... -> Modules -> <module> -> Dependencies -> Add (Alt + Insert) -> Library... (Lua Zip Library)")
+- Setup basic [mod structure](https://github.com/FWolfe/Zomboid-Modding-Guide/blob/master/structure/README.md) to start your modding adventure.
 
-That's it, everything should be setup! You can now start creating awesome mods with full confidence that everything you need to know is right at your fingertips. If you have any questions, suggestions or just want to talk about modding feel free to join [Coco Labs](https://discord.gg/P634g4gjka) on Discord.
+That's it, everything should be setup!
+
+You can now continue modding with full confidence that everything you need to know to create an amazing mod is right at your fingertips. See list of [features](#features) to remind yourself what to expect.
+
+
 
 ## Credits
 
