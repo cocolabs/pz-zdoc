@@ -120,6 +120,7 @@ echo %JAVA_EXE%
 set CLASSPATH=%!classpath!%
 
 echo Launching ZomboidDoc...
+echo.
 @rem Execute pz-zdoc
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %PZ_ZDOC_OPTS% -classpath "%CLASSPATH%" %!mainClassName!% %*
 
