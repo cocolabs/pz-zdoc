@@ -4,10 +4,11 @@
 
 ZomboidDoc is a Lua library compiler for Project Zomboid.
 
-Mods for Project Zomboid are written exclusively in Lua language by interacting with exposed Java classes and ame code is documented online through JavaDocs. This provides us with necessary information but makes development a bit of a hassle when using an integrated development environment such as IntelliJ IDEA since we are expecting a high degree of interactive feedback when writing code. Many advanced [features](https://www.jetbrains.com/idea/features/) offered by IDEA are unavailable since we do not have access to expected Lua source code.
 ## Introduction
 
-ZomboidDoc solves this problem by parsing the online API documentation and compiling it into a fully annotated Lua library that can be read by IDEA which makes writing mods much easier.
+Mods for Project Zomboid that change existing or add custom game logic are composed of scripts written in Lua language. Scripts accomplish this by interacting with Java classes exposed by the game engine (also known as modding API) which are documented online via [Javadocs](https://projectzomboid.com/modding/). Documents provide us with necessary information to start creating script mods but we still lack a comfortable development environment required to stay motivated and creative. 
+
+This is where ZomboidDoc comes in. Powered by [IntelliJ IDEA](https://www.jetbrains.com/idea/) ZomboidDoc makes mod development an enjoyable experience by providing a high degree of interactive feedback when writing code in addition to all the information you need to code an amazing mod right from you IDE.
 
 ## Features
 
