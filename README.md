@@ -86,6 +86,9 @@ start pz-zdoc.bat annotate -i %PZ_DIR_PATH%\media\lua -o ..\media\lua
 
 # Compile lua library from modding API
 start pz-zdoc.bat compile -i %PZ_DIR_PATH% -o ..\media\lua\shared\Library
+
+# Check compile ouput directory
+cd ..\media\lua && dir /B
 ```
 
 Launch ZomboidDoc on Linux:
@@ -103,6 +106,9 @@ sh pz-zdoc annotate -i $PZ_DIR_PATH/media/lua -o ../media/lua
 
 # Compile lua library from modding API
 sh pz-zdoc compile -i $PZ_DIR_PATH -o ../media/lua/shared/Library
+
+# Check compile ouput directory
+cd ../media/lua && ls
 ```
 
 ## Credits
