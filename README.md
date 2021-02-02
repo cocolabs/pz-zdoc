@@ -14,11 +14,11 @@ This is where ZomboidDoc comes in. ZomboidDoc is an easy-to-use Java command-lin
 
 - Creates a fully documented, readable and always up-to-date modding Lua library.
 - Parses online API documentation to include information not available from decompiled code.
-- Uses [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua) annotations to enable a high degree of interactive code feedback in IDEA:
-	- **Syntax highlighting** for Lua language to help you navigate your code.
-	- On the fly **code inspection** to identify problems and offer solutions.
-	- **Smart completion** that gives you a list of relevant symbols applicable in current context.
-	- Much more features to discover as you create your mods.
+- Uses [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua) annotations to enable a high degree of interactive code feedback.
+- **Syntax highlighting** for Lua language to help you navigate your code.
+- On the fly **code inspection** to identify problems and offer solutions.
+- **Smart completion** that gives you a list of relevant symbols in current context.
+- Much more features to discover as you create your mods.
 
 ## Installation
 
