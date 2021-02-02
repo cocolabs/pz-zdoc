@@ -46,8 +46,8 @@ The release distribution archive contains two directories:
 
 Follow these steps in order to launch ZomboidDoc:
 
-   `$ cd <absoulte_path_to_app_dir>/bin`
 1. Open the terminal and navigate to ZomboidDoc `bin` directory.  
+   `$ cd /D <absoulte_path_to_app_dir>/bin`
 2. Set environment variable `PZ_DIR_PATH` to point to game installation directory.  
    `$ set PZ_DIR_PATH=<path_to_game_dir>` - on Windows.  
    `$ export PZ_DIR_PATH=<path_to_game_dir>` - on Unix.
