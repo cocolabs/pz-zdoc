@@ -2,7 +2,7 @@
 
 ![Java CI](https://github.com/yooksi/pz-zdoc/workflows/Java%20CI/badge.svg?branch=dev) ![release](https://img.shields.io/github/v/release/yooksi/pz-zdoc) [![codecov](https://codecov.io/gh/yooksi/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/yooksi/pz-zdoc) [![License](https://img.shields.io/github/license/yooksi/pz-zdoc)](https://www.gnu.org/licenses/)
 
-ZomboidDoc is an API parser and Lua library compiler for Project Zomboid.
+ZomboidDoc is a Lua library compiler for Project Zomboid.
 
 ## Motivation
 Mods for Project Zomboid are written exclusively in Lua language by interacting with exposed Java classes and ame code is documented online through JavaDocs. This provides us with necessary information but makes development a bit of a hassle when using an integrated development environment such as IntelliJ IDEA since we are expecting a high degree of interactive feedback when writing code. Many advanced [features](https://www.jetbrains.com/idea/features/) offered by IDEA are unavailable since we do not have access to expected Lua source code.
