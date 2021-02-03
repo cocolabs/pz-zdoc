@@ -1,45 +1,150 @@
 # ZomboidDoc
 
-[![Build Status](https://jitpack.io/v/yooksi/pz-zdoc.svg)](https://jitpack.io/#yooksi/pz-zdoc) [![Continuous Integration](https://jitci.com/gh/yooksi/pz-zdoc/svg)](https://jitci.com/gh/yooksi/pz-zdoc) ![Game Version](https://img.shields.io/badge/PZ%20Version-IWBUMS%3A%2041.47-red) [![codecov](https://codecov.io/gh/yooksi/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/yooksi/pz-zdoc) [![License](https://img.shields.io/github/license/yooksi/pz-zdoc)](https://www.gnu.org/licenses/)
+![Java CI](https://github.com/yooksi/pz-zdoc/workflows/Java%20CI/badge.svg?branch=dev) ![release](https://img.shields.io/github/v/release/yooksi/pz-zdoc) [![codecov](https://codecov.io/gh/yooksi/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/yooksi/pz-zdoc) [![License](https://img.shields.io/github/license/yooksi/pz-zdoc)](https://www.gnu.org/licenses/) ![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)
 
-ZomboidDoc is an API parser and Lua library compiler for Project Zomboid.
+ZomboidDoc is an easy-to-use Java command-line application that compiles an annotated Lua library directly from modding API. Powered by [IntelliJ IDEA](https://www.jetbrains.com/idea/) it makes mod development an enjoyable experience by providing everything you need to write an amazing mod right from you IDE.
 
-## Motivation
-Mods for Project Zomboid are written exclusively in Lua language by interacting with exposed Java classes and ame code is documented online through JavaDocs. This provides us with necessary information but makes development a bit of a hassle when using an integrated development environment such as IntelliJ IDEA since we are expecting a high degree of interactive feedback when writing code. Many advanced [features](https://www.jetbrains.com/idea/features/) offered by IDEA are unavailable since we do not have access to expected Lua source code.
+## Introduction
 
-ZomboidDoc solves this problem by parsing the online API documentation and compiling it into a fully annotated Lua library that can be read by IDEA which makes writing mods much easier.
+Mods for Project Zomboid that change existing or add custom game logic are composed of scripts written in Lua language. Scripts accomplish this by interacting with Java classes exposed by the game engine (also known as modding API) which are documented online via [Javadocs](https://projectzomboid.com/modding/). Although useful, this documentation is often out of date and a bit of a hassle to read through, but does provide us with necessary information to start writing mods.
+
+However we still lack a comfortable development environment required to stay motivated and creative. This is where ZomboidDoc comes in! It compiles a Lua library directly from exposed game classes using online modding API to get important information not stored in compiled code such as parameter names and comments.
+
+Because ZomboidDoc reads directly from game code the compiled Lua library is guaranteed to always be up-to-date with your installed game version regardless of online API documentation - great when modding for beta game versions.
 
 ## Features
 
-- Documents local Lua files with [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua/) annotations, making it much easier to write code by providing on the fly code inspection and completion when using IntelliJ IDEA.
-- Parses available online API documentation and compiles it into annotated Lua code.
-- Creates a fully documented and readable modding Lua library.
+- Creates a fully documented, readable and always up-to-date modding Lua library.
+- Parses online API documentation to include information not available from decompiled code.
+- Uses [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua) annotations to enable a high degree of interactive code feedback.
+- **Syntax highlighting** for Lua language to help you navigate your code.
+- On the fly **code inspection** to identify problems and offer solutions.
+- **Smart completion** that gives you a list of relevant symbols in current context.
+- Much more features to discover as you create your mods.
 
 ## Installation
+
+### Requirements
+
+- Up-to-date installation of Project Zomboid.
+
+### Setup
+
 - Download the [latest release](https://github.com/yooksi/pz-zdoc/releases/latest) from the repository releases section.
-- Place the jar in `media\lua` relative to your game installation directory <i>or</i>i anywhere on your computer.
+- Extract the release archive to your game installation directory <i>or</i> anywhere on your computer.
 
-## How to use?
-- Run the application via command line using command-appropriate syntax.
-  `java -jar <jar filename> <command> <args>`
-- Use `help` command to print command usage info for all available commands. 
+## How to use
 
-### Annotate Lua
+> - *Little question marks are hyperlinks that reveal more information on mouse hover and click.*
+>
+> - *Content captured in angled brackets represents substitution. For example if the path to game directory was `/home/projectzomboid/` then `PZ_DIR_PATH=<path_to_game_dir>` should be substituted with `PZ_DIR_PATH=/home/projectzomboid/`* 
 
-```shell
-# Annotate local Lua files with EmmyLua annotations.
-java -jar $APP_JAR lua -i <input_path> -o <output_path>
+### Distribution
+
+The release distribution archive contains two directories:
+
+- `bin` directory contains application launch scripts.
+- `lib` directory contains application and dependency `jar` files.
+
+### Launch Script
+
+Follow these steps in order to launch ZomboidDoc:
+
+1. Open the terminal and navigate to ZomboidDoc `bin` directory.  
+   `$ cd /D <absoulte_path_to_app_dir>/bin`
+2. Set environment variable `PZ_DIR_PATH` to point to game installation directory.  
+   `$ set PZ_DIR_PATH=<path_to_game_dir>` - on Windows.  
+   `$ export PZ_DIR_PATH=<path_to_game_dir>` - on Unix.
+3. Launch ZomboidDoc with an appropriate launch script.  
+   `$ start pz-zdoc.bat <command> <args>` - on Windows.  
+   `$ sh pz-zdoc <command> <args>` - on Unix.
+
+Read [Commands](#commands) and [Examples](#examples) section for more information.
+
+### Commands
+
+Here is an overview list of available commands:
+
+- `help` - print command usage info for all available commands.
+- `version` - print Project Zomboid game installation version.
+- `annotate` - annotate local Lua files with EmmyLua annotations.
+- `compile` - compile lua library from modding API.
+
+Notes to keep in mind when executing commands:
+
+- To learn how to use each command run `help [command]` (e.g `help annotate`).
+- Command path arguments that contain whitespaces need to be enclosed in quotation marks.
+
+### Examples
+
+Launch ZomboidDoc on Windows:
+
+```batch
+@rem Navigate to application bin directory
+@rem Application is installed in game root directory
+cd /D E:\Games\Steam\steamapps\common\ProjectZomboid\pz-zdoc\bin
+
+# Set environment variable to game installation directory
+set PZ_DIR_PATH=%cd%\..\..\
+
+# Annotate local Lua files with EmmyLua annotations
+start pz-zdoc.bat annotate -i %PZ_DIR_PATH%\media\lua -o ..\media\lua
+
+# Compile lua library from modding API
+start pz-zdoc.bat compile -i %PZ_DIR_PATH% -o ..\media\lua\shared\Library
+
+# Check compile ouput directory
+cd ..\media\lua && dir /B
 ```
 
-### Compile Lua
+Launch ZomboidDoc on Linux:
 
 ```shell
-# Parse online java api doc from url and compile to lua
-java -jar $APP_JAR java -a <url> -o <output_path>
+# Navigate to application bin directory
+# Application is NOT installed in game root directory
+cd /home/yooks/Documents/pz-zdoc/bin
 
-# Parse local java doc from path and compile to lua
-java -jar $APP_JAR java -i <input_path> -o <output_path>
+# Set environment variable to game installation directory
+export PZ_DIR_PATH=/home/yooks/.local/share/Steam/steamapps/common/ProjectZomboid/projectzomboid
+
+# Annotate local Lua files with EmmyLua annotations
+sh pz-zdoc annotate -i $PZ_DIR_PATH/media/lua -o ../media/lua
+
+# Compile lua library from modding API
+sh pz-zdoc compile -i $PZ_DIR_PATH -o ../media/lua/shared/Library
+
+# Check compile ouput directory
+cd ../media/lua && ls
 ```
+
+### Lua library
+
+#### Standalone
+
+After compiling the library no additional steps are *required* and you can use it as-is with your favorite text editor.
+
+Note that although the compiled Lua library can be used without any additional software integration it is intended to be used with IntelliJ IDEA to provide advanced [features](#features) only available when using IDE.
+
+#### IDE integration
+
+Follow these steps to create a new mod project and enable IDE integration:
+
+- Download and install [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
+- Install [EmmyLua](https://plugins.jetbrains.com/plugin/9768-emmylua) IDEA plugin.
+- Create a new Lua project from IDEA.[<sup>?</sup>](#ide-integration "File -> New -> Project... -> Lua")
+- Package the compiled library directory in an archive (to make it read-only).
+- Create `libs` directory inside mod root directory and move the library archive inside it.
+- Add the library archive as a main module dependency.[<sup>?</sup>](https://www.jetbrains.com/help/idea/working-with-module-dependencies.html#add-a-new-dependency "File -> Project Structure... -> Modules -> <module> -> Dependencies -> Add (Alt + Insert) -> Library... (Lua Zip Library)")
+- Setup basic [mod structure](https://github.com/FWolfe/Zomboid-Modding-Guide/blob/master/structure/README.md) to start your modding adventure.
+
+That's it, everything should be setup!
+
+You can now continue modding with full confidence that everything you need to know to create an amazing mod is right at your fingertips. See list of [features](#features) to remind yourself what to expect.
+
+## Discussion
+
+- Chat about ZomboidDoc on [Discord](https://discord.gg/P634g4gjka) - feel free to join if you have any problems, questions or suggestions regarding the project, or just want to talk about Project Zomboid modding in general.
+- Chat about anything related to Project Zomboid on [Discord](https://discord.gg/PmDeBy5e).
 
 ## Credits
 
@@ -47,4 +152,5 @@ java -jar $APP_JAR java -i <input_path> -o <output_path>
 - [FWolfe](https://github.com/FWolfe/) for writing [Zomboid-Modding-Guide](https://github.com/FWolfe/Zomboid-Modding-Guide).
 
 ## License
+
 This project is licensed under [GNU General Public License v3.0](https://github.com/yooksi/pz-zdoc/blob/master/LICENSE.txt).
