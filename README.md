@@ -67,8 +67,8 @@ Here is an overview list of available commands:
 
 - `help` - print command usage info for all available commands.
 - `version` - print Project Zomboid game installation version.
-- `annotate` - annotate local Lua files with EmmyLua annotations.
-- `compile` - compile lua library from modding API.
+- `annotate` - annotate vanilla Lua files with EmmyLua.
+- `compile` - compile Lua library from modding API.
 
 Notes to keep in mind when executing commands:
 
@@ -87,10 +87,10 @@ cd /D E:\Games\Steam\steamapps\common\ProjectZomboid\pz-zdoc\bin
 # Set environment variable to game installation directory
 set PZ_DIR_PATH=%cd%\..\..\
 
-# Annotate local Lua files with EmmyLua annotations
+# Annotate vanilla Lua files with EmmyLua
 start pz-zdoc.bat annotate -i %PZ_DIR_PATH%\media\lua -o ..\media\lua
 
-# Compile lua library from modding API
+# Compile Lua library from modding API
 start pz-zdoc.bat compile -i %PZ_DIR_PATH% -o ..\media\lua\shared\Library
 
 # Check compile ouput directory
@@ -107,10 +107,10 @@ cd /home/yooks/Documents/pz-zdoc/bin
 # Set environment variable to game installation directory
 export PZ_DIR_PATH=/home/yooks/.local/share/Steam/steamapps/common/ProjectZomboid/projectzomboid
 
-# Annotate local Lua files with EmmyLua annotations
+# Annotate vanilla Lua files with EmmyLua
 sh pz-zdoc annotate -i $PZ_DIR_PATH/media/lua -o ../media/lua
 
-# Compile lua library from modding API
+# Compile Lua library from modding API
 sh pz-zdoc compile -i $PZ_DIR_PATH -o ../media/lua/shared/Library
 
 # Check compile ouput directory
