@@ -200,16 +200,17 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 			Set<LuaMethod> luaMethods = new HashSet<>();
 			for (IMethod method : javaDoc.getMethods())
 			{
-				LuaType returnType = resolveLuaType(method.getReturnType());
-
 				List<LuaParameter> parameters = new ArrayList<>();
 				for (IParameter param : method.getParams())
 				{
 					LuaType paramClass = resolveLuaType(param.getType());
 					parameters.add(new LuaParameter(paramClass, param.getName()));
 				}
-				luaMethods.add(new LuaMethod(method.getName(), luaClass, method.getModifier(),
-						returnType, parameters, method.hasVarArg(), method.getComment()));
+				luaMethods.add(LuaMethod.Builder.create(method.getName())
+						.withOwner(luaClass).withModifier(method.getModifier())
+						.withReturnType(resolveLuaType(method.getReturnType()))
+						.withParams(parameters).withVarArg(method.hasVarArg())
+						.withComment(method.getComment()).build());
 			}
 			result.add(new ZomboidLuaDoc(luaClass, luaFields, luaMethods));
 		}

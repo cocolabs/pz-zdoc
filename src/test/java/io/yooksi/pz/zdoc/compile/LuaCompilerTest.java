@@ -233,15 +233,17 @@ class LuaCompilerTest {
 				)
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
-				new LuaMethod("getText", OWNER_CLASS, MODIFIER, new LuaType("String"),
-						ImmutableList.of(new LuaParameter(new LuaType("Integer"), "iParam"))
-				),
-				new LuaMethod("getNumber", OWNER_CLASS, MODIFIER, new LuaType("Integer"),
-						ImmutableList.of(new LuaParameter(new LuaType("Object"), "oParam"))
-				),
-				new LuaMethod("getObject", OWNER_CLASS, MODIFIER, new LuaType("Object"),
-						ImmutableList.of(new LuaParameter(new LuaType("String"), "sParam"))
-				)
+				LuaMethod.Builder.create("getText").withOwner(OWNER_CLASS)
+						.withModifier(MODIFIER).withReturnType(new LuaType("String")).withParams(
+						ImmutableList.of(new LuaParameter(new LuaType("Integer"), "iParam"))).build(),
+
+				LuaMethod.Builder.create("getNumber").withOwner(OWNER_CLASS)
+						.withModifier(MODIFIER).withReturnType(new LuaType("Integer")).withParams(
+						ImmutableList.of(new LuaParameter(new LuaType("Object"), "oParam"))).build(),
+
+				LuaMethod.Builder.create("getObject").withOwner(OWNER_CLASS)
+						.withModifier(MODIFIER).withReturnType(new LuaType("Object")).withParams(
+						ImmutableList.of(new LuaParameter(new LuaType("String"), "sParam"))).build()
 		);
 		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(
 				new JavaClass(LuaCompilerTest.class), new ArrayList<>(), javaMethods
@@ -268,15 +270,17 @@ class LuaCompilerTest {
 				)
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
-				new LuaMethod("getFloat", OWNER_CLASS, MODIFIER, new LuaType("Float[]"),
-						ImmutableList.of(new LuaParameter(new LuaType("Integer[]"), "iParam"))
-				),
-				new LuaMethod("getDouble", OWNER_CLASS, MODIFIER, new LuaType("Double[]"),
-						ImmutableList.of(new LuaParameter(new LuaType("Object[]"), "oParam"))
-				),
-				new LuaMethod("getByte", OWNER_CLASS, MODIFIER, new LuaType("Byte[]"),
-						ImmutableList.of(new LuaParameter(new LuaType("String[]"), "sParam"))
-				)
+				LuaMethod.Builder.create("getFloat").withOwner(OWNER_CLASS)
+						.withModifier(MODIFIER).withReturnType(new LuaType("Float[]")).withParams(
+						ImmutableList.of(new LuaParameter(new LuaType("Integer[]"), "iParam"))).build(),
+
+				LuaMethod.Builder.create("getDouble").withOwner(OWNER_CLASS)
+						.withModifier(MODIFIER).withReturnType(new LuaType("Double[]")).withParams(
+						ImmutableList.of(new LuaParameter(new LuaType("Object[]"), "oParam"))).build(),
+
+				LuaMethod.Builder.create("getByte").withOwner(OWNER_CLASS)
+						.withModifier(MODIFIER).withReturnType(new LuaType("Byte[]")).withParams(
+						ImmutableList.of(new LuaParameter(new LuaType("String[]"), "sParam"))).build()
 		);
 		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(
 				new JavaClass(LuaCompilerTest.class), new ArrayList<>(), javaMethods
@@ -311,15 +315,17 @@ class LuaCompilerTest {
 				)
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
-				new LuaMethod("getText", OWNER_CLASS, MODIFIER, LUA_ARRAY_LIST_OBJECT,
-						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "sParam"))
-				),
-				new LuaMethod("getNumber", OWNER_CLASS, MODIFIER, LUA_ARRAY_LIST_STRING_OBJECT,
-						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_OBJECT_STRING, "nParam"))
-				),
-				new LuaMethod("getObject", OWNER_CLASS, MODIFIER, LUA_ARRAY_LIST_OBJECT_STRING,
-						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "oParam"))
-				)
+				LuaMethod.Builder.create("getText").withOwner(OWNER_CLASS)
+						.withModifier(MODIFIER).withReturnType(LUA_ARRAY_LIST_OBJECT).withParams(
+						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "sParam"))).build(),
+
+				LuaMethod.Builder.create("getNumber").withOwner(OWNER_CLASS)
+						.withModifier(MODIFIER).withReturnType(LUA_ARRAY_LIST_STRING_OBJECT).withParams(
+						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_OBJECT_STRING, "nParam"))).build(),
+
+				LuaMethod.Builder.create("getObject").withOwner(OWNER_CLASS)
+						.withModifier(MODIFIER).withReturnType(LUA_ARRAY_LIST_OBJECT_STRING).withParams(
+						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "oParam"))).build()
 		);
 		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(
 				new JavaClass(LuaCompilerTest.class), new ArrayList<>(), javaMethods
