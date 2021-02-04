@@ -17,8 +17,6 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import static io.yooksi.pz.zdoc.doc.detail.MethodDetail.Signature;
-
 import java.util.*;
 
 import org.junit.jupiter.api.Assertions;
@@ -36,6 +34,8 @@ import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.element.mod.ModifierKey;
 import zombie.characters.IsoPlayer;
 import zombie.core.Color;
+
+import static io.yooksi.pz.zdoc.doc.detail.MethodDetail.Signature;
 
 @SuppressWarnings("SpellCheckingInspection")
 class MethodDetailTest extends MethodDetailTestFixture {

@@ -17,8 +17,6 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import static io.yooksi.pz.zdoc.doc.detail.FieldDetail.Signature;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +33,8 @@ import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.element.mod.ModifierKey;
 import zombie.core.Color;
+
+import static io.yooksi.pz.zdoc.doc.detail.FieldDetail.Signature;
 
 @SuppressWarnings("SpellCheckingInspection")
 class FieldDetailTest extends FieldDetailTestFixture {

@@ -17,9 +17,6 @@
  */
 package io.yooksi.pz.zdoc;
 
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -46,6 +43,9 @@ import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
 import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.util.Utils;
+
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
 
 public class Main {
 

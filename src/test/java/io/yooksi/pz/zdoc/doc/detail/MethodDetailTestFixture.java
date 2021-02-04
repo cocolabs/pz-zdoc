@@ -17,9 +17,9 @@
  */
 package io.yooksi.pz.zdoc.doc.detail;
 
-import static io.yooksi.pz.zdoc.doc.detail.MethodDetail.Signature;
-
 import io.yooksi.pz.zdoc.doc.DocTest;
+
+import static io.yooksi.pz.zdoc.doc.detail.MethodDetail.Signature;
 
 class MethodDetailTestFixture extends DetailTestFixture<MethodDetail> {
 
