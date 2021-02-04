@@ -17,9 +17,6 @@
  */
 package io.yooksi.pz.zdoc.logger;
 
-import java.io.File;
-import java.nio.file.Paths;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
@@ -27,7 +24,6 @@ import org.apache.logging.log4j.LogManager;
 public class Logger {
 
 	private static final String JVM_PROPERTY = "zdoc.logger";
-	private static final String STANDARD_LOG_PATH = "pz-zdoc.log";
 
 	private static final org.apache.logging.log4j.Logger logger;
 	private static final LoggerType TYPE;
@@ -40,15 +36,6 @@ public class Logger {
 
 		logger = LogManager.getLogger(TYPE.name);
 		logger.debug("Created logger type: " + TYPE.name);
-
-		// Delete redundant log file created by log4j
-		if (TYPE != LoggerType.INFO)
-		{
-			File standardLogFile = Paths.get(STANDARD_LOG_PATH).toFile();
-			if (standardLogFile.exists()) {
-				standardLogFile.deleteOnExit();
-			}
-		}
 	}
 
 	/* Make the constructor private to disable instantiation */
