@@ -51,6 +51,7 @@ import io.yooksi.pz.zdoc.util.Utils;
 
 public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 
+	public static final String GLOBAL_OBJECT_CLASS = "zombie.Lua.LuaManager.GlobalObject";
 	private static final File SERIALIZE_LUA = new File("serialize.lua");
 
 	private final Set<Class<?>> exposedJavaClasses;
@@ -240,7 +241,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 				exposer, "exposed", true
 		);
 		// class containing global exposed methods
-		result.add(Utils.getClassForName("zombie.Lua.LuaManager.GlobalObject"));
+		result.add(Utils.getClassForName(GLOBAL_OBJECT_CLASS));
 		return result;
 	}
 

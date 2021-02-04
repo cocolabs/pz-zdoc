@@ -27,6 +27,7 @@ import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import io.yooksi.pz.zdoc.Main;
+import io.yooksi.pz.zdoc.compile.JavaCompiler;
 import io.yooksi.pz.zdoc.compile.LuaCompiler;
 import io.yooksi.pz.zdoc.element.IMember;
 import io.yooksi.pz.zdoc.element.lua.Annotated;
@@ -112,9 +113,14 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 			ZomboidLuaDoc.appendComments(sb, method);
 			ZomboidLuaDoc.appendAnnotations(sb, method);
 
-			sb.append("function ").append(clazz.getConventionalName());
-			sb.append(':').append(method.getName()).append('(');
+			sb.append("function ");
 
+			// global methods need to be declared outside tables
+			String parentType = clazz.getParentType();
+			if (parentType == null || !parentType.equals(JavaCompiler.GLOBAL_OBJECT_CLASS)) {
+				sb.append(clazz.getConventionalName()).append(':');
+			}
+			sb.append(method.getName()).append('(');
 			method.appendParameterSignature(sb);
 			sb.append(") end\n\n");
 		}

@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.ImmutableList;
 
 import io.yooksi.pz.zdoc.TestWorkspace;
+import io.yooksi.pz.zdoc.compile.JavaCompiler;
 import io.yooksi.pz.zdoc.element.lua.*;
 import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
@@ -385,6 +386,53 @@ class ZomboidLuaDocTest extends TestWorkspace {
 				"---@vararg ArrayList",
 				"---@return ArrayList|Unknown",
 				"function ZomboidLuaDocTest:getUnknownList(...) end"
+		);
+		Assertions.assertEquals(expectedResult, writeToFileAndRead(zDoc));
+	}
+
+	@Test
+	void shouldNotWriteGlobalZomboidLuaDocMethodsAsPartOfTableToFile() throws IOException {
+
+		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
+		luaMethods.add(LuaMethod.Builder.create("firstMethod").build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("secondMethod")
+				.withModifier(new MemberModifier(AccessModifierKey.PUBLIC)).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("thirdMethod")
+				.withModifier(new MemberModifier(AccessModifierKey.PRIVATE))
+				.withReturnType(new LuaType("String")).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("fourthMethod").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.DEFAULT))
+				.withReturnType(new LuaType("Object")).withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("int"), "param1"),
+						new LuaParameter(new LuaType("boolean"), "param2"))).build()
+		);
+		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
+				new LuaClass("LuaManager_GlobalObject", JavaCompiler.GLOBAL_OBJECT_CLASS),
+				new ArrayList<>(), luaMethods
+		);
+
+		List<String> expectedResult = ImmutableList.of(
+				"---@class LuaManager_GlobalObject : " + JavaCompiler.GLOBAL_OBJECT_CLASS,
+				"LuaManager_GlobalObject = {}",
+				"",
+				"---@return void",
+				"function firstMethod() end",
+				"",
+				"---@public",
+				"---@return void",
+				"function secondMethod() end",
+				"",
+				"---@private",
+				"---@return String",
+				"function thirdMethod() end",
+				"",
+				"---@param param1 int",
+				"---@param param2 boolean",
+				"---@return Object",
+				"function fourthMethod(param1, param2) end"
 		);
 		Assertions.assertEquals(expectedResult, writeToFileAndRead(zDoc));
 	}
