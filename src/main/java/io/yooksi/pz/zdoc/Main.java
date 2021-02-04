@@ -237,6 +237,10 @@ public class Main {
 
 	private static void writeAnnotatedLinesToFile(List<String> lines, File file) throws IOException {
 
+		// do not write empty content
+		if (lines.isEmpty()) {
+			return;
+		}
 		// make sure output file exists before we try to write to it
 		if (!file.exists())
 		{
