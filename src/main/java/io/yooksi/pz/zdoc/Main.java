@@ -140,33 +140,26 @@ public class Main {
 						outputFilePath = path;
 						Logger.warn("Unspecified output directory, overwriting files");
 					}
-					/* make sure output file exists before we try to write to it */
 					File outputFile = outputFilePath.toFile();
-					boolean outputFileExists = outputFile.exists();
-					if (!outputFileExists)
-					{
-						File parentFile = outputFile.getParentFile();
-						if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
-							throw new IOException("Unable to create specified output file: " + outputFilePath);
-						}
-					}
 					String fileName = path.getFileName().toString();
 					List<String> content = new ArrayList<>();
 
 					AnnotateRules rules = new AnnotateRules(properties, exclude);
 					AnnotateResult result = LuaAnnotator.annotate(path.toFile(), content, rules);
 
-					String addendum = outputFileExists ? " and overwriting" : "";
+					String addendum = outputFile.exists() ? " and overwriting" : "";
 					Logger.debug(String.format("Annotating%s file %s...", addendum, fileName));
 					switch (result)
 					{
 						case ALL_INCLUDED:
 							Logger.info(String.format("Finished annotating file \"%s\", " +
 									"all elements matched.", fileName));
+							writeAnnotatedLinesToFile(content, outputFile);
 							break;
 						case PARTIAL_INCLUSION:
 							Logger.error(String.format("Failed annotating file \"%s\", " +
 									"some elements were not matched.", fileName));
+							writeAnnotatedLinesToFile(content, outputFile);
 							break;
 						case NO_MATCH:
 							Logger.error(String.format("Failed annotating file \"%s\", " +
@@ -185,7 +178,6 @@ public class Main {
 									"all elements were excluded.", fileName));
 							break;
 					}
-					FileUtils.writeLines(outputFile, content, false);
 				}
 			}
 		}
@@ -241,5 +233,18 @@ public class Main {
 			}
 		}
 		Logger.debug("Finished processing command");
+	}
+
+	private static void writeAnnotatedLinesToFile(List<String> lines, File file) throws IOException {
+
+		// make sure output file exists before we try to write to it
+		if (!file.exists())
+		{
+			File parentFile = file.getParentFile();
+			if (!parentFile.exists() && (!parentFile.mkdirs() || !file.createNewFile())) {
+				throw new IOException("Unable to create specified output file: " + file);
+			}
+		}
+		FileUtils.writeLines(file, lines, false);
 	}
 }
