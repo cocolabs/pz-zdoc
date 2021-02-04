@@ -9,24 +9,28 @@
         <Console name="DebugConsole" target="SYSTEM_OUT">
             <PatternLayout pattern="%level{WARN=Warning, DEBUG=Debug, ERROR=Error, INFO=Info}: %msg%n"/>
         </Console>
-        <!-- Log file for standard use in production environment -->
-        <File name="StandardFile" fileName="pz-zdoc.log">
-            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %msg%n"/>
-        </File>
         <!-- Console for standard use in development environment -->
         <Console name="DevConsole" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{[HH:mm:ss]} [%level] %t - %msg%n"/>
         </Console>
-        <!-- Log file for standard use in development environment -->
-        <File name="DevFile" fileName="logs/main.log">
-            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
-        </File>
-        <!-- Log file for debugging use in development environment -->
-        <RollingFile name="DevDebugFile" fileName="logs/debug.log"
+        <!-- Log file for standard use in development and production environment -->
+        <RollingFile name="StandardFile" fileName="logs/main.log"
                      filePattern="logs/$${date:yyyy-MM}/pz-zdoc-%d{MM-dd-yyyy}-%i.log.zip">
             <PatternLayout
                     pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
             <Policies>
+                <OnStartupTriggeringPolicy />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <!-- Log file for debugging use in development and production environment -->
+        <RollingFile name="StandardDebugFile" fileName="logs/debug.log"
+                     filePattern="logs/$${date:yyyy-MM}/pz-zdoc-%d{MM-dd-yyyy}-debug-%i.log.zip">
+            <PatternLayout
+                    pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy />
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
@@ -40,11 +44,12 @@
         <Logger name="DebugLogger" level="debug" additivity="false">
             <AppenderRef ref="DebugConsole"/>
             <AppenderRef ref="StandardFile"/>
+            <AppenderRef ref="StandardDebugFile"/>
         </Logger>
         <Logger name="DevLogger" level="debug" additivity="false">
             <AppenderRef ref="DevConsole"/>
-            <AppenderRef ref="DevFile"/>
-            <AppenderRef ref="DevDebugFile"/>
+            <AppenderRef ref="StandardFile"/>
+            <AppenderRef ref="StandardDebugFile"/>
         </Logger>
         <Root level="debug"/>
     </Loggers>
