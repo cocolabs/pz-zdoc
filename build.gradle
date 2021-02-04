@@ -49,6 +49,9 @@ sourceSets {
         compileClasspath += configurations.zomboidImplementation
         runtimeClasspath += configurations.zomboidRuntimeOnly
     }
+    media {
+        java.srcDir 'media/lua'
+    }
     zombie {
         java.srcDir 'src/zombie/java'
     }
