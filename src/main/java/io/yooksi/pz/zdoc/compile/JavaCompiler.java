@@ -155,7 +155,8 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 			/* the field is not a parameterized type,
 			 * use declared Field object to construct JavaField instance
 			 */
-			else {
+			else
+			{
 				Logger.debug("Constructing field from JavaField instance");
 				result.add(new JavaField(field));
 			}
