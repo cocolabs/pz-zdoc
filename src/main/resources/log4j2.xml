@@ -38,17 +38,17 @@
     </Appenders>
     <Loggers>
         <Logger name="StandardLogger" level="verbose" additivity="false">
-            <AppenderRef ref="StandardConsole"/>
-            <AppenderRef ref="StandardFile"/>
+            <AppenderRef ref="StandardConsole" level="info"/>
+            <AppenderRef ref="StandardFile" level="verbose"/>
         </Logger>
         <Logger name="DebugLogger" level="debug" additivity="false">
-            <AppenderRef ref="StandardConsole"/>
-            <AppenderRef ref="StandardFile"/>
+            <AppenderRef ref="StandardConsole" level="verbose"/>
+            <AppenderRef ref="StandardFile" level="verbose"/>
             <AppenderRef ref="DebugFile"/>
         </Logger>
         <Logger name="DevLogger" level="debug" additivity="false">
             <AppenderRef ref="DevConsole"/>
-            <AppenderRef ref="StandardFile"/>
+            <AppenderRef ref="StandardFile" level="verbose"/>
             <AppenderRef ref="DebugFile"/>
         </Logger>
         <Root level="debug"/>
