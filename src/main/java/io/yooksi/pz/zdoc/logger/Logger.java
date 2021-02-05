@@ -24,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 public class Logger {
 
 	private static final String JVM_PROPERTY = "zdoc.logger";
+	private static final Level VERBOSE = Level.forName("VERBOSE", 550);
 
 	private static final org.apache.logging.log4j.Logger logger;
 	private static final LoggerType TYPE;
@@ -57,6 +58,14 @@ public class Logger {
 
 	public static void info(String log, Object... params) {
 		logger.info(log, params);
+	}
+
+	public static void detail(String log) {
+		logger.log(VERBOSE, log);
+	}
+
+	public static void detail(String log, Object... params) {
+		logger.log(VERBOSE, log, params);
 	}
 
 	public static void error(String log) {
