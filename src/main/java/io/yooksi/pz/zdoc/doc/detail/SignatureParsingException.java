@@ -19,6 +19,8 @@ package io.yooksi.pz.zdoc.doc.detail;
 
 import org.apache.logging.log4j.Level;
 
+import io.yooksi.pz.zdoc.logger.Logger;
+
 class SignatureParsingException extends DetailParsingException {
 
 	SignatureParsingException(String signature, String message) {
@@ -30,6 +32,6 @@ class SignatureParsingException extends DetailParsingException {
 	}
 
 	Level getLogLevel() {
-		return Level.WARN;
+		return Logger.VERBOSE;
 	}
 }
