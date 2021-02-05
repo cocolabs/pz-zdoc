@@ -38,6 +38,12 @@ application {
     mainClassName = 'io.yooksi.pz.zdoc.Main'
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+
 configurations {
     zomboidRuntimeOnly
     zomboidImplementation
