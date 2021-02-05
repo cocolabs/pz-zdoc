@@ -173,6 +173,7 @@ distributions.main.contents {
 }
 
 def cleanScripts = tasks.register('cleanScripts', Delete.class) {
+    it.description('Delete build scripts directory.')
     it.delete("$buildDir/scripts")
 }
 tasks.named('installDist').configure{
@@ -225,6 +226,7 @@ licenseReport {
 }
 
 tasks.register('readGameVersion', JavaExec.class) {
+    it.description('Read installed game version.')
     it.classpath = sourceSets.main.runtimeClasspath
     it.main = application.mainClassName
     it.args 'version'
@@ -250,6 +252,7 @@ tasks.register('luaDocJar', ZDocJar.class) {
 }
 
 task cleanMedia(type: Delete) {
+    description('Deletes media directory.')
     delete 'media/lua'
 }
 clean.dependsOn(cleanMedia)
