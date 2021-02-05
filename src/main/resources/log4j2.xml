@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
+    <Properties>
+        <Property name="logLevelPattern">
+            %level{VERBOSE=INFO}
+        </Property>
+        <Property name="logFilePattern">
+            logs/$${date:yyyy-MM}/pz-zdoc-%d{MM-dd-yyyy}
+        </Property>
+    </Properties>
     <Appenders>
-        <!-- Console for standard use in production environment -->
+        <!-- Console for use in production environment -->
         <Console name="StandardConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%level{WARN=Warning, DEBUG=Debug, ERROR=ERROR, INFO=Info}: %msg%n"/>
+            <PatternLayout pattern="${logLevelPattern}: %msg%n"/>
         </Console>
-        <!-- Console for debugging use in production environment -->
-        <Console name="DebugConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%level{WARN=Warning, DEBUG=Debug, ERROR=ERROR, INFO=Info}: %msg%n"/>
-        </Console>
-        <!-- Console for standard use in development environment -->
+        <!-- Console for use in development environment -->
         <Console name="DevConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{[HH:mm:ss]} [%level] %t - %msg%n"/>
+            <PatternLayout pattern="%d{[HH:mm:ss]} [${logLevelPattern}] %t - %msg%n"/>
         </Console>
         <!-- Log file for standard use in development and production environment -->
-        <RollingFile name="StandardFile" fileName="logs/main.log"
-                     filePattern="logs/$${date:yyyy-MM}/pz-zdoc-%d{MM-dd-yyyy}-%i.log.zip">
-            <PatternLayout
-                    pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
+        <RollingFile name="StandardFile" fileName="logs/main.log" filePattern="${logFilePattern}-%i.log.zip">
+            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [${logLevelPattern}] %t - %msg%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
         <!-- Log file for debugging use in development and production environment -->
-        <RollingFile name="StandardDebugFile" fileName="logs/debug.log"
-                     filePattern="logs/$${date:yyyy-MM}/pz-zdoc-%d{MM-dd-yyyy}-debug-%i.log.zip">
-            <PatternLayout
-                    pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [%level] %t - %msg%n"/>
+        <RollingFile name="DebugFile" fileName="logs/debug.log" filePattern="${logFilePattern}-debug-%i.log.zip">
+            <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [${logLevelPattern}] %t - %msg%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="StandardLogger" level="info" additivity="false">
+        <Logger name="StandardLogger" level="verbose" additivity="false">
             <AppenderRef ref="StandardConsole"/>
             <AppenderRef ref="StandardFile"/>
         </Logger>
         <Logger name="DebugLogger" level="debug" additivity="false">
-            <AppenderRef ref="DebugConsole"/>
+            <AppenderRef ref="StandardConsole"/>
             <AppenderRef ref="StandardFile"/>
-            <AppenderRef ref="StandardDebugFile"/>
+            <AppenderRef ref="DebugFile"/>
         </Logger>
         <Logger name="DevLogger" level="debug" additivity="false">
             <AppenderRef ref="DevConsole"/>
             <AppenderRef ref="StandardFile"/>
-            <AppenderRef ref="StandardDebugFile"/>
+            <AppenderRef ref="DebugFile"/>
         </Logger>
         <Root level="debug"/>
     </Loggers>
