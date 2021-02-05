@@ -42,7 +42,7 @@
             <AppenderRef ref="StandardFile" level="verbose"/>
         </Logger>
         <Logger name="DebugLogger" level="debug" additivity="false">
-            <AppenderRef ref="StandardConsole" level="verbose"/>
+            <AppenderRef ref="StandardConsole" level="info"/>
             <AppenderRef ref="StandardFile" level="verbose"/>
             <AppenderRef ref="DebugFile"/>
         </Logger>
