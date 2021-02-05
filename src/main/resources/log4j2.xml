@@ -3,11 +3,11 @@
     <Appenders>
         <!-- Console for standard use in production environment -->
         <Console name="StandardConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%msg%n"/>
+            <PatternLayout pattern="%level{WARN=Warning, DEBUG=Debug, ERROR=ERROR, INFO=Info}: %msg%n"/>
         </Console>
         <!-- Console for debugging use in production environment -->
         <Console name="DebugConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%level{WARN=Warning, DEBUG=Debug, ERROR=Error, INFO=Info}: %msg%n"/>
+            <PatternLayout pattern="%level{WARN=Warning, DEBUG=Debug, ERROR=ERROR, INFO=Info}: %msg%n"/>
         </Console>
         <!-- Console for standard use in development environment -->
         <Console name="DevConsole" target="SYSTEM_OUT">
