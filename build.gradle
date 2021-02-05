@@ -25,11 +25,18 @@ plugins {
 }
 apply from: 'setup.gradle'
 apply from: 'spotless.gradle'
-apply from: 'zomboid.gradle'
 
 group 'io.yooksi'
 version '2.1.0'
 
+wrapper {
+    gradleVersion = '6.7.1'
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+application {
+    mainClassName = 'io.yooksi.pz.zdoc.Main'
+}
 
 configurations {
     zomboidRuntimeOnly
@@ -211,12 +218,10 @@ jacocoTestReport {
         xml.destination file("${buildDir}/coverage.xml")
     }
 }
-
 check.dependsOn jacocoTestReport
 
-application {
-    // Define the main class for the application.
-    mainClassName = 'io.yooksi.pz.zdoc.Main'
+licenseReport {
+    renderers = [new InventoryHtmlReportRenderer()]
 }
 
 tasks.register("readGameVersion", JavaExec.class) {
@@ -233,8 +238,7 @@ tasks.register("readGameVersion", JavaExec.class) {
         def versionText = oStream.toString()
         print(versionText)
 
-        // manipulate text to get just version information
-        // ex. 41.50-IWBUMS
+        // get version number and classifier (ex. 41.50-IWBUMS)
         project.ext.gameVersion = versionText.substring(13).replaceAll(" ", "")
     }
 }
@@ -245,20 +249,13 @@ tasks.register("luaDocJar", ZDocJar.class) {
     it.from 'media/lua'
 }
 
-licenseReport {
-    renderers = [new InventoryHtmlReportRenderer()]
-}
-
 task cleanMedia(type: Delete) {
     delete 'media/lua'
 }
 clean.dependsOn(cleanMedia)
 
-wrapper {
-    gradleVersion = '6.7.1'
-    distributionType = Wrapper.DistributionType.ALL
-}
-
+// integration tasks are tasks that should not be run on CI
+// always define this after declaring all tasks
 def integrationTasks = [
         compileIntTestJava
 ]
