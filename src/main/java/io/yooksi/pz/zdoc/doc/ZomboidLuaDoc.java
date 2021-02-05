@@ -35,6 +35,7 @@ import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import io.yooksi.pz.zdoc.element.lua.LuaField;
 import io.yooksi.pz.zdoc.element.lua.LuaMethod;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
+import io.yooksi.pz.zdoc.logger.Logger;
 
 public class ZomboidLuaDoc implements ZomboidDoc {
 
@@ -85,17 +86,21 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 
 	public static void writeGlobalTypesToFile(File file) throws IOException {
 
+		Logger.detail("Writing global lua types to file...");
 		StringBuilder sb = new StringBuilder();
-		for (LuaClass globalType : LuaCompiler.getGlobalTypes())
+		Set<LuaClass> globalTypes = LuaCompiler.getGlobalTypes();
+		for (LuaClass type : globalTypes)
 		{
-			ZomboidLuaDoc.appendAnnotations(sb, globalType);
-			sb.append(globalType.getConventionalName()).append(" = {}\n\n");
+			ZomboidLuaDoc.appendAnnotations(sb, type);
+			sb.append(type.getConventionalName()).append(" = {}\n\n");
 		}
 		FileUtils.write(file, sb.toString(), Main.CHARSET, false);
+		Logger.info("Compiled %d global lua types", globalTypes.size());
 	}
 
 	public void writeToFile(File file) throws IOException {
 
+		Logger.detail("Writing %s to %s...", getName(), file.getName());
 		StringBuilder sb = new StringBuilder();
 
 		ZomboidLuaDoc.appendAnnotations(sb, clazz);

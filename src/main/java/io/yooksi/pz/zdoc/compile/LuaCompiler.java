@@ -31,6 +31,7 @@ import io.yooksi.pz.zdoc.element.IMethod;
 import io.yooksi.pz.zdoc.element.IParameter;
 import io.yooksi.pz.zdoc.element.java.JavaClass;
 import io.yooksi.pz.zdoc.element.lua.*;
+import io.yooksi.pz.zdoc.logger.Logger;
 
 public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 
@@ -89,12 +90,14 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 
 		LuaType result = new LuaType(type);
 		CACHED_TYPES.put(clazz.getName(), result);
+		Logger.debug("Caching lua type (class: %s, type: %s)", clazz.getName(), type);
 		return result;
 	}
 
 	private static void registerGlobalType(IClass clazz, String type) throws CompilerException {
 
-		CACHED_TYPES.put(clazz.getName(), new LuaType(type));
+		LuaCompiler.cacheType(clazz, type);
+		LuaClass globalTypeLuaClass;
 
 		Class<?> typeClass = ((JavaClass) clazz).getClazz();
 		if (typeClass.isArray())
@@ -105,13 +108,14 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 			if (isRegisteredGlobal(typeName)) {
 				return;
 			}
-			String className = resolveClassName(typeName);
-			className = className.replaceAll("\\[]", "");
+			String className = resolveClassName(typeName).replaceAll("\\[]", "");
 			String typeClassName = typeClass.getCanonicalName().replaceAll("\\[]", "");
 			LuaClass luaClass = new LuaClass(className, typeClassName);
-			GLOBAL_TYPES.put(luaClass.getName(), luaClass);
+			type = luaClass.getName(); globalTypeLuaClass = luaClass;
 		}
-		else GLOBAL_TYPES.put(type, new LuaClass(type, typeClass.getCanonicalName()));
+		else globalTypeLuaClass =  new LuaClass(type, typeClass.getCanonicalName());
+		GLOBAL_TYPES.put(type, globalTypeLuaClass);
+		Logger.debug("Registering global lua type (key: %s, value: %s", type, globalTypeLuaClass);
 	}
 
 	private static LuaClass resolveLuaClass(String name) throws CompilerException {
@@ -121,9 +125,16 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		{
 			String parentType = name.replace('$', '.');
 			LuaClass result = new LuaClass(resolveClassName(name), parentType);
+
 			GLOBAL_CLASSES.put(result.getName(), result);
+			Logger.debug("Caching global class (key: %s, value: %s)", result.getName(), result);
+
 			CACHED_CLASSES.put(name, result);
+			Logger.debug("Caching class (key: %s, value: %s)", name, result);
+
 			CACHED_TYPES.put(name, new LuaType(result.getName()));
+			Logger.debug("Caching lua type (class: %s, type: %s)", name, result);
+
 			return result;
 		}
 		else return cachedClass;
@@ -131,23 +142,28 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 
 	private static String resolveClassName(String signature) throws CompilerException {
 
+		Logger.debug("Resolving class name for signature %s", signature);
 		String[] packages = signature.split("\\.");
 		if (packages.length > 1)
 		{
-			String result;
 			char[] cName = packages[packages.length - 1].toCharArray();
 			StringBuilder sb = new StringBuilder();
 			for (char c : cName) {
 				sb.append(c == '$' ? '.' : c);
 			}
-			result = sb.toString();
-			for (int i = packages.length - 2; i >= 0 && isRegisteredGlobal(result); i--) {
-				result = packages[i] + '_' + result;
-			}
+			String result = sb.toString();
 			if (isRegisteredGlobal(result))
 			{
-				String msg = "Unexpected class name (%s) duplicate detected!";
-				throw new CompilerException(String.format(msg, result));
+				String globalClass = result;
+				for (int i = packages.length - 2; i >= 0 && isRegisteredGlobal(result); i--) {
+					result = packages[i] + '_' + result;
+				}
+				Logger.debug("Resolved class name as %s to avoid conflict with global class %s", result, globalClass);
+				if (isRegisteredGlobal(result))
+				{
+					String msg = "Unexpected class name (%s) duplicate detected!";
+					throw new CompilerException(String.format(msg, result));
+				}
 			}
 			return result;
 		}
@@ -182,20 +198,21 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 
 	public Set<ZomboidLuaDoc> compile() throws CompilerException {
 
+		Logger.info("Start compiling lua classes...");
 		Set<ZomboidLuaDoc> result = PredicatedSet.predicatedSet(
 				new HashSet<>(), PredicateUtils.notNullPredicate()
 		);
 		for (ZomboidJavaDoc javaDoc : javaDocs)
 		{
 			LuaClass luaClass = resolveLuaClass(javaDoc.getName());
+			Logger.debug("Compiling lua class %s...", luaClass.getName());
 
 			List<LuaField> luaFields = new ArrayList<>();
 			for (IField field : javaDoc.getFields())
 			{
 				LuaType fieldType = resolveLuaType(field.getType());
-				luaFields.add(new LuaField(fieldType,
-						field.getName(), field.getModifier(), field.getComment())
-				);
+				luaFields.add(new LuaField(fieldType, field.getName(), field.getModifier(), field.getComment()));
+				Logger.debug("Compiled field %s", field.getName());
 			}
 			Set<LuaMethod> luaMethods = new HashSet<>();
 			for (IMethod method : javaDoc.getMethods())
@@ -211,9 +228,14 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 						.withReturnType(resolveLuaType(method.getReturnType()))
 						.withParams(parameters).withVarArg(method.hasVarArg())
 						.withComment(method.getComment()).build());
+
+				Logger.debug("Compiled method %s", method.getName());
 			}
 			result.add(new ZomboidLuaDoc(luaClass, luaFields, luaMethods));
+			Logger.detail("Compiled lua class %s with %d fields and %d methods",
+					luaClass.getName(), luaFields.size(), luaMethods.size());
 		}
+		Logger.info("Finished compiling %d/%d lua classes", result.size(), javaDocs.size());
 		return result;
 	}
 }

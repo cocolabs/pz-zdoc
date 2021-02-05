@@ -204,12 +204,18 @@ public class Main {
 			else Logger.debug("Designated output path: " + userOutput);
 
 			Properties properties = Utils.getProperties("compile.properties");
+			Logger.debug("Reading compile.properties, found %d keys", properties.size());
+
 			String excludeProp = properties.getProperty("exclude");
-			if (!StringUtils.isBlank(excludeProp)) {
-				exclude.addAll(Arrays.asList(excludeProp.split(",")));
+			if (!StringUtils.isBlank(excludeProp))
+			{
+				List<String> excludeEntries = Arrays.asList(excludeProp.split(","));
+				Logger.debug("Loaded %d exclude entries from compile.properties", excludeEntries.size());
+				exclude.addAll(excludeEntries);
 			}
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
-			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile())
+			Set<ZomboidLuaDoc> compiledLua = new LuaCompiler(compiledJava).compile();
+			for (ZomboidLuaDoc zLuaDoc : compiledLua)
 			{
 				String luaDocName = zLuaDoc.getName();
 				String luaDocProp = properties.getProperty(luaDocName);
@@ -227,6 +233,7 @@ public class Main {
 				}
 				else zLuaDoc.writeToFile(userOutput.resolve(luaDocName + ".lua").toFile());
 			}
+			Logger.info("Compiled and written %d lua documents", compiledLua.size());
 			ZomboidLuaDoc.writeGlobalTypesToFile(userOutput.resolve("Types.lua").toFile());
 			for (String excludedClass : exclude) {
 				Logger.warn("Class " + excludedClass + " was designated but not excluded from compilation.");
