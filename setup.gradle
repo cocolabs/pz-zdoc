@@ -14,7 +14,7 @@ if (project.ext.gameDir == null)
     else if (System.hasProperty('game.dir')) {
         project.ext.gameDir = Paths.get(System.getProperty('game.dir'))
     }
-    else throw new RuntimeException("Game directory path not specified")
+    else throw new RuntimeException('Game directory path not specified')
 }
 /**
  * Register a project property of a given name as a {@code boolean} value.
@@ -31,7 +31,7 @@ void registerBooleanProjectProperty(String name, boolean defaultValue) {
     else project.ext.setProperty(name, defaultValue)
 }
 // is the build being run on a CI server?
-registerBooleanProjectProperty("isCI", false)
+registerBooleanProjectProperty('isCI', false)
 
 // should gradle run spotless tasks?
-registerBooleanProjectProperty("makeSpotless", true)
+registerBooleanProjectProperty('makeSpotless', true)
