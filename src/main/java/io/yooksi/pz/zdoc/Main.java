@@ -17,9 +17,6 @@
  */
 package io.yooksi.pz.zdoc;
 
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,7 +27,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,8 +40,12 @@ import io.yooksi.pz.zdoc.compile.LuaAnnotator;
 import io.yooksi.pz.zdoc.compile.LuaCompiler;
 import io.yooksi.pz.zdoc.doc.ZomboidJavaDoc;
 import io.yooksi.pz.zdoc.doc.ZomboidLuaDoc;
+import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import io.yooksi.pz.zdoc.logger.Logger;
 import io.yooksi.pz.zdoc.util.Utils;
+
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
 
 public class Main {
 
@@ -62,8 +62,10 @@ public class Main {
 				args.length, Arrays.toString(args)));
 
 		Command command = Command.parse(args);
-		if (command == null) {
-			throw new ParseException("Missing or unknown command argument");
+		if (command == null)
+		{
+			String format = "Missing or unknown command argument (%s)";
+			throw new ParseException(String.format(format, Arrays.toString(args)));
 		}
 		else if (command == Command.HELP)
 		{
@@ -138,33 +140,26 @@ public class Main {
 						outputFilePath = path;
 						Logger.warn("Unspecified output directory, overwriting files");
 					}
-					/* make sure output file exists before we try to write to it */
 					File outputFile = outputFilePath.toFile();
-					boolean outputFileExists = outputFile.exists();
-					if (!outputFileExists)
-					{
-						File parentFile = outputFile.getParentFile();
-						if (!parentFile.exists() && (!parentFile.mkdirs() || !outputFile.createNewFile())) {
-							throw new IOException("Unable to create specified output file: " + outputFilePath);
-						}
-					}
 					String fileName = path.getFileName().toString();
 					List<String> content = new ArrayList<>();
 
 					AnnotateRules rules = new AnnotateRules(properties, exclude);
 					AnnotateResult result = LuaAnnotator.annotate(path.toFile(), content, rules);
 
-					String addendum = outputFileExists ? " and overwriting" : "";
+					String addendum = outputFile.exists() ? " and overwriting" : "";
 					Logger.debug(String.format("Annotating%s file %s...", addendum, fileName));
 					switch (result)
 					{
 						case ALL_INCLUDED:
 							Logger.info(String.format("Finished annotating file \"%s\", " +
 									"all elements matched.", fileName));
+							writeAnnotatedLinesToFile(content, outputFile);
 							break;
 						case PARTIAL_INCLUSION:
 							Logger.error(String.format("Failed annotating file \"%s\", " +
 									"some elements were not matched.", fileName));
+							writeAnnotatedLinesToFile(content, outputFile);
 							break;
 						case NO_MATCH:
 							Logger.error(String.format("Failed annotating file \"%s\", " +
@@ -183,7 +178,6 @@ public class Main {
 									"all elements were excluded.", fileName));
 							break;
 					}
-					FileUtils.writeLines(outputFile, content, false);
 				}
 			}
 		}
@@ -210,12 +204,18 @@ public class Main {
 			else Logger.debug("Designated output path: " + userOutput);
 
 			Properties properties = Utils.getProperties("compile.properties");
+			Logger.debug("Reading compile.properties, found %d keys", properties.size());
+
 			String excludeProp = properties.getProperty("exclude");
-			if (!StringUtils.isBlank(excludeProp)) {
-				exclude.addAll(Arrays.asList(excludeProp.split(",")));
+			if (!StringUtils.isBlank(excludeProp))
+			{
+				List<String> excludeEntries = Arrays.asList(excludeProp.split(","));
+				Logger.debug("Loaded %d exclude entries from compile.properties", excludeEntries.size());
+				exclude.addAll(excludeEntries);
 			}
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
-			for (ZomboidLuaDoc zLuaDoc : new LuaCompiler(compiledJava).compile())
+			Set<ZomboidLuaDoc> compiledLua = new LuaCompiler(compiledJava).compile();
+			for (ZomboidLuaDoc zLuaDoc : compiledLua)
 			{
 				String luaDocName = zLuaDoc.getName();
 				String luaDocProp = properties.getProperty(luaDocName);
@@ -233,11 +233,29 @@ public class Main {
 				}
 				else zLuaDoc.writeToFile(userOutput.resolve(luaDocName + ".lua").toFile());
 			}
+			Logger.info("Compiled and written %d lua documents", compiledLua.size());
 			ZomboidLuaDoc.writeGlobalTypesToFile(userOutput.resolve("Types.lua").toFile());
 			for (String excludedClass : exclude) {
 				Logger.warn("Class " + excludedClass + " was designated but not excluded from compilation.");
 			}
 		}
 		Logger.debug("Finished processing command");
+	}
+
+	private static void writeAnnotatedLinesToFile(List<String> lines, File file) throws IOException {
+
+		// do not write empty content
+		if (lines.isEmpty()) {
+			return;
+		}
+		// make sure output file exists before we try to write to it
+		if (!file.exists())
+		{
+			File parentFile = file.getParentFile();
+			if (!parentFile.exists() && (!parentFile.mkdirs() || !file.createNewFile())) {
+				throw new IOException("Unable to create specified output file: " + file);
+			}
+		}
+		FileUtils.writeLines(file, lines, false);
 	}
 }

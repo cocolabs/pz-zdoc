@@ -22,7 +22,7 @@ for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
 set DEFAULT_JVM_OPTS=
 
 @rem Set game directory path to APP_HOME if env var not set
-if "%PZ_DIR_PATH%"=="" goto setDirPathToHome
+if "%PZ_DIR_PATH%"=="" set PZ_DIR_PATH="%APP_HOME%\.."
 
 @rem Ensure path is Windows-style path
 set PZ_DIR_PATH=%PZ_DIR_PATH:/=\%
@@ -54,9 +54,6 @@ echo.
 echo ERROR: PZ_DIR_PATH points to an invalid or corrupt game directory: %PZ_DIR_PATH%
 echo.
 goto finish
-
-:setDirPathToHome
-set PZ_DIR_PATH="%APP_HOME%"
 
 @rem Find java.exe
 :findJava
@@ -96,7 +93,7 @@ goto finish
 @rem Validate java version
 set JAVA_TARGET_VERSION=18
 
-for /f "tokens=3" %%g in ('java -version 2^>^&1 ^| findstr /i "version"') do (
+for /f "tokens=3" %%g in ('%JAVA_EXE% -version 2^>^&1 ^| findstr /i "version"') do (
     set JAVA_VERSION_INFO=%%g
 )
 set JAVA_VERSION=%JAVA_VERSION_INFO:"=%
@@ -123,6 +120,7 @@ echo %JAVA_EXE%
 set CLASSPATH=%!classpath!%
 
 echo Launching ZomboidDoc...
+echo.
 @rem Execute pz-zdoc
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %PZ_ZDOC_OPTS% -classpath "%CLASSPATH%" %!mainClassName!% %*
 

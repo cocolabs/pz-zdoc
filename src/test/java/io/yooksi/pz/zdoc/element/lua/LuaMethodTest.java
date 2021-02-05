@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import io.yooksi.pz.zdoc.element.mod.MemberModifier;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLuaClass;
 
 class LuaMethodTest {
@@ -33,10 +32,9 @@ class LuaMethodTest {
 	private static final LuaParameter DUMMY_PARAM =
 			new LuaParameter(new LuaType("dummy"), "param1");
 
-	private static final LuaMethod TEST_METHOD = new LuaMethod("test",
-			new LuaClass("TestClass"), MemberModifier.UNDECLARED, new LuaType("void"),
-			ImmutableList.of(DUMMY_PARAM, new LuaParameter(new LuaType("dummy"), "param2"))
-	);
+	private static final LuaMethod TEST_METHOD = LuaMethod.Builder.create("test")
+			.withOwner(new LuaClass("TestClass")).withParams(ImmutableList.of(
+					DUMMY_PARAM, new LuaParameter(new LuaType("dummy"), "param2"))).build();
 
 	@Test
 	void shouldCreateLuaMethodWithSafeLuaName() {
@@ -44,10 +42,10 @@ class LuaMethodTest {
 		LuaType type = new LuaType("Boolean");
 		List<LuaParameter> params = new ArrayList<>();
 
-		LuaMethod method = new LuaMethod("break", MemberModifier.UNDECLARED, type, params);
+		LuaMethod method = LuaMethod.Builder.create("break").withReturnType(type).withParams(params).build();
 		Assertions.assertEquals("_break", method.getName());
 
-		method = new LuaMethod("test", MemberModifier.UNDECLARED, type, params);
+		method = LuaMethod.Builder.create("test").withReturnType(type).withParams(params).build();
 		Assertions.assertNotEquals("_test", method.getName());
 	}
 
@@ -56,26 +54,22 @@ class LuaMethodTest {
 
 		Assertions.assertEquals("TestClass:test(param1, param2)", TEST_METHOD.toString());
 
-		MemberModifier modifier = MemberModifier.UNDECLARED;
-		LuaMethod varArgMethod = new LuaMethod("test",
-				new LuaClass("TestClass"), modifier, new LuaType("Object"),
-				ImmutableList.of(
-						new LuaParameter(new LuaType("String"), "param1"),
-						new LuaParameter(new LuaType("Integer"), "param2")
-				), true
+		List<LuaParameter> params = ImmutableList.of(
+				new LuaParameter(new LuaType("String"), "param1"),
+				new LuaParameter(new LuaType("Integer"), "param2")
 		);
+		LuaMethod varArgMethod = LuaMethod.Builder.create("test").withOwner(new LuaClass("TestClass"))
+				.withReturnType(new LuaType("Object")).withParams(params).withVarArg(true).build();
+
 		Assertions.assertEquals("TestClass:test(param1, ...)", varArgMethod.toString());
 	}
 
 	@Test
 	void shouldIgnoreLuaMethodHasVarArgWhenEmptyParamList() {
 
-		LuaType type = new LuaType("Boolean");
-		List<LuaParameter> params = new ArrayList<>();
-		MemberModifier modifier = MemberModifier.UNDECLARED;
-
-		LuaMethod method = new LuaMethod("test", null, modifier, type, params, true);
-		Assertions.assertFalse(method.hasVarArg());
+		Assertions.assertFalse(LuaMethod.Builder.create("test")
+				.withReturnType(new LuaType("Boolean")).withVarArg(true).build().hasVarArg()
+		);
 	}
 
 	@Test

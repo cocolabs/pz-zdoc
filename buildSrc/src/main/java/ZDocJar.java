@@ -60,6 +60,10 @@ public class ZDocJar extends Jar {
 		}));
 	}
 
+	private static String maybe(@Nullable String prefix, @Nullable String value) {
+		return GUtil.isTrue(value) ? GUtil.isTrue(prefix) ? "-".concat(value) : value : "";
+	}
+
 	@Override
 	public Task configure(Closure closure) {
 		Task configure = super.configure(closure);
@@ -72,10 +76,6 @@ public class ZDocJar extends Jar {
 			getTaskByName(taskName).dependsOn(this);
 		}
 		return configure;
-	}
-
-	private static String maybe(@Nullable String prefix, @Nullable String value) {
-		return GUtil.isTrue(value) ? GUtil.isTrue(prefix) ? "-".concat(value) : value : "";
 	}
 
 	/**

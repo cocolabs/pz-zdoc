@@ -65,7 +65,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 			if (type == null)
 			{
 				String msg = "Excluding method (%s) from detail, class %s does not exist";
-				Logger.warn(String.format(msg, signature.toString(), signature.returnType));
+				Logger.detail(String.format(msg, signature.toString(), signature.returnType));
 				continue;
 			}
 			List<JavaParameter> params = new ArrayList<>();

@@ -71,7 +71,7 @@ public class FieldDetail extends Detail<JavaField> {
 			if (type != null) {
 				result.add(new JavaField(type, signature.name, signature.modifier, signature.comment));
 			}
-			else Logger.warn(String.format("Excluding field (%s) from detail, " +
+			else Logger.detail(String.format("Excluding field (%s) from detail, " +
 					"class %s does not exist", signature.toString(), signature.type));
 		}
 		return result;

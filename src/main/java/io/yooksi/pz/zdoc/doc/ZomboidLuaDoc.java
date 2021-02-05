@@ -27,14 +27,15 @@ import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import io.yooksi.pz.zdoc.Main;
+import io.yooksi.pz.zdoc.compile.JavaCompiler;
 import io.yooksi.pz.zdoc.compile.LuaCompiler;
-import io.yooksi.pz.zdoc.element.IClass;
 import io.yooksi.pz.zdoc.element.IMember;
 import io.yooksi.pz.zdoc.element.lua.Annotated;
 import io.yooksi.pz.zdoc.element.lua.LuaClass;
 import io.yooksi.pz.zdoc.element.lua.LuaField;
 import io.yooksi.pz.zdoc.element.lua.LuaMethod;
 import io.yooksi.pz.zdoc.lang.lua.EmmyLua;
+import io.yooksi.pz.zdoc.logger.Logger;
 
 public class ZomboidLuaDoc implements ZomboidDoc {
 
@@ -85,17 +86,21 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 
 	public static void writeGlobalTypesToFile(File file) throws IOException {
 
+		Logger.detail("Writing global lua types to file...");
 		StringBuilder sb = new StringBuilder();
-		for (LuaClass globalType : LuaCompiler.getGlobalTypes())
+		Set<LuaClass> globalTypes = LuaCompiler.getGlobalTypes();
+		for (LuaClass type : globalTypes)
 		{
-			ZomboidLuaDoc.appendAnnotations(sb, globalType);
-			sb.append(globalType.getConventionalName()).append(" = {}\n\n");
+			ZomboidLuaDoc.appendAnnotations(sb, type);
+			sb.append(type.getConventionalName()).append(" = {}\n\n");
 		}
 		FileUtils.write(file, sb.toString(), Main.CHARSET, false);
+		Logger.info("Compiled %d global lua types", globalTypes.size());
 	}
 
 	public void writeToFile(File file) throws IOException {
 
+		Logger.detail("Writing %s to %s...", getName(), file.getName());
 		StringBuilder sb = new StringBuilder();
 
 		ZomboidLuaDoc.appendAnnotations(sb, clazz);
@@ -113,9 +118,14 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 			ZomboidLuaDoc.appendComments(sb, method);
 			ZomboidLuaDoc.appendAnnotations(sb, method);
 
-			sb.append("function ").append(clazz.getConventionalName());
-			sb.append(':').append(method.getName()).append('(');
+			sb.append("function ");
 
+			// global methods need to be declared outside tables
+			String parentType = clazz.getParentType();
+			if (parentType == null || !parentType.equals(JavaCompiler.GLOBAL_OBJECT_CLASS)) {
+				sb.append(clazz.getConventionalName()).append(':');
+			}
+			sb.append(method.getName()).append('(');
 			method.appendParameterSignature(sb);
 			sb.append(") end\n\n");
 		}

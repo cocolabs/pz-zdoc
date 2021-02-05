@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.ImmutableList;
 
 import io.yooksi.pz.zdoc.TestWorkspace;
+import io.yooksi.pz.zdoc.compile.JavaCompiler;
 import io.yooksi.pz.zdoc.element.lua.*;
 import io.yooksi.pz.zdoc.element.mod.AccessModifierKey;
 import io.yooksi.pz.zdoc.element.mod.MemberModifier;
@@ -130,25 +131,27 @@ class ZomboidLuaDocTest extends TestWorkspace {
 	void shouldWriteZomboidLuaDocMethodsToFile() throws IOException {
 
 		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
-		luaMethods.add(new LuaMethod("getText", TEST_LUA_CLASS,
-				new MemberModifier(AccessModifierKey.PUBLIC), new LuaType("String"),
-				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param0"))
-		));
-		luaMethods.add(new LuaMethod("getNumber", TEST_LUA_CLASS,
-				new MemberModifier(AccessModifierKey.PROTECTED), new LuaType("Integer"),
-				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
-						new LuaParameter(new LuaType("int"), "param2"))
-		));
-		luaMethods.add(new LuaMethod("getInnerClass", TEST_LUA_CLASS,
-				new MemberModifier(AccessModifierKey.PRIVATE),
-				new LuaType("ZomboidLuaDocTest.InnerClass"),
-				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
-						new LuaParameter(new LuaType("boolean"), "param2"),
-						new LuaParameter(new LuaType("Object[]"), "param3"))
-		));
-		luaMethods.add(new LuaMethod("getArray", TEST_LUA_CLASS,
-				new MemberModifier(AccessModifierKey.DEFAULT),
-				new LuaType("Object[]"), ImmutableList.of())
+		luaMethods.add(LuaMethod.Builder.create("getText").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+				.withReturnType(new LuaType("String")).withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "param0"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getNumber").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.PROTECTED))
+				.withReturnType(new LuaType("Integer")).withParams(
+						ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
+								new LuaParameter(new LuaType("int"), "param2"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getInnerClass").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.PRIVATE))
+				.withReturnType(new LuaType("ZomboidLuaDocTest.InnerClass")).withParams(
+						ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
+								new LuaParameter(new LuaType("boolean"), "param2"),
+								new LuaParameter(new LuaType("Object[]"), "param3"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getArray").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.DEFAULT))
+				.withReturnType(new LuaType("Object[]")).build()
 		);
 		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
@@ -185,29 +188,29 @@ class ZomboidLuaDocTest extends TestWorkspace {
 	void shouldWriteZomboidLuaDocMethodsWithCommentsToFile() throws IOException {
 
 		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
-		luaMethods.add(new LuaMethod("getText", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, new LuaType("String"),
-				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param0")),
-				false, "this method has a single-line comment"
-		));
-		luaMethods.add(new LuaMethod("getNumber", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, new LuaType("Integer"),
-				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
-						new LuaParameter(new LuaType("int"), "param2")),
-				false, "this method has a\nmulti-line comment"
-		));
-		luaMethods.add(new LuaMethod("getInnerClass", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, new LuaType("ZomboidLuaDocTest.InnerClass"),
-				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
+		luaMethods.add(LuaMethod.Builder.create("getText").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("String"))
+				.withParams(ImmutableList.of(new LuaParameter(new LuaType("Object"), "param0")))
+				.withComment("this method has a single-line comment").build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getNumber").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("Integer")).withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "param1"),
+						new LuaParameter(new LuaType("int"), "param2"))
+				).withComment("this method has a\nmulti-line comment").build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getInnerClass").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("ZomboidLuaDocTest.InnerClass"))
+				.withParams(ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
 						new LuaParameter(new LuaType("boolean"), "param2"),
-						new LuaParameter(new LuaType("Object[]"), "param3")),
-				false, "this method has a\rmulti-line comment"
-		));
-		luaMethods.add(new LuaMethod("getArray", TEST_LUA_CLASS,
-				new MemberModifier(AccessModifierKey.DEFAULT),
-				new LuaType("Object[]"), ImmutableList.of(),
-				false, "this method has a\r\nmulti-line comment"
-		));
+						new LuaParameter(new LuaType("Object[]"), "param3"))
+				).withComment("this method has a\rmulti-line comment").build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getArray").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.DEFAULT))
+				.withReturnType(new LuaType("Object[]"))
+				.withComment("this method has a\r\nmulti-line comment").build()
+		);
 		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
 		);
@@ -250,25 +253,29 @@ class ZomboidLuaDocTest extends TestWorkspace {
 	void shouldWriteZomboidLuaDocMethodsWithParameterizedTypesToFile() throws IOException {
 
 		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
-		luaMethods.add(new LuaMethod("getObjectList", TEST_LUA_CLASS,
-				new MemberModifier(AccessModifierKey.PUBLIC), LUA_ARRAY_LIST_OBJECT,
-				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param"))
-		));
-		luaMethods.add(new LuaMethod("getStringObjectList", TEST_LUA_CLASS,
-				new MemberModifier(AccessModifierKey.PROTECTED), LUA_ARRAY_LIST_STRING_OBJECT,
-				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
-						new LuaParameter(LUA_ARRAY_LIST_OBJECT, "param2"))
-		));
-		luaMethods.add(new LuaMethod("getInnerClassList", TEST_LUA_CLASS,
-				new MemberModifier(AccessModifierKey.PRIVATE), LUA_ARRAY_LIST_INNER_CLASS,
-				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
+		luaMethods.add(LuaMethod.Builder.create("getObjectList").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+				.withReturnType(LUA_ARRAY_LIST_OBJECT).withParams(ImmutableList.of(
+						new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getStringObjectList").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.PROTECTED))
+				.withReturnType(LUA_ARRAY_LIST_STRING_OBJECT).withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "param1"),
+						new LuaParameter(LUA_ARRAY_LIST_OBJECT, "param2"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getInnerClassList").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.PRIVATE))
+				.withReturnType(LUA_ARRAY_LIST_INNER_CLASS).withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "param1"),
 						new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param2"),
-						new LuaParameter(new LuaType("Object[]"), "param3"))
-		));
-		luaMethods.add(new LuaMethod("getUnknownList", TEST_LUA_CLASS,
-				new MemberModifier(AccessModifierKey.DEFAULT), LUA_ARRAY_LIST_UNKNOWN,
-				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "param1"))
-		));
+						new LuaParameter(new LuaType("Object[]"), "param3"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getUnknownList").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.DEFAULT))
+				.withReturnType(LUA_ARRAY_LIST_UNKNOWN).withParams(ImmutableList.of(
+						new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "param1"))).build()
+		);
 		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
 		);
@@ -305,51 +312,40 @@ class ZomboidLuaDocTest extends TestWorkspace {
 	void shouldWriteZomboidLuaDocMethodsWithVariadicArgumentsToFile() throws IOException {
 
 		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
-		luaMethods.add(new LuaMethod("getObject", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, new LuaType("Object"),
-				ImmutableList.of(
-						new LuaParameter(new LuaType("Object"), "varargs")
-				), true
-		));
-		luaMethods.add(new LuaMethod("getText", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, new LuaType("String"),
-				ImmutableList.of(
+		luaMethods.add(LuaMethod.Builder.create("getObject").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("Object")).withVarArg(true).withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "varargs"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getText").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("String")).withVarArg(true).withParams(ImmutableList.of(
 						new LuaParameter(new LuaType("Object[]"), "param"),
-						new LuaParameter(new LuaType("String"), "varargs")
-				), true
-		));
-		luaMethods.add(new LuaMethod("getNumber", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, new LuaType("Integer"),
-				ImmutableList.of(
+						new LuaParameter(new LuaType("String"), "varargs"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getNumber").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("Integer")).withVarArg(true).withParams(ImmutableList.of(
 						new LuaParameter(new LuaType("Object"), "param0"),
 						new LuaParameter(new LuaType("Integer"), "param1"),
-						new LuaParameter(new LuaType("String"), "varargs")
-				), true
-		));
-		luaMethods.add(new LuaMethod("getObjectList", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, LUA_ARRAY_LIST_OBJECT,
-				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "varargs")),
-				true
-		));
-		luaMethods.add(new LuaMethod("getStringObjectList", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, LUA_ARRAY_LIST_STRING_OBJECT,
-				ImmutableList.of(
+						new LuaParameter(new LuaType("String"), "varargs"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getObjectList").withOwner(TEST_LUA_CLASS)
+				.withReturnType(LUA_ARRAY_LIST_OBJECT).withVarArg(true).withParams(ImmutableList.of(
+						new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "varargs"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getStringObjectList").withOwner(TEST_LUA_CLASS)
+				.withReturnType(LUA_ARRAY_LIST_STRING_OBJECT).withVarArg(true).withParams(ImmutableList.of(
 						new LuaParameter(new LuaType("Object"), "param1"),
-						new LuaParameter(LUA_ARRAY_LIST_OBJECT, "varargs")),
-				true
-		));
-		luaMethods.add(new LuaMethod("getInnerClassList", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, LUA_ARRAY_LIST_INNER_CLASS,
-				ImmutableList.of(new LuaParameter(new LuaType("Object"), "param1"),
+						new LuaParameter(LUA_ARRAY_LIST_OBJECT, "varargs"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getInnerClassList").withOwner(TEST_LUA_CLASS)
+				.withReturnType(LUA_ARRAY_LIST_INNER_CLASS).withVarArg(true).withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "param1"),
 						new LuaParameter(LUA_ARRAY_LIST_STRING_OBJECT, "param2"),
-						new LuaParameter(new LuaType("Object[]"), "varargs")),
-				true
-		));
-		luaMethods.add(new LuaMethod("getUnknownList", TEST_LUA_CLASS,
-				MemberModifier.UNDECLARED, LUA_ARRAY_LIST_UNKNOWN,
-				ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "varargs")),
-				true
-		));
+						new LuaParameter(new LuaType("Object[]"), "varargs"))).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getUnknownList").withOwner(TEST_LUA_CLASS)
+				.withReturnType(LUA_ARRAY_LIST_UNKNOWN).withVarArg(true).withParams(
+						ImmutableList.of(new LuaParameter(LUA_ARRAY_LIST_UNKNOWN, "varargs"))).build()
+		);
 		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
 		);
@@ -395,6 +391,53 @@ class ZomboidLuaDocTest extends TestWorkspace {
 	}
 
 	@Test
+	void shouldNotWriteGlobalZomboidLuaDocMethodsAsPartOfTableToFile() throws IOException {
+
+		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
+		luaMethods.add(LuaMethod.Builder.create("firstMethod").build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("secondMethod")
+				.withModifier(new MemberModifier(AccessModifierKey.PUBLIC)).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("thirdMethod")
+				.withModifier(new MemberModifier(AccessModifierKey.PRIVATE))
+				.withReturnType(new LuaType("String")).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("fourthMethod").withOwner(TEST_LUA_CLASS)
+				.withModifier(new MemberModifier(AccessModifierKey.DEFAULT))
+				.withReturnType(new LuaType("Object")).withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("int"), "param1"),
+						new LuaParameter(new LuaType("boolean"), "param2"))).build()
+		);
+		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
+				new LuaClass("LuaManager_GlobalObject", JavaCompiler.GLOBAL_OBJECT_CLASS),
+				new ArrayList<>(), luaMethods
+		);
+
+		List<String> expectedResult = ImmutableList.of(
+				"---@class LuaManager_GlobalObject : " + JavaCompiler.GLOBAL_OBJECT_CLASS,
+				"LuaManager_GlobalObject = {}",
+				"",
+				"---@return void",
+				"function firstMethod() end",
+				"",
+				"---@public",
+				"---@return void",
+				"function secondMethod() end",
+				"",
+				"---@private",
+				"---@return String",
+				"function thirdMethod() end",
+				"",
+				"---@param param1 int",
+				"---@param param2 boolean",
+				"---@return Object",
+				"function fourthMethod(param1, param2) end"
+		);
+		Assertions.assertEquals(expectedResult, writeToFileAndRead(zDoc));
+	}
+
+	@Test
 	@SuppressWarnings("ConstantConditions")
 	void shouldThrowExceptionWhenModifyingImmutableFields() {
 
@@ -405,8 +448,7 @@ class ZomboidLuaDocTest extends TestWorkspace {
 				zDoc.getFields().add(new LuaField(type, "field", MemberModifier.UNDECLARED))
 		);
 		Assertions.assertThrows(UnsupportedOperationException.class, () ->
-				zDoc.getMethods().add(new LuaMethod("testMethod",
-						MemberModifier.UNDECLARED, type, ImmutableList.of()))
+				zDoc.getMethods().add(LuaMethod.Builder.create("testMethod").withReturnType(type).build())
 		);
 	}
 

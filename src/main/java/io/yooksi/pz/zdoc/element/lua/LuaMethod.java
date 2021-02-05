@@ -50,20 +50,19 @@ public class LuaMethod implements IMethod, Annotated {
 	private final List<EmmyLua> annotations;
 	private final String comment;
 
-	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
-					 LuaType returnType, List<LuaParameter> params, boolean hasVarArg, String comment) {
+	private LuaMethod(Builder builder) {
 
-		this.name = EmmyLua.getSafeLuaName(name);
-		this.owner = owner;
-		this.returnType = returnType;
-		this.params = Collections.unmodifiableList(params);
-		this.modifier = modifier;
+		this.name = EmmyLua.getSafeLuaName(builder.name);
+		this.owner = builder.owner;
+		this.returnType = builder.returnType != null ? builder.returnType : new LuaType("void");
+		this.modifier = builder.modifier != null ? builder.modifier : MemberModifier.UNDECLARED;
+		this.params = Collections.unmodifiableList(builder.params);
 
 		List<EmmyLua> annotations = new ArrayList<>();
 		if (!modifier.hasAccess(AccessModifierKey.DEFAULT)) {
 			annotations.add(new EmmyLuaAccess(modifier.getAccess()));
 		}
-		if (hasVarArg)
+		if (builder.hasVarArg)
 		{
 			if (!params.isEmpty())
 			{
@@ -74,7 +73,7 @@ public class LuaMethod implements IMethod, Annotated {
 				annotations.add(new EmmyLuaVarArg(params.get(params.size() - 1).getType()));
 			}
 			else {
-				hasVarArg = false;
+				builder.hasVarArg = false;
 				Logger.error("Method %s marked with hasVarArg with no parameters", toString());
 			}
 		}
@@ -82,22 +81,8 @@ public class LuaMethod implements IMethod, Annotated {
 
 		annotations.add(new EmmyLuaReturn(returnType));
 		this.annotations = Collections.unmodifiableList(annotations);
-		this.hasVarArg = hasVarArg;
-		this.comment = comment;
-	}
-
-	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
-					 LuaType returnType, List<LuaParameter> params, boolean hasVarArg) {
-		this(name, owner, modifier, returnType, params, hasVarArg, "");
-	}
-
-	public LuaMethod(String name, @Nullable LuaClass owner, MemberModifier modifier,
-					 LuaType returnType, List<LuaParameter> params) {
-		this(name, owner, modifier, returnType, params, false, "");
-	}
-
-	public LuaMethod(String name, MemberModifier modifier, LuaType returnType, List<LuaParameter> params) {
-		this(name, null, modifier, returnType, params);
+		this.hasVarArg = builder.hasVarArg;
+		this.comment = builder.comment;
 	}
 
 	public void appendParameterSignature(StringBuilder sb) {
@@ -205,5 +190,60 @@ public class LuaMethod implements IMethod, Annotated {
 		result = 31 * result + params.hashCode();
 		result = 31 * result + modifier.hashCode();
 		return 31 * result + (hasVarArg ? 1 : 0);
+	}
+
+	public static class Builder {
+
+		private final String name;
+
+		private @Nullable LuaClass owner;
+		private @Nullable MemberModifier modifier;
+		private @Nullable LuaType returnType;
+
+		private List<LuaParameter> params = new ArrayList<>();
+		private boolean hasVarArg = false;
+		private String comment = "";
+
+		private Builder(String name) {
+			this.name = name;
+		}
+
+		public static Builder create(String name) {
+			return new Builder(name);
+		}
+
+		public Builder withOwner(LuaClass owner) {
+			this.owner = owner;
+			return this;
+		}
+
+		public Builder withModifier(MemberModifier modifier) {
+			this.modifier = modifier;
+			return this;
+		}
+
+		public Builder withReturnType(LuaType returnType) {
+			this.returnType = returnType;
+			return this;
+		}
+
+		public Builder withVarArg(boolean hasVarArg) {
+			this.hasVarArg = hasVarArg;
+			return this;
+		}
+
+		public Builder withComment(String comment) {
+			this.comment = comment;
+			return this;
+		}
+
+		public Builder withParams(List<LuaParameter> params) {
+			this.params = params;
+			return this;
+		}
+
+		public LuaMethod build() {
+			return new LuaMethod(this);
+		}
 	}
 }

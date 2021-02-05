@@ -17,9 +17,6 @@
  */
 package io.yooksi.pz.zdoc.compile;
 
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
-import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,6 +33,9 @@ import com.google.common.collect.ImmutableSet;
 
 import io.yooksi.pz.zdoc.Main;
 import io.yooksi.pz.zdoc.TestWorkspace;
+
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateResult;
+import static io.yooksi.pz.zdoc.compile.LuaAnnotator.AnnotateRules;
 
 class LuaAnnotatorTest extends TestWorkspace {
 

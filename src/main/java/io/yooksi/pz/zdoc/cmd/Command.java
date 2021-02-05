@@ -31,9 +31,9 @@ import org.jetbrains.annotations.Nullable;
 public enum Command {
 
 	HELP("help", "", new Options(), "print command usage info"),
-	VERSION("version", new Options(), "prints game version"),
-	ANNOTATE("annotate", CommandOptions.LUA_OPTIONS, "annotate lua with EmmyLua"),
-	COMPILE("compile", CommandOptions.JAVA_OPTIONS, "compile lua library");
+	VERSION("version", new Options(), "prints game installation version"),
+	ANNOTATE("annotate", CommandOptions.LUA_OPTIONS, "annotate vanilla Lua with EmmyLua"),
+	COMPILE("compile", CommandOptions.JAVA_OPTIONS, "compile Lua library from modding API");
 
 	static
 	{
