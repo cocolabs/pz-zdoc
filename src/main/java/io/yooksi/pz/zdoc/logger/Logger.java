@@ -57,7 +57,7 @@ public class Logger {
 	}
 
 	public static void info(String log, Object... params) {
-		logger.info(log, params);
+		logger.printf(Level.INFO, log, params);
 	}
 
 	public static void detail(String log) {
@@ -65,7 +65,7 @@ public class Logger {
 	}
 
 	public static void detail(String log, Object... params) {
-		logger.log(VERBOSE, log, params);
+		logger.printf(VERBOSE, log, params);
 	}
 
 	public static void error(String log) {
@@ -93,7 +93,7 @@ public class Logger {
 	}
 
 	public static void debug(String format, Object... args) {
-		logger.debug(format, args);
+		logger.printf(Level.DEBUG, format, args);
 	}
 
 	public static void debug(String log, Throwable t) {
