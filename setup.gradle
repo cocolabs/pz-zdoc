@@ -1,21 +1,66 @@
 import java.nio.file.Paths
+import java.nio.file.Path
 
-Properties properties = new Properties()
-def propertiesFile = project.rootProject.file('local.properties')
+project.ext.localProperties = new Properties()
+/*
+ * handle locating properties file when configuring buildSrc project
+ * as the path to project/root directory will be different
+ */
+def rootDir = projectDir.name != 'buildSrc' ? project.rootDir : project.rootDir.parentFile
+def propertiesFile =  rootDir.toPath().resolve('local.properties').toFile()
 if (propertiesFile.exists()) {
-    properties.load(propertiesFile.newDataInputStream())
+    project.ext.localProperties.load(propertiesFile.newDataInputStream())
 }
-project.ext.gameDir = Paths.get(properties.getProperty('game.dir', ''))
-if (project.ext.gameDir == null)
-{
-    if (providers.environmentVariable('GAME_DIR').present) {
-        project.ext.gameDir = Paths.get(providers.environmentVariable('GAME_DIR').get())
+/**
+ * Initialize and get property from {@code local.properties} file with designated type.
+ *
+ * @param name property name to search for in local properties.
+ * @param type class to initialize the property as.
+ * @param env environment variable to use if property not found.
+ * @param defaultValue value to be used if property was not found.
+ * @return found project property of type {@code T} or {@code null} if no property found.
+ */
+def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolean required, T defaultValue) {
+
+    Properties localProperties = project.ext.localProperties
+    String property = localProperties.getProperty(name, '')
+    if (property.isEmpty())
+    {
+        if (!System.hasProperty(name))
+        {
+            // when env parameter is not defined search for env variable with property name
+            def sEnv = env != null && !env.isEmpty() ? env : name
+            def envVariable = providers.environmentVariable(sEnv).forUseAtConfigurationTime()
+            if (envVariable.present) {
+                property = envVariable.get()
+            }
+            else if (required && defaultValue == null) {
+                throw new InvalidUserDataException("Unable to find local project property ${name}")
+            }
+            else return defaultValue
+        }
+        else property = System.getProperty(name)
     }
-    else if (System.hasProperty('game.dir')) {
-        project.ext.gameDir = Paths.get(System.getProperty('game.dir'))
+    if (type instanceof Path) {
+        return Paths.get(property) as T
     }
-    else throw new RuntimeException('Game directory path not specified')
+    else return property as T
 }
+/**
+ * Initialize and get property from {@code local.properties} file with designated type.
+ *
+ * @param name property name to search for in local properties.
+ * @param type class to initialize the property as.
+ * @param env environment variable to use if property not found.
+ * @return found project property of type {@code T} or {@code null} if no property found.
+ */
+def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolean required) {
+    return getLocalProjectProperty(name, type, env, required, null)
+}
+
+// path to Project Zomboid installation directory
+project.ext.gameDir = getLocalProjectProperty('game.dir', Path.class, 'GAME_DIR', true)
+
 /**
  * Register a project property of a given name as a {@code boolean} value.
  *
@@ -24,6 +69,7 @@ if (project.ext.gameDir == null)
  * @see Boolean#parseBoolean(String)
  */
 void registerBooleanProjectProperty(String name, boolean defaultValue) {
+
     def property = project.findProperty(name)
     if (property != null) {
         project.ext.setProperty(name, Boolean.parseBoolean(property as String))
