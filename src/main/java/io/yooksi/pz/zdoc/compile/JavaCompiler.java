@@ -132,7 +132,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 						}
 					}
 					String format = "Didn't find matching field \"%s\" in document \"%s\"";
-					Logger.warn(String.format(format, field.getName(), doc.getName()));
+					Logger.detail(String.format(format, field.getName(), doc.getName()));
 				}
 				/* when no matching field or API page was found, construct new JavaField
 				 * with same properties as declared field but make parameterized types null
@@ -179,7 +179,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 					continue;
 				}
 				String format = "Didn't find matching method \"%s\" in document \"%s\"";
-				Logger.warn(String.format(format, method.getName(), doc.getName()));
+				Logger.detail(String.format(format, method.getName(), doc.getName()));
 			}
 			result.add(jMethod);
 		}
@@ -262,7 +262,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 					Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
 					document = ZomboidAPIDoc.getPage(Paths.get(classPath));
 					if (document == null) {
-						Logger.warn(String.format("Unable to find API page for path %s", classPath));
+						Logger.detail(String.format("Unable to find API page for path %s", classPath));
 					}
 				}
 				catch (IOException e)

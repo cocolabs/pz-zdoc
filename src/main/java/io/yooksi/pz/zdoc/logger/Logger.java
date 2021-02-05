@@ -23,8 +23,8 @@ import org.apache.logging.log4j.LogManager;
 @SuppressWarnings("unused")
 public class Logger {
 
+	public static final Level VERBOSE = Level.forName("VERBOSE", 450);
 	private static final String JVM_PROPERTY = "zdoc.logger";
-	private static final Level VERBOSE = Level.forName("VERBOSE", 450);
 
 	private static final org.apache.logging.log4j.Logger logger;
 	private static final LoggerType TYPE;
