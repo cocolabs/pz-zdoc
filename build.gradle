@@ -30,7 +30,6 @@ group 'io.yooksi'
 version '2.1.0'
 
 wrapper {
-    gradleVersion = '6.7.1'
     distributionType = Wrapper.DistributionType.ALL
 }
 
