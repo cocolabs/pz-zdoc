@@ -19,7 +19,7 @@ tasks.register("generateChangelog", Exec.class) {
             '--include-labels', 'bug,enhancement,breaking,deprecated',
             /*
              * define all labels you want excluded from the changelog */
-            '--exclude-labels', 'dev,wontfix,question',
+            '--exclude-labels', 'dev,wontfix,workflow,question,documentation',
     ]
     if (project.ext.has('githubToken')) {
         commandArgs += [ '--token', project.ext.githubToken ]
