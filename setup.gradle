@@ -41,7 +41,7 @@ def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolea
         }
         else property = System.getProperty(name)
     }
-    if (type instanceof Path) {
+    if (type == Path) {
         return Paths.get(property) as T
     }
     else return property as T
