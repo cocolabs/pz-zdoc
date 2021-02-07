@@ -61,6 +61,9 @@ def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolea
 // path to Project Zomboid installation directory
 project.ext.gameDir = getLocalProjectProperty('game.dir', Path.class, 'GAME_DIR', true)
 
+// Github repository token used to generate changelog
+project.ext.githubToken = getLocalProjectProperty('github.token', String.class, 'GITHUB_TOKEN', false)
+
 /**
  * Register a project property of a given name as a {@code boolean} value.
  *

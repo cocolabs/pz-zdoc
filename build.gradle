@@ -25,6 +25,7 @@ plugins {
 }
 apply from: 'setup.gradle'
 apply from: 'spotless.gradle'
+apply from: 'changelog.gradle'
 
 group 'io.yooksi'
 version '2.1.0'
@@ -155,7 +156,7 @@ dependencies {
 }
 
 distributions.main.contents {
-    it.from (files('README.md', 'LICENSE.txt'))
+    it.from (files('README.md', 'LICENSE.txt', 'CHANGELOG.md'))
     it.exclude {
         File file = it.file
         String filename = file.getName()
