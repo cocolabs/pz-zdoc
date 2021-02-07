@@ -1,0 +1,30 @@
+/**
+ * Generates project changelog using github-changelog-generator
+ * https://github.com/github-changelog-generator/github-changelog-generator
+ */
+tasks.register("generateChangelog", Exec.class) {
+    it.description('Generate a project changelog.')
+    it.group('documentation')
+
+    def commandArgs = [
+            /*
+             * username of the owner of target GitHub repo */
+            '-u', 'yooksi',
+            /*
+             * name of project on GitHub */
+            '-p', project.name,
+            /*
+             * only issues with the specified labels will be included in the changelog
+             * this means that issues that are included HAVE to have at least one of these labels */
+            '--include-labels', 'bug,enhancement,breaking,deprecated',
+            /*
+             * define all labels you want excluded from the changelog */
+            '--exclude-labels', 'dev,wontfix,question',
+    ]
+    if (project.ext.has('githubToken')) {
+        commandArgs += [ '--token', project.ext.githubToken ]
+    }
+    else logger.warn('Github token not supplied, task might fail')
+
+    it.commandLine = [ 'cmd', '/c', 'github_changelog_generator' ]  + commandArgs
+}

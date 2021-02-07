@@ -25,6 +25,7 @@ plugins {
 }
 apply from: 'setup.gradle'
 apply from: 'spotless.gradle'
+apply from: 'changelog.gradle'
 
 group 'io.yooksi'
 version '2.1.0'
