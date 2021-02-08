@@ -147,11 +147,13 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     implementation 'org.jsoup:jsoup:1.13.1'
 
-    // Project Zomboid libraries
-    zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
+    if (!CI) {
+        // Project Zomboid libraries
+        zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
 
-    // Project Zomboid classes
-    zomboidImplementation files(gameDir)
+        // Project Zomboid classes
+        zomboidImplementation files(gameDir)
+    }
 }
 
 test {

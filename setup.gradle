@@ -87,8 +87,11 @@ def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolea
 def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolean required) {
     return getLocalProjectProperty(name, type, env, required, null)
 }
-// path to Project Zomboid installation directory
-project.ext.gameDir = getLocalProjectProperty('game.dir', Path.class, 'GAME_DIR', true)
-
+// initialize local project properties here
+// some local properties (env variables) will not be available on CI server
+if (!CI) {
+    // path to Project Zomboid installation directory
+    project.ext.gameDir = getLocalProjectProperty('game.dir', Path.class, 'GAME_DIR', true)
+}
 // Github repository token used to generate changelog
 project.ext.githubToken = getLocalProjectProperty('github.token', String.class, 'GITHUB_TOKEN', false)
