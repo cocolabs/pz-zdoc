@@ -85,7 +85,7 @@ void registerBooleanProjectProperty(String name, boolean defaultValue) {
     project.ext.setProperty(name, Boolean.parseBoolean(property as String))
 }
 // is the build being run on a CI server?
-registerBooleanProjectProperty('isCI', false)
+registerBooleanProjectProperty('CI', false)
 
 // should gradle run spotless tasks?
 registerBooleanProjectProperty('makeSpotless', true)

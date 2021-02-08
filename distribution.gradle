@@ -55,7 +55,7 @@ distributions.main.contents {
         if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.zip', '.tar')) {
             return true
         }
-        else if (!isCI) {
+        if (!CI) {
             // exclude all files located in game directory
             return isFileInGameDirectory(file)
         }

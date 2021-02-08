@@ -74,7 +74,7 @@ sourceSets {
 
         // empty zomboid classes are needed only when game directory
         // is not available such as when running tests on CI server
-        if (isCI) {
+        if (CI) {
             compileClasspath += sourceSets.zombie.output
             runtimeClasspath += sourceSets.zombie.output
         }
@@ -233,4 +233,4 @@ clean.dependsOn(cleanMedia)
 def integrationTasks = [
         compileIntTestJava
 ]
-integrationTasks.forEach({t -> t.onlyIf { !isCI }})
+integrationTasks.forEach({t -> t.onlyIf { !CI }})
