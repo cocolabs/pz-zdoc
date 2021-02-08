@@ -57,7 +57,6 @@ def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolea
 def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolean required) {
     return getLocalProjectProperty(name, type, env, required, null)
 }
-
 // path to Project Zomboid installation directory
 project.ext.gameDir = getLocalProjectProperty('game.dir', Path.class, 'GAME_DIR', true)
 

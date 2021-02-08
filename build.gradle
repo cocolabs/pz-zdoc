@@ -1,4 +1,3 @@
-import java.nio.file.Paths
 import com.github.jk1.license.render.*
 
 plugins {
@@ -25,7 +24,7 @@ plugins {
 }
 apply from: 'setup.gradle'
 apply from: 'spotless.gradle'
-apply from: 'changelog.gradle'
+apply from: 'distribution.gradle'
 
 group 'io.yooksi'
 version '2.1.0'
@@ -153,47 +152,6 @@ dependencies {
 
     // Project Zomboid classes
     zomboidImplementation files(gameDir)
-}
-
-distributions.main.contents {
-    it.from (files('README.md', 'LICENSE.txt', 'CHANGELOG.md'))
-    it.exclude {
-        File file = it.file
-        String filename = file.getName()
-        /*
-         * there is a bug that occurs when running distribution tasks on Github CI
-         * where the distribution archive tries to add itself to archive
-         * @see https://github.com/yooksi/pz-zdoc/issues/21
-         */
-        if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.zip', '.tar')) {
-            return true
-        }
-        try {
-            java.nio.file.Path gameDirPath = project.ext.gameDir
-            gameDirPath.relativize(Paths.get(file.path as String))
-            return true
-        }
-        catch (IllegalArgumentException ignored) {
-            return false
-        }
-    }
-}
-
-def cleanScripts = tasks.register('cleanScripts', Delete.class) {
-    it.description('Delete build scripts directory.')
-    it.group('zomboid')
-    it.delete("$buildDir/scripts")
-}
-tasks.named('installDist').configure{
-    it.dependsOn(cleanScripts)
-}
-
-tasks.named('startScripts').configure {
-    it.setWindowsStartScriptGenerator(new ZWindowsStartScriptGenerator())
-    it.setUnixStartScriptGenerator(new ZUnixStartScriptGenerator())
-
-    // do not add provided files to classpath, they are not included in distribution
-    it.classpath -= configurations.zomboidImplementation
 }
 
 test {

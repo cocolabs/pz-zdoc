@@ -1,3 +1,4 @@
+import java.nio.file.Paths
 /**
  * Generates project changelog using github-changelog-generator
  * https://github.com/github-changelog-generator/github-changelog-generator
@@ -27,4 +28,45 @@ tasks.register("generateChangelog", Exec.class) {
     else logger.warn('Github token not supplied, task might fail')
 
     it.commandLine = [ 'cmd', '/c', 'github_changelog_generator' ]  + commandArgs
+}
+
+distributions.main.contents {
+    it.from (files('README.md', 'LICENSE.txt', 'CHANGELOG.md'))
+    it.exclude {
+        File file = it.file
+        String filename = file.getName()
+        /*
+         * there is a bug that occurs when running distribution tasks on Github CI
+         * where the distribution archive tries to add itself to archive
+         * @see https://github.com/yooksi/pz-zdoc/issues/21
+         */
+        if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.zip', '.tar')) {
+            return true
+        }
+        try {
+            java.nio.file.Path gameDirPath = project.ext.gameDir
+            gameDirPath.relativize(Paths.get(file.path as String))
+            return true
+        }
+        catch (IllegalArgumentException ignored) {
+            return false
+        }
+    }
+}
+
+def cleanScripts = tasks.register('cleanScripts', Delete.class) {
+    it.description('Delete build scripts directory.')
+    it.group('zomboid')
+    it.delete("$buildDir/scripts")
+}
+tasks.named('installDist').configure{
+    it.dependsOn(cleanScripts)
+}
+
+tasks.named('startScripts').configure {
+    it.setWindowsStartScriptGenerator(new ZWindowsStartScriptGenerator())
+    it.setUnixStartScriptGenerator(new ZUnixStartScriptGenerator())
+
+    // do not add provided files to classpath, they are not included in distribution
+    it.classpath -= configurations.zomboidImplementation
 }
