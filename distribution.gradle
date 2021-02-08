@@ -29,6 +29,18 @@ tasks.register("generateChangelog", Exec.class) {
 
     it.commandLine = [ 'cmd', '/c', 'github_changelog_generator' ]  + commandArgs
 }
+/**
+ * @return {@code true} if the given file is located in game directory.
+ */
+boolean isFileInGameDirectory(File file) {
+    try {
+        project.ext.gameDir.relativize(Paths.get(file.path))
+        return true
+    }
+    catch (IllegalArgumentException ignored) {
+        return false
+    }
+}
 
 distributions.main.contents {
     it.from ('README.md', 'LICENSE.txt', 'CHANGELOG.md')
@@ -43,14 +55,11 @@ distributions.main.contents {
         if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.zip', '.tar')) {
             return true
         }
-        try {
-            java.nio.file.Path gameDirPath = project.ext.gameDir
-            gameDirPath.relativize(Paths.get(file.path as String))
-            return true
+        else if (!isCI) {
+            // exclude all files located in game directory
+            return isFileInGameDirectory(file)
         }
-        catch (IllegalArgumentException ignored) {
-            return false
-        }
+        else return false
     }
 }
 // generate changelog BEFORE creating distribution
