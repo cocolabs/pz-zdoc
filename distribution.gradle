@@ -57,6 +57,10 @@ distributions.main.contents {
 [ 'assembleDist', 'installDist' ].forEach({
     tasks.named(it).configure({it.dependsOn('generateChangelog')})
 })
+// run distribution archive tasks AFTER generating changelog
+[ 'distTar', 'distZip' ].forEach({
+    tasks.named(it).configure({it.mustRunAfter('generateChangelog')})
+})
 def cleanScripts = tasks.register('cleanScripts', Delete.class) {
     it.description('Delete build scripts directory.')
     it.group('zomboid')
