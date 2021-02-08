@@ -53,7 +53,10 @@ distributions.main.contents {
         }
     }
 }
-
+// generate changelog BEFORE creating distribution
+[ 'assembleDist', 'installDist' ].forEach({
+    tasks.named(it).configure({it.dependsOn('generateChangelog')})
+})
 def cleanScripts = tasks.register('cleanScripts', Delete.class) {
     it.description('Delete build scripts directory.')
     it.group('zomboid')
