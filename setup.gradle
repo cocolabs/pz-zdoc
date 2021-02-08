@@ -27,15 +27,19 @@ registerBooleanProjectProperty('CI', false)
 // should gradle run spotless tasks?
 registerBooleanProjectProperty('makeSpotless', true)
 
-project.ext.localProperties = new Properties()
+// directory containing a copy of Project Zomboid classes
+project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile
+
+Properties localProjectProperties = new Properties()
+project.ext.localProperties = localProjectProperties
 /*
  * handle locating properties file when configuring buildSrc project
  * as the path to project/root directory will be different
  */
 def rootDir = projectDir.name != 'buildSrc' ? project.rootDir : project.rootDir.parentFile
-def propertiesFile =  rootDir.toPath().resolve('local.properties').toFile()
+def propertiesFile = rootDir.toPath().resolve('local.properties').toFile()
 if (propertiesFile.exists()) {
-    project.ext.localProperties.load(propertiesFile.newDataInputStream())
+    localProjectProperties.load(propertiesFile.newDataInputStream())
 }
 /**
  * Initialize and get property from {@code local.properties} file with designated type.
