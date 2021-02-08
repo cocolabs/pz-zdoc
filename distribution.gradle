@@ -63,7 +63,7 @@ distributions.main.contents {
     }
 }
 // generate changelog BEFORE creating distribution
-[ 'assembleDist', 'installDist' ].forEach({
+[ 'assemble', 'assembleDist', 'installDist' ].forEach({
     tasks.named(it).configure({it.dependsOn('generateChangelog')})
 })
 // run distribution archive tasks AFTER generating changelog
