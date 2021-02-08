@@ -1,5 +1,6 @@
 import java.nio.file.Paths
 import java.nio.file.Path
+import org.gradle.internal.os.OperatingSystem
 /**
  * Register a project property of a given name as a {@code boolean} value.
  *
@@ -95,3 +96,16 @@ if (!CI) {
 }
 // Github repository token used to generate changelog
 project.ext.githubToken = getLocalProjectProperty('github.token', String.class, 'GITHUB_TOKEN', false)
+
+// write operating system platform name to project property
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        project.ext.osName = "Linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.osName = "macOS"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.osName = "Windows"
+        break
+}
