@@ -73,10 +73,16 @@ project.ext.githubToken = getLocalProjectProperty('github.token', String.class, 
 void registerBooleanProjectProperty(String name, boolean defaultValue) {
 
     def property = project.findProperty(name)
-    if (property != null) {
-        project.ext.setProperty(name, Boolean.parseBoolean(property as String))
+    if (property == null)
+    {
+        // seach for environment variable with same name before assigning default value
+        def envVariable = providers.environmentVariable(name).forUseAtConfigurationTime()
+        if (envVariable.present) {
+            property = envVariable.get()
+        }
+        else property = defaultValue
     }
-    else project.ext.setProperty(name, defaultValue)
+    project.ext.setProperty(name, Boolean.parseBoolean(property as String))
 }
 // is the build being run on a CI server?
 registerBooleanProjectProperty('isCI', false)
