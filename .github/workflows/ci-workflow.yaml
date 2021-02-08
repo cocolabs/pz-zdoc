@@ -18,5 +18,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+            ruby-version: 3.0
+            bundler-cache: true
+      - run: bundle exec rake
       - name: Build with Gradle
         run: ./gradlew build --stacktrace
