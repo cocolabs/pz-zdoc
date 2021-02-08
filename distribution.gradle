@@ -21,8 +21,9 @@ tasks.register("generateChangelog", Exec.class) {
              * define all labels you want excluded from the changelog */
             '--exclude-labels', 'dev,wontfix,workflow,question,documentation',
     ]
-    if (project.ext.has('githubToken')) {
-        commandArgs += [ '--token', project.ext.githubToken ]
+    def token = project.ext.has('githubToken') ? project.ext.githubToken : null
+    if (token != null) {
+        commandArgs += [ '--token', token ]
     }
     else logger.warn('Github token not supplied, task might fail')
 
