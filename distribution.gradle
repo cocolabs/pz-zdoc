@@ -27,7 +27,8 @@ tasks.register("generateChangelog", Exec.class) {
     }
     else logger.warn('Github token not supplied, task might fail')
 
-    it.commandLine = [ 'cmd', '/c', 'github_changelog_generator' ]  + commandArgs
+    def command = [ 'github_changelog_generator' ] + commandArgs
+    it.commandLine = (project.ext.osName == "Windows") ? [ 'cmd', '/c' ] + command : command
 }
 /**
  * @return {@code true} if the given file is located in game directory.
