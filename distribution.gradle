@@ -31,7 +31,7 @@ tasks.register("generateChangelog", Exec.class) {
 }
 
 distributions.main.contents {
-    it.from (files('README.md', 'LICENSE.txt', 'CHANGELOG.md'))
+    it.from ('README.md', 'LICENSE.txt', 'CHANGELOG.md')
     it.exclude {
         File file = it.file
         String filename = file.getName()
