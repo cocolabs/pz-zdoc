@@ -3,6 +3,8 @@ name: Java CI
 on:
   push:
     branches:
+      - 'hotfix/**'         # Hotfix branches
+      - 'work/**'           # Workflow branches
       - master              # Main project branch
       - dev                 # Development branch
 
