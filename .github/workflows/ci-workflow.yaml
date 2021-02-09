@@ -24,4 +24,6 @@ jobs:
             ruby-version: 3.0
             bundler-cache: true
       - name: Build with Gradle
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew build --stacktrace
