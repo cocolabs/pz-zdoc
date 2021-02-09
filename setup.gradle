@@ -120,7 +120,7 @@ def <T> void registerLocalProjectProperty(String name, Class<T> type, String env
 // some local properties (env variables) will not be available on CI server
 if (!CI) {
     // path to Project Zomboid installation directory
-    registerLocalProjectProperty('game.dir', Path.class, 'GAME_DIR', true)
+    registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
 }
 // Github repository token used to generate changelog
-registerLocalProjectProperty('github.token', String.class, 'GITHUB_TOKEN ', false)
+registerLocalProjectProperty('githubToken', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
