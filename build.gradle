@@ -103,6 +103,21 @@ repositories {
     jcenter()
     mavenCentral()
 }
+/**
+ * This task will sync zomboidClassesDir with classes found in game install directory.
+ * Note that it needs to run before dependencies are declared so that
+ * the assembled classes can be included onto the classpath
+ */
+task zomboidClasses(type: Sync) {
+    description 'Assembles zomboid classes.'
+    group 'zomboid'
+    includeEmptyDirs false
+    from project.ext.gameDir
+    include '**/*.class'
+    into zomboidClassesDir
+}
+zomboidClasses.onlyIf { !CI }
+classes.dependsOn(zomboidClasses)
 
 dependencies {
     // https://mvnrepository.com/artifact/com.google.errorprone/error_prone_core
@@ -152,7 +167,7 @@ dependencies {
         zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
 
         // Project Zomboid classes
-        zomboidImplementation files(gameDir)
+        zomboidImplementation files(zomboidClassesDir)
     }
 }
 

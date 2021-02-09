@@ -30,18 +30,6 @@ tasks.register("generateChangelog", Exec.class) {
     def command = [ 'bundle', 'exec', 'github_changelog_generator' ] + commandArgs
     it.commandLine = (project.ext.osName == "Windows") ? [ 'cmd', '/c' ] + command : command
 }
-/**
- * @return {@code true} if the given file is located in game directory.
- */
-boolean isFileInGameDirectory(File file) {
-    try {
-        project.ext.gameDir.relativize(file.toPath())
-        return true
-    }
-    catch (IllegalArgumentException ignored) {
-        return false
-    }
-}
 
 distributions.main.contents {
     it.from ('README.md', 'LICENSE.txt', 'CHANGELOG.md')
@@ -57,10 +45,16 @@ distributions.main.contents {
             return true
         }
         if (!CI) {
-            // exclude all files located in game directory
-            return isFileInGameDirectory(file)
+            // exclude Project Zomboid classes
+            if (file.toPath().startsWith(zomboidClassesDir.toPath())) {
+                return true
+            }
+            // exclude Project Zomboid libraries
+            if (file.toPath().startsWith(gameDir)) {
+                return true
+            }
         }
-        else return false
+        return false
     }
 }
 // generate changelog BEFORE creating distribution
