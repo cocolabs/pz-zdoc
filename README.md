@@ -1,6 +1,6 @@
 # ZomboidDoc
 
-![Java CI](https://github.com/yooksi/pz-zdoc/workflows/Java%20CI/badge.svg?branch=dev) ![release](https://img.shields.io/github/v/release/yooksi/pz-zdoc) [![codecov](https://codecov.io/gh/yooksi/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/yooksi/pz-zdoc) [![License](https://img.shields.io/github/license/yooksi/pz-zdoc)](https://www.gnu.org/licenses/) ![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)
+![Java CI](https://github.com/yooksi/pz-zdoc/workflows/Java%20CI/badge.svg?branch=dev) ![release](https://img.shields.io/github/v/release/yooksi/pz-zdoc) [![codecov](https://codecov.io/gh/yooksi/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/yooksi/pz-zdoc) [![License](https://img.shields.io/github/license/yooksi/pz-zdoc)](https://www.gnu.org/licenses/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
 
 ZomboidDoc is an easy-to-use Java command-line application that compiles an annotated Lua library directly from modding API. Powered by [IntelliJ IDEA](https://www.jetbrains.com/idea/) it makes mod development an enjoyable experience by providing everything you need to write an amazing mod right from you IDE.
 
