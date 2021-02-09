@@ -1,6 +1,19 @@
 import java.nio.file.Paths
 import java.nio.file.Path
 import org.gradle.internal.os.OperatingSystem
+
+// write operating system platform name to project property
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        project.ext.osName = "Linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.osName = "macOS"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.osName = "Windows"
+        break
+}
 /**
  * Register a project property of a given name as a {@code boolean} value.
  *
@@ -43,11 +56,12 @@ if (propertiesFile.exists()) {
     localProjectProperties.load(propertiesFile.newDataInputStream())
 }
 /**
- * Initialize and get property from {@code local.properties} file with designated type.
+ * Initialize and get project property from {@code local.properties} file with designated type.
  *
  * @param name property name to search for in local properties.
  * @param type class to initialize the property as.
  * @param env environment variable to use if property not found.
+ * @param required whether to throw an exception if property is not found.
  * @param defaultValue value to be used if property was not found.
  * @return found project property of type {@code T} or {@code null} if no property found.
  */
@@ -78,34 +92,35 @@ def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolea
     else return property as T
 }
 /**
- * Initialize and get property from {@code local.properties} file with designated type.
+ * Initialize and register project property from {@code local.properties} file.
  *
  * @param name property name to search for in local properties.
  * @param type class to initialize the property as.
  * @param env environment variable to use if property not found.
- * @return found project property of type {@code T} or {@code null} if no property found.
+ * @param required whether to throw an exception if property is not found.
+ * @return found project property or {@code null} if no property found.
  */
-def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolean required) {
-    return getLocalProjectProperty(name, type, env, required, null)
+def registerLocalProjectProperty(String name, Class<Object> type, String env, boolean required) {
+    project.ext.setProperty(name, getLocalProjectProperty(name, type, env, required, null))
+}
+/**
+ * Initialize and register project property from {@code local.properties} file.
+ *
+ * @param name property name to search for in local properties.
+ * @param type class to initialize the property as.
+ * @param env environment variable to use if property not found.
+ * @param required whether to throw an exception if property is not found.
+ * @param defaultValue value to be used if property was not found.
+ * @return found project property or {@code null} if no property found.
+ */
+def <T> void registerLocalProjectProperty(String name, Class<T> type, String env, boolean required, T defaultValue) {
+    project.ext.setProperty(name, getLocalProjectProperty(name, type, env, required, defaultValue))
 }
 // initialize local project properties here
 // some local properties (env variables) will not be available on CI server
 if (!CI) {
     // path to Project Zomboid installation directory
-    project.ext.gameDir = getLocalProjectProperty('game.dir', Path.class, 'GAME_DIR', true)
+    registerLocalProjectProperty('game.dir', Path.class, 'GAME_DIR', true)
 }
 // Github repository token used to generate changelog
-project.ext.githubToken = getLocalProjectProperty('github.token', String.class, 'GITHUB_TOKEN', false)
-
-// write operating system platform name to project property
-switch (OperatingSystem.current()) {
-    case OperatingSystem.LINUX:
-        project.ext.osName = "Linux"
-        break
-    case OperatingSystem.MAC_OS:
-        project.ext.osName = "macOS"
-        break
-    case OperatingSystem.WINDOWS:
-        project.ext.osName = "Windows"
-        break
-}
+registerLocalProjectProperty('github.token', String.class, 'GITHUB_TOKEN ', false)
