@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - 'hotfix/**'         # Hotfix branches
-      - 'work/**'           # Workflow branches
+      - 'workflow/**'       # Workflow branches
+      - workflow            # Main workflow branch
       - master              # Main project branch
       - dev                 # Development branch
 
