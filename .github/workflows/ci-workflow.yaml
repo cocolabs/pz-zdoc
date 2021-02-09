@@ -50,4 +50,4 @@ jobs:
         with:
           java-version: 1.8
       - name: Assemble distribution
-        run: ./gradlew assembleDist --stacktrace
+        run: ./gradlew assembleDist -x generateChangelog --stacktrace
