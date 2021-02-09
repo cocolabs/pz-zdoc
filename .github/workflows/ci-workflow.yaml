@@ -24,6 +24,7 @@ jobs:
         run: ./gradlew compileJava processResources classes jar --stacktrace
 
   document:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Setup Ruby
