@@ -35,3 +35,8 @@ build/
 
 # Exclude Wrapper
 !gradle-wrapper.jar
+
+### Ruby ###
+
+# No need for lock file in workflow
+Gemfile.lock
