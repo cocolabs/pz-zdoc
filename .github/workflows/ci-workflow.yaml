@@ -24,7 +24,6 @@ jobs:
         run: ./gradlew compileJava processResources classes jar --stacktrace
 
   document:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
