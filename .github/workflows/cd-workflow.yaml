@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - 'release/**'        # Release branches
-      - workflow            # Workflow branch
+      - 'workflow/**'       # Workflow branch
       - master              # Main project branch
 jobs:
   build:
