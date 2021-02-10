@@ -53,9 +53,6 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           name: codecov-umbrella
-          directory: ./coverage/reports/
-          files: ./coverage1.xml,./coverage2.xml
-          path_to_write_report: ./coverage/codecov_report.txt
           flags: unittests
           env_vars: OS
           verbose: true
