@@ -51,10 +51,10 @@ jobs:
         with:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
       - name: Generate coverage report
-        if: OS == ubuntu-latest
+        if: env.OS == 'ubuntu-latest'
         run: ./gradlew jacocoTestReport --stacktrace
       - name: Upload coverage to Codecov
-        if: OS == ubuntu-latest
+        if: env.OS == 'ubuntu-latest'
         uses: codecov/codecov-action@v1
         with:
           name: codecov-umbrella
