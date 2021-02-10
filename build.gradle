@@ -133,6 +133,7 @@ dependencies {
         exclude group: 'org.checkerframework'
         exclude module: 'failureaccess'
         exclude module: 'listenablefuture'
+        exclude module: 'j2objc-annotations'
     }
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
