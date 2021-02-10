@@ -45,10 +45,7 @@ jobs:
         with:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
       - name: Generate coverage report
-        run: |
-          pip install pytest
-          pip install pytest-cov
-          pytest --cov=./ --cov-report=xml
+        run: ./gradlew jacocoTestReport --stacktrace
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
