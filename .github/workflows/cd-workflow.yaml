@@ -50,6 +50,7 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           name: codecov-umbrella
+          files: ./build/coverage.xml
           flags: unittests
           env_vars: OS
           verbose: true
