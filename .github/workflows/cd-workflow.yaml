@@ -34,3 +34,7 @@ jobs:
         run: ./gradlew generateChangelog --stacktrace
       - name: Assemble distribution
         run: ./gradlew assembleDist -x generateChangelog --stacktrace
+      - name: Run FOSSA scan
+        uses: fossa-contrib/fossa-action@v1
+        with:
+          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
