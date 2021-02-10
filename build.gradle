@@ -114,7 +114,7 @@ if (!CI) {
         group 'zomboid'
         includeEmptyDirs false
         from project.ext.gameDir
-        include '**/*.class'
+        include '**/*.class', 'stdlib.lbc'
         into zomboidClassesDir
     }
     classes.dependsOn(zomboidClasses)
