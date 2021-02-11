@@ -22,10 +22,12 @@ jobs:
         with:
           java-version: 1.8
       - name: Setup Python
+        if: env.OS == 'ubuntu-latest'
         uses: actions/setup-python@master
         with:
           python-version: 3.7
       - name: Setup Ruby
+        if: env.OS == 'ubuntu-latest'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.0
@@ -41,18 +43,21 @@ jobs:
           name: test-report
           path: ./build/reports/tests/
       - name: Generate changelog
+        if: env.OS == 'ubuntu-latest'
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew generateChangelog --stacktrace
       - name: Assemble distribution
+        if: env.OS == 'ubuntu-latest'
         run: ./gradlew assembleDist -x generateChangelog --stacktrace
       - name: Run FOSSA scan
+        if: env.OS == 'ubuntu-latest'
         uses: fossa-contrib/fossa-action@v1
         with:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
       - name: Generate coverage report
         if: env.OS == 'ubuntu-latest'
-        run: ./gradlew jacocoTestReport --stacktrace
+        run: ./gradlew jacocoTestReport -x test --stacktrace
       - name: Upload coverage to Codecov
         if: env.OS == 'ubuntu-latest'
         uses: codecov/codecov-action@v1
