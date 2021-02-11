@@ -1,6 +1,6 @@
 # ZomboidDoc
 
-![Java CD](https://github.com/yooksi/pz-zdoc/workflows/Java%20CD/badge.svg?branch=master) ![fossa](https://app.fossa.com/api/projects/custom%2B23026%2Fgithub.com%2Fyooksi%2Fpz-zdoc.svg?type=shield) ![release](https://img.shields.io/github/v/release/yooksi/pz-zdoc) [![codecov](https://codecov.io/gh/yooksi/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/yooksi/pz-zdoc) [![License](https://img.shields.io/github/license/yooksi/pz-zdoc)](https://www.gnu.org/licenses/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
+![Java CD](https://github.com/real-coco-labs/pz-zdoc/workflows/Java%20CD/badge.svg?branch=master) ![fossa](https://app.fossa.com/api/projects/custom%2B23026%2Fgithub.com%2Freal-coco-labs%2Fpz-zdoc.svg?type=shield) ![release](https://img.shields.io/github/v/release/real-coco-labs/pz-zdoc) [![codecov](https://codecov.io/gh/real-coco-labs/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/real-coco-labs/pz-zdoc) [![License](https://img.shields.io/github/license/real-coco-labs/pz-zdoc)](https://www.gnu.org/licenses/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
 
 ZomboidDoc is an easy-to-use Java command-line application that compiles an annotated Lua library directly from modding API. Powered by [IntelliJ IDEA](https://www.jetbrains.com/idea/) it makes mod development an enjoyable experience by providing everything you need to write an amazing mod right from you IDE.
 
@@ -30,7 +30,7 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 
 ### Setup
 
-- Download the [latest release](https://github.com/yooksi/pz-zdoc/releases/latest) from the repository releases section.
+- Download the [latest release](https://github.com/real-coco-labs/pz-zdoc/releases/latest) from the repository releases section.
 - Extract the release archive to your game installation directory <i>or</i> anywhere on your computer.
 
 ## How to use
@@ -143,7 +143,7 @@ You can now continue modding with full confidence that everything you need to kn
 
 ## Discussion
 
-- Feel free to [open a ticket](https://github.com/yooksi/pz-zdoc/issues/new) if you have any problems, questions or suggestions regarding the project.
+- Feel free to [open a ticket](https://github.com/real-coco-labs/pz-zdoc/issues/new) if you have any problems, questions or suggestions regarding the project.
 - You are also welcome to join us on [Discord](https://discord.gg/vCeydWCbd9) to talk about Project Zomboid modding and follow community projects.
 
 ## Credits
@@ -153,4 +153,4 @@ You can now continue modding with full confidence that everything you need to kn
 
 ## License
 
-This project is licensed under [GNU General Public License v3.0](https://github.com/yooksi/pz-zdoc/blob/master/LICENSE.txt).
+This project is licensed under [GNU General Public License v3.0](https://github.com/real-coco-labs/pz-zdoc/blob/master/LICENSE.txt).

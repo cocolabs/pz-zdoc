@@ -8,8 +8,8 @@ tasks.register("generateChangelog", Exec.class) {
 
     def commandArgs = [
             /*
-             * username of the owner of target GitHub repo */
-            '-u', 'yooksi',
+             * owner of target GitHub repository */
+            '-u', 'real-coco-labs',
             /*
              * name of project on GitHub */
             '-p', project.name,
@@ -39,7 +39,7 @@ distributions.main.contents {
         /*
          * there is a bug that occurs when running distribution tasks on Github CI
          * where the distribution archive tries to add itself to archive
-         * @see https://github.com/yooksi/pz-zdoc/issues/21
+         * @see https://github.com/real-coco-labs/pz-zdoc/issues/21
          */
         if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.zip', '.tar')) {
             return true
