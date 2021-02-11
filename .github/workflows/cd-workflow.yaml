@@ -74,15 +74,3 @@ jobs:
         uses: fossa-contrib/fossa-action@v1
         with:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
-      # Generate code coverage report with gradle (Jacoco)
-      - name: Generate coverage report
-        run: ./gradlew jacocoTestReport -x test --stacktrace
-      # Upload generated coverage to Codecov
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          name: codecov-umbrella
-          files: ./build/coverage.xml
-          flags: unittests
-          env_vars: OS
-          verbose: true

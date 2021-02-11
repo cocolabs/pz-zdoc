@@ -34,3 +34,14 @@ jobs:
         with:
           name: test-report
           path: ./build/reports/tests/
+      # Generate code coverage report with gradle (Jacoco)
+      - name: Generate coverage report
+        run: ./gradlew jacocoTestReport -x test --stacktrace
+      # Upload generated coverage to Codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          name: codecov-foss
+          files: ./build/coverage.xml
+          flags: unittests
+          verbose: true
