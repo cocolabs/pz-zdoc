@@ -1,10 +1,11 @@
-# Continuous integration
-name: Java CI
-
 on:
   push:
     branches:
       - dev       # Development branch
+
+# Continuous integration
+name: Java CI
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
