@@ -31,7 +31,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: test-report
+          name: test-report-${{ runner.os }}
           path: ./build/reports/tests/
       # Generate code coverage report with gradle (Jacoco)
       - name: Generate coverage report

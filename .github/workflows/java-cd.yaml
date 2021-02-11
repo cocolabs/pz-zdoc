@@ -40,7 +40,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: test-report
+          name: test-report-windows-latest
           path: ./build/reports/tests/
   build:
     name: Unit test and assemble on Linux
@@ -70,7 +70,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: test-report
+          name: test-report-ubuntu-latest
           path: ./build/reports/tests/
       # Generate project changelog with gradle
       - name: Generate changelog
