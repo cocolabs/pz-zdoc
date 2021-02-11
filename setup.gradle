@@ -39,7 +39,7 @@ void registerBooleanProjectProperty(String name, boolean defaultValue) {
 registerBooleanProjectProperty('CI', false)
 
 // should gradle run spotless tasks?
-registerBooleanProjectProperty('makeSpotless', true)
+registerBooleanProjectProperty('makeSpotless', false)
 
 // directory containing a copy of Project Zomboid classes
 project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile

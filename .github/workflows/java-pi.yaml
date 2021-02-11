@@ -20,7 +20,7 @@ jobs:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
       # Check if code is spotless
       - name: Check code format compliance
-        run: ./gradlew spotlessJavaCheck
+        run: ./gradlew spotlessJavaCheck -PmakeSpotless=true
   test:
     name: Unit test on platforms
     runs-on: ${{ matrix.os }}
