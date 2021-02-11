@@ -4,9 +4,7 @@ name: Java CI
 on:
   push:
     branches:
-      - 'release/**'        # Release branches
-      - 'hotfix/**'         # Hotfix branches
-      - dev                 # Development branch
+      - dev       # Development branch
 jobs:
   build:
     runs-on: ${{ matrix.os }}

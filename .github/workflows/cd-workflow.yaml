@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - 'release/**'        # Release branches
+      - 'hotfix/**'         # Hotfix branches
       - master              # Main project branch
 jobs:
   test:
