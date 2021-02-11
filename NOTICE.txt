@@ -1,0 +1,35 @@
+ZomboidDoc
+Copyright (C) 2020-2021 Matthew Cain
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This product depends on a number of libraries with separate
+copyright notices and license terms. Your use of the source code
+for these subcomponents is subject to the terms and conditions of
+the subcomponent's license, as noted in the LICENSE.txt file.
+
+This application uses the following libraries
+licensed under the Apache 2.0 license:
+
+- Apache Commons CLI
+  (http://commons.apache.org/proper/commons-cli/)
+- Apache Commons Collections
+  (http://commons.apache.org/proper/commons-collections/)
+- Apache Commons IO
+  (http://commons.apache.org/io/)
+- Apache Commons Lang
+  (http://commons.apache.org/proper/commons-lang/)
+- Apache Log4j 2
+  (https://logging.apache.org/log4j/2.x/)
+- Guava: Google Core Libraries for Java
+  (https://github.com/google/guava/)
+- IntelliJ IDEA Annotations
+  (http://www.jetbrains.org)
+- Spring Framework
+  (https://github.com/spring-projects/spring-framework)
+
+The Apache 2.0 license can be obtained from
+http://www.apache.org/licenses/LICENSE-2.0
