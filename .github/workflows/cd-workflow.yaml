@@ -18,7 +18,7 @@ jobs:
       with:
         fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
   test:
-    name: Test on Windows
+    name: Unit test on Windows
     runs-on: windows-latest
     steps:
       # Checkout repository
@@ -42,7 +42,7 @@ jobs:
           name: test-report
           path: ./build/reports/tests/
   build:
-    name: Assemble and test on Linux
+    name: Unit test and assemble on Linux
     runs-on: ubuntu-latest
     steps:
       # Checkout repository
