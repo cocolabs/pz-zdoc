@@ -7,13 +7,33 @@ on:
       - 'release/**'        # Release branches
       - master              # Main project branch
 jobs:
+  test:
+    name: Test on Windows
+    runs-on: windows-latest
+    steps:
+      # Checkout repository
+      - uses: actions/checkout@v2
+      # Setup Java environment
+      - name: Setup JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      # Assemble main classes with gradle
+      - name: Assemble classes
+        run: ./gradlew classes --stacktrace
+      # Run unit tests with gradle
+      - name: Run Unit Tests
+        run: ./gradlew test --stacktrace
+      # Upload test reports as run artifact
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: ./build/reports/tests/
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ windows-latest, ubuntu-latest ]
-    env:
-      OS: ${{ matrix.os }}
+    name: Assemble and test on Linux
+    runs-on: ubuntu-latest
     steps:
       # Checkout repository
       - uses: actions/checkout@v2
@@ -24,7 +44,6 @@ jobs:
           java-version: 1.8
       # Ruby is needed to generate changelog
       - name: Setup Ruby
-        if: env.OS == 'ubuntu-latest'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.0
@@ -44,27 +63,22 @@ jobs:
           path: ./build/reports/tests/
       # Generate project changelog with gradle
       - name: Generate changelog
-        if: env.OS == 'ubuntu-latest'
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew generateChangelog --stacktrace
       # Assemble the output of this project with gradle
       - name: Assemble distribution
-        if: env.OS == 'ubuntu-latest'
         run: ./gradlew assembleDist -x generateChangelog --stacktrace
       # Run FOSSA scan and upload build data
       - name: Run FOSSA scan
-        if: env.OS == 'ubuntu-latest'
         uses: fossa-contrib/fossa-action@v1
         with:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
       # Generate code coverage report with gradle (Jacoco)
       - name: Generate coverage report
-        if: env.OS == 'ubuntu-latest'
         run: ./gradlew jacocoTestReport -x test --stacktrace
       # Upload generated coverage to Codecov
       - name: Upload coverage to Codecov
-        if: env.OS == 'ubuntu-latest'
         uses: codecov/codecov-action@v1
         with:
           name: codecov-umbrella
