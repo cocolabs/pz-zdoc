@@ -18,6 +18,9 @@ jobs:
         uses: fossa-contrib/fossa-action@v1
         with:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
+      # Check if code is spotless
+      - name: Check code format compliance
+        run: ./gradlew spotlessJavaCheck
   test:
     name: Unit test on platforms
     runs-on: ${{ matrix.os }}

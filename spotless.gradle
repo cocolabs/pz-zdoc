@@ -1,6 +1,6 @@
 apply plugin: 'com.diffplug.spotless'
 
-if (!CI && project.ext.getProperty('makeSpotless'))
+if (project.ext.getProperty('makeSpotless'))
 {
     def spotlessGistID = '8ace33e409f9b9e6d0dab05fec3f8188'
     apply from: "https://gist.githubusercontent.com/yooksi/$spotlessGistID/raw/spotless.gradle"
