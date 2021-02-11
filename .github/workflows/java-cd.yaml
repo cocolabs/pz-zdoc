@@ -33,7 +33,7 @@ jobs:
           name: test-report-windows-latest
           path: ./build/reports/tests/
   build:
-    name: Unit test and assemble on Linux
+    name: Build and release on Linux
     runs-on: ubuntu-latest
     steps:
       # Checkout repository
@@ -70,4 +70,3 @@ jobs:
       # Assemble the output of this project with gradle
       - name: Assemble distribution
         run: ./gradlew assembleDist -x generateChangelog --stacktrace
-

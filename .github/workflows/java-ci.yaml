@@ -1,13 +1,15 @@
 on:
   push:
     branches:
-      - dev       # Development branch
+      # Development branch
+      - dev
 
 # Continuous integration
 name: Java CI
 
 jobs:
   build:
+    name: Unit test on platforms
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
