@@ -27,3 +27,10 @@ jobs:
       # Run unit tests with gradle
       - name: Run Unit Tests
         run: ./gradlew test --stacktrace
+      # Upload test reports as run artifact
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: ./build/reports/tests/
