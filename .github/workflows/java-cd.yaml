@@ -1,9 +1,8 @@
 on:
   push:
-    branches:
-      - 'release/**'        # Release branches
-      - 'hotfix/**'         # Hotfix branches
-      - master              # Main project branch
+    tags:
+      # Versioned release tags
+      - 'v*'
 
 # Continuous delivery
 name: Java CD
