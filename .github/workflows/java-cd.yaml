@@ -8,15 +8,6 @@ on:
 name: Java CD
 
 jobs:
-  check:
-    name: Check license compliance
-    runs-on: ubuntu-latest
-    steps:
-      # Run FOSSA scan and upload build data
-      - name: Run FOSSA scan
-        uses: fossa-contrib/fossa-action@v1
-        with:
-          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
   test:
     name: Unit test on Windows
     runs-on: windows-latest
