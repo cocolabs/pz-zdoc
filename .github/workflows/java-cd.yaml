@@ -28,6 +28,11 @@ jobs:
         uses: burrunan/gradle-cache-action@v1
         with:
           arguments: classes --stacktrace
+      # Cache project build files
+      - uses: actions/cache@v2
+        with:
+          path: ./build
+          key: ${{ runner.os }}-${{ github.sha }}
       # Run unit tests with gradle
       - name: Run Unit Tests
         uses: burrunan/gradle-cache-action@v1
@@ -73,11 +78,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      # Assemble main classes with gradle
-      - name: Assemble classes
-        uses: burrunan/gradle-cache-action@v1
+      # Restore build files from cache
+      - uses: actions/cache@v2
         with:
-          arguments: classes --stacktrace
+          path: ./build
+          key: ${{ runner.os }}-${{ github.sha }}
       # Assemble the output of this project with gradle
       - name: Assemble distribution
         uses: burrunan/gradle-cache-action@v1
