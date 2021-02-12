@@ -33,7 +33,9 @@ jobs:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
       # Check if code is spotless
       - name: Check code format compliance
-        run: ./gradlew spotlessJavaCheck -PmakeSpotless=true
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: spotlessJavaCheck -PmakeSpotless=true --stacktrace
   test:
     name: Unit test on platforms
     runs-on: ${{ matrix.os }}
@@ -50,10 +52,14 @@ jobs:
           java-version: 1.8
       # Assemble main classes with gradle
       - name: Assemble classes
-        run: ./gradlew classes --stacktrace
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: classes --stacktrace
       # Run unit tests with gradle
       - name: Run Unit Tests
-        run: ./gradlew test --stacktrace
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: test --stacktrace
       # Upload test reports as run artifact
       - name: Upload test reports
         if: always()

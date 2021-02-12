@@ -9,9 +9,16 @@ name: Java CD
 
 jobs:
   test:
-    name: Unit test on Windows
-    runs-on: windows-latest
+    name: Unit test on platforms
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest ]
     steps:
+      # Cache dependencies
+      - uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: dependencies
       # Checkout repository
       - uses: actions/checkout@v2
       # Setup Java environment
@@ -21,21 +28,30 @@ jobs:
           java-version: 1.8
       # Assemble main classes with gradle
       - name: Assemble classes
-        run: ./gradlew classes --stacktrace
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: classes --stacktrace
       # Run unit tests with gradle
       - name: Run Unit Tests
-        run: ./gradlew test --stacktrace
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: test --stacktrace
       # Upload test reports as run artifact
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: test-report-windows-latest
+          name: test-report-${{ runner.os }}
           path: ./build/reports/tests/
   build:
     name: Build and release on Linux
     runs-on: ubuntu-latest
+    needs: test
     steps:
+      # Cache dependencies
+      - uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: dependencies
       # Checkout repository
       - uses: actions/checkout@v2
       # Setup Java environment
@@ -51,17 +67,9 @@ jobs:
           bundler-cache: true
       # Assemble main classes with gradle
       - name: Assemble classes
-        run: ./gradlew classes --stacktrace
-      # Run unit tests with gradle
-      - name: Run Unit Tests
-        run: ./gradlew test --stacktrace
-      # Upload test reports as run artifact
-      - name: Upload test reports
-        if: always()
-        uses: actions/upload-artifact@v2
+        uses: burrunan/gradle-cache-action@v1
         with:
-          name: test-report-ubuntu-latest
-          path: ./build/reports/tests/
+          arguments: classes --stacktrace
       # Generate project changelog with gradle
       - name: Generate changelog
         env:
@@ -69,4 +77,6 @@ jobs:
         run: ./gradlew generateChangelog --stacktrace
       # Assemble the output of this project with gradle
       - name: Assemble distribution
-        run: ./gradlew assembleDist -x generateChangelog --stacktrace
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: assembleDist -x generateChangelog --stacktrace
