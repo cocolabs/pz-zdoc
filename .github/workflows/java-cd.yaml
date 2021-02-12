@@ -27,7 +27,7 @@ jobs:
       - name: Assemble classes
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: classes --stacktrace
+          arguments: classes -s
       # Cache gradle temporary files
       - name: Cache gradle files
         uses: actions/cache@v2
@@ -51,7 +51,7 @@ jobs:
       - name: Run Unit Tests
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: test --stacktrace
+          arguments: test -s
       # Upload test reports as run artifact
       - name: Upload test reports
         if: always()
@@ -78,7 +78,7 @@ jobs:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: generateChangelog --stacktrace
+          arguments: generateChangelog -s
 
   build:
     name: Build and release on Linux
@@ -115,4 +115,4 @@ jobs:
       - name: Assemble distribution
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: assembleDist -x generateChangelog --stacktrace
+          arguments: assembleDist -x generateChangelog -s

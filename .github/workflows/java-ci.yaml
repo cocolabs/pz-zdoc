@@ -37,12 +37,12 @@ jobs:
       - name: Assemble classes
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: classes --stacktrace
+          arguments: classes -s
       # Run unit tests with gradle
       - name: Run Unit Tests
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: test --stacktrace
+          arguments: test -s
       # Upload test reports as run artifact
       - name: Upload test reports
         if: always()
@@ -54,7 +54,7 @@ jobs:
       - name: Generate coverage report
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: jacocoTestReport -x test --stacktrace
+          arguments: jacocoTestReport -x test -s
       # Upload generated coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
