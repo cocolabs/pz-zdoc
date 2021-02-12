@@ -179,8 +179,10 @@ test {
     dependsOn cleanTest
 
     useJUnitPlatform()
-
     testLogging.exceptionFormat = 'full'
+
+    // preserve system properties because gradle tests are forked in a new JVM
+    systemProperty('zdoc.logger', System.getProperty('zdoc.logger'))
 
     // Fail the 'test' task on the first test failure
     failFast = false
