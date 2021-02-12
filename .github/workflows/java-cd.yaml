@@ -126,18 +126,19 @@ jobs:
       - name: Check for pre-release
         id: read-tag
         run: |
-          echo ::set-output name=thisTag::$(echo ${{ github.ref }} | cut -c 12-)
+          echo ::set-output name=tagRef::$(echo ${{ github.ref }} | cut -c 11-)
+          echo ::set-output name=tagName::$(echo ${{ github.ref }} | cut -c 12-)
           if [[ ${{ github.ref }} =~ ^.*\-(alpha|beta|rc).*$ ]]; then
               echo ::set-output name=isPreRelease::true
           fi
       # Generate release data
       - name: Resolve previous tag
         id: resolve-prev-tag
-        run: echo ::set-output name=prevTag::$(git describe --abbrev=0 ${{ steps.read-tag.outputs.thisTag }}^)
+        run: echo ::set-output name=prevTag::$(git describe --abbrev=0 ${{ steps.read-tag.outputs.tagRef }}^)
       - name: Generate release text
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bundler exec github_changelog_generator -u real-coco-labs -p pz-zdoc --since-tag=${{ steps.read-tag.outputs.prevTag }} -o ./release_text.md --no-unreleased --header-label ''
+        run: bundler exec github_changelog_generator -u real-coco-labs -p pz-zdoc --since-tag=${{ steps.resolve-prev-tag.outputs.prevTag }} -o ./release_text.md --no-unreleased --header-label ''
       # Create a release in Github repository
       - name: Create Github release
         uses: actions/create-release@v1
@@ -145,7 +146,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ steps.read-tag.outputs.thisTag }}
+          release_name: ${{ steps.read-tag.outputs.tagName }}
           prerelease: ${{ steps.read-tag.outputs.isPreRelease }}
           body_path: ./release_text.md
           draft: true
