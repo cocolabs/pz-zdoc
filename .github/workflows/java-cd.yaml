@@ -116,3 +116,11 @@ jobs:
         uses: burrunan/gradle-cache-action@v1
         with:
           arguments: assembleDist -x generateChangelog --stacktrace
+      # Parse the tag and see if it's a pre-release
+      - name: Read release tag
+        id: read-tag
+        run: |
+          echo ::set-output name=releaseName::$(echo ${{ github.ref }} | cut -c 12-)
+          if [[ ${{ github.ref }} =~ ^.*\-(alpha|beta|rc).*$ ]]; then
+              echo ::set-output name=preRelease::true
+          fi
