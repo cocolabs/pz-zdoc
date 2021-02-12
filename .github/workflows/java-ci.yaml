@@ -23,6 +23,15 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      # Cache local gradle files
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ./.gradle
+            ./buildSrc/.gradle
+          key: ${{ runner.os }}-gradle-${{ '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       # Assemble main classes with gradle
       - name: Assemble classes
         uses: burrunan/gradle-cache-action@v1
