@@ -34,7 +34,7 @@ jobs:
           path: |
             ./.gradle
             ./buildSrc/.gradle
-          key: ${{ runner.os }}-gradle-${{ '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
       # Cache local build files
@@ -96,7 +96,7 @@ jobs:
           path: |
             ./.gradle
             ./buildSrc/.gradle
-          key: ${{ runner.os }}-gradle-${{ '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
       # Cache local build files
