@@ -21,12 +21,15 @@ tasks.register("generateChangelog", Exec.class) {
              * define all labels you want excluded from the changelog */
             '--exclude-labels', 'dev,wontfix,workflow,question,documentation',
     ]
-    def token = project.ext.has('githubToken') ? project.ext.githubToken : null
-    if (token != null) {
-        commandArgs += [ '--token', token ]
+    // generator will first check for token in environment variables
+    if (!providers.environmentVariable('CHANGELOG_GITHUB_TOKEN').forUseAtConfigurationTime().present)
+    {
+        def githubToken = project.ext.has('githubToken') ? project.ext.githubToken : null
+        if (githubToken != null) {
+            commandArgs += [ '--token', githubToken ]
+        }
+        else logger.warn('Github token not supplied, task might fail')
     }
-    else logger.warn('Github token not supplied, task might fail')
-
     def command = [ 'bundle', 'exec', 'github_changelog_generator' ] + commandArgs
     it.commandLine = (project.ext.osName == "Windows") ? [ 'cmd', '/c' ] + command : command
 }
