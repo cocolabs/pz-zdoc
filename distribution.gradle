@@ -28,7 +28,6 @@ tasks.register("generateChangelog", Exec.class) {
         if (githubToken != null) {
             commandArgs += [ '--token', githubToken ]
         }
-        else logger.warn('Github token not supplied, task might fail')
     }
     def command = [ 'bundle', 'exec', 'github_changelog_generator' ] + commandArgs
     it.commandLine = (project.ext.osName == "Windows") ? [ 'cmd', '/c' ] + command : command
