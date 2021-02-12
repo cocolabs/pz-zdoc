@@ -137,8 +137,7 @@ jobs:
       - name: Generate release text
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bundler exec github_changelog_generator -u real-coco-labs -p pz-zdoc --since-tag=${{ steps.read-tag
-        .outputs.prevTag }} -o ./release_text.md --no-unreleased --header-label ''
+        run: bundler exec github_changelog_generator -u real-coco-labs -p pz-zdoc --since-tag=${{ steps.read-tag.outputs.prevTag }} -o ./release_text.md --no-unreleased --header-label ''
       # Create a release in Github repository
       - name: Create Github release
         uses: actions/create-release@v1
