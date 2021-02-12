@@ -23,8 +23,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      # Cache local gradle files
-      - uses: actions/cache@v2
+      # Cache gradle temporary files
+      - name: Cache gradle files
+        uses: actions/cache@v2
         with:
           path: |
             ./.gradle

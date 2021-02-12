@@ -28,8 +28,9 @@ jobs:
         uses: burrunan/gradle-cache-action@v1
         with:
           arguments: classes --stacktrace
-      # Cache local gradle files
-      - uses: actions/cache@v2
+      # Cache gradle temporary files
+      - name: Cache gradle files
+        uses: actions/cache@v2
         with:
           path: |
             ./.gradle
@@ -37,8 +38,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      # Cache local build files
-      - uses: actions/cache@v2
+      # Cache java compile output
+      - name: Cache build files
+        uses: actions/cache@v2
         with:
           path: |
             ./build/classes
@@ -90,8 +92,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      # Cache local gradle files
-      - uses: actions/cache@v2
+      # Cache gradle temporary files
+      - name: Cache gradle files
+        uses: actions/cache@v2
         with:
           path: |
             ./.gradle
@@ -99,8 +102,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      # Cache local build files
-      - uses: actions/cache@v2
+      # Cache java compile output
+      - name: Cache build files
+        uses: actions/cache@v2
         with:
           path: |
             ./build/classes
