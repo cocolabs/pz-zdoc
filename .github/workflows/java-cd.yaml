@@ -92,6 +92,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      # Ruby is needed to generate changelog
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+          bundler-cache: true
       # Cache gradle temporary files
       - name: Cache gradle files
         uses: actions/cache@v2
@@ -124,6 +130,15 @@ jobs:
           if [[ ${{ github.ref }} =~ ^.*\-(alpha|beta|rc).*$ ]]; then
               echo ::set-output name=isPreRelease::true
           fi
+      # Generate release data
+      - name: Resolve previous tag
+        id: resolve-prev-tag
+        run: echo ::set-output name=prevTag::$(git describe --abbrev=0 ${{ steps.read-tag.outputs.thisTag }}^)
+      - name: Generate release text
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bundler exec github_changelog_generator -u real-coco-labs -p pz-zdoc --since-tag=${{ steps.read-tag
+        .outputs.prevTag }} -o ./release_text.md --no-unreleased --header-label ''
       # Create a release in Github repository
       - name: Create Github release
         uses: actions/create-release@v1
@@ -133,4 +148,5 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: ${{ steps.read-tag.outputs.thisTag }}
           prerelease: ${{ steps.read-tag.outputs.isPreRelease }}
+          body_path: ./release_text.md
           draft: true
