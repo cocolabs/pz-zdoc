@@ -137,16 +137,17 @@ jobs:
               echo ::set-output name=isPreRelease::true
           fi
       # Generate changelog including only latest tag
-      - name: Generate release text
+      - uses: burrunan/gradle-cache-action@v1
+        name: Generate release text
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ORG_GRADLE_PROJECT_cg.sinceTag: ${{ steps.read-tag.outputs.tag }}
-          ORG_GRADLE_PROJECT_cg.output: ./release_text.md
-          ORG_GRADLE_PROJECT_cg.unreleased: false
-          ORG_GRADLE_PROJECT_cg.header: ''
-        uses: burrunan/gradle-cache-action@v1
         with:
           arguments: generateChangelog
+          properties: |
+            cg_sinceTag=${{ steps.read-tag.outputs.tag }}
+            cg_output=./release_text.md
+            cg_unreleased=false
+            cg_header=''
       # Remove notice from generated changelog
       - name: Trim release text
         run: |

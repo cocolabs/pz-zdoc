@@ -21,25 +21,25 @@ tasks.register("generateChangelog", Exec.class) {
             '--exclude-labels', 'dev,wontfix,workflow,question,documentation',
     ]
     // Changelog will start after specified tag
-    if (project.ext.hasProperty('cg.sinceTag')) {
-        commandArgs += [ '--since-tag', project.ext.cg.sinceTag ]
+    if (project.hasProperty('cg_sinceTag')) {
+        commandArgs += [ '--since-tag', project.ext.cg_sinceTag ]
     }
     // Output file. To print to STDOUT instead, use blank as path.
     // Default value: CHANGELOG.md
-    if (project.ext.hasProperty('cg.output')) {
-        commandArgs += [ '--output', project.ext.cg.output ]
+    if (project.hasProperty('cg_output')) {
+        commandArgs += [ '--output', project.ext.cg_output ]
     }
     // Generate log from unreleased closed issues only or
     // add to log unreleased closed issues.
     // Default value: true
-    if (project.ext.hasProperty('cg.unreleased')) {
-        def option = project.ext.cg.unreleased ? '--unreleased' : '--no-unreleased'
-        commandArgs += [option, project.ext.cg.unreleased]
+    if (project.hasProperty('cg_unreleased')) {
+        def option = project.ext.cg_unreleased ? '--unreleased' : '--no-unreleased'
+        commandArgs += [option, project.ext.cg_unreleased]
     }
     // Set up custom header label. Default is "# Changelog".
     // Default value is #CHANGELOG
-    if (project.ext.hasProperty('cg.header')) {
-        commandArgs += [ '--header-label', project.ext.cg.header ]
+    if (project.hasProperty('cg_header')) {
+        commandArgs += [ '--header-label', project.ext.cg_header ]
     }
     // generator will first check for token in environment variables
     if (!providers.environmentVariable('CHANGELOG_GITHUB_TOKEN').forUseAtConfigurationTime().present)
