@@ -110,12 +110,12 @@ jobs:
       # Print information about working tree
       - name: Inspect working tree
         run: |
-          printf "Working tree files: %s\n\n" "$(ls | sed 's/.*/-- &/')"
+          printf "Working tree files: \n%s\n\n" "$(ls | sed 's/.*/-- &/')"
           if [ -d ./build ]; then
-            printf "Build files found: %s\n\n" "$(ls ./build | sed 's/.*/-- &/')"
+            printf "Build files found: \n%s\n\n" "$(ls ./build | sed 's/.*/-- &/')"
           fi
           if [ -d ./build/distributions ]; then
-            printf "Distributions found: %s\n\n" "$(ls ./build/distributions | sed 's/.*/-- &/')"
+            printf "Distributions found: \n%s\n" "$(ls ./build/distributions | sed 's/.*/-- &/')"
           fi
           # Delete the changelog, it will be pulled from cache in next step
           if [ -f ./CHANGELOG.md ]; then
