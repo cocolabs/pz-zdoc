@@ -2,8 +2,8 @@ on:
   workflow_dispatch:
   push:
     tags:
-      # Versioned release tags
-      - 'v*'
+      # Semver release tags
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 # Continuous delivery
 name: Java CD
@@ -130,7 +130,7 @@ jobs:
       - name: Read last tag
         id: read-tag
         run: |
-          echo ::set-output name=tag::$(git describe --abbrev=0 ${{ github.ref }}^)
+          echo ::set-output name=tag::$(git describe --abbrev=0 --match v[0-9]*.[0-9]*.[0-9]* ${{ github.ref }}^)
           echo ::set-output name=ref::$(echo ${{ github.ref }} | cut -c 11-)
           echo ::set-output name=name::$(echo ${{ github.ref }} | cut -c 12-)
           if [[ ${{ github.ref }} =~ ^.*\-(alpha|beta|rc).*$ ]]; then
