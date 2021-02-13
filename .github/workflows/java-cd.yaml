@@ -140,7 +140,13 @@ jobs:
       - name: Generate release text
         env:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bundler exec github_changelog_generator -u yooksi -p pz-zdoc --since-tag=${{ steps.read-tag.outputs.tag }} --output ./release_text.md --no-unreleased --header-label ''
+          ORG_GRADLE_PROJECT_cg.sinceTag: ${{ steps.read-tag.outputs.tag }}
+          ORG_GRADLE_PROJECT_cg.output: ./release_text.md
+          ORG_GRADLE_PROJECT_cg.unreleased: false
+          ORG_GRADLE_PROJECT_cg.header: ''
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: generateChangelog
       # Remove notice from generated changelog
       - name: Trim release text
         run: |
