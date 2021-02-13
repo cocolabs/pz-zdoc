@@ -87,6 +87,8 @@ jobs:
     steps:
       # Checkout repository
       - uses: actions/checkout@v2
+        with:
+          ref: master
       # Setup Java environment
       - name: Setup JDK 1.8
         uses: actions/setup-java@v1
