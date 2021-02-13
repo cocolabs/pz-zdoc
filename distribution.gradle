@@ -50,8 +50,10 @@ tasks.register("generateChangelog", Exec.class) {
         }
     }
     def command = [ 'bundle', 'exec', 'github_changelog_generator' ] + commandArgs
-    logger.info('Generating changelog with arguments: ' + command)
     it.commandLine = (project.ext.osName == "Windows") ? [ 'cmd', '/c' ] + command : command
+    it.doFirst {
+        logger.info('Generating changelog with arguments: ' + commandArgs)
+    }
 }
 
 distributions.main.contents {
