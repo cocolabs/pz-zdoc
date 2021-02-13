@@ -160,4 +160,4 @@ jobs:
           release_name: ${{ steps.read-tag.outputs.name }}
           prerelease: ${{ steps.read-tag.outputs.isPreRelease }}
           body_path: ./release_text.md
-          draft: true
+          draft: false
