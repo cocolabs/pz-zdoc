@@ -33,7 +33,7 @@ tasks.register("generateChangelog", Exec.class) {
     // add to log unreleased closed issues.
     // Default value: true
     if (project.hasProperty('cg_unreleased')) {
-        def option = project.ext.cg_unreleased ? '--unreleased' : '--no-unreleased'
+        def option = Boolean.parseBoolean(project.ext.cg_unreleased) ? '--unreleased' : '--no-unreleased'
         commandArgs += [option, project.ext.cg_unreleased]
     }
     // Set up custom header label. Default is "# Changelog".
