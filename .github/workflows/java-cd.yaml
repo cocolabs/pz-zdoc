@@ -79,6 +79,12 @@ jobs:
         uses: burrunan/gradle-cache-action@v1
         with:
           arguments: generateChangelog --stacktrace
+      # Cache generated changelog
+      - name: Cache changelog
+        uses: actions/cache@v2
+        with:
+          path: ./CHANGELOG.md
+          key: ${{ runner.os }}-changelog-${{ github.sha }}
 
   build:
     name: Build and release on Linux
@@ -111,7 +117,20 @@ jobs:
           if [ -d ./build/distributions ]; then
             printf "Distributions found: %s\n\n" "$(ls ./build/distributions | sed 's/.*/-- &/')"
           fi
-      # Cache gradle temporary files
+          # Delete the changelog, it will be pulled from cache in next step
+          if [ -f ./CHANGELOG.md ]; then
+            rm ./CHANGELOG.md
+            if [ $? != 0 ]; then
+              echo ::error Unable to delete CHANGELOG.md
+            fi
+          fi
+      # Pull generated changelog from cache
+      - name: Cache changelog
+        uses: actions/cache@v2
+        with:
+          path: ./CHANGELOG.md
+          key: ${{ runner.os }}-changelog-${{ github.sha }}
+      # Pull gradle temporary files from cache
       - name: Cache gradle files
         uses: actions/cache@v2
         with:
