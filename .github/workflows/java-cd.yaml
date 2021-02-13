@@ -152,6 +152,7 @@ jobs:
           less release_text.md
       # Create a release in Github repository
       - name: Create Github release
+        id: create-release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -161,3 +162,23 @@ jobs:
           prerelease: ${{ steps.read-tag.outputs.isPreRelease }}
           body_path: ./release_text.md
           draft: false
+      # Upload distribution artifact to release
+      - name: Upload distribution zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./build/distributions/pz-zdoc-${{ steps.read-tag.outputs.name }}.zip
+          asset_name: pz-zdoc-${{ steps.read-tag.outputs.name }}.zip
+          asset_content_type: application/zip
+      # Upload distribution artifact to release
+      - name: Upload distribution tar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./build/distributions/pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
+          asset_name: pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
+          asset_content_type: application/tar
