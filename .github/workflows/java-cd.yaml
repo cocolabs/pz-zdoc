@@ -126,12 +126,14 @@ jobs:
           fi
       # Pull generated changelog from cache
       - name: Cache changelog
+        id: cache-changelog
         uses: actions/cache@v2
         with:
           path: ./CHANGELOG.md
           key: ${{ runner.os }}-changelog-${{ github.sha }}
-      # Pull gradle temporary files from cache
+      # Pull gradle project files from cache
       - name: Cache gradle files
+        id: cache-gradle
         uses: actions/cache@v2
         with:
           path: |
@@ -140,8 +142,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      # Cache java compile output
+      # Pull java compile output from cache
       - name: Cache build files
+        id: cache-build
         uses: actions/cache@v2
         with:
           path: |
@@ -149,6 +152,25 @@ jobs:
             ./build/resources
             ./buildSrc/build
           key: ${{ runner.os }}-${{ github.sha }}
+      # Check if cache was pulled correctly
+      - name: Validate cache
+        id: cache-validate
+        run: |
+          echo Validating changelog cache...
+          if [ "${{ steps.cache-changelog.outputs.cache-hit }}" != true ]; then
+            echo ::set-output name=fail::true
+            echo ::error Changelog was not pulled from cache
+          fi
+          echo Validating gradle cache...
+          if [ "${{ steps.cache-gradle.outputs.cache-hit }}" != true ]; then
+            echo ::set-output name=fail::true
+            echo ::error Gradle project files were not pulled from cache
+          fi
+          echo Validating build cache...
+          if [ "${{ steps.cache-build.outputs.cache-hit }}" != true ]; then
+            echo ::set-output name=fail::true
+            echo ::error Build files were not pulled from cache
+          fi
       # Assemble the output of this project with gradle
       - name: Assemble distribution
         uses: burrunan/gradle-cache-action@v1
