@@ -7,8 +7,8 @@ on:
         default: 'info'
   push:
     tags:
-      # Versioned release tags
-      - 'v*'
+      # Semver release tags
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 # Continuous delivery
 name: Java CD
@@ -83,7 +83,13 @@ jobs:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: generateChangelog -s
+          arguments: generateChangelog --stacktrace
+      # Cache generated changelog
+      - name: Cache changelog
+        uses: actions/cache@v2
+        with:
+          path: ./CHANGELOG.md
+          key: ${{ runner.os }}-changelog-${{ github.sha }}
 
   build:
     name: Build and release on Linux
@@ -92,13 +98,47 @@ jobs:
     steps:
       # Checkout repository
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}    # Checkout target tag
+          fetch-depth: 0            # Fetch all branches and tags
       # Setup Java environment
       - name: Setup JDK 1.8
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      # Cache gradle temporary files
+      # Ruby is needed to generate changelog
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+          bundler-cache: true
+      # Print information about working tree
+      - name: Inspect working tree
+        run: |
+          printf "Working tree files: \n%s\n\n" "$(ls | sed 's/.*/-- &/')"
+          if [ -d ./build ]; then
+            printf "Build files found: \n%s\n\n" "$(ls ./build | sed 's/.*/-- &/')"
+          fi
+          if [ -d ./build/distributions ]; then
+            printf "Distributions found: \n%s\n" "$(ls ./build/distributions | sed 's/.*/-- &/')"
+          fi
+          # Delete the changelog, it will be pulled from cache in next step
+          if [ -f ./CHANGELOG.md ]; then
+            rm ./CHANGELOG.md
+            if [ $? != 0 ]; then
+              echo ::error Unable to delete CHANGELOG.md
+            fi
+          fi
+      # Pull generated changelog from cache
+      - name: Cache changelog
+        id: cache-changelog
+        uses: actions/cache@v2
+        with:
+          path: ./CHANGELOG.md
+          key: ${{ runner.os }}-changelog-${{ github.sha }}
+      # Pull gradle project files from cache
       - name: Cache gradle files
+        id: cache-gradle
         uses: actions/cache@v2
         with:
           path: |
@@ -107,8 +147,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      # Cache java compile output
+      # Pull java compile output from cache
       - name: Cache build files
+        id: cache-build
         uses: actions/cache@v2
         with:
           path: |
@@ -116,8 +157,88 @@ jobs:
             ./build/resources
             ./buildSrc/build
           key: ${{ runner.os }}-${{ github.sha }}
+      # Check if cache was pulled correctly
+      - name: Validate cache
+        id: cache-validate
+        run: |
+          echo Validating changelog cache...
+          if [ "${{ steps.cache-changelog.outputs.cache-hit }}" != true ]; then
+            echo ::set-output name=fail::true
+            echo ::error Changelog was not pulled from cache
+          fi
+          echo Validating gradle cache...
+          if [ "${{ steps.cache-gradle.outputs.cache-hit }}" != true ]; then
+            echo ::set-output name=fail::true
+            echo ::error Gradle project files were not pulled from cache
+          fi
+          echo Validating build cache...
+          if [ "${{ steps.cache-build.outputs.cache-hit }}" != true ]; then
+            echo ::set-output name=fail::true
+            echo ::error Build files were not pulled from cache
+          fi
       # Assemble the output of this project with gradle
       - name: Assemble distribution
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: assembleDist -x generateChangelog -s
+          arguments: assembleDist -x generateChangelog --stacktrace
+      # Read previous tag created in repository
+      # Parse and see if it's a pre-release
+      - name: Read last tag
+        id: read-tag
+        run: |
+          echo ::set-output name=tag::$(git describe --abbrev=0 --match v[0-9]*.[0-9]*.[0-9]* ${{ github.ref }}^)
+          echo ::set-output name=ref::$(echo ${{ github.ref }} | cut -c 11-)
+          echo ::set-output name=name::$(echo ${{ github.ref }} | cut -c 12-)
+          if [[ ${{ github.ref }} =~ ^.*\-(alpha|beta|rc).*$ ]]; then
+              echo ::set-output name=isPreRelease::true
+          fi
+      # Generate changelog including only latest tag
+      - uses: burrunan/gradle-cache-action@v1
+        name: Generate release text
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          arguments: generateChangelog
+          properties: |
+            cg_sinceTag=${{ steps.read-tag.outputs.tag }}
+            cg_output=./release_text.md
+            cg_unreleased=false
+            cg_header=''
+      # Remove notice from generated changelog
+      - name: Trim release text
+        run: |
+          head -n -3 release_text.md > tmp.txt
+          tail -n +4 tmp.txt > release_text.md
+          less release_text.md
+      # Create a release in Github repository
+      - name: Create Github release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.read-tag.outputs.ref }}
+          release_name: ${{ steps.read-tag.outputs.name }}
+          prerelease: ${{ steps.read-tag.outputs.isPreRelease }}
+          body_path: ./release_text.md
+          draft: false
+      # Upload distribution artifact to release
+      - name: Upload distribution zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./build/distributions/pz-zdoc-${{ steps.read-tag.outputs.name }}.zip
+          asset_name: pz-zdoc-${{ steps.read-tag.outputs.name }}.zip
+          asset_content_type: application/zip
+      # Upload distribution artifact to release
+      - name: Upload distribution tar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./build/distributions/pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
+          asset_name: pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
+          asset_content_type: application/tar

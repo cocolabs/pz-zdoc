@@ -7,8 +7,7 @@ tasks.register("generateChangelog", Exec.class) {
     it.group('documentation')
 
     def commandArgs = [
-            /*
-             * owner of target GitHub repository */
+            // owner of target GitHub repository
             '-u', 'real-coco-labs',
             /*
              * name of project on GitHub */
@@ -21,6 +20,27 @@ tasks.register("generateChangelog", Exec.class) {
              * define all labels you want excluded from the changelog */
             '--exclude-labels', 'dev,wontfix,workflow,question,documentation',
     ]
+    // Changelog will start after specified tag
+    if (project.hasProperty('cg_sinceTag')) {
+        commandArgs += [ '--since-tag', project.ext.cg_sinceTag ]
+    }
+    // Output file. To print to STDOUT instead, use blank as path.
+    // Default value: CHANGELOG.md
+    if (project.hasProperty('cg_output')) {
+        commandArgs += [ '--output', project.ext.cg_output ]
+    }
+    // Generate log from unreleased closed issues only or
+    // add to log unreleased closed issues.
+    // Default value: true
+    if (project.hasProperty('cg_unreleased')) {
+        def option = Boolean.parseBoolean(project.ext.cg_unreleased) ? '--unreleased' : '--no-unreleased'
+        commandArgs += [option, project.ext.cg_unreleased]
+    }
+    // Set up custom header label. Default is "# Changelog".
+    // Default value is #CHANGELOG
+    if (project.hasProperty('cg_header')) {
+        commandArgs += [ '--header-label', project.ext.cg_header ]
+    }
     // generator will first check for token in environment variables
     if (!providers.environmentVariable('CHANGELOG_GITHUB_TOKEN').forUseAtConfigurationTime().present)
     {
@@ -31,6 +51,9 @@ tasks.register("generateChangelog", Exec.class) {
     }
     def command = [ 'bundle', 'exec', 'github_changelog_generator' ] + commandArgs
     it.commandLine = (project.ext.osName == "Windows") ? [ 'cmd', '/c' ] + command : command
+    it.doFirst {
+        logger.info('Generating changelog with arguments: ' + commandArgs)
+    }
 }
 
 distributions.main.contents {
