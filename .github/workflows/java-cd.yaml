@@ -202,7 +202,6 @@ jobs:
           properties: |
             cg_sinceTag=${{ steps.read-tag.outputs.tag }}
             cg_output=./release_text.md
-            cg_unreleased=false
             cg_header=''
       # Remove notice from generated changelog
       - name: Trim release text

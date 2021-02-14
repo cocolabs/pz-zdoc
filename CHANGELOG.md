@@ -1,13 +1,5 @@
 # Changelog
 
-## [Unreleased](https://github.com/real-coco-labs/pz-zdoc/tree/HEAD)
-
-[Full Changelog](https://github.com/real-coco-labs/pz-zdoc/compare/v2.1.0...HEAD)
-
-**Closed issues:**
-
-- Redundant distribution libraries [\#46](https://github.com/real-coco-labs/pz-zdoc/issues/46)
-
 ## [v2.1.0](https://github.com/real-coco-labs/pz-zdoc/tree/v2.1.0) (2021-02-05)
 
 [Full Changelog](https://github.com/real-coco-labs/pz-zdoc/compare/v2.0.0...v2.1.0)
