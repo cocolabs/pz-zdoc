@@ -36,7 +36,7 @@ public class ZDocJar extends Jar {
 
 	private static final String TASK_GROUP = "zomboid";
 	private static final String[] DEPENDANT_TASKS = new String[]{ "jar" };
-	private static final Object[] DEPENDENCY_TASKS = new String[]{ "readGameVersion" };
+	private static final Object[] DEPENDENCY_TASKS = new String[]{ "zomboidVersion" };
 
 	private final Project project = this.getProject();
 

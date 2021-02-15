@@ -213,8 +213,8 @@ licenseReport {
     renderers = [new InventoryHtmlReportRenderer()]
 }
 
-tasks.register('readGameVersion', JavaExec.class) {
-    it.description('Read installed game version.')
+tasks.register('zomboidVersion', JavaExec.class) {
+    it.description('Read Project Zomboid game version.')
     it.group('zomboid')
 
     it.classpath = sourceSets.main.runtimeClasspath
