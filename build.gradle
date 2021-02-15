@@ -228,10 +228,10 @@ tasks.register('zomboidVersion', JavaExec.class) {
         // get application command output from stream
         // ex. game version 41.50 - IWBUMS
         def versionText = oStream.toString()
-        print(versionText)
 
         // get version number and classifier (ex. 41.50-IWBUMS)
-        project.ext.gameVersion = versionText.substring(13).replaceAll(" ", "")
+        project.ext.gameVersion = versionText.substring(18).replaceAll(" ", "")
+        println("game version: ${project.ext.gameVersion}")
     }
 }
 
