@@ -32,7 +32,8 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 
 ### Requirements
 
-- Up-to-date installation of Project Zomboid.
+- Project Zomboid[<sup>?</sup>](#requirements "tested with 41.50-IWBUMS")
+- [JDK 8](https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot)[<sup>?</sup>](#requirements "tested with OpenJDK 1.8.0_282")
 
 ### Setup
 
