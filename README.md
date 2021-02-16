@@ -24,6 +24,12 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 
 ## Installation
 
+### Notes 
+
+- *Little question marks are hyperlinks that reveal more information on mouse hover and click.*
+- *Content captured in angled brackets represents substitution. For example if the path to game directory was `/home/projectzomboid/` then `PZ_DIR_PATH=<path_to_game_dir>` should be substituted with `PZ_DIR_PATH=/home/projectzomboid/`*.
+- *Application path arguments should not end with a backslash when running on Windows to avoid escaping quotation mark delimiters that separate quoted paths as option arguments.*  
+
 ### Requirements
 
 - Up-to-date installation of Project Zomboid.
@@ -34,10 +40,6 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 - Extract the release archive to your game installation directory <i>or</i> anywhere on your computer.
 
 ## How to use
-
-> - *Little question marks are hyperlinks that reveal more information on mouse hover and click.*
-> - *Content captured in angled brackets represents substitution. For example if the path to game directory was `/home/projectzomboid/` then `PZ_DIR_PATH=<path_to_game_dir>` should be substituted with `PZ_DIR_PATH=/home/projectzomboid/`* 
-> - *Application path arguments should not end with a backslash when running on Windows to avoid escaping quotation mark delimiters that separate quoted paths as option arguments.*  
 
 ### Distribution
 
