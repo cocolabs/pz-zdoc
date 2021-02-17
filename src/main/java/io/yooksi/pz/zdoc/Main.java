@@ -108,6 +108,7 @@ public class Main {
 			else if (paths.isEmpty()) {
 				Logger.warn("No files found under path " + root);
 			}
+			boolean onlyAnnotated = cmdLine.includeOnlyAnnotated();
 			Properties properties = Utils.getProperties("annotate.properties");
 			// process every file found under given root path
 			for (Path path : paths)
@@ -164,18 +165,30 @@ public class Main {
 						case NO_MATCH:
 							Logger.error(String.format("Failed annotating file \"%s\", " +
 									"no elements were matched", fileName));
+							if (!onlyAnnotated) {
+								writeAnnotatedLinesToFile(content, outputFile);
+							}
 							break;
 						case SKIPPED_FILE_IGNORED:
 							Logger.info(String.format("Skipped annotating file \"%s\", " +
 									"file was ignored.", fileName));
+							if (!onlyAnnotated) {
+								writeAnnotatedLinesToFile(content, outputFile);
+							}
 							break;
 						case SKIPPED_FILE_EMPTY:
 							Logger.warn(String.format("Skipped annotating file \"%s\", " +
 									"file was empty.", fileName));
+							if (!onlyAnnotated) {
+								writeAnnotatedLinesToFile(content, outputFile);
+							}
 							break;
 						case ALL_EXCLUDED:
 							Logger.warn(String.format("Skipped annotating file \"%s\", " +
 									"all elements were excluded.", fileName));
+							if (!onlyAnnotated) {
+								writeAnnotatedLinesToFile(content, outputFile);
+							}
 							break;
 					}
 				}

@@ -91,6 +91,14 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	}
 
 	/**
+	 * Return {@code true} if {@link Command#ANNOTATE} should include only lua classes that were
+	 * successfully annotated by {@link io.yooksi.pz.zdoc.compile.LuaAnnotator LuaAnnotator}.
+	 */
+	public boolean includeOnlyAnnotated() {
+		return hasOption(CommandOptions.ONLY_ANNOTATED_OPTION.getOpt());
+	}
+
+	/**
 	 * @return {@code Set} of class names specified in command options to exclude from
 	 * 		compilation process or an empty list if exclude option has not been set.
 	 *
