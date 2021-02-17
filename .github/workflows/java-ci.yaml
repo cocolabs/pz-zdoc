@@ -8,6 +8,9 @@ on:
   push:
     paths:
       - '**.java'
+  pull_request:
+    paths:
+      - '**.java'
 
 # Continuous integration
 name: Java CI
