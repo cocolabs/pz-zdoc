@@ -13,7 +13,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${logLevelPattern}: %msg%n"/>
         </Console>
-        <!-- Log file for standard use in production environment -->
+        <!-- Log file for standard use in development environment -->
         <RollingFile name="MainFile" fileName="logs/main.log" filePattern="${logFilePattern}-%i.log.zip">
             <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [${logLevelPattern}] %t - %msg%n"/>
             <Policies>
@@ -22,7 +22,7 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
-        <!-- Log file for debugging use in production environment -->
+        <!-- Log file for debugging use in development environment -->
         <RollingFile name="DebugFile" fileName="logs/debug.log" filePattern="${logFilePattern}-debug-%i.log.zip">
             <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [${logLevelPattern}] %t - %msg%n"/>
             <Policies>
@@ -33,15 +33,10 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="StandardLogger" level="verbose" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="MainFile" level="verbose"/>
-        </Logger>
-        <Logger name="DebugLogger" level="debug" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
+        <Root level="debug">
+            <AppenderRef ref="Console" level="verbose"/>
             <AppenderRef ref="MainFile" level="verbose"/>
             <AppenderRef ref="DebugFile"/>
-        </Logger>
-        <Root level="debug"/>
+        </Root>
     </Loggers>
 </Configuration>

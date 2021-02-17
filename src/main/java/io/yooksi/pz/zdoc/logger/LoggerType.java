@@ -22,8 +22,7 @@ import java.util.Arrays;
 public enum LoggerType {
 
 	INFO("info", "StandardLogger"),
-	DEBUG("debug", "DebugLogger"),
-	DEV("dev", "DevLogger");
+	DEBUG("debug", "DebugLogger");
 
 	final String key, name;
 
