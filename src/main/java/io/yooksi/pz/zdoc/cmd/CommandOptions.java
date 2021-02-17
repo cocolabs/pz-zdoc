@@ -40,6 +40,11 @@ final class CommandOptions {
 							"to exclude classes from document generation")
 					.required(false).hasArg().argName("list").valueSeparator(' ').build();
 
+	static final Option ONLY_ANNOTATED_OPTION =
+			Option.builder("s").longOpt("only-annotated")
+					.desc("only include classes that were annotated")
+					.required(false).build();
+
 	static final Options LUA_OPTIONS = new Options();
 	static final Options JAVA_OPTIONS = new Options();
 
@@ -47,7 +52,8 @@ final class CommandOptions {
 	{
 		LUA_OPTIONS.addOption(clone(INPUT_OPTION))
 				.addOption(clone(OUTPUT_OPTION))
-				.addOption(clone(EXCLUDE_CLASS_OPTION));
+				.addOption(clone(EXCLUDE_CLASS_OPTION))
+				.addOption(ONLY_ANNOTATED_OPTION);
 
 		JAVA_OPTIONS.addOption(clone(INPUT_OPTION))
 				.addOption(clone(OUTPUT_OPTION))

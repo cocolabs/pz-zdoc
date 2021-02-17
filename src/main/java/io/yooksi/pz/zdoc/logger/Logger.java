@@ -19,24 +19,26 @@ package io.yooksi.pz.zdoc.logger;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 
 @SuppressWarnings("unused")
 public class Logger {
 
 	public static final Level VERBOSE = Level.forName("VERBOSE", 450);
 	private static final String JVM_PROPERTY = "zdoc.logger";
-
 	private static final org.apache.logging.log4j.Logger logger;
-	private static final LoggerType TYPE;
 
 	static
 	{
 		String loggerName = System.getProperty(JVM_PROPERTY);
-		TYPE = loggerName != null && !loggerName.isEmpty() ?
-				LoggerType.get(loggerName, LoggerType.INFO) : LoggerType.INFO;
-
-		logger = LogManager.getLogger(TYPE.name);
-		logger.debug("Created logger type: " + TYPE.name);
+		if (loggerName == null || loggerName.isEmpty()) {
+			logger = LogManager.getLogger(LoggerType.INFO.name);
+		}
+		else if (!loggerName.equals("dev")) {
+			logger = LogManager.getLogger(LoggerType.get(loggerName, LoggerType.INFO).name);
+		}
+		else logger = Configurator.initialize(null, "log4j2-dev.xml").getRootLogger();
+		logger.debug("Initialize logger: " + (!logger.getName().isEmpty() ? logger.getName() : loggerName));
 	}
 
 	/* Make the constructor private to disable instantiation */

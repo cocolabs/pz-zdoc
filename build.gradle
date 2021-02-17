@@ -25,7 +25,7 @@ apply from: 'spotless.gradle'
 apply from: 'distribution.gradle'
 
 group 'io.yooksi'
-version '2.1.0'
+version '2.2.0'
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
