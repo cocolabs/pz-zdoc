@@ -8,10 +8,10 @@ tasks.register("generateChangelog", Exec.class) {
 
     def commandArgs = [
             // owner of target GitHub repository
-            '-u', 'real-coco-labs',
+            '-u', project.ext.get('repo.owner'),
             /*
              * name of project on GitHub */
-            '-p', project.name,
+            '-p', project.ext.get('repo.name'),
             /*
              * only issues with the specified labels will be included in the changelog
              * this means that issues that are included HAVE to have at least one of these labels */
