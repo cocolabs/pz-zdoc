@@ -170,7 +170,7 @@ public class Main {
 							}
 							break;
 						case SKIPPED_FILE_IGNORED:
-							Logger.info(String.format("Skipped annotating file \"%s\", " +
+							Logger.warn(String.format("Skipped annotating file \"%s\", " +
 									"file was ignored.", fileName));
 							if (!onlyAnnotated) {
 								writeAnnotatedLinesToFile(content, outputFile);
