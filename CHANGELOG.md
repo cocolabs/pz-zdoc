@@ -1,5 +1,18 @@
 # Changelog
 
+## [v2.2.0](https://github.com/real-coco-labs/pz-zdoc/tree/v2.2.0) (2021-02-17)
+
+[Full Changelog](https://github.com/real-coco-labs/pz-zdoc/compare/v2.1.0...v2.2.0)
+
+**Implemented enhancements:**
+
+- Dedicated production log directory [\#55](https://github.com/real-coco-labs/pz-zdoc/issues/55)
+- Optional only-annotated lua inclusion [\#54](https://github.com/real-coco-labs/pz-zdoc/issues/54)
+
+**Closed issues:**
+
+- Redundant distribution libraries [\#46](https://github.com/real-coco-labs/pz-zdoc/issues/46)
+
 ## [v2.1.0](https://github.com/real-coco-labs/pz-zdoc/tree/v2.1.0) (2021-02-05)
 
 [Full Changelog](https://github.com/real-coco-labs/pz-zdoc/compare/v2.0.0...v2.1.0)
@@ -7,7 +20,6 @@
 **Implemented enhancements:**
 
 - Reduce production console logging [\#38](https://github.com/real-coco-labs/pz-zdoc/issues/38)
-- Write only annotated files [\#37](https://github.com/real-coco-labs/pz-zdoc/issues/37)
 - Make application easier to launch from game dir [\#33](https://github.com/real-coco-labs/pz-zdoc/issues/33)
 - Improve production file logger [\#32](https://github.com/real-coco-labs/pz-zdoc/issues/32)
 
@@ -27,6 +39,7 @@
 
 **Implemented enhancements:**
 
+- Write only annotated files [\#37](https://github.com/real-coco-labs/pz-zdoc/issues/37)
 - Application launch script for Unix [\#27](https://github.com/real-coco-labs/pz-zdoc/issues/27)
 - Application launch script for Windows [\#26](https://github.com/real-coco-labs/pz-zdoc/issues/26)
 - Compile global methods [\#22](https://github.com/real-coco-labs/pz-zdoc/issues/22)
