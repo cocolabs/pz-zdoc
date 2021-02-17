@@ -6,9 +6,8 @@ on:
         required: true
         default: 'info'
   push:
-    branches:
-      # Development branch
-      - dev
+    paths:
+      - '**.java'
 
 # Continuous integration
 name: Java CI
