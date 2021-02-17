@@ -9,7 +9,7 @@
 - Reduce production console logging [\#38](https://github.com/real-coco-labs/pz-zdoc/issues/38)
 - Write only annotated files [\#37](https://github.com/real-coco-labs/pz-zdoc/issues/37)
 - Make application easier to launch from game dir [\#33](https://github.com/real-coco-labs/pz-zdoc/issues/33)
-- Improve production file logging [\#32](https://github.com/real-coco-labs/pz-zdoc/issues/32)
+- Improve production file logger [\#32](https://github.com/real-coco-labs/pz-zdoc/issues/32)
 
 **Fixed bugs:**
 
