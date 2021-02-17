@@ -14,7 +14,7 @@
             <PatternLayout pattern="${logLevelPattern}: %msg%n"/>
         </Console>
         <!-- Log file for standard use in production environment -->
-        <RollingFile name="MainFile" fileName="logs/main.log" filePattern="${logFilePattern}-%i.log.zip">
+        <RollingFile name="MainFile" fileName="logs/zdoc/main.log" filePattern="${logFilePattern}-%i.log.zip">
             <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [${logLevelPattern}] %t - %msg%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy/>
@@ -23,7 +23,7 @@
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
         <!-- Log file for debugging use in production environment -->
-        <RollingFile name="DebugFile" fileName="logs/debug.log" filePattern="${logFilePattern}-debug-%i.log.zip">
+        <RollingFile name="DebugFile" fileName="logs/zdoc/debug.log" filePattern="${logFilePattern}-debug-%i.log.zip">
             <PatternLayout pattern="%d{[yyyy-MM-dd][HH:mm:ss]} [${logLevelPattern}] %t - %msg%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy/>
