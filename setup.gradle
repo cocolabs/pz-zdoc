@@ -123,4 +123,4 @@ if (!CI) {
     registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
 }
 // Github repository token used to generate changelog
-registerLocalProjectProperty('githubChangelogToken', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
+registerLocalProjectProperty('cg.token', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
