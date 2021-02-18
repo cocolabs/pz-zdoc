@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * All available application commands.
  */
+@SuppressWarnings("ImmutableEnumChecker")
 public enum Command {
 
 	HELP("help", "", new Options(), "print command usage info"),
