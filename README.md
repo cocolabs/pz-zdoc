@@ -69,7 +69,7 @@ Read [Commands](#commands) and [Examples](#examples) section for more informatio
 Here is an overview list of available commands:
 
 - `help` - print command usage info for all available commands.
-- `version` - print Project Zomboid game installation version.
+- `version` - print application and game version information.
 - `annotate` - annotate vanilla Lua files with EmmyLua.
 - `compile` - compile Lua library from modding API.
 
