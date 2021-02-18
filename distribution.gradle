@@ -42,8 +42,9 @@ tasks.register("generateChangelog", Exec.class) {
     // generator will first check for token in environment variables
     if (!providers.environmentVariable('CHANGELOG_GITHUB_TOKEN').forUseAtConfigurationTime().present)
     {
-        if (project.ext.has('cg.token')) {
-            commandArgs += [ '--token', project.ext.get('cg.token') ]
+        def githubToken = project.ext.get('cg.token')
+        if (githubToken != null) {
+            commandArgs += [ '--token', githubToken ]
         }
     }
     //noinspection GroovyAssignabilityCheck
