@@ -188,6 +188,7 @@ public class JavaMethod implements IMethod {
 		return hasVarArg;
 	}
 
+	@SuppressWarnings("ReferenceEquality")
 	public boolean equals(JavaMethod method, boolean shallow) {
 
 		if (shallow)

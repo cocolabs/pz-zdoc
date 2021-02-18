@@ -79,6 +79,7 @@ public class JavaField implements IField {
 		return comment;
 	}
 
+	@SuppressWarnings("ReferenceEquality")
 	public boolean equals(JavaField field, boolean shallow) {
 
 		if (shallow)

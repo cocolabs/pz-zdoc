@@ -65,6 +65,7 @@ public class JavaParameter implements IParameter, SignatureToken {
 		return name;
 	}
 
+	@SuppressWarnings("ReferenceEquality")
 	public boolean equals(JavaParameter param, boolean shallow) {
 
 		if (shallow)

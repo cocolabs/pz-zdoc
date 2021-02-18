@@ -127,6 +127,7 @@ public class JavaClass implements IClass, SignatureToken {
 		return sb.toString();
 	}
 
+	@SuppressWarnings("ReferenceEquality")
 	public boolean equals(JavaClass jClass, boolean shallow) {
 
 		if (shallow)
