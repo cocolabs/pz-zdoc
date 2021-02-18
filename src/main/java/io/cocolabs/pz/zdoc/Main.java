@@ -20,6 +20,7 @@ package io.cocolabs.pz.zdoc;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,6 +77,23 @@ public class Main {
 		else if (command == Command.VERSION)
 		{
 			try {
+				/* first try to find version file project root directory,
+				 * available when we are not running from a jar
+				 */
+				String zdocVersion; File versionFile = new File("version.txt");
+				if (!versionFile.exists())
+				{
+					try (InputStream iStream = CLASS_LOADER.getResourceAsStream("version.txt"))
+					{
+						if (iStream == null) {
+							throw new FileNotFoundException("Unable to read version, missing version.txt");
+						}
+						zdocVersion = iStream.toString();
+					}
+				}
+				else zdocVersion = FileUtils.readFileToString(versionFile, CHARSET);
+				Logger.info("zdoc version " + zdocVersion);
+
 				Class<?> coreClass = Utils.getClassForName("zombie.core.Core");
 				Object core = MethodUtils.invokeStaticMethod(coreClass, "getInstance");
 
@@ -83,6 +101,7 @@ public class Main {
 				Object sGameVersion = MethodUtils.invokeExactMethod(gameVersion, "toString");
 
 				Logger.info("game version " + sGameVersion);
+				return;
 			}
 			catch (ReflectiveOperationException e) {
 				throw new RuntimeException(e);

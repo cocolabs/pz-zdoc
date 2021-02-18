@@ -25,7 +25,7 @@ apply from: 'spotless.gradle'
 apply from: 'distribution.gradle'
 
 group 'io.cocolabs'
-version '2.2.0'
+version file('version.txt').readLines().get(0)
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
