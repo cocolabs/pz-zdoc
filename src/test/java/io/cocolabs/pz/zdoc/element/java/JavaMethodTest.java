@@ -194,7 +194,7 @@ class JavaMethodTest {
 				() -> METHOD_WITH_PARAMETERS.getParams().addAll(DUMMY_PARAMS));
 	}
 
-	@SuppressWarnings({ "WeakerAccess", "RedundantSuppression" })
+	@SuppressWarnings({ "WeakerAccess", "RedundantSuppression", "EmptyMethod" })
 	private static class InnerTest {
 
 		@TestOnly

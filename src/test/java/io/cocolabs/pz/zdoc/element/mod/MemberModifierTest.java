@@ -29,7 +29,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({ "unused", "EmptyMethod" })
 class MemberModifierTest {
 
 	private static final AccessModifierKey PUBLIC = AccessModifierKey.PUBLIC;

@@ -203,7 +203,7 @@ class JavaCompilerTest extends DocTest {
 		Assertions.assertEquals("nestedField", compiledFields.get(0).getName());
 	}
 
-	@SuppressWarnings({ "unused", "SameReturnValue", "ProtectedMembersInFinalClass" })
+	@SuppressWarnings({ "unused", "SameReturnValue", "ProtectedMembersInFinalClass", "EmptyMethod" })
 	private static final class CompileTest {
 
 		//@formatter:off

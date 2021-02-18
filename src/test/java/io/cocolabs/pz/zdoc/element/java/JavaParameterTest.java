@@ -21,7 +21,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({ "unused", "EmptyMethod" })
 class JavaParameterTest {
 
 	@Test
