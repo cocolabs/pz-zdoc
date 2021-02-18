@@ -19,6 +19,9 @@ tasks.register("generateChangelog", Exec.class) {
             /*
              * define all labels you want excluded from the changelog */
             '--exclude-labels', 'dev,wontfix,workflow,question,documentation',
+            /*
+             * do not include issue without labels */
+            '--no-issues-wo-labels', 'false'
     ]
     // Changelog will start after specified tag
     if (project.ext.has('cg.sinceTag')) {
