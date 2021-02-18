@@ -55,11 +55,11 @@ public class LuaAnnotator {
 	 * String table2 = "DerivedTestTable = ISTestTable:derive(\"TestTable\")";
 	 * String table3 = "DeclaredTestTable = {}";
 	 * Matcher matcher = ZomboidLuaDoc.LUA_TABLE_DECLARATION.matcher(table1);
-	 * assert matcher.find() && matcher.group(2).equals("NewTestTable");
-	 * assert matcher.group(3).equals("ISTestTable") && matcher.group(4).equals("new");
+	 * assert matcher.find() {@code &&} matcher.group(2).equals("NewTestTable");
+	 * assert matcher.group(3).equals("ISTestTable") {@code &&} matcher.group(4).equals("new");
 	 * matcher = ZomboidLuaDoc.LUA_TABLE_DECLARATION.matcher(table2);
-	 * assert matcher.find() && matcher.group(2).equals("DerivedTestTable");
-	 * assert matcher.group(3).equals("ISTestTable") && matcher.group(4).equals("derive");
+	 * assert matcher.find() {@code &&} matcher.group(2).equals("DerivedTestTable");
+	 * assert matcher.group(3).equals("ISTestTable") {@code &&} matcher.group(4).equals("derive");
 	 * matcher = ZomboidLuaDoc.LUA_TABLE_DECLARATION.matcher(table3);
 	 * assert matcher.find() && matcher.group(2).equals("DeclaredTestTable");
 	 * assert matcher.group(3) == null && matcher.group(4) == null
