@@ -180,9 +180,9 @@ jobs:
         with:
           arguments: generateChangelog
           properties: |
-            cg_sinceTag=${{ steps.read-tag.outputs.tag }}
-            cg_output=./release_text.md
-            cg_header=''
+            cg.sinceTag=${{ steps.read-tag.outputs.tag }}
+            cg.output=./release_text.md
+            cg.header=''
       # Remove notice from generated changelog
       - name: Trim release text
         run: |
