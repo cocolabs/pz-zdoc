@@ -36,7 +36,7 @@ import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 @SuppressWarnings("unused")
 class JavaMethodTest {
 
-	private static final List<JavaParameter> DUMMY_PARAMS =
+	private static final ImmutableList<JavaParameter> DUMMY_PARAMS =
 			ImmutableList.of(new JavaParameter(Object.class, "param1"));
 
 	private static final JavaMethod METHOD_WITH_PARAMETERS =
