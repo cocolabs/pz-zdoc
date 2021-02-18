@@ -27,25 +27,25 @@ import io.cocolabs.pz.zdoc.element.lua.LuaType;
  * <ul>
  * <li>Full format:
  * <pre>
- * 	--@param param_name MY_TYPE[|other_type] [@comment]
+ * 	---{@code @param} param_name MY_TYPE[|other_type] [@comment]
  * </pre>
  * </li>
  * <li>Target:
  * <ul style="list-style-type:circle">
  * <li>function parameters<pre>
- * ---@param car Car
+ * ---{@code @param} car Car
  * local function setCar(car)
  *     ...
  * end
  * </pre>
  * <pre>
- * ---@param car Car
+ * ---{@code @param} car Car
  * setCallback(function(car)
  *     ...
  * end)
  * </pre></li>
  * <li>for loop variables<pre>
- * ---@param car Car
+ * ---{@code @param} car Car
  * for k, car in ipairs(list) do
  * end
  * </pre></li>
