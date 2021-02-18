@@ -111,7 +111,7 @@ public class LuaClass implements IClass, Annotated {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (!(obj instanceof LuaClass)) {
 			return false;
 		}
 		LuaClass luaClass = (LuaClass) obj;

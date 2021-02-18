@@ -106,7 +106,7 @@ public class JavaField implements IField {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (!(obj instanceof JavaField)) {
 			return false;
 		}
 		JavaField jField = (JavaField) obj;

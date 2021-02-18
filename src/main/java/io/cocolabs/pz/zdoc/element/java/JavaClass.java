@@ -151,7 +151,7 @@ public class JavaClass implements IClass, SignatureToken {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (!(obj instanceof JavaClass)) {
 			return false;
 		}
 		JavaClass jClass = (JavaClass) obj;

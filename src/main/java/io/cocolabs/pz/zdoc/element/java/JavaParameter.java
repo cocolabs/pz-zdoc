@@ -86,7 +86,7 @@ public class JavaParameter implements IParameter, SignatureToken {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (!(obj instanceof JavaParameter)) {
 			return false;
 		}
 		JavaParameter param = (JavaParameter) obj;
