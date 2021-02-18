@@ -112,3 +112,19 @@ tasks.named('startScripts').configure {
     // do not add provided files to classpath, they are not included in distribution
     it.classpath -= configurations.zomboidImplementation
 }
+
+publishing {
+    repositories {
+        maven {
+            name = 'GitHubPackages'
+            url = uri('https://maven.pkg.github.com/real-coco-labs/pz-zdoc')
+            credentials {
+                username = project.findProperty('ghp.user') ?: System.getenv('GHP_USER')
+                password = project.findProperty('ghp.token') ?: System.getenv('GHP_TOKEN')
+            }
+        }
+    }
+    publications.register('zdoc', MavenPublication.class) {
+        it.from(project.components.java as SoftwareComponent)
+    }
+}

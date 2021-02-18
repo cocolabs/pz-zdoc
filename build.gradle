@@ -6,7 +6,7 @@ plugins {
     id 'idea'
 
     // https://docs.gradle.org/current/userguide/maven_plugin.html
-    id 'maven'
+    id 'maven-publish'
 
     // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
