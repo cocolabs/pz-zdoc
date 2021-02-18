@@ -41,20 +41,60 @@ jobs:
           key: ${{ runner.os }}-changelog-${{ github.sha }}
 
   build:
-    name: Build and release on Linux
+    name: Build on Linux
     runs-on: ubuntu-latest
-    needs: generate
+    steps:
+      # Checkout repository
+      - uses: actions/checkout@v2
+      # Setup Java environment
+      - name: Setup JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      # Pull gradle project files from cache
+      - name: Cache gradle files
+        id: cache-gradle
+        uses: actions/cache@v2
+        with:
+          path: |
+            ./.gradle
+            ./buildSrc/.gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      # Check if cache was pulled correctly
+      - name: Validate cache
+        id: cache-validate
+        run: |
+          echo Validating gradle cache...
+          if [ "${{ steps.cache-gradle.outputs.cache-hit }}" != true ]; then
+            echo ::set-output name=fail::true
+            echo ::error Gradle project files were not pulled from cache
+          fi
+      # Assemble the output of this project with gradle
+      - name: Assemble distribution
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: assembleDist -x generateChangelog --stacktrace
+      # Cache distribution files
+      - name: Cache distribution
+        id: cache-build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ./build/distributions
+          key: ${{ runner.os }}-dist-${{ github.sha }}
+
+  release:
+    name: Release project
+    runs-on: ubuntu-latest
+    needs: build
     steps:
       # Checkout repository
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}    # Checkout target tag
           fetch-depth: 0            # Fetch all branches and tags
-      # Setup Java environment
-      - name: Setup JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
       # Ruby is needed to generate changelog
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -78,13 +118,6 @@ jobs:
               echo ::error Unable to delete CHANGELOG.md
             fi
           fi
-      # Pull generated changelog from cache
-      - name: Cache changelog
-        id: cache-changelog
-        uses: actions/cache@v2
-        with:
-          path: ./CHANGELOG.md
-          key: ${{ runner.os }}-changelog-${{ github.sha }}
       # Pull gradle project files from cache
       - name: Cache gradle files
         id: cache-gradle
@@ -96,40 +129,38 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      # Pull java compile output from cache
-      - name: Cache build files
+      # Pull generated changelog from cache
+      - name: Cache changelog
+        id: cache-changelog
+        uses: actions/cache@v2
+        with:
+          path: ./CHANGELOG.md
+          key: ${{ runner.os }}-changelog-${{ github.sha }}
+      # Pull distribution files from cache
+      - name: Cache distribution
         id: cache-build
         uses: actions/cache@v2
         with:
           path: |
-            ./build/classes
-            ./build/resources
-            ./buildSrc/build
-          key: ${{ runner.os }}-${{ github.sha }}
+            ./build/distributions
+          key: ${{ runner.os }}-dist-${{ github.sha }}
       # Check if cache was pulled correctly
       - name: Validate cache
         id: cache-validate
         run: |
           echo Validating changelog cache...
-          if [ "${{ steps.cache-changelog.outputs.cache-hit }}" != true ]; then
-            echo ::set-output name=fail::true
-            echo ::error Changelog was not pulled from cache
-          fi
-          echo Validating gradle cache...
           if [ "${{ steps.cache-gradle.outputs.cache-hit }}" != true ]; then
             echo ::set-output name=fail::true
             echo ::error Gradle project files were not pulled from cache
           fi
-          echo Validating build cache...
+          if [ "${{ steps.cache-changelog.outputs.cache-hit }}" != true ]; then
+            echo ::set-output name=fail::true
+            echo ::error Changelog was not pulled from cache
+          fi
           if [ "${{ steps.cache-build.outputs.cache-hit }}" != true ]; then
             echo ::set-output name=fail::true
-            echo ::error Build files were not pulled from cache
+            echo ::error distributions were not pulled from cache
           fi
-      # Assemble the output of this project with gradle
-      - name: Assemble distribution
-        uses: burrunan/gradle-cache-action@v1
-        with:
-          arguments: assembleDist -x generateChangelog --stacktrace
       # Read previous tag created in repository
       # Parse and see if it's a pre-release
       - name: Read last tag
