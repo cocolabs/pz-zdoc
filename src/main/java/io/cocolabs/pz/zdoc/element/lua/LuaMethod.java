@@ -28,12 +28,12 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 import io.cocolabs.pz.zdoc.element.IMethod;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
+import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 import io.cocolabs.pz.zdoc.lang.lua.EmmyLua;
 import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaAccess;
 import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaReturn;
 import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaVarArg;
 import io.cocolabs.pz.zdoc.logger.Logger;
-import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 
 /**
  * This class represents a parsed Lua method.

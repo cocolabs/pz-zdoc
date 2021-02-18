@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-import io.cocolabs.pz.zdoc.TestWorkspace;
 import io.cocolabs.pz.zdoc.Main;
+import io.cocolabs.pz.zdoc.TestWorkspace;
 
 class LuaAnnotatorTest extends TestWorkspace {
 

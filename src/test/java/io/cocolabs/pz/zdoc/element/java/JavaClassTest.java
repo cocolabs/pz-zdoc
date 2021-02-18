@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 
-@SuppressWarnings({"SameReturnValue", "unused"})
+@SuppressWarnings({ "SameReturnValue", "unused" })
 class JavaClassTest {
 
 	@TestOnly

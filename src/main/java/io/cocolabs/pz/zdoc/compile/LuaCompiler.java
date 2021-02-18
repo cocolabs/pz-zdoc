@@ -19,22 +19,21 @@ package io.cocolabs.pz.zdoc.compile;
 
 import java.util.*;
 
-import com.google.common.base.Splitter;
-
 import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.collections4.set.PredicatedSet;
 import org.jetbrains.annotations.UnmodifiableView;
 
+import com.google.common.base.Splitter;
+
 import io.cocolabs.pz.zdoc.doc.ZomboidJavaDoc;
 import io.cocolabs.pz.zdoc.doc.ZomboidLuaDoc;
-import io.cocolabs.pz.zdoc.element.lua.*;
-import io.cocolabs.pz.zdoc.logger.Logger;
 import io.cocolabs.pz.zdoc.element.IClass;
 import io.cocolabs.pz.zdoc.element.IField;
 import io.cocolabs.pz.zdoc.element.IMethod;
 import io.cocolabs.pz.zdoc.element.IParameter;
 import io.cocolabs.pz.zdoc.element.java.JavaClass;
 import io.cocolabs.pz.zdoc.element.lua.*;
+import io.cocolabs.pz.zdoc.logger.Logger;
 
 public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 

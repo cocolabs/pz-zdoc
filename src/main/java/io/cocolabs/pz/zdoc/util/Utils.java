@@ -48,6 +48,7 @@ public class Utils {
 
 	/**
 	 * Returns {@code true} if file denoted by given path is a Lua file.
+	 *
 	 * @throws NullPointerException if given path has no elements.
 	 */
 	public static boolean isLuaFile(Path path) {

@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Splitter;
-
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import com.google.common.base.Splitter;
 
 import io.cocolabs.pz.zdoc.doc.ZomboidAPIDoc;
 import io.cocolabs.pz.zdoc.element.java.JavaClass;

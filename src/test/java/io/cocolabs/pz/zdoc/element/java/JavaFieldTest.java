@@ -21,11 +21,11 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.base.Splitter;
-
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.base.Splitter;
 
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 
@@ -81,7 +81,7 @@ class JavaFieldTest {
 			Assertions.assertEquals(expected, new JavaField(declaredField).toString());
 
 			try {
-				List<String> elements  = Splitter.onPattern("\\s+").splitToList(fieldData[i + 1]);
+				List<String> elements = Splitter.onPattern("\\s+").splitToList(fieldData[i + 1]);
 				Class<?> clazz = Class.forName(elements.get(elements.size() - 1));
 				MemberModifier modifier = new MemberModifier(declaredField.getModifiers());
 				Assertions.assertEquals(expected, new JavaField(clazz, fieldData[i], modifier).toString());

@@ -81,7 +81,8 @@ public class Main {
 				/* first try to find version file project root directory,
 				 * available when we are not running from a jar
 				 */
-				String zdocVersion; File versionFile = new File("version.txt");
+				String zdocVersion;
+				File versionFile = new File("version.txt");
 				if (!versionFile.exists())
 				{
 					try (InputStream iStream = CLASS_LOADER.getResourceAsStream("version.txt"))
@@ -115,7 +116,8 @@ public class Main {
 			Logger.debug("Preparing to parse and document lua files...");
 
 			Path root = cmdLine.getInputPath();
-			List<Path> paths; Path dir = cmdLine.getOutputPath();
+			List<Path> paths;
+			Path dir = cmdLine.getOutputPath();
 			try (Stream<Path> stream = Files.walk(Paths.get(root.toString()))) {
 				paths = stream.filter(Files::isRegularFile).collect(Collectors.toCollection(ArrayList::new));
 			}

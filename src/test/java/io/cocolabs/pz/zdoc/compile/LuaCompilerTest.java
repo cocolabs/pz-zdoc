@@ -37,7 +37,6 @@ import io.cocolabs.pz.zdoc.element.lua.*;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 import io.cocolabs.pz.zdoc.element.mod.ModifierKey;
-import io.cocolabs.pz.zdoc.element.lua.*;
 
 @SuppressWarnings("JavaLangClash")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

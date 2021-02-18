@@ -24,9 +24,9 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import io.cocolabs.pz.zdoc.element.IField;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
+import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 import io.cocolabs.pz.zdoc.lang.lua.EmmyLua;
 import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaField;
-import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 
 public class LuaField implements IField, Annotated {
 

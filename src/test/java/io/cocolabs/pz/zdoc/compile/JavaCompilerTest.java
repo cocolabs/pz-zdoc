@@ -39,7 +39,6 @@ import io.cocolabs.pz.zdoc.element.java.JavaParameter;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 import io.cocolabs.pz.zdoc.element.mod.ModifierKey;
-
 import zombie.characters.IsoPlayer;
 import zombie.core.Color;
 

@@ -85,6 +85,7 @@ public enum Command {
 	 * Returns command that matches first array element.
 	 *
 	 * @return first array element or {@code null} if no matching command was found.
+	 *
 	 * @throws IllegalArgumentException if argument array is empty.
 	 */
 	public static @Nullable Command parse(String[] args) {

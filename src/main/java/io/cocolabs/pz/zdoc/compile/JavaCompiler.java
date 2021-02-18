@@ -36,12 +36,12 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jetbrains.annotations.Nullable;
 
+import io.cocolabs.pz.zdoc.Main;
 import io.cocolabs.pz.zdoc.doc.ZomboidAPIDoc;
 import io.cocolabs.pz.zdoc.doc.ZomboidJavaDoc;
 import io.cocolabs.pz.zdoc.doc.detail.DetailParsingException;
 import io.cocolabs.pz.zdoc.doc.detail.FieldDetail;
 import io.cocolabs.pz.zdoc.doc.detail.MethodDetail;
-import io.cocolabs.pz.zdoc.Main;
 import io.cocolabs.pz.zdoc.element.java.JavaClass;
 import io.cocolabs.pz.zdoc.element.java.JavaField;
 import io.cocolabs.pz.zdoc.element.java.JavaMethod;

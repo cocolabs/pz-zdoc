@@ -28,8 +28,8 @@ import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import io.cocolabs.pz.zdoc.element.IMethod;
-import io.cocolabs.pz.zdoc.logger.Logger;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
+import io.cocolabs.pz.zdoc.logger.Logger;
 
 /**
  * This class represents a wrapped {@link Method} object.
