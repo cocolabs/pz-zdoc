@@ -188,6 +188,7 @@ public class JavaMethod implements IMethod {
 		return hasVarArg;
 	}
 
+	@SuppressWarnings("ReferenceEquality")
 	public boolean equals(JavaMethod method, boolean shallow) {
 
 		if (shallow)
@@ -227,7 +228,7 @@ public class JavaMethod implements IMethod {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (!(obj instanceof JavaMethod)) {
 			return false;
 		}
 		JavaMethod jMethod = (JavaMethod) obj;

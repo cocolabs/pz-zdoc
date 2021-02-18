@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Sets;
 
 import io.cocolabs.pz.zdoc.doc.ZomboidAPIDoc;
@@ -95,15 +96,15 @@ public class FieldDetail extends Detail<JavaField> {
 			super(signatureText);
 			Logger.debug("Parsing field signature: " + signature);
 
-			String[] elements = signature.split("\\s+");
-			if (elements.length < 2) {
+			List<String> elements = Splitter.onPattern("\\s+").splitToList(signature);
+			if (elements.size() < 2) {
 				throw new SignatureParsingException(signature, "missing one or more elements");
 			}
 			int index = 0;
 			/*
 			 * parse signature access modifier (optional)
 			 */
-			AccessModifierKey access = AccessModifierKey.get(elements[0]);
+			AccessModifierKey access = AccessModifierKey.get(elements.get(0));
 			if (access != AccessModifierKey.DEFAULT) {
 				index = 1;
 			}
@@ -111,9 +112,9 @@ public class FieldDetail extends Detail<JavaField> {
 			 * parse signature non-access modifier (optional)
 			 */
 			SetUniqueList<ModifierKey> modifierKeys = SetUniqueList.setUniqueList(new ArrayList<>());
-			for (; index < elements.length; index++)
+			for (; index < elements.size(); index++)
 			{
-				Collection<ModifierKey> foundKeys = ModifierKey.get(elements[index]);
+				Collection<ModifierKey> foundKeys = ModifierKey.get(elements.get(index));
 				if (!foundKeys.contains(ModifierKey.UNDECLARED)) {
 					modifierKeys.addAll(foundKeys);
 				}
@@ -129,8 +130,8 @@ public class FieldDetail extends Detail<JavaField> {
 			String[] data = new String[]{ "type", "name" };
 			for (int i = 0; i < data.length; i++, index++)
 			{
-				if (index < elements.length) {
-					data[i] = elements[index];
+				if (index < elements.size()) {
+					data[i] = elements.get(index);
 				}
 				else throw new SignatureParsingException(signature, "missing element " + data[0]);
 			}
@@ -139,11 +140,11 @@ public class FieldDetail extends Detail<JavaField> {
 			/*
 			 * parse signature comment (optional)
 			 */
-			if (index < elements.length)
+			if (index < elements.size())
 			{
 				StringBuilder sb = new StringBuilder();
-				for (; index < elements.length; index++) {
-					sb.append(elements[index]).append(" ");
+				for (; index < elements.size(); index++) {
+					sb.append(elements.get(index)).append(" ");
 				}
 				sb.deleteCharAt(sb.length() - 1);
 				this.comment = sb.toString();

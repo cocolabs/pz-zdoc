@@ -19,6 +19,8 @@ package io.cocolabs.pz.zdoc.compile;
 
 import java.util.*;
 
+import com.google.common.base.Splitter;
+
 import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.collections4.set.PredicatedSet;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -145,10 +147,10 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 	private static String resolveClassName(String signature) throws CompilerException {
 
 		Logger.debug("Resolving class name for signature %s", signature);
-		String[] packages = signature.split("\\.");
-		if (packages.length > 1)
+		List<String> packages = Splitter.on('.').splitToList(signature);
+		if (packages.size() > 1)
 		{
-			char[] cName = packages[packages.length - 1].toCharArray();
+			char[] cName = packages.get(packages.size() - 1).toCharArray();
 			StringBuilder sb = new StringBuilder();
 			for (char c : cName) {
 				sb.append(c == '$' ? '.' : c);
@@ -157,8 +159,8 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 			if (isRegisteredGlobal(result))
 			{
 				String globalClass = result;
-				for (int i = packages.length - 2; i >= 0 && isRegisteredGlobal(result); i--) {
-					result = packages[i] + '_' + result;
+				for (int i = packages.size() - 2; i >= 0 && isRegisteredGlobal(result); i--) {
+					result = packages.get(i) + '_' + result;
 				}
 				Logger.debug("Resolved class name as %s to avoid conflict with global class %s", result, globalClass);
 				if (isRegisteredGlobal(result))
@@ -198,6 +200,7 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		return Collections.unmodifiableSet(result);
 	}
 
+	@Override
 	public Set<ZomboidLuaDoc> compile() throws CompilerException {
 
 		Logger.info("Start compiling lua classes...");

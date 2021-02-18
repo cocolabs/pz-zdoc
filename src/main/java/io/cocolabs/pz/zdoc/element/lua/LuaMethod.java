@@ -153,15 +153,15 @@ public class LuaMethod implements IMethod, Annotated {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object obj) {
 
-		if (this == o) {
+		if (this == obj) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if (!(obj instanceof LuaMethod)) {
 			return false;
 		}
-		LuaMethod luaMethod = (LuaMethod) o;
+		LuaMethod luaMethod = (LuaMethod) obj;
 
 		if (!Objects.equals(owner, luaMethod.owner)) {
 			return false;

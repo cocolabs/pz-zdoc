@@ -73,20 +73,22 @@ public abstract class EmmyLua {
 	}
 
 	/**
-	 * @return {@code true} if the given {@code String} is a keyword reserved by EmmyLua.
+	 * Returns {@code true} if given {@code String} is a keyword reserved by EmmyLua.
 	 */
 	public static boolean isBuiltInType(String type) {
 		return BUILT_IN_TYPES.contains(type);
 	}
 
 	/**
-	 * @return {@code true} if the given {@code String} is a keyword reserved by Lua.
+	 * Returns {@code true} if given {@code String} is a keyword reserved by Lua.
 	 */
 	public static boolean isReservedKeyword(String keyword) {
 		return RESERVED_KEYWORDS.contains(keyword);
 	}
 
 	/**
+	 * Returns safe to use Lua member {@code String}.
+	 *
 	 * @return {@code String} that is safe to use as member name in Lua.
 	 * 		If the given string matches (non-case-sensitive) a reserved or built-in Lua keyword,
 	 * 		the result will be prepended with {@code '_'} character to avoid keyword clashing.
@@ -115,7 +117,7 @@ public abstract class EmmyLua {
 		return luaType != null ? luaType.getName() : "any";
 	}
 
-	/** @return textual representation of this annotation. */
+	/** Returns textual representation of this annotation. */
 	@Override
 	public String toString() {
 		return annotation;

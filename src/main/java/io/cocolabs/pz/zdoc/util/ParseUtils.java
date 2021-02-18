@@ -24,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 public class ParseUtils {
 
 	/**
+	 * Returns optional group captured by {@code Matcher}.
+	 *
 	 * @param match {@code MatchResult} that holds the captured group.
 	 * @param group the index of a capturing group in this matcher's pattern
 	 * @return input subsequence captured by {@code Matcher} for the given group

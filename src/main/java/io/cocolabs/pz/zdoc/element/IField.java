@@ -24,10 +24,11 @@ public interface IField extends IMember {
 
 	IClass getType();
 
-	/** @return name of the {@code Field} represented by this object. */
+	/** Returns name of the {@code Field} represented by this object. */
+	@Override
 	String getName();
 
-	/** @return a string describing this {@code Field}. */
+	/** Returns a string describing this {@code Field}. */
 	@Override
 	String toString();
 }

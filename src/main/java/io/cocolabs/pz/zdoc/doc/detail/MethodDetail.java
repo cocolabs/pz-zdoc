@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.common.base.Splitter;
+
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -105,20 +107,20 @@ public class MethodDetail extends Detail<JavaMethod> {
 			super(signatureText);
 			Logger.debug("Parsing method signature: " + signature);
 
-			String[] elements = signature.split("\\s+");
-			if (elements.length < 2) {
+			List<String> elements = Splitter.onPattern("\\s+").splitToList(signature);
+			if (elements.size() < 2) {
 				throw new SignatureParsingException(signature, "missing one or more elements");
 			}
 			int index = 0;
 			/*
 			 * parse signature annotation (optional)
 			 */
-			String element = elements[index];
+			String element = elements.get(index);
 			String annotation = element.charAt(0) == '@' ? element.substring(index++) : "";
 			/*
 			 * parse signature access modifier (optional)
 			 */
-			AccessModifierKey access = AccessModifierKey.get(elements[index]);
+			AccessModifierKey access = AccessModifierKey.get(elements.get(index));
 			if (access != AccessModifierKey.DEFAULT) {
 				index += 1;
 			}
@@ -126,9 +128,9 @@ public class MethodDetail extends Detail<JavaMethod> {
 			 * parse signature non-access modifier (optional)
 			 */
 			SetUniqueList<ModifierKey> modifierKeys = SetUniqueList.setUniqueList(new ArrayList<>());
-			for (; index < elements.length; index++)
+			for (; index < elements.size(); index++)
 			{
-				Collection<ModifierKey> foundKeys = ModifierKey.get(elements[index]);
+				Collection<ModifierKey> foundKeys = ModifierKey.get(elements.get(index));
 				if (!foundKeys.contains(ModifierKey.UNDECLARED)) {
 					modifierKeys.addAll(foundKeys);
 				}
@@ -142,15 +144,15 @@ public class MethodDetail extends Detail<JavaMethod> {
 			 * parse signature type and name
 			 */
 			String type;
-			if (index < elements.length) {
-				type = elements[index];
+			if (index < elements.size()) {
+				type = elements.get(index);
 			}
 			else throw new SignatureParsingException(signature, "missing element type");
 			this.returnType = type;
 
 			String name = null;
 			StringBuilder sb = new StringBuilder();
-			for (char c : elements[index += 1].toCharArray())
+			for (char c : elements.get(index += 1).toCharArray())
 			{
 				if (c == '(') {
 					name = ParseUtils.flushStringBuilder(sb);
@@ -168,10 +170,10 @@ public class MethodDetail extends Detail<JavaMethod> {
 			if (paramsSegment.charAt(0) != ')')
 			{
 				String params = null;
-				for (index += 1; index < elements.length && params == null; index++)
+				for (index += 1; index < elements.size() && params == null; index++)
 				{
 					sb.append(" ");
-					for (char c : elements[index].toCharArray())
+					for (char c : elements.get(index).toCharArray())
 					{
 						if (c == ')') {
 							params = ParseUtils.flushStringBuilder(sb);
@@ -197,8 +199,8 @@ public class MethodDetail extends Detail<JavaMethod> {
 			/*
 			 * parse signature comment (optional)
 			 */
-			for (; index < elements.length; index++) {
-				sb.append(" ").append(elements[index]);
+			for (; index < elements.size(); index++) {
+				sb.append(" ").append(elements.get(index));
 			}
 			String tComment = sb.toString().trim();
 			if (!annotation.isEmpty())

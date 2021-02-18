@@ -46,6 +46,7 @@ public class LuaType implements IClass {
 		this(name, new ArrayList<>());
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -56,15 +57,15 @@ public class LuaType implements IClass {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object obj) {
 
-		if (this == o) {
+		if (this == obj) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if (!(obj instanceof LuaType)) {
 			return false;
 		}
-		LuaType luaType = (LuaType) o;
+		LuaType luaType = (LuaType) obj;
 
 		if (!name.equals(luaType.name)) {
 			return false;

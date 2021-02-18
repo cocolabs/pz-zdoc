@@ -29,8 +29,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaClass;
+import io.cocolabs.pz.zdoc.Main;
 import io.cocolabs.pz.zdoc.element.lua.LuaClass;
+import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaClass;
 import io.cocolabs.pz.zdoc.logger.Logger;
 import io.cocolabs.pz.zdoc.util.ParseUtils;
 
@@ -54,11 +55,11 @@ public class LuaAnnotator {
 	 * String table2 = "DerivedTestTable = ISTestTable:derive(\"TestTable\")";
 	 * String table3 = "DeclaredTestTable = {}";
 	 * Matcher matcher = ZomboidLuaDoc.LUA_TABLE_DECLARATION.matcher(table1);
-	 * assert matcher.find() && matcher.group(2).equals("NewTestTable");
-	 * assert matcher.group(3).equals("ISTestTable") && matcher.group(4).equals("new");
+	 * assert matcher.find() {@code &&} matcher.group(2).equals("NewTestTable");
+	 * assert matcher.group(3).equals("ISTestTable") {@code &&} matcher.group(4).equals("new");
 	 * matcher = ZomboidLuaDoc.LUA_TABLE_DECLARATION.matcher(table2);
-	 * assert matcher.find() && matcher.group(2).equals("DerivedTestTable");
-	 * assert matcher.group(3).equals("ISTestTable") && matcher.group(4).equals("derive");
+	 * assert matcher.find() {@code &&} matcher.group(2).equals("DerivedTestTable");
+	 * assert matcher.group(3).equals("ISTestTable") {@code &&} matcher.group(4).equals("derive");
 	 * matcher = ZomboidLuaDoc.LUA_TABLE_DECLARATION.matcher(table3);
 	 * assert matcher.find() && matcher.group(2).equals("DeclaredTestTable");
 	 * assert matcher.group(3) == null && matcher.group(4) == null
@@ -106,7 +107,7 @@ public class LuaAnnotator {
 		if (!file.exists()) {
 			throw new FileNotFoundException(file.getPath());
 		}
-		List<String> input = FileUtils.readLines(file, Charset.defaultCharset());
+		List<String> input = FileUtils.readLines(file, Main.CHARSET);
 		if (input.size() == 0) {
 			return AnnotateResult.SKIPPED_FILE_EMPTY;
 		}

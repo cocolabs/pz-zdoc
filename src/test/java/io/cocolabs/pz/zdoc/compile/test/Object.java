@@ -20,5 +20,6 @@ package io.cocolabs.pz.zdoc.compile.test;
 import org.jetbrains.annotations.TestOnly;
 
 @TestOnly
+@SuppressWarnings("JavaLangClash")
 public class Object {
 }

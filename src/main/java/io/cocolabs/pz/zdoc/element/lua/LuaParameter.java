@@ -65,15 +65,15 @@ public class LuaParameter implements IParameter, Annotated {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object obj) {
 
-		if (this == o) {
+		if (this == obj) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if (!(obj instanceof LuaParameter)) {
 			return false;
 		}
-		LuaParameter that = (LuaParameter) o;
+		LuaParameter that = (LuaParameter) obj;
 
 		if (!type.equals(that.type)) {
 			return false;

@@ -204,7 +204,7 @@ class JavaCompilerTest extends DocTest {
 		Assertions.assertEquals("nestedField", compiledFields.get(0).getName());
 	}
 
-	@SuppressWarnings({ "unused", "SameReturnValue" })
+	@SuppressWarnings({ "unused", "SameReturnValue", "ProtectedMembersInFinalClass" })
 	private static final class CompileTest {
 
 		//@formatter:off
@@ -258,7 +258,7 @@ class JavaCompilerTest extends DocTest {
 			new NestedClass().nestedField = nestedField;
 		}
 
-		@SuppressWarnings({ "WeakerAccess", "InnerClassMayBeStatic" })
+		@SuppressWarnings({ "WeakerAccess", "InnerClassMayBeStatic", "ClassCanBeStatic" })
 		class NestedClass {
 			private String nestedField;
 		}

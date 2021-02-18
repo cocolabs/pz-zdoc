@@ -96,7 +96,7 @@ public class MemberModifier {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (!(obj instanceof MemberModifier)) {
 			return false;
 		}
 		MemberModifier modifier = (MemberModifier) obj;

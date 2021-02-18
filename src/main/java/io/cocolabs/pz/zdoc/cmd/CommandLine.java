@@ -17,8 +17,12 @@
  */
 package io.cocolabs.pz.zdoc.cmd;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -75,7 +79,8 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	public static void printHelp(Command[] commands) {
 
 		//noinspection UseOfSystemOutOrSystemErr
-		try (PrintWriter pw = new PrintWriter(System.out))
+		OutputStreamWriter osw = new OutputStreamWriter(System.out, StandardCharsets.UTF_8);
+		try (PrintWriter pw = new PrintWriter(new BufferedWriter(osw)))
 		{
 			pw.println("See 'help <command>' to read about a specific command");
 			for (Command command : commands)
@@ -101,6 +106,8 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	}
 
 	/**
+	 * Returns class names to exclude from compilation process.
+	 *
 	 * @return {@code Set} of class names specified in command options to exclude from
 	 * 		compilation process or an empty list if exclude option has not been set.
 	 *
@@ -111,35 +118,37 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		Option excludeOpt = CommandOptions.EXCLUDE_CLASS_OPTION;
 		if (hasOption(excludeOpt.getOpt()))
 		{
-			String value = getParsedValue(excludeOpt);
+			String value = getParsedValue(excludeOpt, String.class);
 			return Sets.newHashSet(value.split(","));
 		}
 		return new HashSet<>();
 	}
 
 	/**
-	 * @return input path specified in command options.
+	 * Returns input path specified in command options.
 	 */
 	public Path getInputPath() {
-		return ((File) getParsedValue(CommandOptions.INPUT_OPTION)).toPath();
+		return getParsedValue(CommandOptions.INPUT_OPTION, File.class).toPath();
 	}
 
 	/**
+	 * Returns command operation output path.
+	 *
 	 * @return output path specified in command options or {@code null} if
 	 * 		output command option was not specified.
 	 */
 	public @Nullable Path getOutputPath() {
 
-		File outputFile = getParsedValue(CommandOptions.OUTPUT_OPTION);
+		File outputFile = getParsedValue(CommandOptions.OUTPUT_OPTION, File.class);
 		return outputFile != null ? outputFile.toPath() : null;
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T getParsedValue(Option option) throws IllegalArgumentException {
+	private <T> T getParsedValue(Option option, Class<T> type) throws IllegalArgumentException {
 
 		String sOption = option.getOpt();
 		try {
-			return ((T) getParsedOptionValue(sOption));
+			return type.cast(getParsedOptionValue(sOption));
 		}
 		catch (ParseException | ClassCastException e) {
 			throw new IllegalArgumentException(String.format("An error occurred while " +

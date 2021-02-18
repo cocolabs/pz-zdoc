@@ -85,15 +85,15 @@ public class LuaField implements IField, Annotated {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object obj) {
 
-		if (this == o) {
+		if (this == obj) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if (!(obj instanceof LuaField)) {
 			return false;
 		}
-		LuaField luaField = (LuaField) o;
+		LuaField luaField = (LuaField) obj;
 
 		if (!name.equals(luaField.name)) {
 			return false;
