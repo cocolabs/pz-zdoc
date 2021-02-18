@@ -117,7 +117,7 @@ public abstract class EmmyLua {
 		return luaType != null ? luaType.getName() : "any";
 	}
 
-	/** @return textual representation of this annotation. */
+	/** Returns textual representation of this annotation. */
 	@Override
 	public String toString() {
 		return annotation;
