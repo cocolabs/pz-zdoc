@@ -20,6 +20,7 @@
 **Implemented enhancements:**
 
 - Reduce production console logging [\#38](https://github.com/real-coco-labs/pz-zdoc/issues/38)
+- Write only annotated files [\#37](https://github.com/real-coco-labs/pz-zdoc/issues/37)
 - Make application easier to launch from game dir [\#33](https://github.com/real-coco-labs/pz-zdoc/issues/33)
 - Improve production file logger [\#32](https://github.com/real-coco-labs/pz-zdoc/issues/32)
 
@@ -39,7 +40,6 @@
 
 **Implemented enhancements:**
 
-- Write only annotated files [\#37](https://github.com/real-coco-labs/pz-zdoc/issues/37)
 - Application launch script for Unix [\#27](https://github.com/real-coco-labs/pz-zdoc/issues/27)
 - Application launch script for Windows [\#26](https://github.com/real-coco-labs/pz-zdoc/issues/26)
 - Compile global methods [\#22](https://github.com/real-coco-labs/pz-zdoc/issues/22)

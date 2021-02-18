@@ -123,4 +123,10 @@ if (!CI) {
     registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
 }
 // Github repository token used to generate changelog
-registerLocalProjectProperty('githubToken', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
+registerLocalProjectProperty('cg.token', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
+
+// Username used to publish to Github packages with Maven
+registerLocalProjectProperty('ghp.user', String.class, 'GHP_USER', false)
+
+// Token used to publish to Github packages with Maven
+registerLocalProjectProperty('ghp.token', String.class, 'GHP_TOKEN', false)

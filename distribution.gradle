@@ -8,10 +8,10 @@ tasks.register("generateChangelog", Exec.class) {
 
     def commandArgs = [
             // owner of target GitHub repository
-            '-u', 'real-coco-labs',
+            '-u', project.ext.get('repo.owner'),
             /*
              * name of project on GitHub */
-            '-p', project.name,
+            '-p', project.ext.get('repo.name'),
             /*
              * only issues with the specified labels will be included in the changelog
              * this means that issues that are included HAVE to have at least one of these labels */
@@ -21,38 +21,40 @@ tasks.register("generateChangelog", Exec.class) {
             '--exclude-labels', 'dev,wontfix,workflow,question,documentation',
     ]
     // Changelog will start after specified tag
-    if (project.hasProperty('cg_sinceTag')) {
-        commandArgs += [ '--since-tag', project.ext.cg_sinceTag ]
+    if (project.ext.has('cg.sinceTag')) {
+        commandArgs += [ '--since-tag', project.ext.get('cg.sinceTag') ]
     }
     // Output file. To print to STDOUT instead, use blank as path.
     // Default value: CHANGELOG.md
-    if (project.hasProperty('cg_output')) {
-        commandArgs += [ '--output', project.ext.cg_output ]
+    if (project.ext.has('cg.output')) {
+        commandArgs += [ '--output', project.ext.get('cg.output') ]
     }
     // Generate log from unreleased closed issues only or
-    // add to log unreleased closed issues.
-    // Default value: true
-    if (project.hasProperty('cg_unreleased')) {
-        commandArgs += [Boolean.parseBoolean(project.ext.cg_unreleased as String) ? '--unreleased' : '--no-unreleased']
+    // add to log unreleased closed issues. Default is 'true'
+    if (project.ext.has('cg.unreleased')) {
+        commandArgs += [project.ext.get('cg.unreleased') as boolean ? '--unreleased' : '--no-unreleased']
     }
     else  commandArgs += ['--no-unreleased' ]
     // Set up custom header label. Default is "# Changelog".
-    // Default value is #CHANGELOG
-    if (project.hasProperty('cg_header')) {
-        commandArgs += [ '--header-label', project.ext.cg_header ]
+    if (project.ext.has('cg.header')) {
+        commandArgs += [ '--header-label', project.ext.get('cg.header') ]
     }
+    // this args will be displayed in log (avoid showing token)
+    def displayArgs = commandArgs.toListString()
+
     // generator will first check for token in environment variables
     if (!providers.environmentVariable('CHANGELOG_GITHUB_TOKEN').forUseAtConfigurationTime().present)
     {
-        def githubToken = project.ext.has('githubToken') ? project.ext.githubToken : null
+        def githubToken = project.ext.get('cg.token')
         if (githubToken != null) {
             commandArgs += [ '--token', githubToken ]
         }
     }
-    def command = [ 'bundle', 'exec', 'github_changelog_generator' ] + commandArgs
-    it.commandLine = (project.ext.osName == "Windows") ? [ 'cmd', '/c' ] + command : command
+    //noinspection GroovyAssignabilityCheck
+    def command = new ArrayList<String>([ 'bundle', 'exec', 'github_changelog_generator' ] + commandArgs)
+    it.commandLine = (project.ext.osName == "Windows") ? ['cmd', '/c' ] + command : command
     it.doFirst {
-        logger.info('Generating changelog with arguments: ' + commandArgs)
+        logger.info('Generating changelog with arguments: ' + displayArgs)
     }
 }
 
@@ -109,4 +111,20 @@ tasks.named('startScripts').configure {
 
     // do not add provided files to classpath, they are not included in distribution
     it.classpath -= configurations.zomboidImplementation
+}
+
+publishing {
+    repositories {
+        maven {
+            name = 'GitHubPackages'
+            url = uri('https://maven.pkg.github.com/real-coco-labs/pz-zdoc')
+            credentials {
+                username = project.findProperty('ghp.user') ?: System.getenv('GHP_USER')
+                password = project.findProperty('ghp.token') ?: System.getenv('GHP_TOKEN')
+            }
+        }
+    }
+    publications.register('zdoc', MavenPublication.class) {
+        it.from(project.components.java as SoftwareComponent)
+    }
 }
