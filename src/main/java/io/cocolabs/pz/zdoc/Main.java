@@ -83,6 +83,7 @@ public class Main {
 				Object sGameVersion = MethodUtils.invokeExactMethod(gameVersion, "toString");
 
 				Logger.info("game version " + sGameVersion);
+				return;
 			}
 			catch (ReflectiveOperationException e) {
 				throw new RuntimeException(e);
