@@ -39,6 +39,9 @@ tasks.register("generateChangelog", Exec.class) {
     if (project.ext.has('cg.header')) {
         commandArgs += [ '--header-label', project.ext.get('cg.header') ]
     }
+    // this args will be displayed in log (avoid showing token)
+    def displayArgs = commandArgs.toListString()
+
     // generator will first check for token in environment variables
     if (!providers.environmentVariable('CHANGELOG_GITHUB_TOKEN').forUseAtConfigurationTime().present)
     {
@@ -51,7 +54,7 @@ tasks.register("generateChangelog", Exec.class) {
     def command = new ArrayList<String>([ 'bundle', 'exec', 'github_changelog_generator' ] + commandArgs)
     it.commandLine = (project.ext.osName == "Windows") ? ['cmd', '/c' ] + command : command
     it.doFirst {
-        logger.info('Generating changelog with arguments: ' + commandArgs)
+        logger.info('Generating changelog with arguments: ' + displayArgs)
     }
 }
 
