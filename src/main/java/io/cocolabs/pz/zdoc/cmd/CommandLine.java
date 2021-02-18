@@ -17,8 +17,12 @@
  */
 package io.cocolabs.pz.zdoc.cmd;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -75,7 +79,8 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	public static void printHelp(Command[] commands) {
 
 		//noinspection UseOfSystemOutOrSystemErr
-		try (PrintWriter pw = new PrintWriter(System.out))
+		OutputStreamWriter osw = new OutputStreamWriter(System.out, StandardCharsets.UTF_8);
+		try (PrintWriter pw = new PrintWriter(new BufferedWriter(osw)))
 		{
 			pw.println("See 'help <command>' to read about a specific command");
 			for (Command command : commands)

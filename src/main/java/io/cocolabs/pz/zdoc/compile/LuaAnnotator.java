@@ -29,8 +29,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaClass;
+import io.cocolabs.pz.zdoc.Main;
 import io.cocolabs.pz.zdoc.element.lua.LuaClass;
+import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaClass;
 import io.cocolabs.pz.zdoc.logger.Logger;
 import io.cocolabs.pz.zdoc.util.ParseUtils;
 
@@ -106,7 +107,7 @@ public class LuaAnnotator {
 		if (!file.exists()) {
 			throw new FileNotFoundException(file.getPath());
 		}
-		List<String> input = FileUtils.readLines(file, Charset.defaultCharset());
+		List<String> input = FileUtils.readLines(file, Main.CHARSET);
 		if (input.size() == 0) {
 			return AnnotateResult.SKIPPED_FILE_EMPTY;
 		}

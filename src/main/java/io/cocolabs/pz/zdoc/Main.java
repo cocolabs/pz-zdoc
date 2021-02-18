@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +47,7 @@ import io.cocolabs.pz.zdoc.util.Utils;
 
 public class Main {
 
-	public static final String CHARSET = Charset.defaultCharset().name();
+	public static final String CHARSET = StandardCharsets.UTF_8.name();
 	public static final ClassLoader CLASS_LOADER = Main.class.getClassLoader();
 
 	/**
