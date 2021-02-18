@@ -24,15 +24,15 @@ apply from: 'setup.gradle'
 apply from: 'spotless.gradle'
 apply from: 'distribution.gradle'
 
-group 'io.yooksi'
-version '2.2.0'
+group 'io.cocolabs'
+version file('version.txt').readLines().get(0)
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
 
 application {
-    mainClassName = 'io.yooksi.pz.zdoc.Main'
+    mainClassName = 'io.cocolabs.pz.zdoc.Main'
 }
 
 java {

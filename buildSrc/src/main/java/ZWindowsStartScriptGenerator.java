@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -36,7 +37,7 @@ import org.gradle.util.TextUtil;
 @NonNullApi
 public class ZWindowsStartScriptGenerator implements ScriptGenerator {
 
-	private static final Charset CHARSET = Charset.defaultCharset();
+	private static final Charset CHARSET = StandardCharsets.UTF_8;
 	private static final ClassLoader CL = ZWindowsStartScriptGenerator.class.getClassLoader();
 
 	private static final String[] CLASSPATH_ADDENDUM = new String[]{
