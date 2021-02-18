@@ -61,6 +61,8 @@ tasks.register("generateChangelog", Exec.class) {
     }
 }
 
+jar.from 'version.txt'
+
 distributions.main.contents {
     it.from ('README.md', 'LICENSE.txt', 'CHANGELOG.md')
     // version.txt is used by version command
