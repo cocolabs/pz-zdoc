@@ -58,6 +58,10 @@ tasks.register("generateChangelog", Exec.class) {
 
 distributions.main.contents {
     it.from ('README.md', 'LICENSE.txt', 'CHANGELOG.md')
+    // version.txt is used by version command
+    it.from(projectDir) {
+        it.include 'version.txt'
+    }
     it.exclude {
         File file = it.file
         String filename = file.getName()
