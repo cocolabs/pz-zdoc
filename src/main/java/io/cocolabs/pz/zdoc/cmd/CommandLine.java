@@ -118,7 +118,7 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 		Option excludeOpt = CommandOptions.EXCLUDE_CLASS_OPTION;
 		if (hasOption(excludeOpt.getOpt()))
 		{
-			String value = getParsedValue(excludeOpt);
+			String value = getParsedValue(excludeOpt, String.class);
 			return Sets.newHashSet(value.split(","));
 		}
 		return new HashSet<>();
@@ -128,7 +128,7 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	 * Returns input path specified in command options.
 	 */
 	public Path getInputPath() {
-		return ((File) getParsedValue(CommandOptions.INPUT_OPTION)).toPath();
+		return getParsedValue(CommandOptions.INPUT_OPTION, File.class).toPath();
 	}
 
 	/**
@@ -139,16 +139,16 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	 */
 	public @Nullable Path getOutputPath() {
 
-		File outputFile = getParsedValue(CommandOptions.OUTPUT_OPTION);
+		File outputFile = getParsedValue(CommandOptions.OUTPUT_OPTION, File.class);
 		return outputFile != null ? outputFile.toPath() : null;
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T getParsedValue(Option option) throws IllegalArgumentException {
+	private <T> T getParsedValue(Option option, Class<T> type) throws IllegalArgumentException {
 
 		String sOption = option.getOpt();
 		try {
-			return ((T) getParsedOptionValue(sOption));
+			return type.cast(getParsedOptionValue(sOption));
 		}
 		catch (ParseException | ClassCastException e) {
 			throw new IllegalArgumentException(String.format("An error occurred while " +
