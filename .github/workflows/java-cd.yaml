@@ -225,9 +225,7 @@ jobs:
       - uses: burrunan/gradle-cache-action@v1
         name: Publish to Github packages
         env:
-          CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHP_USER: yooksi
+          GHP_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
         with:
           arguments: publishZdocPublicationToGitHubPackagesRepository
-          properties: |
-            ghp.user=yooksi
-            ghp.token=${{ secrets.PUBLISH_TOKEN }}
