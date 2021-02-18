@@ -31,7 +31,6 @@ import io.cocolabs.pz.zdoc.compile.JavaCompiler;
 import io.cocolabs.pz.zdoc.element.lua.*;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
-import io.yooksi.pz.zdoc.element.lua.*;
 
 class ZomboidLuaDocTest extends TestWorkspace {
 
@@ -59,7 +58,7 @@ class ZomboidLuaDocTest extends TestWorkspace {
 	void shouldWriteZomboidLuaDocClassNameToFile() throws IOException {
 
 		List<String> expectedResult = ImmutableList.of(
-				"---@class ZomboidLuaDocTest : ZomboidLuaDocTest",
+				"---@class ZomboidLuaDocTest : io.cocolabs.pz.zdoc.doc.ZomboidLuaDocTest",
 				"ZomboidLuaDocTest = {}"
 		);
 		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(TEST_LUA_CLASS);
@@ -87,7 +86,7 @@ class ZomboidLuaDocTest extends TestWorkspace {
 				TEST_LUA_CLASS, luaFields, new HashSet<>()
 		);
 		List<String> expectedResult = ImmutableList.of(
-				"---@class ZomboidLuaDocTest : ZomboidLuaDocTest",
+				"---@class ZomboidLuaDocTest : io.cocolabs.pz.zdoc.doc.ZomboidLuaDocTest",
 				"---@field public object Object",
 				"---@field private text String",
 				"---@field protected _number Integer",
@@ -118,7 +117,7 @@ class ZomboidLuaDocTest extends TestWorkspace {
 				TEST_LUA_CLASS, luaFields, new HashSet<>()
 		);
 		List<String> expectedResult = ImmutableList.of(
-				"---@class ZomboidLuaDocTest : ZomboidLuaDocTest",
+				"---@class ZomboidLuaDocTest : io.cocolabs.pz.zdoc.doc.ZomboidLuaDocTest",
 				"---@field public object ArrayList|Object",
 				"---@field private text ArrayList|String|Object",
 				"---@field protected inner ArrayList|ZomboidLuaDocTest.InnerClass",
@@ -158,7 +157,7 @@ class ZomboidLuaDocTest extends TestWorkspace {
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
 		);
 		List<String> expectedResult = ImmutableList.of(
-				"---@class ZomboidLuaDocTest : ZomboidLuaDocTest",
+				"---@class ZomboidLuaDocTest : io.cocolabs.pz.zdoc.doc.ZomboidLuaDocTest",
 				"ZomboidLuaDocTest = {}",
 				"",
 				"---@public",
@@ -216,7 +215,7 @@ class ZomboidLuaDocTest extends TestWorkspace {
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
 		);
 		List<String> expectedResult = ImmutableList.of(
-				"---@class ZomboidLuaDocTest : ZomboidLuaDocTest",
+				"---@class ZomboidLuaDocTest : io.cocolabs.pz.zdoc.doc.ZomboidLuaDocTest",
 				"ZomboidLuaDocTest = {}",
 				"",
 				"---this method has a single-line comment",
@@ -281,7 +280,7 @@ class ZomboidLuaDocTest extends TestWorkspace {
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
 		);
 		List<String> expectedResult = ImmutableList.of(
-				"---@class ZomboidLuaDocTest : ZomboidLuaDocTest",
+				"---@class ZomboidLuaDocTest : io.cocolabs.pz.zdoc.doc.ZomboidLuaDocTest",
 				"ZomboidLuaDocTest = {}",
 				"",
 				"---@public",
@@ -351,7 +350,7 @@ class ZomboidLuaDocTest extends TestWorkspace {
 				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
 		);
 		List<String> expectedResult = ImmutableList.of(
-				"---@class ZomboidLuaDocTest : ZomboidLuaDocTest",
+				"---@class ZomboidLuaDocTest : io.cocolabs.pz.zdoc.doc.ZomboidLuaDocTest",
 				"ZomboidLuaDocTest = {}",
 				"",
 				"---@vararg Object",

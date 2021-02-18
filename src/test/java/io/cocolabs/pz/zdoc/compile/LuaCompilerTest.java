@@ -37,7 +37,7 @@ import io.cocolabs.pz.zdoc.element.lua.*;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 import io.cocolabs.pz.zdoc.element.mod.ModifierKey;
-import io.yooksi.pz.zdoc.element.lua.*;
+import io.cocolabs.pz.zdoc.element.lua.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LuaCompilerTest {
@@ -102,9 +102,9 @@ class LuaCompilerTest {
 			zJavaDocs.add(new ZomboidJavaDoc(new JavaClass(c), new ArrayList<>(), new HashSet<>()));
 		}
 		Map<java.lang.String, java.lang.String> classData = ImmutableMap.of(
-				"LuaCompilerTest.Object", "LuaCompilerTest.Object",
-				"LuaCompilerTest.String", "LuaCompilerTest.String",
-				"LuaCompilerTest.Integer", "LuaCompilerTest.Integer"
+				"LuaCompilerTest.Object", "io.cocolabs.pz.zdoc.compile.LuaCompilerTest.Object",
+				"LuaCompilerTest.String", "io.cocolabs.pz.zdoc.compile.LuaCompilerTest.String",
+				"LuaCompilerTest.Integer", "io.cocolabs.pz.zdoc.compile.LuaCompilerTest.Integer"
 		);
 		Set<LuaClass> expectedLuaClasses = new LinkedHashSet<>();
 		classData.forEach((k, v) -> expectedLuaClasses.add(new LuaClass(k, v)));
@@ -402,9 +402,9 @@ class LuaCompilerTest {
 						.put("Object", "java.lang.Object")
 						.put("String", "java.lang.String")
 						.put("Integer", "java.lang.Integer")
-						.put("test_Object", "Object")
-						.put("test_String", "String")
-						.put("test_Integer", "Integer").build();
+						.put("test_Object", "io.cocolabs.pz.zdoc.compile.test.Object")
+						.put("test_String", "io.cocolabs.pz.zdoc.compile.test.String")
+						.put("test_Integer", "io.cocolabs.pz.zdoc.compile.test.Integer").build();
 
 		Set<LuaClass> expectedLuaClasses = new LinkedHashSet<>();
 		classData.forEach((k, v) -> expectedLuaClasses.add(new LuaClass(k, v)));

@@ -32,7 +32,7 @@ import io.cocolabs.pz.zdoc.element.IField;
 import io.cocolabs.pz.zdoc.element.IMethod;
 import io.cocolabs.pz.zdoc.element.IParameter;
 import io.cocolabs.pz.zdoc.element.java.JavaClass;
-import io.yooksi.pz.zdoc.element.lua.*;
+import io.cocolabs.pz.zdoc.element.lua.*;
 
 public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 

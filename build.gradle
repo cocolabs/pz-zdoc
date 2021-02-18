@@ -24,7 +24,7 @@ apply from: 'setup.gradle'
 apply from: 'spotless.gradle'
 apply from: 'distribution.gradle'
 
-group 'io.yooksi'
+group 'io.cocolabs'
 version '2.2.0'
 
 wrapper {
@@ -32,7 +32,7 @@ wrapper {
 }
 
 application {
-    mainClassName = 'io.yooksi.pz.zdoc.Main'
+    mainClassName = 'io.cocolabs.pz.zdoc.Main'
 }
 
 java {

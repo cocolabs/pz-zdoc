@@ -47,7 +47,7 @@ class JavaClassTest {
 	void shouldParseValidJavaClassFromClassObject() {
 
 		JavaClass jClass = new JavaClass(JavaClassTest.class);
-		String classPath = "io/yooksi/pz/zdoc/element/java/JavaClassTest";
+		String classPath = "io/cocolabs/pz/zdoc/element/java/JavaClassTest";
 
 		Assertions.assertEquals(classPath, JavaClass.getPathForClass(JavaClassTest.class));
 		Assertions.assertEquals(JavaClassTest.class.getName(), jClass.getName());
@@ -57,7 +57,7 @@ class JavaClassTest {
 	void shouldParseValidJavaClassFromInnerClassObject() {
 
 		JavaClass jClass = new JavaClass(InnerClass.class);
-		String classPath = "io/yooksi/pz/zdoc/element/java/JavaClassTest.InnerClass";
+		String classPath = "io/cocolabs/pz/zdoc/element/java/JavaClassTest.InnerClass";
 
 		Assertions.assertEquals(classPath, JavaClass.getPathForClass(InnerClass.class));
 		Assertions.assertEquals(InnerClass.class.getTypeName(), jClass.getName());

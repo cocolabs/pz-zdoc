@@ -37,12 +37,12 @@ class MethodSignatureParserTest {
 	void shouldThrowExceptionWhenParsingUnknownClasses() {
 
 		Set<String> unknownMethodSignatures = Sets.newHashSet(
-				"io.yooksi.unknownClass param",
-				"io.yooksi.unknownClass<java.lang.Object> param",
-				"io.yooksi.unknownClass<java.lang.Object, java.lang.String> param",
-				"java.lang.Object param0, io.yooksi.unknownClass param1",
-				"java.lang.Object param0, io.yooksi.unknownClass<java.lang.Object> param",
-				"java.lang.Object param0, io.yooksi.unknownClass<java.lang.Object, java.lang.String> param"
+				"io.cocolabs.unknownClass param",
+				"io.cocolabs.unknownClass<java.lang.Object> param",
+				"io.cocolabs.unknownClass<java.lang.Object, java.lang.String> param",
+				"java.lang.Object param0, io.cocolabs.unknownClass param1",
+				"java.lang.Object param0, io.cocolabs.unknownClass<java.lang.Object> param",
+				"java.lang.Object param0, io.cocolabs.unknownClass<java.lang.Object, java.lang.String> param"
 		);
 		for (String signature : unknownMethodSignatures) {
 			Assertions.assertThrows(SignatureParsingException.class,
