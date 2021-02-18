@@ -198,6 +198,7 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 		return Collections.unmodifiableSet(result);
 	}
 
+	@Override
 	public Set<ZomboidLuaDoc> compile() throws CompilerException {
 
 		Logger.info("Start compiling lua classes...");

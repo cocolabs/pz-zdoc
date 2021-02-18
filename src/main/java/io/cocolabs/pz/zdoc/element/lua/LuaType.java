@@ -46,6 +46,7 @@ public class LuaType implements IClass {
 		this(name, new ArrayList<>());
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

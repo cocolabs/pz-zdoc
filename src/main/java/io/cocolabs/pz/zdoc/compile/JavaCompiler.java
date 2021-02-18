@@ -272,6 +272,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 		return result;
 	}
 
+	@Override
 	public Set<ZomboidJavaDoc> compile() {
 
 		Logger.info("Start compiling java classes...");

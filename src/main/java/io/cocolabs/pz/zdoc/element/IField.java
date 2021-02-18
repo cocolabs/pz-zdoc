@@ -25,6 +25,7 @@ public interface IField extends IMember {
 	IClass getType();
 
 	/** Returns name of the {@code Field} represented by this object. */
+	@Override
 	String getName();
 
 	/** Returns a string describing this {@code Field}. */
