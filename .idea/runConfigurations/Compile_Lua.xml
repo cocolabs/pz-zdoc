@@ -2,7 +2,7 @@
   <configuration default="false" name="Compile Lua" type="Application" factoryName="Application">
     <log_file alias="Main" path="$PROJECT_DIR$/logs/main.log" />
     <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
-    <option name="MAIN_CLASS_NAME" value="io.yooksi.pz.zdoc.Main" />
+    <option name="MAIN_CLASS_NAME" value="io.cocolabs.pz.zdoc.Main" />
     <module name="pz-zdoc.main" />
     <option name="PROGRAM_PARAMETERS" value="compile -i &quot;$PZ_DIR_PATH$&quot; -o media/lua/shared/Library" />
     <option name="VM_PARAMETERS" value="-Dzdoc.logger=&quot;dev&quot;" />
