@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
@@ -114,10 +115,10 @@ public class Main {
 			Logger.debug("Preparing to parse and document lua files...");
 
 			Path root = cmdLine.getInputPath();
-			Path dir = cmdLine.getOutputPath();
-			List<Path> paths = Files.walk(Paths.get(root.toString()))
-					.filter(Files::isRegularFile).collect(Collectors.toCollection(ArrayList::new));
-
+			List<Path> paths; Path dir = cmdLine.getOutputPath();
+			try (Stream<Path> stream = Files.walk(Paths.get(root.toString()))) {
+				paths = stream.filter(Files::isRegularFile).collect(Collectors.toCollection(ArrayList::new));
+			}
 			if (paths.size() > 1) {
 				Logger.info("Parsing and documenting lua files found in " + root);
 			}
