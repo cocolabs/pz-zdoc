@@ -68,7 +68,7 @@ public enum Command {
 		this(name, HelpFormatter.DEFAULT_OPT_PREFIX, options, help);
 	}
 
-	/** @return {@code Command} that matches the given name. */
+	/** Returns command that matches the given name. */
 	public static @Nullable Command get(String name) {
 
 		for (Command value : Command.values())
@@ -81,9 +81,9 @@ public enum Command {
 	}
 
 	/**
-	 * @return {@code Command} that matches first element in the given
-	 * 		array of arguments or {@code null} if no matching command was found.
+	 * Returns command that matches first array element.
 	 *
+	 * @return first array element or {@code null} if no matching command was found.
 	 * @throws IllegalArgumentException if argument array is empty.
 	 */
 	public static @Nullable Command parse(String[] args) {
@@ -95,10 +95,13 @@ public enum Command {
 	}
 
 	/**
-	 * @return {@code Command} that matches first element in the given
-	 * 		array of arguments or {@code null} if no matching command was found.
+	 * Returns command that matches first array element.
+	 *
+	 * @param fromIndex index to reference the first element from.
+	 * @return first array element or {@code null} if no matching command was found.
 	 *
 	 * @throws IllegalArgumentException if argument array is empty.
+	 * @see #parse(String[])
 	 */
 	public static @Nullable Command parse(String[] args, int fromIndex) {
 

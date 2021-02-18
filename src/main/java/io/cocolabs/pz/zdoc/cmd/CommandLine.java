@@ -101,6 +101,8 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	}
 
 	/**
+	 * Returns class names to exclude from compilation process.
+	 *
 	 * @return {@code Set} of class names specified in command options to exclude from
 	 * 		compilation process or an empty list if exclude option has not been set.
 	 *
@@ -118,13 +120,15 @@ public class CommandLine extends org.apache.commons.cli.CommandLine {
 	}
 
 	/**
-	 * @return input path specified in command options.
+	 * Returns input path specified in command options.
 	 */
 	public Path getInputPath() {
 		return ((File) getParsedValue(CommandOptions.INPUT_OPTION)).toPath();
 	}
 
 	/**
+	 * Returns command operation output path.
+	 *
 	 * @return output path specified in command options or {@code null} if
 	 * 		output command option was not specified.
 	 */
