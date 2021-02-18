@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import com.google.common.base.Splitter;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -71,13 +73,13 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 		String comment = member.getComment();
 		if (!StringUtils.isBlank(comment))
 		{
-			String[] comments = comment.split("(\\r\\n|\\r|\\n)");
-			int commentCount = comments.length;
+			List<String> comments = Splitter.onPattern("(\\r\\n|\\r|\\n)").splitToList(comment);
+			int commentCount = comments.size();
 			if (commentCount > 0)
 			{
-				sb.append("---").append(comments[0]);
+				sb.append("---").append(comments.get(0));
 				for (int i = 1; i < commentCount; i++) {
-					sb.append("\n---\n---").append(comments[i]);
+					sb.append("\n---\n---").append(comments.get(i));
 				}
 				sb.append('\n');
 			}
