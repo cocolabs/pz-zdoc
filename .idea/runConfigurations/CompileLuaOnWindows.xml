@@ -11,8 +11,8 @@
     <option name="PARAMETERS" value="compile -i &quot;$PZ_DIR_PATH$&quot; -o media/lua/shared/Library" />
     <method v="2">
       <option name="Make" enabled="true" />
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="cleanMedia" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="installDist" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="false" tasks="cleanMedia" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="false" tasks="installDist" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="-x generateChangelog" />
     </method>
   </configuration>
 </component>
