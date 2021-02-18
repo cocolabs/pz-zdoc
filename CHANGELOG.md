@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.0.0](https://github.com/real-coco-labs/pz-zdoc/tree/v3.0.0) (2021-02-18)
+
+[Full Changelog](https://github.com/real-coco-labs/pz-zdoc/compare/v2.2.0...v3.0.0)
+
+**Breaking changes:**
+
+- Move to organization namespace [\#56](https://github.com/real-coco-labs/pz-zdoc/issues/56)
+- Improve version command [\#34](https://github.com/real-coco-labs/pz-zdoc/issues/34)
+
 ## [v2.2.0](https://github.com/real-coco-labs/pz-zdoc/tree/v2.2.0) (2021-02-17)
 
 [Full Changelog](https://github.com/real-coco-labs/pz-zdoc/compare/v2.1.0...v2.2.0)
@@ -8,10 +17,7 @@
 
 - Dedicated production log directory [\#55](https://github.com/real-coco-labs/pz-zdoc/issues/55)
 - Optional only-annotated lua inclusion [\#54](https://github.com/real-coco-labs/pz-zdoc/issues/54)
-
-**Closed issues:**
-
-- Redundant distribution libraries [\#46](https://github.com/real-coco-labs/pz-zdoc/issues/46)
+- Exclude redundant distribution libraries [\#46](https://github.com/real-coco-labs/pz-zdoc/issues/46)
 
 ## [v2.1.0](https://github.com/real-coco-labs/pz-zdoc/tree/v2.1.0) (2021-02-05)
 
