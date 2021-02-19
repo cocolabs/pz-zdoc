@@ -17,10 +17,7 @@
  */
 package io.cocolabs.pz.zdoc;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +30,9 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 
 import io.cocolabs.pz.zdoc.cmd.Command;
 import io.cocolabs.pz.zdoc.cmd.CommandLine;
@@ -90,7 +90,9 @@ public class Main {
 						if (iStream == null) {
 							throw new FileNotFoundException("Unable to read version, missing version.txt");
 						}
-						zdocVersion = iStream.toString();
+						try (Reader reader = new InputStreamReader(iStream, Charsets.UTF_8)) {
+							zdocVersion = CharStreams.toString(reader);
+						}
 					}
 				}
 				else zdocVersion = FileUtils.readFileToString(versionFile, CHARSET);
