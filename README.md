@@ -59,7 +59,7 @@ task zomboidVersion(type: JavaExec) {
 
 ### Manual
 
-- Download the [latest release](https://github.com/real-coco-labs/pz-zdoc/releases/latest) from the repository releases section.
+- Download the [latest release](https://github.com/real-coco-labs/pz-zdoc/releases/latest) from the repository.
 - Extract the release archive to your game installation directory <i>or</i> anywhere on your computer.
 
 ## How to use
