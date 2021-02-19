@@ -10,7 +10,7 @@ on:
       - 'release/**'        # Release branches
       - 'hotfix/**'         # Hotfix branches
       - master              # Main project branch
-  pull_request:
+  pull_request_target:
 
 # Quality Assurance
 name: Java QA
