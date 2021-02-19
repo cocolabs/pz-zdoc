@@ -30,7 +30,7 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 - *Content captured in angled brackets represents substitution. For example; if the path to game directory is `/home/projectzomboid/` then substitute `PZ_DIR_PATH=<path_to_game_dir>` with `PZ_DIR_PATH=/home/projectzomboid/`*.
 - *Application path arguments should not end with a backslash when running on Windows to avoid escaping quotation mark delimiters that separate quoted paths as option arguments.*  
 
-### Requirements
+### Prerequisites
 
 - Project Zomboid[<sup>?</sup>](#requirements "tested with 41.50-IWBUMS")
 - [JDK 8](https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot)[<sup>?</sup>](#requirements "tested with OpenJDK 1.8.0_282")
