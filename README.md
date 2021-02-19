@@ -26,8 +26,8 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 
 ### Notes 
 
-- *Little question marks are hyperlinks that reveal more information on mouse hover and click.*
-- *Content captured in angled brackets represents substitution. For example if the path to game directory was `/home/projectzomboid/` then `PZ_DIR_PATH=<path_to_game_dir>` should be substituted with `PZ_DIR_PATH=/home/projectzomboid/`*.
+- *Little question marks are hyperlinks that reveal more information when you hover over them.*
+- *Content captured in angled brackets represents substitution. For example; if the path to game directory is `/home/projectzomboid/` then substitute `PZ_DIR_PATH=<path_to_game_dir>` with `PZ_DIR_PATH=/home/projectzomboid/`*.
 - *Application path arguments should not end with a backslash when running on Windows to avoid escaping quotation mark delimiters that separate quoted paths as option arguments.*  
 
 ### Requirements
