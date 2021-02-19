@@ -35,7 +35,29 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 - Project Zomboid[<sup>?</sup>](#requirements "tested with 41.50-IWBUMS")
 - [JDK 8](https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot)[<sup>?</sup>](#requirements "tested with OpenJDK 1.8.0_282")
 
-### Setup
+### Gradle
+
+The easiest way to install and use ZomboidDoc is with [ZomboidMod](https://github.com/real-coco-labs/pz-zmod), which has built-in support for all ZomboidDoc commands. Read project [documentation](https://github.com/real-coco-labs/pz-zmod/blob/master/README.md) to learn more about how to setup and use ZomboidMod.
+
+It is also possible to setup ZomboidDoc with Gradle without using ZomboidMod:
+
+```groovy
+repositories {
+    // ZomboidDoc artifacts are hosted as Github packages
+    maven { url = uri('https://maven.pkg.github.com/real-coco-labs/pz-zdoc') }
+}
+dependencies {
+    // https://github.com/orgs/real-coco-labs/packages?repo_name=pz-zdoc
+    implementation 'io.cocolabs:pz-zdoc:3.+'
+}
+// Example of how to execute ZomboidDoc commands with tasks
+task zomboidVersion(type: JavaExec) {
+    main = 'io.cocolabs.pz.zdoc.Main'
+    args 'version'
+}
+```
+
+### Manual
 
 - Download the [latest release](https://github.com/real-coco-labs/pz-zdoc/releases/latest) from the repository releases section.
 - Extract the release archive to your game installation directory <i>or</i> anywhere on your computer.
