@@ -37,7 +37,7 @@ jobs:
       - name: Check license compliance
         uses: fossa-contrib/fossa-action@v1
         with:
-          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
+          fossa-api-key: e389dc57bff085a023f902db8e9854cb
       # Check if code is spotless
       - name: Check code format compliance
         uses: burrunan/gradle-cache-action@v1

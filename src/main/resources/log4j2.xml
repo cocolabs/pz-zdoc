@@ -10,7 +10,10 @@
     </Properties>
     <Appenders>
         <!-- Console for use in production environment -->
-        <Console name="Console" target="SYSTEM_OUT">
+        <Console name="StandardConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%msg%n"/>
+        </Console>
+        <Console name="DebugConsole" target="SYSTEM_OUT">
             <PatternLayout pattern="${logLevelPattern}: %msg%n"/>
         </Console>
         <!-- Log file for standard use in production environment -->
@@ -34,11 +37,11 @@
     </Appenders>
     <Loggers>
         <Logger name="StandardLogger" level="verbose" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="StandardConsole" level="info"/>
             <AppenderRef ref="MainFile" level="verbose"/>
         </Logger>
         <Logger name="DebugLogger" level="debug" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="DebugConsole" level="info"/>
             <AppenderRef ref="MainFile" level="verbose"/>
             <AppenderRef ref="DebugFile"/>
         </Logger>
