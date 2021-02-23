@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.0.1](https://github.com/real-coco-labs/pz-zdoc/tree/v3.0.1) (2021-02-19)
+
+[Full Changelog](https://github.com/real-coco-labs/pz-zdoc/compare/v3.0.0...v3.0.1)
+
+**Fixed bugs:**
+
+- Malformed version output [\#61](https://github.com/real-coco-labs/pz-zdoc/issues/61)
+- Production jar missing version.txt [\#59](https://github.com/real-coco-labs/pz-zdoc/issues/59)
+
 ## [v3.0.0](https://github.com/real-coco-labs/pz-zdoc/tree/v3.0.0) (2021-02-18)
 
 [Full Changelog](https://github.com/real-coco-labs/pz-zdoc/compare/v2.2.0...v3.0.0)
