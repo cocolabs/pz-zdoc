@@ -101,7 +101,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 
 	static List<JavaField> compileJavaFields(Class<?> clazz, @Nullable ZomboidAPIDoc doc) throws DetailParsingException {
 
-		Logger.debug("Start compiling java fields...");
+		Logger.debug("Start compiling java fields for " + clazz.getName());
 		List<JavaField> result = PredicatedList.predicatedList(
 				new ArrayList<>(), PredicateUtils.notNullPredicate()
 		);
@@ -167,7 +167,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 
 	static Set<JavaMethod> compileJavaMethods(Class<?> clazz, @Nullable ZomboidAPIDoc doc) throws DetailParsingException {
 
-		Logger.debug("Start compiling java methods...");
+		Logger.debug("Start compiling java methods for " + clazz.getName());
 		Set<JavaMethod> result = PredicatedSet.predicatedSet(
 				new HashSet<>(), PredicateUtils.notNullPredicate()
 		);
