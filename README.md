@@ -164,7 +164,7 @@ You can now continue modding with full confidence that everything you need to kn
 ## Discussion
 
 - Feel free to [open a ticket](https://github.com/real-coco-labs/pz-zdoc/issues/new) if you have any problems, questions or suggestions regarding the project.
-- You are also welcome to join us on [Discord](https://discord.gg/vCeydWCbd9) to talk about Project Zomboid modding and follow community projects.
+- You are also welcome to join us on [Discord](https://discord.gg/vCeydWCbd9) to talk about modding and follow community projects.
 
 ## Credits
 
