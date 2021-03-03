@@ -75,7 +75,7 @@ distributions.main.contents {
         /*
          * there is a bug that occurs when running distribution tasks on Github CI
          * where the distribution archive tries to add itself to archive
-         * @see https://github.com/real-coco-labs/pz-zdoc/issues/21
+         * @see https://github.com/cocolabs/pz-zdoc/issues/21
          */
         if (filename.startsWith(archivesBaseName) && filename.endsWithAny('.zip', '.tar')) {
             return true
@@ -122,7 +122,7 @@ publishing {
     repositories {
         maven {
             name = 'GitHubPackages'
-            url = uri('https://maven.pkg.github.com/real-coco-labs/pz-zdoc')
+            url = uri('https://maven.pkg.github.com/cocolabs/pz-zdoc')
             credentials {
                 username = project.findProperty('ghp.user') ?: System.getenv('GHP_USER')
                 password = project.findProperty('ghp.token') ?: System.getenv('GHP_TOKEN')

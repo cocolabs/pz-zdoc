@@ -1,6 +1,6 @@
 # ZomboidDoc
 
-![Java CD](https://github.com/real-coco-labs/pz-zdoc/workflows/Java%20CD/badge.svg?branch=master) [![FOSSA Status](https://app.fossa.com/api/projects/custom%2B23026%2Fgithub.com%2Freal-coco-labs%2Fpz-zdoc.svg?type=shield)](https://app.fossa.com/projects/custom%2B23026%2Fgithub.com%2Freal-coco-labs%2Fpz-zdoc?ref=badge_shield) [![release](https://img.shields.io/github/v/release/real-coco-labs/pz-zdoc)](https://github.com/real-coco-labs/pz-zdoc/releases/latest) [![codecov](https://codecov.io/gh/real-coco-labs/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/real-coco-labs/pz-zdoc) [![License](https://img.shields.io/github/license/real-coco-labs/pz-zdoc)](https://www.gnu.org/licenses/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
+![Java CD](https://github.com/cocolabs/pz-zdoc/workflows/Java%20CD/badge.svg?branch=master) [![FOSSA Status](https://app.fossa.com/api/projects/custom%2B23026%2Fgithub.com%2Fcocolabs%2Fpz-zdoc.svg?type=shield)](https://app.fossa.com/projects/custom%2B23026%2Fgithub.com%2Fcocolabs%2Fpz-zdoc?ref=badge_shield) [![release](https://img.shields.io/github/v/release/cocolabs/pz-zdoc)](https://github.com/cocolabs/pz-zdoc/releases/latest) [![codecov](https://codecov.io/gh/cocolabs/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/cocolabs/pz-zdoc) [![License](https://img.shields.io/github/license/cocolabs/pz-zdoc)](https://www.gnu.org/licenses/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
 
 ZomboidDoc is an easy-to-use Java command-line application that compiles an annotated Lua library directly from modding API. Powered by [IntelliJ IDEA](https://www.jetbrains.com/idea/) it makes mod development an enjoyable experience by providing everything you need to write an amazing mod right from you IDE.
 
@@ -37,7 +37,7 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 
 ### Gradle
 
-The easiest way to install and use ZomboidDoc is with [ZomboidMod](https://github.com/real-coco-labs/pz-zmod), which has built-in support for all ZomboidDoc commands. Read project [documentation](https://github.com/real-coco-labs/pz-zmod/blob/master/README.md) to learn more about how to setup and use ZomboidMod.
+The easiest way to install and use ZomboidDoc is with [ZomboidMod](https://github.com/cocolabs/pz-zmod), which has built-in support for all ZomboidDoc commands. Read project [documentation](https://github.com/cocolabs/pz-zmod/blob/master/README.md) to learn more about how to setup and use ZomboidMod.
 
 It is also possible to setup ZomboidDoc with Gradle without using ZomboidMod:
 
@@ -47,14 +47,14 @@ project.ext.cocoLabsRepo = 'pz-zdoc'
 apply from: 'https://git.io/JtydE'
 
 dependencies {
-    // https://github.com/orgs/real-coco-labs/packages?repo_name=pz-zdoc
+    // https://github.com/orgs/cocolabs/packages?repo_name=pz-zdoc
     implementation 'io.cocolabs:pz-zdoc:3.+'
 }
 ```
 
 ### Manual
 
-- Download the [latest release](https://github.com/real-coco-labs/pz-zdoc/releases/latest) from the repository.
+- Download the [latest release](https://github.com/cocolabs/pz-zdoc/releases/latest) from the repository.
 - Extract the release archive to your game installation directory <i>or</i> anywhere on your computer.
 
 ## How to use
@@ -163,7 +163,7 @@ You can now continue modding with full confidence that everything you need to kn
 
 ## Discussion
 
-- Feel free to [open a ticket](https://github.com/real-coco-labs/pz-zdoc/issues/new) if you have any problems, questions or suggestions regarding the project.
+- Feel free to [open a ticket](https://github.com/cocolabs/pz-zdoc/issues/new) if you have any problems, questions or suggestions regarding the project.
 - You are also welcome to join us on [Discord](https://discord.gg/vCeydWCbd9) to talk about modding and follow community projects.
 
 ## Credits
@@ -173,4 +173,4 @@ You can now continue modding with full confidence that everything you need to kn
 
 ## License
 
-This project is licensed under [GNU General Public License v3.0](https://github.com/real-coco-labs/pz-zdoc/blob/master/LICENSE.txt).
+This project is licensed under [GNU General Public License v3.0](https://github.com/cocolabs/pz-zdoc/blob/master/LICENSE.txt).
