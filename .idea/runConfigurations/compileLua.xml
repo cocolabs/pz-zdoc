@@ -1,0 +1,26 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="compileLua" type="GradleRunConfiguration" factoryName="Gradle">
+    <log_file alias="Main" path="$PROJECT_DIR$/logs/main.log" />
+    <log_file alias="Debug" path="$PROJECT_DIR$/logs/debug.log" />
+    <ExternalSystemSettings>
+      <option name="executionName" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="scriptParameters" value="" />
+      <option name="taskDescriptions">
+        <list />
+      </option>
+      <option name="taskNames">
+        <list>
+          <option value="run" />
+          <option value="--args='compile -i &quot;$PZ_DIR_PATH$&quot; -o build/tmp/compileLua/media/lua/shared/Library'" />
+        </list>
+      </option>
+      <option name="vmOptions" value="-Dzdoc.logger=&quot;dev&quot;" />
+    </ExternalSystemSettings>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <DebugAllEnabled>false</DebugAllEnabled>
+    <method v="2" />
+  </configuration>
+</component>
