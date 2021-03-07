@@ -113,6 +113,27 @@ public class MethodDetail extends Detail<JavaMethod> {
 				commentBuilder.append('\n').append(commentBlocks.get(i).text());
 			}
 		}
+		// include override method documentation
+		boolean lastElementOverrideLabel = false;
+		for (Element blockListElement : element.getAllElements())
+		{
+			String tagName = blockListElement.tagName();
+			if (blockListElement.className().equals("overrideSpecifyLabel"))
+			{
+				if (commentBuilder.length() > 0) {
+					commentBuilder.append('\n');
+				}
+				commentBuilder.append(blockListElement.text());
+				lastElementOverrideLabel = true;
+			}
+			else if (lastElementOverrideLabel)
+			{
+				if (tagName.equals("dd")) {
+					commentBuilder.append('\n').append(blockListElement.text());
+				}
+				lastElementOverrideLabel = false;
+			}
+		}
 		String result = commentBuilder.toString();
 		if (!result.isEmpty()) {
 			Logger.debug("Parsed detail comment: \"" + result + "\"");

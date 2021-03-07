@@ -429,9 +429,12 @@ class MethodDetailTest extends MethodDetailTestFixture {
 
 		List<JavaMethod> entries = detail.getEntries();
 		String[] expectedComments = new String[]{
-				"This is a single-line block comment",
-				"This is a multi\nline block comment",
-				"", "", "", "", "",
+				"This is a single-line block comment\nSpecified by:\nbegin in class BaseCommand",
+				"This is a multi\nline block comment\nSpecified by:\nDoesInstantly in class BaseCommand",
+				"Specified by:\ninit in class BaseCommand",
+				"Specified by:\nIsFinished in class BaseCommand",
+				"Specified by:\nupdate in class BaseCommand",
+				"", "Specified by:\ngetColor in class BaseCommand",
 				"This method is annotated as @Deprecated"
 		};
 		Assertions.assertEquals(expectedComments.length, entries.size());
