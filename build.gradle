@@ -21,6 +21,7 @@ plugins {
     id 'com.github.jk1.dependency-license-report' version '1.16'
 }
 apply from: 'setup.gradle'
+apply from: 'zomboid.gradle'
 apply from: 'spotless.gradle'
 apply from: 'distribution.gradle'
 

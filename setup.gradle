@@ -121,6 +121,9 @@ def <T> void registerLocalProjectProperty(String name, Class<T> type, String env
 if (!CI) {
     // path to Project Zomboid installation directory
     registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
+
+    // path to IntelliJ IDEA installation directory
+    registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', true)
 }
 // Github repository token used to generate changelog
 registerLocalProjectProperty('cg.token', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
