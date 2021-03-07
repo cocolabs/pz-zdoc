@@ -274,6 +274,12 @@ public class Main {
 			}
 		}
 		Logger.debug("Finished processing command");
+		/*
+		 * exit application gracefully to avoid unpredictable
+		 * AGENT_ERROR_NO_JNI_ENV error that is present in J8 sun classes:
+		 * https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6476706
+		 */
+		System.exit(0);
 	}
 
 	private static void writeAnnotatedLinesToFile(List<String> lines, File file) throws IOException {
