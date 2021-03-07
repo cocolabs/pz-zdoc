@@ -77,9 +77,9 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 			int commentCount = comments.size();
 			if (commentCount > 0)
 			{
-				sb.append("---").append(comments.get(0));
+				sb.append("---").append(comments.get(0).trim());
 				for (int i = 1; i < commentCount; i++) {
-					sb.append("\n---\n---").append(comments.get(i));
+					sb.append("\n---\n---").append(comments.get(i).trim());
 				}
 				sb.append('\n');
 			}
