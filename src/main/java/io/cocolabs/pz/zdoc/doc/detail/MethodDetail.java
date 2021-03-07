@@ -62,7 +62,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 				Logger.error("Unable to find method signature for method: " + listName);
 				continue;
 			}
-			Signature signature = new Signature(qualifyZomboidClassElements(eSignature));
+			Signature signature = new Signature(qualifyZomboidClassElements(eSignature), blockList);
 			JavaClass type = TypeSignatureParser.parse(signature.returnType);
 			if (type == null)
 			{
@@ -103,7 +103,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 		final MemberModifier modifier;
 		final String returnType, name, params, comment;
 
-		Signature(String signatureText) throws SignatureParsingException {
+		Signature(String signatureText, String detailComment) throws SignatureParsingException {
 			super(signatureText);
 			Logger.debug("Parsing method signature: " + signature);
 
@@ -208,11 +208,18 @@ public class MethodDetail extends Detail<JavaMethod> {
 				String commentSuffix = "This method is annotated as " + annotation;
 				tComment = tComment.isEmpty() ? commentSuffix : tComment + '\n' + commentSuffix;
 			}
+			if (detailComment != null && !detailComment.isEmpty()) {
+				tComment += !tComment.isEmpty() ? '\n' + detailComment : detailComment;
+			}
 			this.comment = tComment;
 		}
 
-		private Signature(Element element) throws SignatureParsingException {
-			this(element.text());
+		Signature(String signatureText) throws SignatureParsingException {
+			this(signatureText, "");
+		}
+
+		private Signature(Element element, Element parentElement) throws SignatureParsingException {
+			this(element.text(), parseDetailComments(parentElement));
 		}
 	}
 }

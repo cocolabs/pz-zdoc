@@ -32,6 +32,7 @@ import io.cocolabs.pz.zdoc.element.java.JavaParameter;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 import io.cocolabs.pz.zdoc.element.mod.ModifierKey;
+
 import zombie.characters.IsoPlayer;
 import zombie.core.Color;
 
@@ -420,6 +421,21 @@ class MethodDetailTest extends MethodDetailTestFixture {
 		}
 	}
 
+	@Test
+	void shouldParseValidMethodDetailCommentBlocks() {
+
+		List<JavaMethod> entries = detail.getEntries();
+		String[] expectedComments = new String[]{
+				"This is a single-line block comment",
+				"This is a multi\nline block comment",
+				"", "", "", "", "",
+				"This method is annotated as @Deprecated"
+		};
+		Assertions.assertEquals(expectedComments.length, entries.size());
+		for (int i = 0; i < entries.size(); i++) {
+			Assertions.assertEquals(expectedComments[i], entries.get(i).getComment());
+		}
+	}
 	@Test
 	void shouldGetCorrectMethodDetailEntriesByName() {
 
