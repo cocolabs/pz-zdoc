@@ -19,6 +19,8 @@ package io.cocolabs.pz.zdoc.doc.detail;
 
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
@@ -78,6 +80,22 @@ class DetailTest extends DetailTestFixture<DetailTest.TestDetail> {
 			Element signature = this.detail.qualifyZomboidClassElements(pre);
 			Assertions.assertEquals(entry.getValue(), DetailSignature.normalizeElement(signature));
 		}
+	}
+
+	@Test
+	void shouldCorrectlyParseDetailCommentBlocks() {
+
+		String html = StringUtils.join(
+				"<ul class=\"blockList\">",
+				"	<li class=\"blockList\">",
+				"		<h4>sampleMethod</h4>",
+				"		<pre>public&nbsp;float&nbsp;sampleMethod()</pre>",
+				"		<div class=\"block\">This is a sample comment</div>",
+				"	</li>",
+				"</ul>"
+		);
+		Element element = Jsoup.parse(html, "").getAllElements().first();
+		Assertions.assertEquals("This is a sample comment", Detail.parseDetailComments(element));
 	}
 
 	@Test

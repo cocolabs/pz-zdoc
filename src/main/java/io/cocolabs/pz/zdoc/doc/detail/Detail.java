@@ -32,6 +32,7 @@ import org.springframework.util.ClassUtils;
 
 import io.cocolabs.pz.zdoc.doc.ZomboidAPIDoc;
 import io.cocolabs.pz.zdoc.element.IMember;
+import io.cocolabs.pz.zdoc.logger.Logger;
 
 public abstract class Detail<T extends IMember> {
 
@@ -88,6 +89,31 @@ public abstract class Detail<T extends IMember> {
 			textNode.text(ClassUtils.convertResourcePathToClassName(packagePath));
 		}
 		return element;
+	}
+
+	/**
+	 * Parse comment text from given element.
+	 */
+	static String parseDetailComments(Element element) {
+
+		StringBuilder commentBuilder = new StringBuilder();
+		Elements commentBlocks = element.getElementsByClass("block");
+		if (!commentBlocks.isEmpty())
+		{
+			commentBuilder.append(commentBlocks.get(0).text());
+			/*
+			 * normally there should only be one comment block per element
+			 * but check for additional blocks just to be on the safe side
+			 */
+			for (int i = 1; i < commentBlocks.size(); i++) {
+				commentBuilder.append('\n').append(commentBlocks.get(i).text());
+			}
+		}
+		String result = commentBuilder.toString();
+		if (!result.isEmpty()) {
+			Logger.debug("Parsed detail comment: \"" + result + "\"");
+		}
+		return result;
 	}
 
 	public @UnmodifiableView List<T> getEntries() {
