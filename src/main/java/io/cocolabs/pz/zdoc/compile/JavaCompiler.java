@@ -115,51 +115,41 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 				continue;
 			}
 			int typeParamCount = field.getType().getTypeParameters().length;
-			if (typeParamCount > 0)
-			{
-				/* if the field is a parameterized type we are not going to be able
-				 * to determine the exact type due to runtime erasure, so try to
-				 * use the field data from online API page if possible
-				 */
-				Logger.debug("Field has %d type parameters", typeParamCount);
-				JavaClass jField = new JavaClass(field.getType());
-				if (doc != null)
-				{
-					Logger.debug("Searching for field in document %s", doc.getName());
-					JavaField docField = fieldDetail.getEntry(field.getName());
-					if (docField != null)
-					{
-						/* extra care has to be taken to ensure that we are dealing with exactly
-						 * the same object since API documentation is often out of date
-						 */
-						Logger.debug("Found mathing detail field entry with name %s", docField.getName());
-						if (docField.getType().equals(jField, true))
-						{
-							/* matching field was found, use field data pulled from API page
-							 * with written type parameters instead of declared field
-							 */
-							result.add(docField);
-							continue;
-						}
-						else Logger.debug("Detail entry (%s) did not match field", docField.getType());
-					}
-					String format = "Didn't find matching field \"%s\" in document \"%s\"";
-					Logger.detail(String.format(format, field.getName(), doc.getName()));
-				}
-				/* when no matching field or API page was found, construct new JavaField
-				 * with same properties as declared field but make parameterized types null
-				 */
-				MemberModifier modifier = new MemberModifier(field.getModifiers());
-				result.add(new JavaField(jField, field.getName(), modifier));
-			}
-			/* the field is not a parameterized type,
-			 * use declared Field object to construct JavaField instance
+			/*
+			 * if the field is a parameterized type we are not going to be able
+			 * to determine the exact type due to runtime erasure, so try to
+			 * use the field data from online API page if possible
 			 */
-			else
+			Logger.debug("Field has %d type parameters", typeParamCount);
+			JavaClass jField = new JavaClass(field.getType());
+			if (doc != null)
 			{
-				Logger.debug("Constructing field from JavaField instance");
-				result.add(new JavaField(field));
+				Logger.debug("Searching for field in document %s", doc.getName());
+				JavaField docField = fieldDetail.getEntry(field.getName());
+				if (docField != null)
+				{
+					/* extra care has to be taken to ensure that we are dealing with exactly
+					 * the same object since API documentation is often out of date
+					 */
+					Logger.debug("Found mathing detail field entry with name %s", docField.getName());
+					if (docField.getType().equals(jField, true))
+					{
+						/* matching field was found, use field data pulled from API page
+						 * with written type parameters instead of declared field
+						 */
+						result.add(docField);
+						continue;
+					}
+					else Logger.debug("Detail entry (%s) did not match field", docField.getType());
+				}
+				String format = "Didn't find matching field \"%s\" in document \"%s\"";
+				Logger.detail(String.format(format, field.getName(), doc.getName()));
 			}
+			/* when no matching field or API page was found, construct new JavaField
+			 * with same properties as declared field but make parameterized types null
+			 */
+			MemberModifier modifier = new MemberModifier(field.getModifiers());
+			result.add(new JavaField(jField, field.getName(), modifier));
 		}
 		Logger.debug("Finished compiling %d fields", result.size());
 		return result;
