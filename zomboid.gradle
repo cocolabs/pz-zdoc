@@ -1,3 +1,6 @@
+// directory containing Project Zomboid classes
+project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile
+
 // directory containing Project Zomboid sources
 project.ext.zomboidSourcesDir = file("$buildDir/generated/sources/zomboid").absoluteFile
 
@@ -35,4 +38,39 @@ tasks.register('decompileZomboid', JavaExec.class) {
 
     it.args params + zomboidClassesDir.path + zomboidSourcesDir.path
     it.dependsOn(zomboidClasses)
+}
+
+tasks.register('zomboidJar', Jar.class) {
+
+	it.description 'Assembles a jar archive containing game classes.'
+	it.group 'zomboid'
+	it.onlyIf {
+		def files = zomboidClassesDir.exists() ? zomboidClassesDir.listFiles() : null
+		return files != null && files.size() > 0
+	}
+	it.includeEmptyDirs = false
+
+	it.archiveBaseName.set('zomboid')
+	it.archiveVersion.set('')
+
+	it.from zomboidClassesDir
+	it.destinationDir file('lib')
+
+	it.dependsOn(zomboidClasses)
+}
+
+tasks.register("zomboidSourcesJar", Jar.class) {
+
+	it.description 'Assembles a jar containing decompiled game sources.'
+	it.group 'zomboid'
+	it.onlyIf {
+		def files = zomboidSourcesDir.exists() ? zomboidSourcesDir.listFiles() : null
+		return files != null && files.size() > 0
+	}
+	it.archiveBaseName.set('zomboid')
+	it.archiveVersion.set('')
+	it.classifier 'sources'
+
+	it.from zomboidSourcesDir
+	it.destinationDir file('lib')
 }
