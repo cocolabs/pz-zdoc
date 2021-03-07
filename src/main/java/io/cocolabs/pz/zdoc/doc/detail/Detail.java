@@ -100,7 +100,7 @@ public abstract class Detail<T extends IMember> {
 		Elements commentBlocks = element.getElementsByClass("block");
 		if (!commentBlocks.isEmpty())
 		{
-			commentBuilder.append(commentBlocks.get(0).text());
+			commentBuilder.append(commentBlocks.get(0).wholeText());
 			/*
 			 * normally there should only be one comment block per element
 			 * but check for additional blocks just to be on the safe side
