@@ -169,7 +169,7 @@ dependencies {
         zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
 
         // Project Zomboid classes
-        zomboidImplementation files(zomboidClassesDir)
+        zomboidImplementation files('lib/zomboid.jar')
     }
 }
 
