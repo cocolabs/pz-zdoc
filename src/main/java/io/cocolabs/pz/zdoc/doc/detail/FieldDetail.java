@@ -82,6 +82,28 @@ public class FieldDetail extends Detail<JavaField> {
 		return getEntries().stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
 	}
 
+	static String parseFieldComments(Element element) {
+
+		StringBuilder commentBuilder = new StringBuilder();
+		Elements commentBlocks = element.getElementsByClass("block");
+		if (!commentBlocks.isEmpty())
+		{
+			commentBuilder.append(commentBlocks.get(0).wholeText());
+			/*
+			 * normally there should only be one comment block per element
+			 * but check for additional blocks just to be on the safe side
+			 */
+			for (int i = 1; i < commentBlocks.size(); i++) {
+				commentBuilder.append('\n').append(commentBlocks.get(i).text());
+			}
+		}
+		String result = commentBuilder.toString();
+		if (!result.isEmpty()) {
+			Logger.debug("Parsed detail comment: \"" + result + "\"");
+		}
+		return result;
+	}
+
 	@Override
 	public Set<JavaField> getEntries(String name) {
 		return Sets.newHashSet(getEntry(name));
@@ -161,7 +183,7 @@ public class FieldDetail extends Detail<JavaField> {
 		}
 
 		private Signature(Element element, Element parentElement) throws SignatureParsingException {
-			this(element.text(), parseDetailComments(parentElement));
+			this(element.text(), parseFieldComments(parentElement));
 		}
 	}
 }

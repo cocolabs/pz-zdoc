@@ -83,22 +83,6 @@ class DetailTest extends DetailTestFixture<DetailTest.TestDetail> {
 	}
 
 	@Test
-	void shouldCorrectlyParseDetailCommentBlocks() {
-
-		String html = StringUtils.join(
-				"<ul class=\"blockList\">",
-				"	<li class=\"blockList\">",
-				"		<h4>sampleMethod</h4>",
-				"		<pre>public&nbsp;float&nbsp;sampleMethod()</pre>",
-				"		<div class=\"block\">This is a sample comment</div>",
-				"	</li>",
-				"</ul>"
-		);
-		Element element = Jsoup.parse(html, "").getAllElements().first();
-		Assertions.assertEquals("This is a sample comment", Detail.parseDetailComments(element));
-	}
-
-	@Test
 	void shouldThrowExceptionWhenModifyingDetailMembers() {
 		Assertions.assertThrows(UnsupportedOperationException.class,
 				() -> new TestDetail().getEntries().add(new TestMember()));

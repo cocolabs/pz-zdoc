@@ -19,6 +19,9 @@ package io.cocolabs.pz.zdoc.doc.detail;
 
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -436,6 +439,24 @@ class MethodDetailTest extends MethodDetailTestFixture {
 			Assertions.assertEquals(expectedComments[i], entries.get(i).getComment());
 		}
 	}
+
+	@Test
+	void shouldCorrectlyParseMethodComments() {
+
+		String html = StringUtils.join(
+				"<ul class=\"blockList\">",
+				"	<li class=\"blockList\">",
+				"		<h4>sampleMethod</h4>",
+				"		<pre>public&nbsp;float&nbsp;sampleMethod()</pre>",
+				"		<div class=\"block\">This is a sample comment</div>",
+				"	</li>",
+				"</ul>"
+		);
+		Element element = Jsoup.parse(html, "").getAllElements().first();
+		String fieldComments = FieldDetail.parseFieldComments(element);
+		Assertions.assertEquals("This is a sample comment", fieldComments);
+	}
+
 	@Test
 	void shouldGetCorrectMethodDetailEntriesByName() {
 

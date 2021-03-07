@@ -107,12 +107,9 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 
 		ZomboidLuaDoc.appendAnnotations(sb, clazz);
 		// TODO: static fields should be written as actual fields (not just annotations)
-		for (LuaField field : fields)
-		{
-//			ZomboidLuaDoc.appendComments(sb, field);
+		for (LuaField field : fields) {
 			ZomboidLuaDoc.appendAnnotations(sb, field);
 		}
-		// TODO: newlines should be platform independent
 		sb.append(clazz.getConventionalName()).append(" = {}\n\n");
 
 		for (LuaMethod method : methods)

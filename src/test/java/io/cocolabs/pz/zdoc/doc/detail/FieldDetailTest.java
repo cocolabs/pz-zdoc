@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -257,6 +260,23 @@ class FieldDetailTest extends FieldDetailTestFixture {
 		for (int i = 0; i < entries.size(); i++) {
 			Assertions.assertEquals(expectedComments[i], entries.get(i).getComment());
 		}
+	}
+
+	@Test
+	void shouldCorrectlyParseFieldComments() {
+
+		String html = StringUtils.join(
+				"<ul class=\"blockList\">",
+				"	<li class=\"blockList\">",
+				"		<h4>x</h4>",
+				"		<pre>public&nbsp;float x</pre>",
+				"		<div class=\"block\">This is a sample comment</div>",
+				"	</li>",
+				"</ul>"
+		);
+		Element element = Jsoup.parse(html, "").getAllElements().first();
+		String fieldComments = FieldDetail.parseFieldComments(element);
+		Assertions.assertEquals("This is a sample comment", fieldComments);
 	}
 
 	@Test
