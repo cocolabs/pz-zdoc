@@ -243,6 +243,23 @@ class FieldDetailTest extends FieldDetailTestFixture {
 	}
 
 	@Test
+	void shouldParseValidFieldDetailComments() {
+
+		List<JavaField> entries = detail.getEntries();
+		String[] expectedComments = new String[]{
+				"The alpha component of the colour",
+				"The blue component of the colour",
+				"The fixed colour black",
+				"The fixed colour blue",
+				"The fixed colour cyan"
+		};
+		Assertions.assertEquals(expectedComments.length, entries.size());
+		for (int i = 0; i < entries.size(); i++) {
+			Assertions.assertEquals(expectedComments[i], entries.get(i).getComment());
+		}
+	}
+
+	@Test
 	void shouldGetCorrectFieldDetailEntriesByName() {
 
 		List<JavaField> expectedJavaFieldEntries = ImmutableList.of(

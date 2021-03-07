@@ -61,7 +61,7 @@ public class FieldDetail extends Detail<JavaField> {
 				if (eSignature == null) {
 					throw new DetailParsingException("Unable to find field signature for field: " + name);
 				}
-				signature = new Signature(qualifyZomboidClassElements(eSignature));
+				signature = new Signature(qualifyZomboidClassElements(eSignature), blockList);
 			}
 			catch (DetailParsingException e)
 			{
@@ -92,7 +92,7 @@ public class FieldDetail extends Detail<JavaField> {
 		final MemberModifier modifier;
 		final String type, name, comment;
 
-		Signature(String signatureText) throws SignatureParsingException {
+		Signature(String signatureText, String detailComment) throws SignatureParsingException {
 			super(signatureText);
 			Logger.debug("Parsing field signature: " + signature);
 
@@ -140,6 +140,7 @@ public class FieldDetail extends Detail<JavaField> {
 			/*
 			 * parse signature comment (optional)
 			 */
+			String sComment = "";
 			if (index < elements.size())
 			{
 				StringBuilder sb = new StringBuilder();
@@ -147,13 +148,20 @@ public class FieldDetail extends Detail<JavaField> {
 					sb.append(elements.get(index)).append(" ");
 				}
 				sb.deleteCharAt(sb.length() - 1);
-				this.comment = sb.toString();
+				sComment = sb.toString();
 			}
-			else this.comment = "";
+			if (detailComment != null && !detailComment.isEmpty()) {
+				sComment += !sComment.isEmpty() ? '\n' + detailComment : detailComment;
+			}
+			this.comment = sComment;
 		}
 
-		private Signature(Element element) throws SignatureParsingException {
-			this(element.text());
+		Signature(String signatureText) throws SignatureParsingException {
+			this(signatureText, "");
+		}
+
+		private Signature(Element element, Element parentElement) throws SignatureParsingException {
+			this(element.text(), parseDetailComments(parentElement));
 		}
 	}
 }
