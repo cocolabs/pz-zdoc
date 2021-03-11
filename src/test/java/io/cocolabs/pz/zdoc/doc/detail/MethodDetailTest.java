@@ -444,23 +444,6 @@ class MethodDetailTest extends MethodDetailTestFixture {
 	}
 
 	@Test
-	void shouldCorrectlyParseMethodComments() {
-
-		String html = StringUtils.join(
-				"<ul class=\"blockList\">",
-				"	<li class=\"blockList\">",
-				"		<h4>sampleMethod</h4>",
-				"		<pre>public&nbsp;float&nbsp;sampleMethod()</pre>",
-				"		<div class=\"block\">This is a sample comment</div>",
-				"	</li>",
-				"</ul>"
-		);
-		Element element = Jsoup.parse(html, "").getAllElements().first();
-		String fieldComments = FieldDetail.parseFieldComments(element);
-		Assertions.assertEquals("This is a sample comment", fieldComments);
-	}
-
-	@Test
 	void shouldGetCorrectMethodDetailEntriesByName() {
 
 		List<JavaMethod> expectedJavaMethodEntries = ImmutableList.of(

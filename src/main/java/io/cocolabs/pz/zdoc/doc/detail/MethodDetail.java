@@ -62,7 +62,46 @@ public class MethodDetail extends Detail<JavaMethod> {
 				Logger.error("Unable to find method signature for method: " + listName);
 				continue;
 			}
-			Signature signature = new Signature(qualifyZomboidClassElements(eSignature), blockList);
+			// parse method block and label comments
+			StringBuilder commentBuilder = new StringBuilder();
+			Elements commentBlocks = blockList.getElementsByClass("block");
+			if (!commentBlocks.isEmpty())
+			{
+				commentBuilder.append(commentBlocks.get(0).wholeText());
+				/*
+				 * normally there should only be one comment block per element
+				 * but check for additional blocks just to be on the safe side
+				 */
+				for (int i = 1; i < commentBlocks.size(); i++) {
+					commentBuilder.append('\n').append(commentBlocks.get(i).text());
+				}
+			}
+			// include override method documentation
+			boolean lastElementOverrideLabel = false;
+			for (Element blockListElement : blockList.getAllElements())
+			{
+				String tagName = blockListElement.tagName();
+				if (blockListElement.className().equals("overrideSpecifyLabel"))
+				{
+					if (commentBuilder.length() > 0) {
+						commentBuilder.append('\n');
+					}
+					commentBuilder.append(blockListElement.text());
+					lastElementOverrideLabel = true;
+				}
+				else if (lastElementOverrideLabel)
+				{
+					if (tagName.equals("dd")) {
+						commentBuilder.append('\n').append(blockListElement.text());
+					}
+					lastElementOverrideLabel = false;
+				}
+			}
+			String methodComment = commentBuilder.toString();
+			if (!methodComment.isEmpty()) {
+				Logger.debug("Parsed detail comment: \"" + result + "\"");
+			}
+			Signature signature = new Signature(qualifyZomboidClassElements(eSignature), methodComment);
 			JavaClass type = TypeSignatureParser.parse(signature.returnType);
 			if (type == null)
 			{
@@ -97,49 +136,6 @@ public class MethodDetail extends Detail<JavaMethod> {
 	@Override
 	public Set<JavaMethod> getEntries(String name) {
 		return getEntries().stream().filter(e -> e.getName().equals(name)).collect(Collectors.toSet());
-	}
-
-	private static String parseMethodComments(Element element) {
-
-		StringBuilder commentBuilder = new StringBuilder();
-		Elements commentBlocks = element.getElementsByClass("block");
-		if (!commentBlocks.isEmpty())
-		{
-			commentBuilder.append(commentBlocks.get(0).wholeText());
-			/*
-			 * normally there should only be one comment block per element
-			 * but check for additional blocks just to be on the safe side
-			 */
-			for (int i = 1; i < commentBlocks.size(); i++) {
-				commentBuilder.append('\n').append(commentBlocks.get(i).text());
-			}
-		}
-		// include override method documentation
-		boolean lastElementOverrideLabel = false;
-		for (Element blockListElement : element.getAllElements())
-		{
-			String tagName = blockListElement.tagName();
-			if (blockListElement.className().equals("overrideSpecifyLabel"))
-			{
-				if (commentBuilder.length() > 0) {
-					commentBuilder.append('\n');
-				}
-				commentBuilder.append(blockListElement.text());
-				lastElementOverrideLabel = true;
-			}
-			else if (lastElementOverrideLabel)
-			{
-				if (tagName.equals("dd")) {
-					commentBuilder.append('\n').append(blockListElement.text());
-				}
-				lastElementOverrideLabel = false;
-			}
-		}
-		String result = commentBuilder.toString();
-		if (!result.isEmpty()) {
-			Logger.debug("Parsed detail comment: \"" + result + "\"");
-		}
-		return result;
 	}
 
 	static class Signature extends DetailSignature {
@@ -262,8 +258,8 @@ public class MethodDetail extends Detail<JavaMethod> {
 			this(signatureText, "");
 		}
 
-		private Signature(Element element, Element parentElement) throws SignatureParsingException {
-			this(element.text(), parseMethodComments(parentElement));
+		private Signature(Element element, String comment) throws SignatureParsingException {
+			this(element.text(), comment);
 		}
 	}
 }

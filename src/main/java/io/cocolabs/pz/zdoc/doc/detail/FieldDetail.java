@@ -55,13 +55,31 @@ public class FieldDetail extends Detail<JavaField> {
 			Element header = blockList.getElementsByTag("h4").first();
 			String name = header != null ? header.text() : "unknown";
 
+			// parse field block comment
+			StringBuilder commentBuilder = new StringBuilder();
+			Elements commentBlocks = blockList.getElementsByClass("block");
+			if (!commentBlocks.isEmpty())
+			{
+				commentBuilder.append(commentBlocks.get(0).wholeText());
+				/*
+				 * normally there should only be one comment block per element
+				 * but check for additional blocks just to be on the safe side
+				 */
+				for (int i = 1; i < commentBlocks.size(); i++) {
+					commentBuilder.append('\n').append(commentBlocks.get(i).text());
+				}
+			}
+			String fieldComment = commentBuilder.toString();
+			if (!fieldComment.isEmpty()) {
+				Logger.debug("Parsed detail comment: \"" + result + "\"");
+			}
 			Signature signature;
 			try {
 				Element eSignature = blockList.getElementsByTag("pre").first();
 				if (eSignature == null) {
 					throw new DetailParsingException("Unable to find field signature for field: " + name);
 				}
-				signature = new Signature(qualifyZomboidClassElements(eSignature), blockList);
+				signature = new Signature(qualifyZomboidClassElements(eSignature), fieldComment);
 			}
 			catch (DetailParsingException e)
 			{
@@ -80,28 +98,6 @@ public class FieldDetail extends Detail<JavaField> {
 
 	public @Nullable JavaField getEntry(String name) {
 		return getEntries().stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
-	}
-
-	static String parseFieldComments(Element element) {
-
-		StringBuilder commentBuilder = new StringBuilder();
-		Elements commentBlocks = element.getElementsByClass("block");
-		if (!commentBlocks.isEmpty())
-		{
-			commentBuilder.append(commentBlocks.get(0).wholeText());
-			/*
-			 * normally there should only be one comment block per element
-			 * but check for additional blocks just to be on the safe side
-			 */
-			for (int i = 1; i < commentBlocks.size(); i++) {
-				commentBuilder.append('\n').append(commentBlocks.get(i).text());
-			}
-		}
-		String result = commentBuilder.toString();
-		if (!result.isEmpty()) {
-			Logger.debug("Parsed detail comment: \"" + result + "\"");
-		}
-		return result;
 	}
 
 	@Override
@@ -182,8 +178,8 @@ public class FieldDetail extends Detail<JavaField> {
 			this(signatureText, "");
 		}
 
-		private Signature(Element element, Element parentElement) throws SignatureParsingException {
-			this(element.text(), parseFieldComments(parentElement));
+		private Signature(Element element, String comment) throws SignatureParsingException {
+			this(element.text(), comment);
 		}
 	}
 }
