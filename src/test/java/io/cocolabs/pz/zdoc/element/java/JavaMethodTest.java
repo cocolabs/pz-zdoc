@@ -69,9 +69,8 @@ class JavaMethodTest {
 
 		String methodName = "testMethodWithParameters";
 		Assertions.assertEquals(methodName, METHOD_WITH_PARAMETERS.getName());
-
-		JavaMethod method = new JavaMethod(methodName, Void.class, DUMMY_PARAMS, MemberModifier.UNDECLARED);
-		Assertions.assertEquals(methodName, method.getName());
+		Assertions.assertEquals(methodName, JavaMethod.Builder.create(methodName)
+				.withReturnType(void.class).withParams(DUMMY_PARAMS).build().getName());
 	}
 
 	@Test
@@ -94,27 +93,25 @@ class JavaMethodTest {
 		MemberModifier modifier = MemberModifier.UNDECLARED;
 
 		List<JavaMethod> javaMethodsList = ImmutableList.of(
-				new JavaMethod("varArgMethod1", returnType,
-						ImmutableList.of(
-								new JavaParameter(String.class, "params")
-						),
-						modifier, true
-				),
-				new JavaMethod("varArgMethod2", returnType,
-						ImmutableList.of(
+				JavaMethod.Builder.create("varArgMethod1").withReturnType(returnType)
+						.withModifier(modifier).withVarArgs(true)
+						.withParams(new JavaParameter(String.class, "params"))
+						.build(),
+
+				JavaMethod.Builder.create("varArgMethod2").withReturnType(returnType)
+						.withModifier(modifier).withVarArgs(true)
+						.withParams(
 								new JavaParameter(Integer.class, "param0"),
 								new JavaParameter(String.class, "params")
-						),
-						modifier, true
-				),
-				new JavaMethod("varArgMethod3", returnType,
-						ImmutableList.of(
+						).build(),
+
+				JavaMethod.Builder.create("varArgMethod3").withReturnType(returnType)
+						.withModifier(modifier).withVarArgs(true)
+						.withParams(
 								new JavaParameter(Integer.class, "param0"),
 								new JavaParameter(Object.class, "param1"),
 								new JavaParameter(String.class, "params")
-						),
-						modifier, true
-				)
+						).build()
 		);
 		List<String> expectedReadableForm = ImmutableList.of(
 				"void varArgMethod1(java.lang.String... params)",
@@ -161,18 +158,18 @@ class JavaMethodTest {
 	void shouldMatchMethodsWithVarArgAndArrayParameter() {
 
 		MemberModifier modifier = MemberModifier.UNDECLARED;
-		JavaMethod method1 = new JavaMethod("method1", new JavaClass(Object.class),
-				ImmutableList.of(
+		JavaMethod method1 = JavaMethod.Builder.create("method1")
+				.withReturnType(Object.class).withModifier(modifier).withVarArgs(true)
+				.withParams(
 						new JavaParameter(new JavaClass(String.class), "param"),
 						new JavaParameter(new JavaClass(Integer.class), "params")
-				), modifier, true
-		);
-		JavaMethod method2 = new JavaMethod("method1", new JavaClass(Object.class),
-				ImmutableList.of(
+				).build();
+		JavaMethod method2 = JavaMethod.Builder.create("method1")
+				.withReturnType(Object.class).withModifier(modifier).withVarArgs(true)
+				.withParams(
 						new JavaParameter(new JavaClass(String.class), "param"),
 						new JavaParameter(new JavaClass(Integer[].class), "params")
-				), modifier, false
-		);
+				).build();
 		Assertions.assertEquals(method1, method2);
 	}
 
@@ -181,10 +178,9 @@ class JavaMethodTest {
 
 		JavaClass returnType = new JavaClass(Object.class);
 		List<JavaParameter> params = new ArrayList<>();
-		MemberModifier modifier = MemberModifier.UNDECLARED;
 
-		JavaMethod method = new JavaMethod("test", returnType, params, modifier, true);
-		Assertions.assertFalse(method.hasVarArg());
+		Assertions.assertFalse(JavaMethod.Builder.create("test").withReturnType(returnType)
+				.withVarArgs(true).withParams(params).build().hasVarArg());
 	}
 
 	@Test

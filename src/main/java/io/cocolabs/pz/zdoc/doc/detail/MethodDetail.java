@@ -86,9 +86,10 @@ public class MethodDetail extends Detail<JavaMethod> {
 					continue;
 				}
 			}
-			result.add(new JavaMethod(
-					signature.name, type, params, signature.modifier, isVarArgs, signature.comment)
-			);
+			result.add(JavaMethod.Builder.create(signature.name)
+					.withReturnType(type).withModifier(signature.modifier)
+					.withParams(params).withVarArgs(isVarArgs)
+					.withComment(signature.comment).build());
 		}
 		return result;
 	}

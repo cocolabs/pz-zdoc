@@ -206,6 +206,7 @@ public class LuaMethod implements IMethod, Annotated {
 
 		private Builder(String name) {
 			this.name = name;
+
 		}
 
 		public static Builder create(String name) {

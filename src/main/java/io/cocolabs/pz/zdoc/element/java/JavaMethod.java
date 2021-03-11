@@ -21,10 +21,11 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import io.cocolabs.pz.zdoc.element.IMethod;
@@ -43,25 +44,26 @@ public class JavaMethod implements IMethod {
 	private final boolean hasVarArg;
 	private final String comment;
 
-	public JavaMethod(String name, JavaClass returnType, List<JavaParameter> params,
-					  MemberModifier modifier, boolean hasVarArg, String comment) {
-		this.name = name;
-		this.returnType = Validate.notNull(returnType);
-		this.modifier = modifier;
-		if (hasVarArg)
+	public JavaMethod(Builder builder) {
+
+		this.name = builder.name;
+		this.returnType = builder.returnType != null ? builder.returnType : new JavaClass(void.class);
+		this.modifier = builder.modifier != null ? builder.modifier : MemberModifier.UNDECLARED;
+		List<JavaParameter> jParams = builder.params != null ? builder.params : new ArrayList<>();
+		if (builder.hasVarArg)
 		{
-			if (!params.isEmpty())
+			if (!jParams.isEmpty())
 			{
 				List<JavaParameter> tParams = new ArrayList<>();
 				/*
 				 * copy every element in params list except last one,
 				 * which has to be copied separately below
 				 */
-				int lastIndex = params.size() - 1;
+				int lastIndex = jParams.size() - 1;
 				for (int i = 0; i < lastIndex; i++) {
-					tParams.add(params.get(i));
+					tParams.add(jParams.get(i));
 				}
-				JavaParameter lastParam = params.get(lastIndex);
+				JavaParameter lastParam = jParams.get(lastIndex);
 				JavaClass paramType = lastParam.getType();
 				/*
 				 * copy last parameter with an array of the original
@@ -74,47 +76,15 @@ public class JavaMethod implements IMethod {
 				this.params = Collections.unmodifiableList(tParams);
 			}
 			else {
-				hasVarArg = false;
+				builder.hasVarArg = false;
 				// initialize params before logging error with toString() to avoid NPE
-				this.params = Collections.unmodifiableList(params);
+				this.params = Collections.unmodifiableList(jParams);
 				Logger.error("Method %s marked with hasVarArg with no parameters", toString());
 			}
 		}
-		else this.params = Collections.unmodifiableList(params);
-		this.hasVarArg = hasVarArg;
-		this.comment = comment;
-	}
-
-	public JavaMethod(String name, JavaClass returnType, List<JavaParameter> params,
-					  MemberModifier modifier, boolean hasVarArg) {
-		this(name, returnType, params, modifier, hasVarArg, "");
-	}
-
-	private JavaMethod(String name, JavaClass returnType,
-					   List<JavaParameter> params, MemberModifier modifier, String comment) {
-		this(name, returnType, params, modifier, false, comment);
-	}
-
-	public JavaMethod(String name, JavaClass returnType,
-					  List<JavaParameter> params, MemberModifier modifier) {
-		this(name, returnType, params, modifier, "");
-	}
-
-	public JavaMethod(String name, JavaClass returnType, MemberModifier modifier) {
-		this(name, returnType, new ArrayList<>(), modifier, "");
-	}
-
-	public JavaMethod(String name, Class<?> returnType,
-					  List<JavaParameter> params, MemberModifier modifier) {
-		this(name, new JavaClass(returnType), params, modifier, "");
-	}
-
-	public JavaMethod(String name, Class<?> returnType, JavaParameter param, MemberModifier modifier) {
-		this(name, new JavaClass(returnType), Collections.singletonList(param), modifier, "");
-	}
-
-	public JavaMethod(String name, Class<?> returnType, MemberModifier modifier) {
-		this(name, new JavaClass(returnType), new ArrayList<>(), modifier, "");
+		else this.params = Collections.unmodifiableList(jParams);
+		this.hasVarArg = builder.hasVarArg;
+		this.comment = builder.comment;
 	}
 
 	public JavaMethod(Method method) {
@@ -156,6 +126,64 @@ public class JavaMethod implements IMethod {
 		String modifier = this.modifier.toString();
 		modifier = modifier.isEmpty() ? "" : modifier + " ";
 		return String.format("%s%s %s(%s)", modifier, returnType, getName(), sParams);
+	}
+
+	public static class Builder {
+
+		private final String name;
+		private @Nullable JavaClass returnType;
+		private @Nullable MemberModifier modifier;
+		private @Nullable List<JavaParameter> params;
+
+		private boolean hasVarArg = false;
+		private String comment = "";
+
+		public Builder(String name) {
+			this.name = name;
+		}
+
+		public static Builder create(String name) {
+			return new Builder(name);
+		}
+
+		public Builder withReturnType(JavaClass type) {
+			returnType = type;
+			return this;
+		}
+
+		public Builder withReturnType(Class<?> type) {
+			returnType = new JavaClass(type);
+			return this;
+		}
+
+		public Builder withParams(List<JavaParameter> params) {
+			this.params = params;
+			return this;
+		}
+
+		public Builder withModifier(MemberModifier modifier) {
+			this.modifier = modifier;
+			return this;
+		}
+
+		public Builder withParams(JavaParameter...params) {
+			this.params = new ArrayList<>(Arrays.asList(params));
+			return this;
+		}
+
+		public Builder withVarArgs(boolean hasVarArg) {
+			this.hasVarArg = hasVarArg;
+			return this;
+		}
+
+		public Builder withComment(String comment) {
+			this.comment = comment;
+			return this;
+		}
+
+		public JavaMethod build() {
+			return new JavaMethod(this);
+		}
 	}
 
 	@Override

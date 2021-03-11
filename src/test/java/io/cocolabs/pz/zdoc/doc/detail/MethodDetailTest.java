@@ -464,44 +464,42 @@ class MethodDetailTest extends MethodDetailTestFixture {
 	void shouldGetCorrectMethodDetailEntriesByName() {
 
 		List<JavaMethod> expectedJavaMethodEntries = ImmutableList.of(
-				new JavaMethod("begin", int.class, ImmutableList.of(
-						new JavaParameter(Object.class, "param")
-				), new MemberModifier(AccessModifierKey.PUBLIC)
-				),
-				new JavaMethod("DoesInstantly", boolean.class, ImmutableList.of(
-						new JavaParameter(int.class, "number")
-				), new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC)
-				),
-				new JavaMethod("init", String.class, ImmutableList.of(
-						new JavaParameter(String.class, "object"),
-						new JavaParameter(String[].class, "params")
-				), new MemberModifier(
-						AccessModifierKey.PRIVATE, ModifierKey.STATIC, ModifierKey.FINAL
-				)),
-				new JavaMethod("IsFinished", Object[].class, MemberModifier.UNDECLARED
-				),
-				new JavaMethod("update", void.class, ImmutableList.of(
-						new JavaParameter(
-								new JavaClass(ArrayList.class, new JavaClass(String.class)),
-								"params"
-						)
-				), new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
-				),
-				new JavaMethod("getActivatedMods", new JavaClass(
-						ArrayList.class, new JavaClass(String.class)
-				), ImmutableList.of(),
-						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
-				),
-				new JavaMethod("getColor", Color[].class, ImmutableList.of(
-						new JavaParameter(new JavaClass(IsoPlayer.class), "player")
-				), new MemberModifier(AccessModifierKey.PUBLIC)
-				),
-				new JavaMethod("doTask", void.class, ImmutableList.of(
-						new JavaParameter(JavaClassUtils.getMap(JavaClassUtils.getMap(
-								JavaClassUtils.CLASS, Object.class), Object.class), "map"
-						),
-						new JavaParameter(Object.class, "obj")
-				), new MemberModifier(AccessModifierKey.PUBLIC))
+				JavaMethod.Builder.create("begin").withReturnType(int.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(new JavaParameter(Object.class, "param"))
+						.build(),
+				JavaMethod.Builder.create("DoesInstantly").withReturnType(boolean.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC))
+						.withParams(new JavaParameter(int.class, "number"))
+						.build(),
+				JavaMethod.Builder.create("init").withReturnType(String.class)
+						.withModifier(new MemberModifier(
+								AccessModifierKey.PRIVATE, ModifierKey.STATIC, ModifierKey.FINAL)
+						).withParams(
+								new JavaParameter(String.class, "object"),
+								new JavaParameter(String[].class, "params")
+						).build(),
+				JavaMethod.Builder.create("IsFinished").withReturnType(Object[].class).build(),
+				JavaMethod.Builder.create("update").withReturnType(void.class)
+						.withModifier(new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC))
+						.withParams(new JavaParameter(
+								new JavaClass(ArrayList.class, new JavaClass(String.class)), "params")
+						).build(),
+				JavaMethod.Builder.create("getActivatedMods")
+						.withReturnType(new JavaClass(ArrayList.class, new JavaClass(String.class)))
+						.withModifier(new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC))
+						.build(),
+				JavaMethod.Builder.create("getColor").withReturnType(Color[].class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(new JavaParameter(new JavaClass(IsoPlayer.class), "player"))
+						.build(),
+				JavaMethod.Builder.create("doTask").withReturnType(void.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(
+								new JavaParameter(JavaClassUtils.getMap(JavaClassUtils.getMap(
+										JavaClassUtils.CLASS, Object.class), Object.class), "map"),
+								new JavaParameter(Object.class, "obj")
+						).build()
 		);
 		Assertions.assertEquals(expectedJavaMethodEntries.size(), detail.getEntries().size());
 		for (JavaMethod field : expectedJavaMethodEntries) {
