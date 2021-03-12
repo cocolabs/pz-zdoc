@@ -86,19 +86,17 @@ public class MethodDetail extends Detail<JavaMethod> {
 				// include override method documentation
 				if (className.equals("overrideSpecifyLabel"))
 				{
+					if (commentBuilder.length() > 0) {
+						commentBuilder.append('\n');
+					}
 					commentBuilder.append(listElement.text());
 					Element overrideLabelElement = listElements.get(i += 1);
-					if (overrideLabelElement.tagName().equals("dd"))
+					if (!overrideLabelElement.tagName().equals("dd"))
 					{
-						if (commentBuilder.length() > 0) {
-							commentBuilder.append('\n');
-						}
-						commentBuilder.append(overrideLabelElement.text());
-					}
-					else {
 						String format = "Unexpected description list element '%s'";
 						Logger.error(String.format(format, overrideLabelElement));
 					}
+					else commentBuilder.append('\n').append(overrideLabelElement.text());
 				}
 				// include method return value documentation
 				else if (className.equals("returnLabel"))
