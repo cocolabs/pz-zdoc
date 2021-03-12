@@ -275,22 +275,5 @@ public class LuaMethod implements IMethod, Annotated {
 		public String getComment() {
 			return comment;
 		}
-
-		@Override
-		public boolean equals(Object o) {
-
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass() || !super.equals(o)) {
-				return false;
-			}
-			return comment.equals(((ReturnType) o).comment);
-		}
-
-		@Override
-		public int hashCode() {
-			return 31 * super.hashCode() + comment.hashCode();
-		}
 	}
 }
