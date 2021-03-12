@@ -209,7 +209,8 @@ public class JavaMethod implements IMethod {
 		}
 
 		public ReturnType(Class<?> clazz) {
-			this(clazz, null);
+			super(clazz);
+			this.comment = "";
 		}
 
 		public String getComment() {
