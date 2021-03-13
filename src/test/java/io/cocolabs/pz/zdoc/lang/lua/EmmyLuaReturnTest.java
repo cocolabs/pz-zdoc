@@ -20,6 +20,7 @@ package io.cocolabs.pz.zdoc.lang.lua;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import io.cocolabs.pz.zdoc.element.lua.LuaMethod;
 import io.cocolabs.pz.zdoc.element.lua.LuaType;
 
 class EmmyLuaReturnTest {
@@ -27,13 +28,23 @@ class EmmyLuaReturnTest {
 	@Test
 	void shouldCorrectlyFormatEmmyLuaReturnAnnotation() {
 
-		// ---@param TYPE
-		EmmyLuaReturn annotation = new EmmyLuaReturn(new LuaType("Dog"));
+		// ---@return TYPE
+		EmmyLuaReturn annotation = new EmmyLuaReturn(new LuaMethod.ReturnType("Dog"));
 		Assertions.assertEquals("---@return Dog", annotation.toString());
 
-		// ---@param TYPE|OTHER_TYPE
-		annotation = new EmmyLuaReturn(new LuaType("Dog", new LuaType("Animal")));
-		Assertions.assertEquals("---@return Dog|Animal", annotation.toString());
+		// ---@return TYPE @comment
+		LuaType luaType = new LuaType("Dog");
+		String comment = "returns a dog class";
+
+		annotation = new EmmyLuaReturn(new LuaMethod.ReturnType(luaType, comment));
+		Assertions.assertEquals("---@return Dog @" + comment, annotation.toString());
+
+		// ---@return TYPE|OTHER_TYPE @commnet
+		luaType = new LuaType("Dog", new LuaType("Animal"));
+		comment = "returns an Animal class";
+
+		annotation = new EmmyLuaReturn(new LuaMethod.ReturnType(luaType, comment));
+		Assertions.assertEquals("---@return Dog|Animal @" + comment, annotation.toString());
 	}
 
 	@Test
