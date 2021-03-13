@@ -444,6 +444,23 @@ class MethodDetailTest extends MethodDetailTestFixture {
 	}
 
 	@Test
+	void shouldParseValidMethodReturnTypeComment() {
+
+		List<JavaMethod> entries = detail.getEntries();
+		String[] expectedComments = new String[]{
+				"some number",
+				"true or false",
+				"some text", "array of objects",
+				"", "array of objects",
+				"array of colors", ""
+		};
+		Assertions.assertEquals(expectedComments.length, entries.size());
+		for (int i = 0; i < entries.size(); i++) {
+			Assertions.assertEquals(expectedComments[i], entries.get(i).getReturnType().getComment());
+		}
+	}
+
+	@Test
 	void shouldGetCorrectMethodDetailEntriesByName() {
 
 		List<JavaMethod> expectedJavaMethodEntries = ImmutableList.of(

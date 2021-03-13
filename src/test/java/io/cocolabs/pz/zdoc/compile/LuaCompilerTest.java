@@ -470,7 +470,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(luaFields, zLuaDocs.iterator().next().getFields());
 	}
 
-	@Test @Order(13)
+	@Test @Order(14)
 	void shouldFilterGlobalClassTypesFromGlobalTypesWhenCompilingLua() {
 
 		Set<LuaClass> expectedGlobalTypes = Sets.newHashSet(

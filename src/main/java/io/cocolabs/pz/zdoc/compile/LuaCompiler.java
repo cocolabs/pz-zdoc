@@ -29,9 +29,9 @@ import io.cocolabs.pz.zdoc.doc.ZomboidJavaDoc;
 import io.cocolabs.pz.zdoc.doc.ZomboidLuaDoc;
 import io.cocolabs.pz.zdoc.element.IClass;
 import io.cocolabs.pz.zdoc.element.IField;
-import io.cocolabs.pz.zdoc.element.IMethod;
 import io.cocolabs.pz.zdoc.element.IParameter;
 import io.cocolabs.pz.zdoc.element.java.JavaClass;
+import io.cocolabs.pz.zdoc.element.java.JavaMethod;
 import io.cocolabs.pz.zdoc.element.lua.*;
 import io.cocolabs.pz.zdoc.logger.Logger;
 
@@ -219,7 +219,7 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 				Logger.debug("Compiled field %s", field.getName());
 			}
 			Set<LuaMethod> luaMethods = new HashSet<>();
-			for (IMethod method : javaDoc.getMethods())
+			for (JavaMethod method : javaDoc.getMethods())
 			{
 				List<LuaParameter> parameters = new ArrayList<>();
 				for (IParameter param : method.getParams())
@@ -227,9 +227,10 @@ public class LuaCompiler implements ICompiler<ZomboidLuaDoc> {
 					LuaType paramClass = resolveLuaType(param.getType());
 					parameters.add(new LuaParameter(paramClass, param.getName()));
 				}
+				JavaMethod.ReturnType returnType = method.getReturnType();
 				luaMethods.add(LuaMethod.Builder.create(method.getName())
 						.withOwner(luaClass).withModifier(method.getModifier())
-						.withReturnType(resolveLuaType(method.getReturnType()))
+						.withReturnType(resolveLuaType(returnType), returnType.getComment())
 						.withParams(parameters).withVarArg(method.hasVarArg())
 						.withComment(method.getComment()).build());
 

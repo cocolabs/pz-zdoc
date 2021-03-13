@@ -38,7 +38,7 @@ import io.cocolabs.pz.zdoc.logger.Logger;
 public class JavaMethod implements IMethod {
 
 	private final String name;
-	private final JavaClass returnType;
+	private final ReturnType returnType;
 	private final List<JavaParameter> params;
 	private final MemberModifier modifier;
 	private final boolean hasVarArg;
@@ -47,7 +47,7 @@ public class JavaMethod implements IMethod {
 	public JavaMethod(Builder builder) {
 
 		this.name = builder.name;
-		this.returnType = builder.returnType != null ? builder.returnType : new JavaClass(void.class);
+		this.returnType = builder.returnType != null ? builder.returnType : new ReturnType(void.class);
 		this.modifier = builder.modifier != null ? builder.modifier : MemberModifier.UNDECLARED;
 		List<JavaParameter> jParams = builder.params != null ? builder.params : new ArrayList<>();
 		if (builder.hasVarArg)
@@ -90,7 +90,7 @@ public class JavaMethod implements IMethod {
 	public JavaMethod(Method method) {
 
 		this.name = method.getName();
-		this.returnType = new JavaClass(method.getReturnType());
+		this.returnType = new ReturnType(method.getReturnType());
 
 		List<JavaParameter> params = new ArrayList<>();
 		for (Parameter methodParam : method.getParameters()) {
@@ -131,7 +131,7 @@ public class JavaMethod implements IMethod {
 	public static class Builder {
 
 		private final String name;
-		private @Nullable JavaClass returnType;
+		private @Nullable ReturnType returnType;
 		private @Nullable MemberModifier modifier;
 		private @Nullable List<JavaParameter> params;
 
@@ -146,13 +146,18 @@ public class JavaMethod implements IMethod {
 			return new Builder(name);
 		}
 
+		public Builder withReturnType(JavaClass type, String comment) {
+			returnType = new ReturnType(type, comment);
+			return this;
+		}
+
 		public Builder withReturnType(JavaClass type) {
-			returnType = type;
+			returnType = new ReturnType(type, "");
 			return this;
 		}
 
 		public Builder withReturnType(Class<?> type) {
-			returnType = new JavaClass(type);
+			returnType = new ReturnType(type);
 			return this;
 		}
 
@@ -186,6 +191,33 @@ public class JavaMethod implements IMethod {
 		}
 	}
 
+	public static class ReturnType extends JavaClass {
+
+		private final String comment;
+
+		public ReturnType(Class<?> clazz, @Nullable List<JavaClass> typeParameters, String comment) {
+			super(clazz, typeParameters);
+			this.comment = comment;
+		}
+
+		public ReturnType(Class<?> clazz, @Nullable List<JavaClass> typeParameters) {
+			this(clazz, typeParameters, "");
+		}
+
+		public ReturnType(JavaClass clazz, String comment) {
+			this(clazz.getClazz(), clazz.getTypeParameters(), comment);
+		}
+
+		public ReturnType(Class<?> clazz) {
+			super(clazz);
+			this.comment = "";
+		}
+
+		public String getComment() {
+			return comment;
+		}
+	}
+
 	@Override
 	public String getName() {
 		return name;
@@ -202,7 +234,7 @@ public class JavaMethod implements IMethod {
 	}
 
 	@Override
-	public JavaClass getReturnType() {
+	public ReturnType getReturnType() {
 		return returnType;
 	}
 

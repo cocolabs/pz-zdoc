@@ -19,7 +19,7 @@ package io.cocolabs.pz.zdoc.lang.lua;
 
 import java.util.regex.Pattern;
 
-import io.cocolabs.pz.zdoc.element.lua.LuaType;
+import io.cocolabs.pz.zdoc.element.lua.LuaMethod;
 
 /**
  * Use {@code @return} to specify the return type of a function
@@ -56,12 +56,8 @@ public class EmmyLuaReturn extends EmmyLua {
 			"^---\\s*@return\\s+(\\w+)(?:\\s*\\|\\s*(\\w+))?(?:\\s*@\\s*(.*))?\\s*$"
 	);
 
-	public EmmyLuaReturn(LuaType type, String comment) {
-		super("return", formatType(type), comment);
-	}
-
-	public EmmyLuaReturn(LuaType type) {
-		this(type, "");
+	public EmmyLuaReturn(LuaMethod.ReturnType type) {
+		super("return", formatType(type), type.getComment());
 	}
 
 	public static boolean isAnnotation(String text) {

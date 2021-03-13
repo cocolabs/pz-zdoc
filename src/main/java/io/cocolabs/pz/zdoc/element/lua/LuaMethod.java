@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import io.cocolabs.pz.zdoc.element.IMethod;
+import io.cocolabs.pz.zdoc.element.IReturnType;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 import io.cocolabs.pz.zdoc.lang.lua.EmmyLua;
@@ -43,7 +44,7 @@ public class LuaMethod implements IMethod, Annotated {
 	private final @Nullable LuaClass owner;
 
 	private final String name;
-	private final LuaType returnType;
+	private final ReturnType returnType;
 	private final List<LuaParameter> params;
 	private final MemberModifier modifier;
 	private final boolean hasVarArg;
@@ -54,7 +55,7 @@ public class LuaMethod implements IMethod, Annotated {
 
 		this.name = EmmyLua.getSafeLuaName(builder.name);
 		this.owner = builder.owner;
-		this.returnType = builder.returnType != null ? builder.returnType : new LuaType("void");
+		this.returnType = builder.returnType != null ? builder.returnType : new ReturnType("void");
 		this.modifier = builder.modifier != null ? builder.modifier : MemberModifier.UNDECLARED;
 		this.params = Collections.unmodifiableList(builder.params);
 
@@ -198,7 +199,7 @@ public class LuaMethod implements IMethod, Annotated {
 
 		private @Nullable LuaClass owner;
 		private @Nullable MemberModifier modifier;
-		private @Nullable LuaType returnType;
+		private @Nullable ReturnType returnType;
 
 		private List<LuaParameter> params = new ArrayList<>();
 		private boolean hasVarArg = false;
@@ -223,8 +224,13 @@ public class LuaMethod implements IMethod, Annotated {
 			return this;
 		}
 
+		public Builder withReturnType(LuaType returnType, String comment) {
+			this.returnType = new ReturnType(returnType, comment);
+			return this;
+		}
+
 		public Builder withReturnType(LuaType returnType) {
-			this.returnType = returnType;
+			this.returnType = new ReturnType(returnType, "");
 			return this;
 		}
 
@@ -245,6 +251,29 @@ public class LuaMethod implements IMethod, Annotated {
 
 		public LuaMethod build() {
 			return new LuaMethod(this);
+		}
+	}
+
+	public static class ReturnType extends LuaType implements IReturnType {
+
+		private final String comment;
+
+		public ReturnType(String name, List<LuaType> otherTypes, String comment) {
+			super(name, otherTypes);
+			this.comment = comment;
+		}
+
+		public ReturnType(String name) {
+			super(name);
+			this.comment = "";
+		}
+
+		public ReturnType(LuaType type, String comment) {
+			this(type.name, type.getTypeParameters(), comment);
+		}
+
+		public String getComment() {
+			return comment;
 		}
 	}
 }

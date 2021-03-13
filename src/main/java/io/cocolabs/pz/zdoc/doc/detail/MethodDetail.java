@@ -76,25 +76,47 @@ public class MethodDetail extends Detail<JavaMethod> {
 					commentBuilder.append('\n').append(commentBlocks.get(i).text());
 				}
 			}
-			// include override method documentation
-			boolean lastElementOverrideLabel = false;
-			for (Element blockListElement : blockList.getAllElements())
+			String returnTypeComment = "";
+			Elements listElements = blockList.getAllElements();
+			for (int i = 0; i < listElements.size(); i++)
 			{
-				String tagName = blockListElement.tagName();
-				if (blockListElement.className().equals("overrideSpecifyLabel"))
+				Element listElement = listElements.get(i);
+				String className = listElement.className();
+
+				// include override method documentation
+				if (className.equals("overrideSpecifyLabel"))
 				{
 					if (commentBuilder.length() > 0) {
 						commentBuilder.append('\n');
 					}
-					commentBuilder.append(blockListElement.text());
-					lastElementOverrideLabel = true;
-				}
-				else if (lastElementOverrideLabel)
-				{
-					if (tagName.equals("dd")) {
-						commentBuilder.append('\n').append(blockListElement.text());
+					commentBuilder.append(listElement.text());
+					// avoid accessing index out of bounds
+					if (i + 1 < listElements.size())
+					{
+						Element overrideLabelElement = listElements.get(i += 1);
+						if (!overrideLabelElement.tagName().equals("dd"))
+						{
+							String format = "Unexpected description list element '%s'";
+							Logger.error(String.format(format, overrideLabelElement));
+						}
+						else commentBuilder.append('\n').append(overrideLabelElement.text());
 					}
-					lastElementOverrideLabel = false;
+				}
+				// include method return value documentation
+				else if (className.equals("returnLabel"))
+				{
+					// avoid accessing index out of bounds
+					if (i + 1 < listElements.size())
+					{
+						Element returnLabelElement = listElements.get(i += 1);
+						if (returnLabelElement.tagName().equals("dd")) {
+							returnTypeComment = returnLabelElement.text();
+						}
+						else {
+							String format = "Unexpected description list element '%s'";
+							Logger.error(String.format(format, returnLabelElement));
+						}
+					}
 				}
 			}
 			String methodComment = commentBuilder.toString();
@@ -126,9 +148,8 @@ public class MethodDetail extends Detail<JavaMethod> {
 				}
 			}
 			result.add(JavaMethod.Builder.create(signature.name)
-					.withReturnType(type).withModifier(signature.modifier)
-					.withParams(params).withVarArgs(isVarArgs)
-					.withComment(signature.comment).build());
+					.withReturnType(type, returnTypeComment).withModifier(signature.modifier)
+					.withParams(params).withVarArgs(isVarArgs).withComment(signature.comment).build());
 		}
 		return result;
 	}
