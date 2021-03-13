@@ -90,24 +90,32 @@ public class MethodDetail extends Detail<JavaMethod> {
 						commentBuilder.append('\n');
 					}
 					commentBuilder.append(listElement.text());
-					Element overrideLabelElement = listElements.get(i += 1);
-					if (!overrideLabelElement.tagName().equals("dd"))
+					// avoid accessing index out of bounds
+					if (i + 1 < listElements.size())
 					{
-						String format = "Unexpected description list element '%s'";
-						Logger.error(String.format(format, overrideLabelElement));
+						Element overrideLabelElement = listElements.get(i += 1);
+						if (!overrideLabelElement.tagName().equals("dd"))
+						{
+							String format = "Unexpected description list element '%s'";
+							Logger.error(String.format(format, overrideLabelElement));
+						}
+						else commentBuilder.append('\n').append(overrideLabelElement.text());
 					}
-					else commentBuilder.append('\n').append(overrideLabelElement.text());
 				}
 				// include method return value documentation
 				else if (className.equals("returnLabel"))
 				{
-					Element returnLabelElement = listElements.get(i += 1);
-					if (returnLabelElement.tagName().equals("dd")) {
-						returnTypeComment = returnLabelElement.text();
-					}
-					else {
-						String format = "Unexpected description list element '%s'";
-						Logger.error(String.format(format, returnLabelElement));
+					// avoid accessing index out of bounds
+					if (i + 1 < listElements.size())
+					{
+						Element returnLabelElement = listElements.get(i += 1);
+						if (returnLabelElement.tagName().equals("dd")) {
+							returnTypeComment = returnLabelElement.text();
+						}
+						else {
+							String format = "Unexpected description list element '%s'";
+							Logger.error(String.format(format, returnLabelElement));
+						}
 					}
 				}
 			}
