@@ -452,6 +452,47 @@ class ZomboidLuaDocTest extends TestWorkspace {
 		);
 	}
 
+	@Test
+	void shouldWriteZomboidLuaDocMethodsWithValidReturnTypeComments() throws IOException {
+
+		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
+		luaMethods.add(LuaMethod.Builder.create("getObject").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("Object"), "returns a simple object")
+				.build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getNumber").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("Number"), "returns a simple number")
+				.withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "param"))
+				).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getString").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("String"), "returns a simple string")
+				.withVarArg(true).withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("Object"), "varargs"))
+				).build()
+		);
+		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
+				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
+		);
+		List<String> expectedResult = ImmutableList.of(
+				"---@class ZomboidLuaDocTest : io.cocolabs.pz.zdoc.doc.ZomboidLuaDocTest",
+				"ZomboidLuaDocTest = {}",
+				"",
+				"---@return Object @returns a simple object",
+				"function ZomboidLuaDocTest:getObject() end",
+				"",
+				"---@param param Object",
+				"---@return Number @returns a simple number",
+				"function ZomboidLuaDocTest:getNumber(param) end",
+				"",
+				"---@vararg Object",
+				"---@return String @returns a simple string",
+				"function ZomboidLuaDocTest:getString(...) end"
+		);
+		Assertions.assertEquals(expectedResult, writeToFileAndRead(zDoc));
+	}
+
 	@TestOnly
 	private List<String> writeToFileAndRead(ZomboidLuaDoc zDoc) throws IOException {
 
