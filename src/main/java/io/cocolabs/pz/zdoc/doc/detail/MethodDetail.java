@@ -75,25 +75,40 @@ public class MethodDetail extends Detail<JavaMethod> {
 			}
 			String returnTypeComment = "";
 			Map<String, String> paramComments = new HashMap<>();
-			Elements listElements = new Elements(blockList.getAllElements().stream()
-					.filter(e -> e.tagName().equals("dd") || e.tagName().equals("dt"))
-					.collect(Collectors.toList()));
+			Map<Element, Elements> descriptionList = new HashMap<>();
 
-			for (int i = 0; i < listElements.size(); i++)
+			Elements ddElements = new Elements();
+			for (Element element : blockList.getAllElements())
 			{
-				Element listElement = listElements.get(i);
-				// list elements are processed in condition sections below
-				if (!listElement.tagName().equals("dt")) {
-					continue;
+				// description list title
+				if (element.tagName().equals("dt"))
+				{
+					ddElements = new Elements();
+					descriptionList.put(element, ddElements);
 				}
-				Element titleContainer = listElement.getElementsByTag("span").first();
+				// description list elements
+				else if (element.tagName().equals("dd")) {
+					ddElements.add(element);
+				}
+			}
+			for (Map.Entry<Element, Elements> entry : descriptionList.entrySet())
+			{
+				Element listTitle = entry.getKey();
+				Elements listEntries = entry.getValue();
+				if (listEntries.isEmpty())
+				{
+					String format = "Missing list elements for title '%s'";
+					Logger.error(String.format(format, listTitle));
+				}
+				Element titleContainer = listTitle.getElementsByTag("span").first();
 				// we're expecting to find list title in span container
 				if (titleContainer == null)
 				{
-					Logger.error(String.format("Unexpected description list format '%s'", listElement));
+					Logger.error(String.format("Unexpected description list title '%s'", listTitle));
 					continue;
 				}
 				String className = titleContainer.className();
+
 				// include override method documentation
 				//noinspection IfCanBeSwitch
 				if (className.equals("overrideSpecifyLabel"))
@@ -101,54 +116,31 @@ public class MethodDetail extends Detail<JavaMethod> {
 					if (commentBuilder.length() > 0) {
 						commentBuilder.append('\n');
 					}
-					commentBuilder.append(listElement.text());
-					// avoid accessing index out of bounds
-					if (i + 1 < listElements.size())
-					{
-						Element overrideLabelElement = listElements.get(i += 1);
-						if (!overrideLabelElement.tagName().equals("dd"))
-						{
-							String format = "Unexpected description list element '%s'";
-							Logger.error(String.format(format, overrideLabelElement));
-						}
-						else commentBuilder.append('\n').append(overrideLabelElement.text());
-					}
+					commentBuilder.append(listTitle.text());
+					Element overrideLabelElement = listEntries.get(0);
+					commentBuilder.append('\n').append(overrideLabelElement.text());
 				}
 				// include method return value documentation
 				else if (className.equals("returnLabel"))
 				{
-					// avoid accessing index out of bounds
-					if (i + 1 < listElements.size())
-					{
-						Element returnLabelElement = listElements.get(i += 1);
-						if (returnLabelElement.tagName().equals("dd")) {
-							returnTypeComment = returnLabelElement.text();
-						}
-						else {
-							String format = "Unexpected description list element '%s'";
-							Logger.error(String.format(format, returnLabelElement));
-						}
-					}
+					Element returnLabelElement = listEntries.get(0);
+					returnTypeComment = returnLabelElement.text();
 				}
 				// include method parameter documentation
 				else if (className.equals("paramLabel"))
 				{
-					for (int i2 = i += 1; i2 < listElements.size(); i2 = i += 1)
+					for (Element listEntry : listEntries)
 					{
-						Element paramLabelElement = listElements.get(i2);
-						if (paramLabelElement.tagName().equals("dd"))
+						Element eParamName = listEntry.getElementsByTag("code").first();
+						if (eParamName == null)
 						{
-							Element eParamName = paramLabelElement.getElementsByTag("code").first();
-							if (eParamName != null)
-							{
-								String sParamName = eParamName.text();
-								// trim element text to get only parameter comment
-								String paramText = paramLabelElement.text().substring(sParamName.length() + 3);
-								paramComments.put(eParamName.text(), paramText);
-							}
-							else Logger.error(String.format("No paramLabel name found '%s'", paramLabelElement));
+							Logger.error(String.format("No paramLabel name found '%s'", listEntry));
+							continue;
 						}
-						else break;
+						String sParamName = eParamName.text();
+						// trim element text to get only parameter comment
+						String paramText = listEntry.text().substring(sParamName.length() + 3);
+						paramComments.put(sParamName, paramText);
 					}
 				}
 			}
