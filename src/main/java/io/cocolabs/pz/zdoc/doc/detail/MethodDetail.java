@@ -17,10 +17,7 @@
  */
 package io.cocolabs.pz.zdoc.doc.detail;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.list.SetUniqueList;
@@ -77,13 +74,28 @@ public class MethodDetail extends Detail<JavaMethod> {
 				}
 			}
 			String returnTypeComment = "";
-			Elements listElements = blockList.getAllElements();
+			Map<String, String> paramComments = new HashMap<>();
+			Elements listElements = new Elements(blockList.getAllElements().stream()
+					.filter(e -> e.tagName().equals("dd") || e.tagName().equals("dt"))
+					.collect(Collectors.toList()));
+
 			for (int i = 0; i < listElements.size(); i++)
 			{
 				Element listElement = listElements.get(i);
-				String className = listElement.className();
-
+				// list elements are processed in condition sections below
+				if (!listElement.tagName().equals("dt")) {
+					continue;
+				}
+				Element titleContainer = listElement.getElementsByTag("span").first();
+				// we're expecting to find list title in span container
+				if (titleContainer == null)
+				{
+					Logger.error(String.format("Unexpected description list format '%s'", listElement));
+					continue;
+				}
+				String className = titleContainer.className();
 				// include override method documentation
+				//noinspection IfCanBeSwitch
 				if (className.equals("overrideSpecifyLabel"))
 				{
 					if (commentBuilder.length() > 0) {
@@ -118,6 +130,27 @@ public class MethodDetail extends Detail<JavaMethod> {
 						}
 					}
 				}
+				// include method parameter documentation
+				else if (className.equals("paramLabel"))
+				{
+					for (int i2 = i += 1; i2 < listElements.size(); i2 = i += 1)
+					{
+						Element paramLabelElement = listElements.get(i2);
+						if (paramLabelElement.tagName().equals("dd"))
+						{
+							Element eParamName = paramLabelElement.getElementsByTag("code").first();
+							if (eParamName != null)
+							{
+								String sParamName = eParamName.text();
+								// trim element text to get only parameter comment
+								String paramText = paramLabelElement.text().substring(sParamName.length() + 3);
+								paramComments.put(eParamName.text(), paramText);
+							}
+							else Logger.error(String.format("No paramLabel name found '%s'", paramLabelElement));
+						}
+						else break;
+					}
+				}
 			}
 			String methodComment = commentBuilder.toString();
 			if (!methodComment.isEmpty()) {
@@ -131,13 +164,14 @@ public class MethodDetail extends Detail<JavaMethod> {
 				Logger.detail(String.format(msg, signature.toString(), signature.returnType));
 				continue;
 			}
-			List<JavaParameter> params = new ArrayList<>();
+			// rawParams is a list of parameter without comments
+			List<JavaParameter> rawParams = new ArrayList<>();
 			boolean isVarArgs = false;
 			if (!signature.params.isEmpty())
 			{
 				try {
 					MethodSignatureParser parser = new MethodSignatureParser(signature.params);
-					params = parser.parse();
+					rawParams = parser.parse();
 					isVarArgs = parser.isVarArg();
 				}
 				catch (SignatureParsingException e)
@@ -146,6 +180,18 @@ public class MethodDetail extends Detail<JavaMethod> {
 					Logger.printf(e.getLogLevel(), String.format(msg, signature.toString(), e.getMessage()));
 					continue;
 				}
+			}
+			// match parameters with their respected comments
+			List<JavaParameter> params = new ArrayList<>();
+			for (int i = 0; i < rawParams.size(); i++)
+			{
+				JavaParameter param = rawParams.get(i);
+				String comment = paramComments.get(param.getName());
+				if (comment != null) {
+					params.add(i, new JavaParameter(param.getType(), param.getName(), comment));
+				}
+				// when no comment was found use raw parameter
+				else params.add(i, param);
 			}
 			result.add(JavaMethod.Builder.create(signature.name)
 					.withReturnType(type, returnTypeComment).withModifier(signature.modifier)
