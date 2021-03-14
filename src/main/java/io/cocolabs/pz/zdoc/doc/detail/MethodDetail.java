@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.apache.logging.log4j.util.Strings;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -138,9 +139,18 @@ public class MethodDetail extends Detail<JavaMethod> {
 							continue;
 						}
 						String sParamName = eParamName.text();
-						// trim element text to get only parameter comment
-						String paramText = listEntry.text().substring(sParamName.length() + 3);
-						paramComments.put(sParamName, paramText);
+						int stringIndex = sParamName.length() + 3;
+						String sListEntry = listEntry.text();
+
+						// make sure parameter comment exists before trimming
+						if (stringIndex <= sListEntry.length())
+						{
+							// trim element text to get only parameter comment
+							String paramText = sListEntry.substring(stringIndex);
+							if (!Strings.isBlank(paramText)) {
+								paramComments.put(sParamName, paramText);
+							}
+						}
 					}
 				}
 			}
