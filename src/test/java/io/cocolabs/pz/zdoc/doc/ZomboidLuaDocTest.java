@@ -493,6 +493,55 @@ class ZomboidLuaDocTest extends TestWorkspace {
 		Assertions.assertEquals(expectedResult, writeToFileAndRead(zDoc));
 	}
 
+	@Test
+	void shouldWriteZomboidLuaDocMethodsWithValidParameterComments() throws IOException {
+
+		Set<LuaMethod> luaMethods = new LinkedHashSet<>();
+		luaMethods.add(LuaMethod.Builder.create("getObject").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("Object"))
+				.withParams(new LuaParameter(new LuaType("Object"), "arg0", "object to get"))
+				.build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getNumber").withOwner(TEST_LUA_CLASS)
+				.withReturnType(new LuaType("Number"), "returns a simple number")
+				.withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("String"), "arg0", "some string param"),
+						new LuaParameter(new LuaType("Number"), "arg1", "some number param")
+				)).build()
+		);
+		luaMethods.add(LuaMethod.Builder.create("getString").withOwner(TEST_LUA_CLASS).withVarArg(true)
+				.withReturnType(new LuaType("String"), "returns a simple string")
+				.withParams(ImmutableList.of(
+						new LuaParameter(new LuaType("String"), "arg0", "some string param"),
+						new LuaParameter(new LuaType("Number"), "arg1", "some number param"),
+						new LuaParameter(new LuaType("Object"), "arg2", "variadic argument")
+				)).build()
+		);
+		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
+				TEST_LUA_CLASS, new ArrayList<>(), luaMethods
+		);
+		List<String> expectedResult = ImmutableList.of(
+				"---@class ZomboidLuaDocTest : io.cocolabs.pz.zdoc.doc.ZomboidLuaDocTest",
+				"ZomboidLuaDocTest = {}",
+				"",
+				"---@param arg0 Object @object to get",
+				"---@return Object",
+				"function ZomboidLuaDocTest:getObject(arg0) end",
+				"",
+				"---@param arg0 String @some string param",
+				"---@param arg1 Number @some number param",
+				"---@return Number @returns a simple number",
+				"function ZomboidLuaDocTest:getNumber(arg0, arg1) end",
+				"",
+				"---@param arg0 String @some string param",
+				"---@param arg1 Number @some number param",
+				"---@vararg Object @variadic argument",
+				"---@return String @returns a simple string",
+				"function ZomboidLuaDocTest:getString(arg0, arg1, ...) end"
+		);
+		Assertions.assertEquals(expectedResult, writeToFileAndRead(zDoc));
+	}
+
 	@TestOnly
 	private List<String> writeToFileAndRead(ZomboidLuaDoc zDoc) throws IOException {
 
