@@ -97,8 +97,8 @@ public class MethodDetail extends Detail<JavaMethod> {
 				Elements listEntries = entry.getValue();
 				if (listEntries.isEmpty())
 				{
-					String format = "Missing list elements for title '%s'";
-					Logger.error(String.format(format, listTitle));
+					Logger.debug(String.format("Missing list elements for title '%s'", listTitle.text()));
+					continue;
 				}
 				Element titleContainer = listTitle.getElementsByTag("span").first();
 				// we're expecting to find list title in span container
