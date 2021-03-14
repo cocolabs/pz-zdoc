@@ -17,10 +17,7 @@
  */
 package io.cocolabs.pz.zdoc.element.lua;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -71,7 +68,8 @@ public class LuaMethod implements IMethod, Annotated {
 				for (int i = 0, size = params.size() - 1; i < size; i++) {
 					annotations.addAll(params.get(i).getAnnotations());
 				}
-				annotations.add(new EmmyLuaVarArg(params.get(params.size() - 1).getType()));
+				LuaParameter param = params.get(params.size() - 1);
+				annotations.add(new EmmyLuaVarArg(param.getType(), param.getComment()));
 			}
 			else {
 				builder.hasVarArg = false;
@@ -246,6 +244,11 @@ public class LuaMethod implements IMethod, Annotated {
 
 		public Builder withParams(List<LuaParameter> params) {
 			this.params = params;
+			return this;
+		}
+
+		public Builder withParams(LuaParameter...params) {
+			this.params = new ArrayList<>(Arrays.asList(params));
 			return this;
 		}
 

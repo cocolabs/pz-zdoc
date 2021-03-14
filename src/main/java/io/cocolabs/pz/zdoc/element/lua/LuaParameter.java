@@ -29,14 +29,19 @@ import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaParam;
 public class LuaParameter implements IParameter, Annotated {
 
 	private final LuaType type;
-	private final String name;
+	private final String name, comment;
 	private final List<EmmyLua> annotations;
 
-	public LuaParameter(LuaType type, String name) {
+	public LuaParameter(LuaType type, String name, String comment) {
 
 		this.type = type;
 		this.name = EmmyLua.getSafeLuaName(name);
-		this.annotations = Collections.singletonList(new EmmyLuaParam(this.name, type));
+		this.comment = comment;
+		this.annotations = Collections.singletonList(new EmmyLuaParam(this.name, type, comment));
+	}
+
+	public LuaParameter(LuaType type, String name) {
+		this(type, name, "");
 	}
 
 	@Override
@@ -47,6 +52,11 @@ public class LuaParameter implements IParameter, Annotated {
 	@Override
 	public String getAsVarArg() {
 		return "...";
+	}
+
+	@Override
+	public String getComment() {
+		return comment;
 	}
 
 	@Override

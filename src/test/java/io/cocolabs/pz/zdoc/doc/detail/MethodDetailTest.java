@@ -19,9 +19,7 @@ package io.cocolabs.pz.zdoc.doc.detail;
 
 import java.util.*;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -457,6 +455,45 @@ class MethodDetailTest extends MethodDetailTestFixture {
 		Assertions.assertEquals(expectedComments.length, entries.size());
 		for (int i = 0; i < entries.size(); i++) {
 			Assertions.assertEquals(expectedComments[i], entries.get(i).getReturnType().getComment());
+		}
+	}
+
+	@Test
+	void shouldParseValidMethodParameterComments() {
+
+		List<JavaMethod> entries = detail.getEntries();
+		Map<String, List<Pair<String, String>>> expectedComments = new LinkedHashMap<>();
+		expectedComments.put("begin", ImmutableList.of(Pair.of("param", "single parameter")));
+		expectedComments.put("DoesInstantly", ImmutableList.of(Pair.of("number", "integer parameter")));
+		expectedComments.put("init", ImmutableList.of(
+				Pair.of("object", "string object"),
+				Pair.of("params", "array of string objects")
+		));
+		expectedComments.put("IsFinished", Collections.emptyList());
+		expectedComments.put("update", ImmutableList.of(Pair.of("params", "list of string objects")));
+		expectedComments.put("getActivatedMods", Collections.emptyList());
+		expectedComments.put("getColor", ImmutableList.of(Pair.of("player", "player parameter")));
+		expectedComments.put("doTask", ImmutableList.of(
+				Pair.of("map", "map parameter"),
+				Pair.of("obj", "object parameter")
+		));
+		Assertions.assertEquals(expectedComments.size(), entries.size());
+		Iterator<Map.Entry<String, List<Pair<String, String>>>> iter = expectedComments.entrySet().iterator();
+		for (JavaMethod javaMethod : entries)
+		{
+			Map.Entry<String, List<Pair<String, String>>> entry = iter.next();
+			List<Pair<String, String>> expectedParams = entry.getValue();
+			List<JavaParameter> methodParams = javaMethod.getParams();
+
+			Assertions.assertEquals(methodParams.size(), expectedParams.size());
+			for (int i1 = 0; i1 < methodParams.size(); i1++)
+			{
+				JavaParameter param = methodParams.get(i1);
+				Pair<String, String> expectedParam = expectedParams.get(i1);
+
+				Assertions.assertEquals(expectedParam.getKey(), param.getName());
+				Assertions.assertEquals(expectedParam.getValue(), param.getComment());
+			}
 		}
 	}
 

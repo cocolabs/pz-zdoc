@@ -17,13 +17,11 @@
  */
 package io.cocolabs.pz.zdoc.doc.detail;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.apache.logging.log4j.util.Strings;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -77,44 +75,81 @@ public class MethodDetail extends Detail<JavaMethod> {
 				}
 			}
 			String returnTypeComment = "";
-			Elements listElements = blockList.getAllElements();
-			for (int i = 0; i < listElements.size(); i++)
+			Map<String, String> paramComments = new HashMap<>();
+			Map<Element, Elements> descriptionList = new HashMap<>();
+
+			Elements ddElements = new Elements();
+			for (Element element : blockList.getAllElements())
 			{
-				Element listElement = listElements.get(i);
-				String className = listElement.className();
+				// description list title
+				if (element.tagName().equals("dt"))
+				{
+					ddElements = new Elements();
+					descriptionList.put(element, ddElements);
+				}
+				// description list elements
+				else if (element.tagName().equals("dd")) {
+					ddElements.add(element);
+				}
+			}
+			for (Map.Entry<Element, Elements> entry : descriptionList.entrySet())
+			{
+				Element listTitle = entry.getKey();
+				Elements listEntries = entry.getValue();
+				if (listEntries.isEmpty())
+				{
+					Logger.debug(String.format("Missing list elements for title '%s'", listTitle.text()));
+					continue;
+				}
+				Element titleContainer = listTitle.getElementsByTag("span").first();
+				// we're expecting to find list title in span container
+				if (titleContainer == null)
+				{
+					Logger.error(String.format("Unexpected description list title '%s'", listTitle));
+					continue;
+				}
+				String className = titleContainer.className();
 
 				// include override method documentation
+				//noinspection IfCanBeSwitch
 				if (className.equals("overrideSpecifyLabel"))
 				{
 					if (commentBuilder.length() > 0) {
 						commentBuilder.append('\n');
 					}
-					commentBuilder.append(listElement.text());
-					// avoid accessing index out of bounds
-					if (i + 1 < listElements.size())
-					{
-						Element overrideLabelElement = listElements.get(i += 1);
-						if (!overrideLabelElement.tagName().equals("dd"))
-						{
-							String format = "Unexpected description list element '%s'";
-							Logger.error(String.format(format, overrideLabelElement));
-						}
-						else commentBuilder.append('\n').append(overrideLabelElement.text());
-					}
+					commentBuilder.append(listTitle.text());
+					Element overrideLabelElement = listEntries.get(0);
+					commentBuilder.append('\n').append(overrideLabelElement.text());
 				}
 				// include method return value documentation
 				else if (className.equals("returnLabel"))
 				{
-					// avoid accessing index out of bounds
-					if (i + 1 < listElements.size())
+					Element returnLabelElement = listEntries.get(0);
+					returnTypeComment = returnLabelElement.text();
+				}
+				// include method parameter documentation
+				else if (className.equals("paramLabel"))
+				{
+					for (Element listEntry : listEntries)
 					{
-						Element returnLabelElement = listElements.get(i += 1);
-						if (returnLabelElement.tagName().equals("dd")) {
-							returnTypeComment = returnLabelElement.text();
+						Element eParamName = listEntry.getElementsByTag("code").first();
+						if (eParamName == null)
+						{
+							Logger.error(String.format("No paramLabel name found '%s'", listEntry));
+							continue;
 						}
-						else {
-							String format = "Unexpected description list element '%s'";
-							Logger.error(String.format(format, returnLabelElement));
+						String sParamName = eParamName.text();
+						int stringIndex = sParamName.length() + 3;
+						String sListEntry = listEntry.text();
+
+						// make sure parameter comment exists before trimming
+						if (stringIndex <= sListEntry.length())
+						{
+							// trim element text to get only parameter comment
+							String paramText = sListEntry.substring(stringIndex);
+							if (!Strings.isBlank(paramText)) {
+								paramComments.put(sParamName, paramText);
+							}
 						}
 					}
 				}
@@ -131,13 +166,14 @@ public class MethodDetail extends Detail<JavaMethod> {
 				Logger.detail(String.format(msg, signature.toString(), signature.returnType));
 				continue;
 			}
-			List<JavaParameter> params = new ArrayList<>();
+			// rawParams is a list of parameter without comments
+			List<JavaParameter> rawParams = new ArrayList<>();
 			boolean isVarArgs = false;
 			if (!signature.params.isEmpty())
 			{
 				try {
 					MethodSignatureParser parser = new MethodSignatureParser(signature.params);
-					params = parser.parse();
+					rawParams = parser.parse();
 					isVarArgs = parser.isVarArg();
 				}
 				catch (SignatureParsingException e)
@@ -146,6 +182,18 @@ public class MethodDetail extends Detail<JavaMethod> {
 					Logger.printf(e.getLogLevel(), String.format(msg, signature.toString(), e.getMessage()));
 					continue;
 				}
+			}
+			// match parameters with their respected comments
+			List<JavaParameter> params = new ArrayList<>();
+			for (int i = 0; i < rawParams.size(); i++)
+			{
+				JavaParameter param = rawParams.get(i);
+				String comment = paramComments.get(param.getName());
+				if (comment != null) {
+					params.add(i, new JavaParameter(param.getType(), param.getName(), comment));
+				}
+				// when no comment was found use raw parameter
+				else params.add(i, param);
 			}
 			result.add(JavaMethod.Builder.create(signature.name)
 					.withReturnType(type, returnTypeComment).withModifier(signature.modifier)

@@ -24,4 +24,6 @@ public interface IParameter {
 	String getName();
 
 	String getAsVarArg();
+
+	String getComment();
 }
