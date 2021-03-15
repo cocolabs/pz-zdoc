@@ -281,10 +281,14 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 			{
 				@Nullable ZomboidAPIDoc document = null;
 				try {
-					Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
-					document = ZomboidAPIDoc.getPage(Paths.get(classPath));
-					if (document == null) {
-						Logger.detail(String.format("Unable to find API page for path %s", classPath));
+					// do not try to get zomboid documentation for JDK classes
+					if (!classPath.startsWith("java/"))
+					{
+						Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
+						document = ZomboidAPIDoc.getPage(Paths.get(classPath));
+						if (document == null) {
+							Logger.detail(String.format("Unable to find API page for path %s", classPath));
+						}
 					}
 				}
 				catch (IOException e)
