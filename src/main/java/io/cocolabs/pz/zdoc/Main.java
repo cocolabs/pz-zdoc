@@ -30,6 +30,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.logging.log4j.util.Strings;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
@@ -50,6 +51,7 @@ public class Main {
 
 	public static final String CHARSET = StandardCharsets.UTF_8.name();
 	public static final ClassLoader CLASS_LOADER = Main.class.getClassLoader();
+	static final Map<String, String> CLASS_OVERRIDES = new HashMap<>();
 
 	/**
 	 * <p>Application main entry point method.</p>
@@ -247,6 +249,17 @@ public class Main {
 				Logger.debug("Loaded %d exclude entries from compile.properties", excludeEntries.size());
 				exclude.addAll(excludeEntries);
 			}
+			// remove exclude property so it doesnt get included as override entry
+			properties.remove(exclude);
+
+			// store all class override entries in map
+			for (Map.Entry<Object, Object> entry : properties.entrySet())
+			{
+				String override = (String) entry.getValue();
+				if (Strings.isNotBlank(override)) {
+					CLASS_OVERRIDES.put((String) entry.getKey(), override);
+				}
+			}
 			Set<ZomboidJavaDoc> compiledJava = new JavaCompiler(exclude).compile();
 			Set<ZomboidLuaDoc> compiledLua = new LuaCompiler(compiledJava).compile();
 			for (ZomboidLuaDoc zLuaDoc : compiledLua)
@@ -280,6 +293,21 @@ public class Main {
 		 * https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6476706
 		 */
 		System.exit(0);
+	}
+
+	/**
+	 * <p>Returns Lua class name that is safe to use in compiled library.</p>
+	 * <p>Note that it is safe to pass array class names (ex. {@code Vector2[]}).</p>
+	 *
+	 * @param name name of the class name to lookup.
+	 */
+	public static String getSafeLuaClassName(String name) {
+
+		boolean isArray = name.endsWith("[]");
+		String sName = isArray ? name.substring(0, name.length() - 2) : name;
+
+		String override = CLASS_OVERRIDES.get(sName);
+		return override != null ? (!isArray ? override : override + "[]") : name;
 	}
 
 	private static void writeAnnotatedLinesToFile(List<String> lines, File file) throws IOException {
