@@ -100,7 +100,7 @@ public abstract class EmmyLua {
 
 	static String formatType(LuaType type) {
 
-		String typeName = Main.getSafeLuaClassName(type.getName());
+		String typeName = readLuaTypeName(type);
 		List<LuaType> typeParameters = type.getTypeParameters();
 		if (!typeParameters.isEmpty())
 		{

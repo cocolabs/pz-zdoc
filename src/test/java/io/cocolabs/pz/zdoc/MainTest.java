@@ -17,20 +17,26 @@
  */
 package io.cocolabs.pz.zdoc;
 
+import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class MainTest {
+public class MainTest extends Main {
 
 	@Test
 	void shouldGetSafeLuaClassName() {
 
-		Main.CLASS_OVERRIDES.put("Vector2", "JVector2");
+		registerClassOverride("Vector2", "JVector2");
 
-		Assertions.assertEquals(Main.getSafeLuaClassName("Vector2"), "JVector2");
-		Assertions.assertEquals(Main.getSafeLuaClassName("Vector2[]"), "JVector2[]");
+		Assertions.assertEquals(getSafeLuaClassName("Vector2"), "JVector2");
+		Assertions.assertEquals(getSafeLuaClassName("Vector2[]"), "JVector2[]");
 
 		// class names that are not overriden should return same name
-		Assertions.assertEquals(Main.getSafeLuaClassName("TestClass"), "TestClass");
+		Assertions.assertEquals(getSafeLuaClassName("TestClass"), "TestClass");
+	}
+
+	@TestOnly
+	public static void registerClassOverride(String key, String value) {
+		CLASS_OVERRIDES.put(key, value);
 	}
 }
