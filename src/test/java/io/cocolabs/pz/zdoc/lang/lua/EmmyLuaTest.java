@@ -23,6 +23,9 @@ import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import io.cocolabs.pz.zdoc.MainTest;
+import io.cocolabs.pz.zdoc.element.lua.LuaType;
+
 class EmmyLuaTest {
 
 	@Test
@@ -58,5 +61,18 @@ class EmmyLuaTest {
 			Assertions.assertEquals('_' + keyword, EmmyLua.getSafeLuaName(keyword));
 		}
 		Assertions.assertNotEquals("type", EmmyLua.getSafeLuaName("Type"));
+	}
+
+	@Test
+	void shouldFormatTypeWithCorrectSafeName() {
+
+		MainTest.registerClassOverride("Vector2", "JVector2");
+		MainTest.registerClassOverride("TestClass", "JTestClass");
+
+		LuaType expectedResult = new LuaType("Vector2");
+		Assertions.assertEquals(EmmyLua.formatType(expectedResult), "JVector2");
+
+		expectedResult = new LuaType("Vector2", new LuaType("TestClass"));
+		Assertions.assertEquals(EmmyLua.formatType(expectedResult), "JVector2|JTestClass");
 	}
 }
