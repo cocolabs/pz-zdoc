@@ -34,6 +34,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.Nullable;
 
 import io.cocolabs.pz.zdoc.Main;
@@ -54,12 +55,16 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 	public static final String GLOBAL_OBJECT_CLASS = "zombie.Lua.LuaManager.GlobalObject";
 	private static final File SERIALIZE_LUA = new File("serialize.lua");
 
+	private final Properties localClassProperties;
 	private final Set<Class<?>> exposedJavaClasses;
 	private final Set<String> excludedClasses;
 
 	public JavaCompiler(Set<String> excludedClasses) throws CompilerException {
 		try {
-			/* serialize.lua file is required by J2SEPlatform when setting up environment,
+			// these properties values will override local class paths
+			localClassProperties = Utils.getProperties("local_class.properties");
+			/*
+			 * serialize.lua file is required by J2SEPlatform when setting up environment,
 			 * it is searched in project root directory and it will not be available there
 			 * when running from IDE, so we have to make it available for runtime session
 			 */
@@ -78,9 +83,6 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 						throw new IOException("Unable to copy serialize.lua to root directory");
 					}
 				}
-				catch (IOException e) {
-					throw new RuntimeException(e);
-				}
 			}
 			exposedJavaClasses = Collections.unmodifiableSet(getExposedJava());
 			/*
@@ -92,6 +94,9 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 				Logger.warn("Unable to delete serialize.lua, deleting on JVM exit");
 				SERIALIZE_LUA.deleteOnExit();
 			}
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		catch (ReflectiveOperationException e) {
 			throw new CompilerException("Error occurred while reading exposed java", e);
@@ -276,7 +281,19 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 				continue;
 			}
 			Logger.info("Compiling exposed class %s...", exposedClassName);
+
 			String classPath = JavaClass.getPathForClass(exposedClass);
+			String localClassPath = (String) localClassProperties.get(classPath);
+			boolean expectMissingApiPage = false;
+
+			// path values defined in properties override class path
+			if (localClassPath != null)
+			{
+				if (Strings.isNotBlank(localClassPath)) {
+					classPath = localClassPath;
+				}
+				else expectMissingApiPage = true;
+			}
 			if (!classPath.isEmpty())
 			{
 				@Nullable ZomboidAPIDoc document = null;
@@ -286,8 +303,14 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 					{
 						Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
 						document = ZomboidAPIDoc.getPage(Paths.get(classPath));
-						if (document == null) {
-							Logger.warn(String.format("Unable to find API page for path %s", classPath));
+						if (document == null)
+						{
+							if (!expectMissingApiPage) {
+								Logger.warn(String.format("Unable to find API page for path %s", classPath));
+							}
+						}
+						else if (expectMissingApiPage) {
+							Logger.warn(String.format("Expected to find missing API page for path %s", classPath));
 						}
 					}
 				}
