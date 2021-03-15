@@ -287,7 +287,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 						Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
 						document = ZomboidAPIDoc.getPage(Paths.get(classPath));
 						if (document == null) {
-							Logger.detail(String.format("Unable to find API page for path %s", classPath));
+							Logger.warn(String.format("Unable to find API page for path %s", classPath));
 						}
 					}
 				}
