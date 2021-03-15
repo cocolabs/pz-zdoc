@@ -17,6 +17,7 @@
  */
 package io.cocolabs.pz.zdoc.lang.lua;
 
+import io.cocolabs.pz.zdoc.Main;
 import io.cocolabs.pz.zdoc.element.lua.LuaType;
 
 /**
@@ -42,7 +43,7 @@ import io.cocolabs.pz.zdoc.element.lua.LuaType;
 public class EmmyLuaVarArg extends EmmyLua {
 
 	public EmmyLuaVarArg(LuaType type, String comment) {
-		super("vararg", type.getName(), comment);
+		super("vararg", Main.getSafeLuaClassName(type.getName()), comment);
 	}
 
 	public EmmyLuaVarArg(LuaType type) {

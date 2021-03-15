@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
+import io.cocolabs.pz.zdoc.Main;
 import io.cocolabs.pz.zdoc.element.lua.LuaType;
 
 /**
@@ -99,7 +100,7 @@ public abstract class EmmyLua {
 
 	static String formatType(LuaType type) {
 
-		String typeName = type.getName();
+		String typeName = Main.getSafeLuaClassName(type.getName());
 		List<LuaType> typeParameters = type.getTypeParameters();
 		if (!typeParameters.isEmpty())
 		{
@@ -114,7 +115,7 @@ public abstract class EmmyLua {
 	}
 
 	private static String readLuaTypeName(@Nullable LuaType luaType) {
-		return luaType != null ? luaType.getName() : "any";
+		return luaType != null ? Main.getSafeLuaClassName(luaType.getName()) : "any";
 	}
 
 	/** Returns textual representation of this annotation. */
