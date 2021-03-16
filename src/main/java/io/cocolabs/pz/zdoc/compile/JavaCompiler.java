@@ -62,7 +62,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 	public JavaCompiler(Set<String> excludedClasses) throws CompilerException {
 		try {
 			// these properties values will override local class paths
-			localClassProperties = Utils.getProperties("local_class.properties");
+			localClassProperties = Utils.getProperties("javaclass.properties");
 			/*
 			 * serialize.lua file is required by J2SEPlatform when setting up environment,
 			 * it is searched in project root directory and it will not be available there
