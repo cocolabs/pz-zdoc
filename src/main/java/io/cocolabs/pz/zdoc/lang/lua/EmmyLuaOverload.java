@@ -35,8 +35,8 @@ import io.cocolabs.pz.zdoc.element.lua.LuaParameter;
  */
 public class EmmyLuaOverload extends EmmyLua {
 
-	public EmmyLuaOverload(List<LuaParameter> params, String comment) {
-		super("overload", formatAnnotation(params), comment);
+	public EmmyLuaOverload(List<LuaParameter> params) {
+		super("overload", formatAnnotation(params), "");
 	}
 
 	private static String formatAnnotation(List<LuaParameter> params) {

@@ -37,12 +37,9 @@ public class EmmyLuaOverloadTest {
 			new LuaParameter(new LuaType("Number"), "arg1"),
 			new LuaParameter(new LuaType("String"), "arg2")
 		);
-		String comment = "overloaded method";
-		EmmyLuaOverload annotation = new EmmyLuaOverload(params, comment);
+		EmmyLuaOverload annotation = new EmmyLuaOverload(params);
 
-		String sFunction = "fun(arg0:Object, arg1:Number, arg2:String)";
-		String expected = String.format("---@overload %s @%s", sFunction, comment);
-
+		String expected = "---@overload fun(arg0:Object, arg1:Number, arg2:String)";
 		Assertions.assertEquals(expected, annotation.toString());
 	}
 }
