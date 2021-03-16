@@ -106,6 +106,10 @@ public class LuaMethod implements IMethod, Annotated {
 		}
 	}
 
+	public @Nullable LuaClass getOwner() {
+		return owner;
+	}
+
 	@Override
 	public String toString() {
 
@@ -212,7 +216,7 @@ public class LuaMethod implements IMethod, Annotated {
 			return new Builder(name);
 		}
 
-		public Builder withOwner(LuaClass owner) {
+		public Builder withOwner(@Nullable LuaClass owner) {
 			this.owner = owner;
 			return this;
 		}
