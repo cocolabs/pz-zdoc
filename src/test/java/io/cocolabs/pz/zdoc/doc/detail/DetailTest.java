@@ -64,6 +64,10 @@ class DetailTest extends DetailTestFixture<DetailTest.TestDetail> {
 				"public zombie.Test.InnerClass innerClass"
 		);
 		qualifiedNames.put(
+				"public Test.InnerClass.DeepInnerClass deepInnerClass",
+				"public zombie.Test.InnerClass$DeepInnerClass deepInnerClass"
+		);
+		qualifiedNames.put(
 				"public float getData(TestData data)",
 				"public float getData(zombie.TestData data)"
 		);
