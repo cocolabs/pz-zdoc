@@ -42,7 +42,7 @@ class DetailTest extends DetailTestFixture<DetailTest.TestDetail> {
 	void shouldGetValidParsedDetailObject() {
 
 		String[] entryNames = new String[]{
-				"innerClass", "getData"
+				"innerClass", "deepInnerClass", "getData"
 		};
 		Elements detail = this.detail.getDetail();
 		Assertions.assertEquals(entryNames.length, detail.size());
