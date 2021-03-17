@@ -1,5 +1,5 @@
 // changelog.gradle
-apply from: 'https://git.io/JqJiC'
+apply from: 'https://git.io/JmWv6'
 
 jar.from 'version.txt'
 
