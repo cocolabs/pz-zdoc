@@ -32,7 +32,7 @@ public class MainTest extends Main {
 		Assertions.assertEquals("JVector2[]", getSafeLuaClassName("Vector2[]"));
 
 		// class names that are not overriden should return same name
-		Assertions.assertEquals("TestClass", getSafeLuaClassName("TestClass"));
+		Assertions.assertEquals("MainTest", getSafeLuaClassName("MainTest"));
 	}
 
 	@TestOnly
