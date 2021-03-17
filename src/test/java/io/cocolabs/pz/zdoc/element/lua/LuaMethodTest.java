@@ -17,15 +17,17 @@
  */
 package io.cocolabs.pz.zdoc.element.lua;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 
+import io.cocolabs.pz.zdoc.lang.lua.EmmyLua;
 import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaClass;
+import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaOverload;
 
 class LuaMethodTest {
 
@@ -72,6 +74,38 @@ class LuaMethodTest {
 		);
 	}
 
+	@Test
+	void shouldCreateMethodWithOverloadProperties() {
+
+		Set<LuaMethod> overloadMethods = Sets.newHashSet(
+				LuaMethod.Builder.create("testMethod").withParams(
+						new LuaParameter(new LuaType("Object"), "arg0")
+				).build(),
+				LuaMethod.Builder.create("testMethod").withParams(
+						new LuaParameter(new LuaType("Object"), "arg0"),
+						new LuaParameter(new LuaType("Number"), "arg1")
+				).build(),
+				LuaMethod.Builder.create("testMethod").withParams(
+						new LuaParameter(new LuaType("Object"), "arg0"),
+						new LuaParameter(new LuaType("Number"), "arg1"),
+						new LuaParameter(new LuaType("String"), "arg2")
+				).build()
+		);
+		LuaMethod method = LuaMethod.Builder.create("testMethod").withOverloads(overloadMethods).build();
+
+		List<EmmyLua> annotations = method.getAnnotations();
+		Set<EmmyLuaOverload> overloadAnnotations = new HashSet<>();
+		annotations.stream().filter(a -> a instanceof EmmyLuaOverload)
+				.forEach(a -> overloadAnnotations.add((EmmyLuaOverload) a));
+
+		Assertions.assertEquals(overloadMethods.size(), overloadAnnotations.size());
+		for (LuaMethod overloadMethod : overloadMethods)
+		{
+			EmmyLuaOverload annotation = new EmmyLuaOverload(overloadMethod.getParams());
+			Assertions.assertEquals(1, annotations.stream()
+					.filter(a -> a.toString().equals(annotation.toString())).count());
+		}
+	}
 	@Test
 	@SuppressWarnings("ConstantConditions")
 	void shouldThrowExceptionWhenModifyingLuaMethodAnnotations() {
