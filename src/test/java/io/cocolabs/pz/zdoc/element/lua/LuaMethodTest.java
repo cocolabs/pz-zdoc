@@ -106,6 +106,52 @@ class LuaMethodTest {
 					.filter(a -> a.toString().equals(annotation.toString())).count());
 		}
 	}
+
+	@Test
+	void shouldCompareOverloadMethodsAccordingToParamSize() {
+
+		Comparator<LuaMethod> comparator = new LuaMethod.OverloadMethodComparator();
+
+		// identical to luaMethods[1] array entry
+		LuaMethod luaMethod = LuaMethod.Builder.create("method").withParams(
+				new LuaParameter(new LuaType("Object"), "arg0"),
+				new LuaParameter(new LuaType("String"), "arg1")
+		).build();
+
+		LuaMethod[] luaMethods = new LuaMethod[] {
+			LuaMethod.Builder.create("method").withParams(
+					new LuaParameter(new LuaType("Object"), "arg0")
+			).build(),
+			LuaMethod.Builder.create("method").withParams(
+					new LuaParameter(new LuaType("Object"), "arg0"),
+					new LuaParameter(new LuaType("String"), "arg1")
+			).build(),
+			LuaMethod.Builder.create("method").withParams(
+					new LuaParameter(new LuaType("Object"), "arg0"),
+					new LuaParameter(new LuaType("Number"), "arg1"),
+					new LuaParameter(new LuaType("Number"), "arg2")
+			).build(),
+			LuaMethod.Builder.create("method").withParams(
+					new LuaParameter(new LuaType("Object"), "arg0"),
+					new LuaParameter(new LuaType("String"), "arg2"),
+					new LuaParameter(new LuaType("Number"), "arg3"),
+					new LuaParameter(new LuaType("Object"), "arg4")
+			).build()
+		};
+		Assertions.assertEquals(-1, comparator.compare(luaMethods[0], luaMethods[1]));
+		Assertions.assertEquals(-1, comparator.compare(luaMethods[1], luaMethods[2]));
+		Assertions.assertEquals(0, comparator.compare(luaMethods[1], luaMethod));
+		Assertions.assertEquals(1, comparator.compare(luaMethods[3], luaMethods[2]));
+
+		SortedSet<LuaMethod> sortedSet = new TreeSet<>(comparator);
+		sortedSet.addAll(Arrays.asList(luaMethods));
+
+		Iterator<LuaMethod> iter = sortedSet.iterator();
+		for (int i = 0; i < sortedSet.size(); i++) {
+			Assertions.assertEquals(luaMethods[i], iter.next());
+		}
+	}
+
 	@Test
 	@SuppressWarnings("ConstantConditions")
 	void shouldThrowExceptionWhenModifyingLuaMethodAnnotations() {

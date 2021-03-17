@@ -298,4 +298,14 @@ public class LuaMethod implements IMethod, Annotated {
 			return comment;
 		}
 	}
+
+	public static class OverloadMethodComparator implements Comparator<LuaMethod> {
+
+		@Override
+		public int compare(LuaMethod o1, LuaMethod o2) {
+
+			int result = Integer.compare(o1.getParams().size(), o2.getParams().size());
+			return result != 0 ? result : (o1.equals(o2) ? 0 : -1);
+		}
+	}
 }
