@@ -27,10 +27,7 @@ import io.cocolabs.pz.zdoc.element.IMethod;
 import io.cocolabs.pz.zdoc.element.IReturnType;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLua;
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaAccess;
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaReturn;
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaVarArg;
+import io.cocolabs.pz.zdoc.lang.lua.*;
 import io.cocolabs.pz.zdoc.logger.Logger;
 
 /**
@@ -79,6 +76,18 @@ public class LuaMethod implements IMethod, Annotated {
 		else params.forEach(p -> annotations.addAll(p.getAnnotations()));
 
 		annotations.add(new EmmyLuaReturn(returnType));
+		if (builder.overloads != null)
+		{
+			for (LuaMethod overload : builder.overloads)
+			{
+				if (!overload.getName().equals(name))
+				{
+					String format = "Unexpected Lua method overload name '%s' for method '%s'";
+					Logger.error(format, overload.getName(), name);
+				}
+				else annotations.add(new EmmyLuaOverload(overload.params));
+			}
+		}
 		this.annotations = Collections.unmodifiableList(annotations);
 		this.hasVarArg = builder.hasVarArg;
 		this.comment = builder.comment;
@@ -104,6 +113,10 @@ public class LuaMethod implements IMethod, Annotated {
 			// method has variadic argument
 			else sb.append("...");
 		}
+	}
+
+	public @Nullable LuaClass getOwner() {
+		return owner;
 	}
 
 	@Override
@@ -198,6 +211,7 @@ public class LuaMethod implements IMethod, Annotated {
 		private @Nullable LuaClass owner;
 		private @Nullable MemberModifier modifier;
 		private @Nullable ReturnType returnType;
+		private @Nullable Set<LuaMethod> overloads;
 
 		private List<LuaParameter> params = new ArrayList<>();
 		private boolean hasVarArg = false;
@@ -212,7 +226,7 @@ public class LuaMethod implements IMethod, Annotated {
 			return new Builder(name);
 		}
 
-		public Builder withOwner(LuaClass owner) {
+		public Builder withOwner(@Nullable LuaClass owner) {
 			this.owner = owner;
 			return this;
 		}
@@ -252,6 +266,11 @@ public class LuaMethod implements IMethod, Annotated {
 			return this;
 		}
 
+		public Builder withOverloads(Set<LuaMethod> overloads) {
+			this.overloads = overloads;
+			return this;
+		}
+
 		public LuaMethod build() {
 			return new LuaMethod(this);
 		}
@@ -277,6 +296,16 @@ public class LuaMethod implements IMethod, Annotated {
 
 		public String getComment() {
 			return comment;
+		}
+	}
+
+	public static class OverloadMethodComparator implements Comparator<LuaMethod> {
+
+		@Override
+		public int compare(LuaMethod o1, LuaMethod o2) {
+
+			int result = Integer.compare(o1.getParams().size(), o2.getParams().size());
+			return result != 0 ? result : (o1.equals(o2) ? 0 : -1);
 		}
 	}
 }

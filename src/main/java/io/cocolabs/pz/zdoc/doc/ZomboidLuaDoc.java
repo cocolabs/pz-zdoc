@@ -48,7 +48,7 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 	public ZomboidLuaDoc(LuaClass clazz, List<LuaField> fields, Set<LuaMethod> methods) {
 		this.clazz = clazz;
 		this.fields = Collections.unmodifiableList(Validate.noNullElements(fields));
-		this.methods = Collections.unmodifiableSet(Validate.noNullElements(methods));
+		this.methods = Collections.unmodifiableSet(Validate.noNullElements(overloadMethods(methods)));
 	}
 
 	public ZomboidLuaDoc(LuaClass clazz) {
@@ -130,6 +130,56 @@ public class ZomboidLuaDoc implements ZomboidDoc {
 		}
 		sb.deleteCharAt(sb.length() - 1);
 		FileUtils.write(file, sb.toString(), Main.CHARSET, false);
+	}
+
+	private Set<LuaMethod> overloadMethods(Set<LuaMethod> luaMethods) {
+
+		// list of overload methods for each lua method
+		Map<String, Set<LuaMethod>> overloadData = new LinkedHashMap<>();
+
+		for (LuaMethod method : luaMethods)
+		{
+			String methodName = method.getName();
+			Set<LuaMethod> overloadEntry = overloadData.get(methodName);
+			if (overloadEntry == null)
+			{
+				Comparator<LuaMethod> comparator = new LuaMethod.OverloadMethodComparator();
+				SortedSet<LuaMethod> overloadMethods = new TreeSet<>(comparator);
+
+				overloadMethods.add(method);
+				overloadData.put(methodName, overloadMethods);
+			}
+			else overloadEntry.add(method);
+		}
+		Set<LuaMethod> result = new LinkedHashSet<>();
+		for (Map.Entry<String, Set<LuaMethod>> entry : overloadData.entrySet())
+		{
+			Set<LuaMethod> methods = entry.getValue();
+			if (methods.size() > 1)
+			{
+				// use iterator so we can replace the method entry
+				Iterator<LuaMethod> iter = methods.iterator();
+				/*
+				 * add annotations to first method (as sorted by OverloadMethodComparator)
+				 * to be written to file because EmmyLua displays in IntelliJ IDEA structure
+				 * only first overloaded method occurance it finds, everything else is ignored.
+				 */
+				LuaMethod method = iter.next();
+				/*
+				 * replace the first method with a copied method with overloded method entries,
+				 * this is the only difference between the old and newly created method
+				 */
+				methods.remove(method);
+				methods.add(LuaMethod.Builder.create(method.getName())
+						.withOwner(method.getOwner()).withModifier(method.getModifier())
+						.withReturnType(method.getReturnType()).withOverloads(methods)
+						.withParams(method.getParams()).withVarArg(method.hasVarArg())
+						.withComment(method.getComment()).build()
+				);
+			}
+			result.addAll(methods);
+		}
+		return result;
 	}
 
 	@Override

@@ -20,17 +20,18 @@ package io.cocolabs.pz.zdoc.doc;
 import java.io.IOException;
 import java.util.*;
 
+import com.google.common.collect.ImmutableList;
+
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import com.google.common.collect.ImmutableList;
 
 import io.cocolabs.pz.zdoc.TestWorkspace;
 import io.cocolabs.pz.zdoc.compile.JavaCompiler;
 import io.cocolabs.pz.zdoc.element.lua.*;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
+import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaOverload;
 
 class ZomboidLuaDocTest extends TestWorkspace {
 
@@ -540,6 +541,55 @@ class ZomboidLuaDocTest extends TestWorkspace {
 				"function ZomboidLuaDocTest:getString(arg0, arg1, ...) end"
 		);
 		Assertions.assertEquals(expectedResult, writeToFileAndRead(zDoc));
+	}
+
+	@Test
+	void shouldOverloadZomboidLuaDocMethods() {
+
+		LuaMethod[] expectedMethodsOrdered = new LuaMethod[] {
+				LuaMethod.Builder.create("testMethod").withParams(
+						new LuaParameter(new LuaType("Object"), "arg0"))
+				.build(),
+				LuaMethod.Builder.create("testMethod").withParams(
+						new LuaParameter(new LuaType("Object"), "arg0"),
+						new LuaParameter(new LuaType("Number"), "arg1")
+				).build(),
+				LuaMethod.Builder.create("testMethod").withParams(
+						new LuaParameter(new LuaType("Object"), "arg0"),
+						new LuaParameter(new LuaType("Number"), "arg1"),
+						new LuaParameter(new LuaType("String"), "arg2")
+				).build(),
+				LuaMethod.Builder.create("notOverloadedMethod").build()
+		};
+		Set<LuaMethod> expectedMethodsUnordered = new HashSet<>(Arrays.asList(expectedMethodsOrdered));
+		ZomboidLuaDoc zDoc = new ZomboidLuaDoc(
+				TEST_LUA_CLASS, new ArrayList<>(), expectedMethodsUnordered
+		);
+		Set<LuaMethod> methods = zDoc.getMethods();
+		Assertions.assertEquals(expectedMethodsOrdered.length, methods.size());
+
+		Iterator<LuaMethod> iter = methods.iterator();
+
+		LuaMethod firstMethod = iter.next();
+		Assertions.assertEquals(expectedMethodsOrdered[0], firstMethod);
+
+		EmmyLuaOverload[] expectedOverloadAnnotations = new EmmyLuaOverload[] {
+			new EmmyLuaOverload(expectedMethodsOrdered[1].getParams()),
+			new EmmyLuaOverload(expectedMethodsOrdered[2].getParams())
+		};
+		List<EmmyLuaOverload> actualOverloadAnnotations = new ArrayList<>();
+		firstMethod.getAnnotations().stream().filter(a -> a instanceof EmmyLuaOverload)
+				.forEach(a -> actualOverloadAnnotations.add((EmmyLuaOverload) a));
+
+		for (int i = 0; i < actualOverloadAnnotations.size(); i++)
+		{
+			String expected = expectedOverloadAnnotations[i].toString();
+			Assertions.assertEquals(expected, actualOverloadAnnotations.get(i).toString());
+		}
+		// assert correct method order in sorted collection
+		for (int i = 1; i < expectedMethodsOrdered.length; i++) {
+			Assertions.assertEquals(expectedMethodsOrdered[i], iter.next());
+		}
 	}
 
 	@TestOnly
