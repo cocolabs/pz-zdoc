@@ -28,11 +28,11 @@ public class MainTest extends Main {
 
 		registerClassOverride("Vector2", "JVector2");
 
-		Assertions.assertEquals(getSafeLuaClassName("Vector2"), "JVector2");
-		Assertions.assertEquals(getSafeLuaClassName("Vector2[]"), "JVector2[]");
+		Assertions.assertEquals("JVector2", getSafeLuaClassName("Vector2"));
+		Assertions.assertEquals("JVector2[]", getSafeLuaClassName("Vector2[]"));
 
 		// class names that are not overriden should return same name
-		Assertions.assertEquals(getSafeLuaClassName("TestClass"), "TestClass");
+		Assertions.assertEquals("TestClass", getSafeLuaClassName("TestClass"));
 	}
 
 	@TestOnly

@@ -70,9 +70,9 @@ class EmmyLuaTest {
 		MainTest.registerClassOverride("TestClass", "JTestClass");
 
 		LuaType expectedResult = new LuaType("Vector2");
-		Assertions.assertEquals(EmmyLua.formatType(expectedResult), "JVector2");
+		Assertions.assertEquals("JVector2", EmmyLua.formatType(expectedResult));
 
 		expectedResult = new LuaType("Vector2", new LuaType("TestClass"));
-		Assertions.assertEquals(EmmyLua.formatType(expectedResult), "JVector2|JTestClass");
+		Assertions.assertEquals("JVector2|JTestClass", EmmyLua.formatType(expectedResult));
 	}
 }
