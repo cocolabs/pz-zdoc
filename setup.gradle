@@ -127,9 +127,3 @@ if (!CI) {
 }
 // Github repository token used to generate changelog
 registerLocalProjectProperty('cg.token', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
-
-// Username used to publish to Github packages with Maven
-registerLocalProjectProperty('ghp.user', String.class, 'GHP_USER', false)
-
-// Token used to publish to Github packages with Maven
-registerLocalProjectProperty('ghp.token', String.class, 'GHP_TOKEN', false)

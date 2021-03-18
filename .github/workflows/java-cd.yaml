@@ -221,11 +221,3 @@ jobs:
           asset_path: ./build/distributions/pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
           asset_name: pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
           asset_content_type: application/tar
-      # Publish publication to Github packages with Maven
-      - uses: burrunan/gradle-cache-action@v1
-        name: Publish to Github packages
-        env:
-          GHP_USER: yooksi
-          GHP_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
-        with:
-          arguments: publishZdocPublicationToGitHubPackagesRepository
