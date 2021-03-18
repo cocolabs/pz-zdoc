@@ -36,6 +36,7 @@ import io.cocolabs.pz.zdoc.element.lua.LuaType;
  * local cls = class()
  * </pre></li>
  * </ul></li>
+ * </ul>
  *
  * @see <a href="https://git.io/JLP7D">EmmyLua Documentation</a>
  */

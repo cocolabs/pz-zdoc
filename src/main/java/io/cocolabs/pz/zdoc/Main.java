@@ -53,10 +53,6 @@ public class Main {
 	public static final ClassLoader CLASS_LOADER = Main.class.getClassLoader();
 	static final Map<String, String> CLASS_OVERRIDES = new HashMap<>();
 
-	/**
-	 * <p>Application main entry point method.</p>
-	 * <p>Accepts {@link Command} enums as application argument</p>
-	 */
 	public static void main(String[] args) throws IOException, ParseException, CompilerException {
 
 		Logger.debug(String.format("Started application with %d args: %s",
