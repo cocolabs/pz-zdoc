@@ -23,7 +23,7 @@ plugins {
 apply from: 'setup.gradle'
 apply from: 'zomboid.gradle'
 apply from: 'spotless.gradle'
-apply from: 'distribution.gradle'
+apply from: 'publish.gradle'
 
 group 'io.cocolabs'
 version file('version.txt').readLines().get(0)
