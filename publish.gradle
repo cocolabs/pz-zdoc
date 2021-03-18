@@ -5,8 +5,6 @@ project.ext.set('repo.name', 'pz-zdoc')
 // changelog.gradle
 apply from: 'https://git.io/JqJiC'
 
-jar.from 'version.txt'
-
 distributions.main.contents {
     it.from ('README.md', 'LICENSE.txt', 'CHANGELOG.md')
     // version.txt is used by version command
@@ -60,6 +58,23 @@ tasks.named('startScripts').configure {
 
     // do not add provided files to classpath, they are not included in distribution
     it.classpath -= configurations.zomboidImplementation
+}
+
+// include version information in jar
+jar.from 'version.txt'
+
+task javadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
 }
 
 publishing {
