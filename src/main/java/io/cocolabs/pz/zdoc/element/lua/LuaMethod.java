@@ -294,6 +294,7 @@ public class LuaMethod implements IMethod, Annotated {
 			this(type.name, type.getTypeParameters(), comment);
 		}
 
+		@Override
 		public String getComment() {
 			return comment;
 		}
