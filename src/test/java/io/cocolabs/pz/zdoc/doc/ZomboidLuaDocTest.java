@@ -20,11 +20,11 @@ package io.cocolabs.pz.zdoc.doc;
 import java.io.IOException;
 import java.util.*;
 
-import com.google.common.collect.ImmutableList;
-
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.ImmutableList;
 
 import io.cocolabs.pz.zdoc.TestWorkspace;
 import io.cocolabs.pz.zdoc.compile.JavaCompiler;

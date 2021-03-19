@@ -19,8 +19,6 @@ package io.cocolabs.pz.zdoc.doc.detail;
 
 import java.util.*;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;

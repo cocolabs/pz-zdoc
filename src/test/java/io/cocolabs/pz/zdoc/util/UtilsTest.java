@@ -89,7 +89,6 @@ class UtilsTest {
 
 		@SuppressWarnings("unused")
 		public static final class TestClass2 {
-
 			public static final class TestClass3 {
 			}
 		}

@@ -18,6 +18,5 @@
 package io.cocolabs.pz.zdoc.element;
 
 public interface IReturnType {
-
 	String getComment();
 }

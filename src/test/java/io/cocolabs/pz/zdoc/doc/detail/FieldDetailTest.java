@@ -21,18 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import zombie.core.Color;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import io.cocolabs.pz.zdoc.element.java.JavaClass;
 import io.cocolabs.pz.zdoc.element.java.JavaField;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
 import io.cocolabs.pz.zdoc.element.mod.ModifierKey;
+import zombie.core.Color;
 
 @SuppressWarnings("SpellCheckingInspection")
 class FieldDetailTest extends FieldDetailTestFixture {
