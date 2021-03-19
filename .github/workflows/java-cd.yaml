@@ -221,3 +221,8 @@ jobs:
           asset_path: ./build/distributions/pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
           asset_name: pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
           asset_content_type: application/tar
+      # Publish to Sonatype repository
+      - uses: burrunan/gradle-cache-action@v1
+        name: Publish to Sonatype
+        with:
+          arguments: publishToSonatypeAndCloseStagingRepository
