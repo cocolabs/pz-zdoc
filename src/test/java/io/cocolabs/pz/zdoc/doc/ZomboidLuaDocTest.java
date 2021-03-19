@@ -571,8 +571,22 @@ class ZomboidLuaDocTest extends TestWorkspace {
 		Iterator<LuaMethod> iter = methods.iterator();
 
 		LuaMethod firstMethod = iter.next();
-		Assertions.assertEquals(expectedMethodsOrdered[0], firstMethod);
-
+		// assert that notOverloadedMethod is first or last method
+		if (!firstMethod.equals(expectedMethodsOrdered[0]))
+		{
+			Assertions.assertEquals(expectedMethodsOrdered[3], firstMethod);
+			// assert correct method order in sorted collection
+			for (int i = 0; i < expectedMethodsOrdered.length - 1; i++) {
+				Assertions.assertEquals(expectedMethodsOrdered[i], iter.next());
+			}
+		}
+		else {
+			Assertions.assertEquals(expectedMethodsOrdered[0], firstMethod);
+			// assert correct method order in sorted collection
+			for (int i = 1; i < expectedMethodsOrdered.length; i++) {
+				Assertions.assertEquals(expectedMethodsOrdered[i], iter.next());
+			}
+		}
 		EmmyLuaOverload[] expectedOverloadAnnotations = new EmmyLuaOverload[] {
 			new EmmyLuaOverload(expectedMethodsOrdered[1].getParams()),
 			new EmmyLuaOverload(expectedMethodsOrdered[2].getParams())
@@ -585,10 +599,6 @@ class ZomboidLuaDocTest extends TestWorkspace {
 		{
 			String expected = expectedOverloadAnnotations[i].toString();
 			Assertions.assertEquals(expected, actualOverloadAnnotations.get(i).toString());
-		}
-		// assert correct method order in sorted collection
-		for (int i = 1; i < expectedMethodsOrdered.length; i++) {
-			Assertions.assertEquals(expectedMethodsOrdered[i], iter.next());
 		}
 	}
 
