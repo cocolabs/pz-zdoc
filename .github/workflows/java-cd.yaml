@@ -200,7 +200,7 @@ jobs:
           release_name: ${{ steps.read-tag.outputs.name }}
           prerelease: ${{ steps.read-tag.outputs.isPreRelease }}
           body_path: ./release_text.md
-          draft: false
+          draft: true
       # Upload distribution artifact to release
       - name: Upload distribution zip
         uses: actions/upload-release-asset@v1
@@ -221,11 +221,8 @@ jobs:
           asset_path: ./build/distributions/pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
           asset_name: pz-zdoc-${{ steps.read-tag.outputs.name }}.tar
           asset_content_type: application/tar
-      # Publish publication to Github packages with Maven
+      # Publish to Sonatype repository
       - uses: burrunan/gradle-cache-action@v1
-        name: Publish to Github packages
-        env:
-          GHP_USER: yooksi
-          GHP_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        name: Publish to Sonatype
         with:
-          arguments: publishZdocPublicationToGitHubPackagesRepository
+          arguments: publishToSonatypeAndCloseStagingRepository

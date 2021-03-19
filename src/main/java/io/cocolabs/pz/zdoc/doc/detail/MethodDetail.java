@@ -17,13 +17,11 @@
  */
 package io.cocolabs.pz.zdoc.doc.detail;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.apache.logging.log4j.util.Strings;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -62,7 +60,105 @@ public class MethodDetail extends Detail<JavaMethod> {
 				Logger.error("Unable to find method signature for method: " + listName);
 				continue;
 			}
-			Signature signature = new Signature(qualifyZomboidClassElements(eSignature));
+			// parse method block and label comments
+			StringBuilder commentBuilder = new StringBuilder();
+			Elements commentBlocks = blockList.getElementsByClass("block");
+			if (!commentBlocks.isEmpty())
+			{
+				commentBuilder.append(commentBlocks.get(0).wholeText());
+				/*
+				 * normally there should only be one comment block per element
+				 * but check for additional blocks just to be on the safe side
+				 */
+				for (int i = 1; i < commentBlocks.size(); i++) {
+					commentBuilder.append('\n').append(commentBlocks.get(i).text());
+				}
+			}
+			String returnTypeComment = "";
+			Map<String, String> paramComments = new HashMap<>();
+			Map<Element, Elements> descriptionList = new HashMap<>();
+
+			Elements ddElements = new Elements();
+			for (Element element : blockList.getAllElements())
+			{
+				// description list title
+				if (element.tagName().equals("dt"))
+				{
+					ddElements = new Elements();
+					descriptionList.put(element, ddElements);
+				}
+				// description list elements
+				else if (element.tagName().equals("dd")) {
+					ddElements.add(element);
+				}
+			}
+			for (Map.Entry<Element, Elements> entry : descriptionList.entrySet())
+			{
+				Element listTitle = entry.getKey();
+				Elements listEntries = entry.getValue();
+				if (listEntries.isEmpty())
+				{
+					Logger.debug(String.format("Missing list elements for title '%s'", listTitle.text()));
+					continue;
+				}
+				Element titleContainer = listTitle.getElementsByTag("span").first();
+				// we're expecting to find list title in span container
+				if (titleContainer == null)
+				{
+					Logger.error(String.format("Unexpected description list title '%s'", listTitle));
+					continue;
+				}
+				String className = titleContainer.className();
+
+				// include override method documentation
+				//noinspection IfCanBeSwitch
+				if (className.equals("overrideSpecifyLabel"))
+				{
+					if (commentBuilder.length() > 0) {
+						commentBuilder.append('\n');
+					}
+					commentBuilder.append(listTitle.text());
+					Element overrideLabelElement = listEntries.get(0);
+					commentBuilder.append('\n').append(overrideLabelElement.text());
+				}
+				// include method return value documentation
+				else if (className.equals("returnLabel"))
+				{
+					Element returnLabelElement = listEntries.get(0);
+					returnTypeComment = returnLabelElement.text();
+				}
+				// include method parameter documentation
+				else if (className.equals("paramLabel"))
+				{
+					for (Element listEntry : listEntries)
+					{
+						Element eParamName = listEntry.getElementsByTag("code").first();
+						if (eParamName == null)
+						{
+							Logger.error(String.format("No paramLabel name found '%s'", listEntry));
+							continue;
+						}
+						String sParamName = eParamName.text();
+						int stringIndex = sParamName.length() + 3;
+						String sListEntry = listEntry.text();
+
+						// make sure parameter comment exists before trimming
+						if (stringIndex <= sListEntry.length())
+						{
+							// trim element text to get only parameter comment
+							String paramText = sListEntry.substring(stringIndex);
+							if (!Strings.isBlank(paramText)) {
+								paramComments.put(sParamName, paramText);
+							}
+						}
+					}
+				}
+			}
+			String methodComment = commentBuilder.toString();
+			if (!methodComment.isEmpty()) {
+				Logger.debug("Parsed detail comment: \"" + result + "\"");
+			}
+			Signature signature = new Signature(qualifyZomboidClassElements(eSignature), methodComment);
 			JavaClass type = TypeSignatureParser.parse(signature.returnType);
 			if (type == null)
 			{
@@ -70,13 +166,14 @@ public class MethodDetail extends Detail<JavaMethod> {
 				Logger.detail(String.format(msg, signature.toString(), signature.returnType));
 				continue;
 			}
-			List<JavaParameter> params = new ArrayList<>();
+			// rawParams is a list of parameter without comments
+			List<JavaParameter> rawParams = new ArrayList<>();
 			boolean isVarArgs = false;
 			if (!signature.params.isEmpty())
 			{
 				try {
 					MethodSignatureParser parser = new MethodSignatureParser(signature.params);
-					params = parser.parse();
+					rawParams = parser.parse();
 					isVarArgs = parser.isVarArg();
 				}
 				catch (SignatureParsingException e)
@@ -86,9 +183,21 @@ public class MethodDetail extends Detail<JavaMethod> {
 					continue;
 				}
 			}
-			result.add(new JavaMethod(
-					signature.name, type, params, signature.modifier, isVarArgs, signature.comment)
-			);
+			// match parameters with their respected comments
+			List<JavaParameter> params = new ArrayList<>();
+			for (int i = 0; i < rawParams.size(); i++)
+			{
+				JavaParameter param = rawParams.get(i);
+				String comment = paramComments.get(param.getName());
+				if (comment != null) {
+					params.add(i, new JavaParameter(param.getType(), param.getName(), comment));
+				}
+				// when no comment was found use raw parameter
+				else params.add(i, param);
+			}
+			result.add(JavaMethod.Builder.create(signature.name)
+					.withReturnType(type, returnTypeComment).withModifier(signature.modifier)
+					.withParams(params).withVarArgs(isVarArgs).withComment(signature.comment).build());
 		}
 		return result;
 	}
@@ -103,7 +212,7 @@ public class MethodDetail extends Detail<JavaMethod> {
 		final MemberModifier modifier;
 		final String returnType, name, params, comment;
 
-		Signature(String signatureText) throws SignatureParsingException {
+		Signature(String signatureText, String detailComment) throws SignatureParsingException {
 			super(signatureText);
 			Logger.debug("Parsing method signature: " + signature);
 
@@ -208,11 +317,18 @@ public class MethodDetail extends Detail<JavaMethod> {
 				String commentSuffix = "This method is annotated as " + annotation;
 				tComment = tComment.isEmpty() ? commentSuffix : tComment + '\n' + commentSuffix;
 			}
+			if (detailComment != null && !detailComment.isEmpty()) {
+				tComment += !tComment.isEmpty() ? '\n' + detailComment : detailComment;
+			}
 			this.comment = tComment;
 		}
 
-		private Signature(Element element) throws SignatureParsingException {
-			this(element.text());
+		Signature(String signatureText) throws SignatureParsingException {
+			this(signatureText, "");
+		}
+
+		private Signature(Element element, String comment) throws SignatureParsingException {
+			this(element.text(), comment);
 		}
 	}
 }

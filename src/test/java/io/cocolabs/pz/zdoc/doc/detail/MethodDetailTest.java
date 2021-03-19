@@ -19,6 +19,7 @@ package io.cocolabs.pz.zdoc.doc.detail;
 
 import java.util.*;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -421,47 +422,120 @@ class MethodDetailTest extends MethodDetailTestFixture {
 	}
 
 	@Test
+	void shouldParseValidMethodDetailCommentBlocks() {
+
+		List<JavaMethod> entries = detail.getEntries();
+		String[] expectedComments = new String[]{
+				"This is a single-line block comment\nSpecified by:\nbegin in class BaseCommand",
+				"This is a multi\nline block comment\nSpecified by:\nDoesInstantly in class BaseCommand",
+				"Specified by:\ninit in class BaseCommand",
+				"Specified by:\nIsFinished in class BaseCommand",
+				"Specified by:\nupdate in class BaseCommand",
+				"", "Specified by:\ngetColor in class BaseCommand",
+				"This method is annotated as @Deprecated"
+		};
+		Assertions.assertEquals(expectedComments.length, entries.size());
+		for (int i = 0; i < entries.size(); i++) {
+			Assertions.assertEquals(expectedComments[i], entries.get(i).getComment());
+		}
+	}
+
+	@Test
+	void shouldParseValidMethodReturnTypeComment() {
+
+		List<JavaMethod> entries = detail.getEntries();
+		String[] expectedComments = new String[]{
+				"some number",
+				"true or false",
+				"some text", "array of objects",
+				"", "array of objects",
+				"array of colors", ""
+		};
+		Assertions.assertEquals(expectedComments.length, entries.size());
+		for (int i = 0; i < entries.size(); i++) {
+			Assertions.assertEquals(expectedComments[i], entries.get(i).getReturnType().getComment());
+		}
+	}
+
+	@Test
+	void shouldParseValidMethodParameterComments() {
+
+		List<JavaMethod> entries = detail.getEntries();
+		Map<String, List<Pair<String, String>>> expectedComments = new LinkedHashMap<>();
+		expectedComments.put("begin", ImmutableList.of(Pair.of("param", "single parameter")));
+		expectedComments.put("DoesInstantly", ImmutableList.of(Pair.of("number", "integer parameter")));
+		expectedComments.put("init", ImmutableList.of(
+				Pair.of("object", "string object"),
+				Pair.of("params", "array of string objects")
+		));
+		expectedComments.put("IsFinished", Collections.emptyList());
+		expectedComments.put("update", ImmutableList.of(Pair.of("params", "list of string objects")));
+		expectedComments.put("getActivatedMods", Collections.emptyList());
+		expectedComments.put("getColor", ImmutableList.of(Pair.of("player", "player parameter")));
+		expectedComments.put("doTask", ImmutableList.of(
+				Pair.of("map", "map parameter"),
+				Pair.of("obj", "object parameter")
+		));
+		Assertions.assertEquals(expectedComments.size(), entries.size());
+		Iterator<Map.Entry<String, List<Pair<String, String>>>> iter = expectedComments.entrySet().iterator();
+		for (JavaMethod javaMethod : entries)
+		{
+			Map.Entry<String, List<Pair<String, String>>> entry = iter.next();
+			List<Pair<String, String>> expectedParams = entry.getValue();
+			List<JavaParameter> methodParams = javaMethod.getParams();
+
+			Assertions.assertEquals(methodParams.size(), expectedParams.size());
+			for (int i1 = 0; i1 < methodParams.size(); i1++)
+			{
+				JavaParameter param = methodParams.get(i1);
+				Pair<String, String> expectedParam = expectedParams.get(i1);
+
+				Assertions.assertEquals(expectedParam.getKey(), param.getName());
+				Assertions.assertEquals(expectedParam.getValue(), param.getComment());
+			}
+		}
+	}
+
+	@Test
 	void shouldGetCorrectMethodDetailEntriesByName() {
 
 		List<JavaMethod> expectedJavaMethodEntries = ImmutableList.of(
-				new JavaMethod("begin", int.class, ImmutableList.of(
-						new JavaParameter(Object.class, "param")
-				), new MemberModifier(AccessModifierKey.PUBLIC)
-				),
-				new JavaMethod("DoesInstantly", boolean.class, ImmutableList.of(
-						new JavaParameter(int.class, "number")
-				), new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC)
-				),
-				new JavaMethod("init", String.class, ImmutableList.of(
-						new JavaParameter(String.class, "object"),
-						new JavaParameter(String[].class, "params")
-				), new MemberModifier(
-						AccessModifierKey.PRIVATE, ModifierKey.STATIC, ModifierKey.FINAL
-				)),
-				new JavaMethod("IsFinished", Object[].class, MemberModifier.UNDECLARED
-				),
-				new JavaMethod("update", void.class, ImmutableList.of(
-						new JavaParameter(
-								new JavaClass(ArrayList.class, new JavaClass(String.class)),
-								"params"
-						)
-				), new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
-				),
-				new JavaMethod("getActivatedMods", new JavaClass(
-						ArrayList.class, new JavaClass(String.class)
-				), ImmutableList.of(),
-						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
-				),
-				new JavaMethod("getColor", Color[].class, ImmutableList.of(
-						new JavaParameter(new JavaClass(IsoPlayer.class), "player")
-				), new MemberModifier(AccessModifierKey.PUBLIC)
-				),
-				new JavaMethod("doTask", void.class, ImmutableList.of(
-						new JavaParameter(JavaClassUtils.getMap(JavaClassUtils.getMap(
-								JavaClassUtils.CLASS, Object.class), Object.class), "map"
-						),
-						new JavaParameter(Object.class, "obj")
-				), new MemberModifier(AccessModifierKey.PUBLIC))
+				JavaMethod.Builder.create("begin").withReturnType(int.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(new JavaParameter(Object.class, "param"))
+						.build(),
+				JavaMethod.Builder.create("DoesInstantly").withReturnType(boolean.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC))
+						.withParams(new JavaParameter(int.class, "number"))
+						.build(),
+				JavaMethod.Builder.create("init").withReturnType(String.class)
+						.withModifier(new MemberModifier(
+								AccessModifierKey.PRIVATE, ModifierKey.STATIC, ModifierKey.FINAL)
+						).withParams(
+								new JavaParameter(String.class, "object"),
+								new JavaParameter(String[].class, "params")
+						).build(),
+				JavaMethod.Builder.create("IsFinished").withReturnType(Object[].class).build(),
+				JavaMethod.Builder.create("update").withReturnType(void.class)
+						.withModifier(new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC))
+						.withParams(new JavaParameter(
+								new JavaClass(ArrayList.class, new JavaClass(String.class)), "params")
+						).build(),
+				JavaMethod.Builder.create("getActivatedMods")
+						.withReturnType(new JavaClass(ArrayList.class, new JavaClass(String.class)))
+						.withModifier(new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC))
+						.build(),
+				JavaMethod.Builder.create("getColor").withReturnType(Color[].class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(new JavaParameter(new JavaClass(IsoPlayer.class), "player"))
+						.build(),
+				JavaMethod.Builder.create("doTask").withReturnType(void.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(
+								new JavaParameter(JavaClassUtils.getMap(JavaClassUtils.getMap(
+										JavaClassUtils.CLASS, Object.class), Object.class), "map"),
+								new JavaParameter(Object.class, "obj")
+						).build()
 		);
 		Assertions.assertEquals(expectedJavaMethodEntries.size(), detail.getEntries().size());
 		for (JavaMethod field : expectedJavaMethodEntries) {

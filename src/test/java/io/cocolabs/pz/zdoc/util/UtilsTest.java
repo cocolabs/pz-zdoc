@@ -20,6 +20,7 @@ package io.cocolabs.pz.zdoc.util;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -62,5 +63,34 @@ class UtilsTest {
 		Assertions.assertEquals(float.class, Utils.getClassForName("float"));
 		Assertions.assertEquals(double.class, Utils.getClassForName("double"));
 		Assertions.assertEquals(void.class, Utils.getClassForName("void"));
+	}
+
+	@Test
+	void shouldGetCorrectClassForName() {
+
+		String[] badClassPaths = new String[] {
+				"io.cocolabs.pz.zdoc.util.UtilsTest.TestClass.TestClass2",
+				"io.cocolabs.pz.zdoc.util.UtilsTest.TestClass.TestClass2.TestClass3"
+		};
+		for (String classPath : badClassPaths) {
+			Assertions.assertThrows(ClassNotFoundException.class, () -> Utils.getClassForName(classPath));
+		}
+		String[] goodClassPaths = new String[] {
+				"io.cocolabs.pz.zdoc.util.UtilsTest.TestClass$TestClass2",
+				"io.cocolabs.pz.zdoc.util.UtilsTest.TestClass$TestClass2$TestClass3"
+		};
+		for (String classPath : goodClassPaths) {
+			Assertions.assertDoesNotThrow(() -> Utils.getClassForName(classPath));
+		}
+	}
+
+	@TestOnly
+	public static final class TestClass {
+
+		@SuppressWarnings("unused")
+		public static final class TestClass2 {
+			public static final class TestClass3 {
+			}
+		}
 	}
 }

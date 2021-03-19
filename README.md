@@ -44,7 +44,7 @@ It is also possible to setup ZomboidDoc with Gradle without using ZomboidMod:
 ```groovy
 // Github Packages repository credentials
 project.ext.cocoLabsRepo = 'pz-zdoc'
-apply from: 'https://git.io/JtydE'
+apply from: 'https://git.io/JmWv6'
 
 dependencies {
     // https://github.com/orgs/cocolabs/packages?repo_name=pz-zdoc

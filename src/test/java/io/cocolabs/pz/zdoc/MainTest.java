@@ -15,38 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.cocolabs.pz.zdoc.lang.lua;
+package io.cocolabs.pz.zdoc;
 
-import io.cocolabs.pz.zdoc.Main;
-import io.cocolabs.pz.zdoc.element.lua.LuaType;
+import org.jetbrains.annotations.TestOnly;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-/**
- * Used to denote a variadic argument.
- * <ul>
- * <li>Full format:
- * <pre>
- * ---@vararg TYPE
- * </pre></li>
- * <li>Example:
- * <pre>
- * ---@vararg string
- * ---@return string
- * local function format(...)
- *     local tbl = { ... } -- inferred as string[]
- * end
- * </pre>
- * </li>
- * </ul>
- *
- * @see <a href="https://git.io/JLPlm">EmmyLua Documentation</a>
- */
-public class EmmyLuaVarArg extends EmmyLua {
+public class MainTest extends Main {
 
-	public EmmyLuaVarArg(LuaType type, String comment) {
-		super("vararg", Main.getSafeLuaClassName(type.getName()), comment);
+	@Test
+	void shouldGetSafeLuaClassName() {
+
+		registerClassOverride("Vector2", "JVector2");
+
+		Assertions.assertEquals("JVector2", getSafeLuaClassName("Vector2"));
+		Assertions.assertEquals("JVector2[]", getSafeLuaClassName("Vector2[]"));
+
+		// class names that are not overriden should return same name
+		Assertions.assertEquals("MainTest", getSafeLuaClassName("MainTest"));
 	}
 
-	public EmmyLuaVarArg(LuaType type) {
-		this(type, "");
+	@TestOnly
+	public static void registerClassOverride(String key, String value) {
+		CLASS_OVERRIDES.put(key, value);
 	}
 }

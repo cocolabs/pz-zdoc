@@ -8,6 +8,12 @@ plugins {
     // https://docs.gradle.org/current/userguide/maven_plugin.html
     id 'maven-publish'
 
+    // https://docs.gradle.org/current/userguide/signing_plugin.html
+    id 'signing'
+
+    // https://docs.gradle.org/current/userguide/signing_plugin.html
+    id "io.github.gradle-nexus.publish-plugin" version "1.0.0"
+
     // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
 
@@ -21,10 +27,13 @@ plugins {
     id 'com.github.jk1.dependency-license-report' version '1.16'
 }
 apply from: 'setup.gradle'
+if (!CI) {
+    apply from: 'zomboid.gradle'
+}
 apply from: 'spotless.gradle'
-apply from: 'distribution.gradle'
+apply from: 'publish.gradle'
 
-group 'io.cocolabs'
+group 'io.github.cocolabs'
 version file('version.txt').readLines().get(0)
 
 wrapper {
@@ -168,7 +177,7 @@ dependencies {
         zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
 
         // Project Zomboid classes
-        zomboidImplementation files(zomboidClassesDir)
+        zomboidImplementation files('lib/zomboid.jar')
     }
 }
 

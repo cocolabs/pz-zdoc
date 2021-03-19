@@ -17,36 +17,29 @@
  */
 package io.cocolabs.pz.zdoc.lang.lua;
 
-import io.cocolabs.pz.zdoc.Main;
+import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.ImmutableList;
+
+import io.cocolabs.pz.zdoc.element.lua.LuaParameter;
 import io.cocolabs.pz.zdoc.element.lua.LuaType;
 
-/**
- * Used to denote a variadic argument.
- * <ul>
- * <li>Full format:
- * <pre>
- * ---@vararg TYPE
- * </pre></li>
- * <li>Example:
- * <pre>
- * ---@vararg string
- * ---@return string
- * local function format(...)
- *     local tbl = { ... } -- inferred as string[]
- * end
- * </pre>
- * </li>
- * </ul>
- *
- * @see <a href="https://git.io/JLPlm">EmmyLua Documentation</a>
- */
-public class EmmyLuaVarArg extends EmmyLua {
+public class EmmyLuaOverloadTest {
 
-	public EmmyLuaVarArg(LuaType type, String comment) {
-		super("vararg", Main.getSafeLuaClassName(type.getName()), comment);
-	}
+	@Test
+	void shouldProperlyFormatEmmyLuaOverloadAnnotation() {
 
-	public EmmyLuaVarArg(LuaType type) {
-		this(type, "");
+		List<LuaParameter> params = ImmutableList.of(
+			new LuaParameter(new LuaType("Object"), "arg0"),
+			new LuaParameter(new LuaType("Number"), "arg1"),
+			new LuaParameter(new LuaType("String"), "arg2")
+		);
+		EmmyLuaOverload annotation = new EmmyLuaOverload(params);
+
+		String expected = "---@overload fun(arg0:Object, arg1:Number, arg2:String)";
+		Assertions.assertEquals(expected, annotation.toString());
 	}
 }

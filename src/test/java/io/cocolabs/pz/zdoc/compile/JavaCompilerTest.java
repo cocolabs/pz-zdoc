@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
 import io.cocolabs.pz.zdoc.JavaClassUtils;
@@ -95,38 +94,46 @@ class JavaCompilerTest extends DocTest {
 	void shouldCompileDeclaredJavaMethodsFromClassWithNullDocument() throws DetailParsingException {
 
 		Set<JavaMethod> expectedJavaMethods = Sets.newHashSet(
-				new JavaMethod("begin", int.class,
-						new JavaParameter(Object.class, "arg0"),
-						new MemberModifier(AccessModifierKey.PUBLIC)
-				),
-				new JavaMethod("DoesInstantly", boolean.class,
-						new JavaParameter(int.class, "arg0"),
-						new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC)
-				),
-				new JavaMethod("init", String.class,
-						Arrays.asList(
+				JavaMethod.Builder.create("begin").withReturnType(int.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(new JavaParameter(Object.class, "arg0"))
+						.build(),
+
+				JavaMethod.Builder.create("DoesInstantly").withReturnType(boolean.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC))
+						.withParams(new JavaParameter(int.class, "arg0"))
+						.build(),
+
+				JavaMethod.Builder.create("init").withReturnType(String.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PRIVATE, ModifierKey.STATIC, ModifierKey.FINAL))
+						.withParams(
 								new JavaParameter(String.class, "arg0"),
 								new JavaParameter(String[].class, "arg1")
-						),
-						new MemberModifier(AccessModifierKey.PRIVATE, ModifierKey.STATIC, ModifierKey.FINAL)
-				),
-				new JavaMethod("IsFinished", Object[].class, MemberModifier.UNDECLARED
-				),
-				new JavaMethod("update", void.class,
-						new JavaParameter(new JavaClass(ArrayList.class, 1), "arg0"),
-						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
-				),
-				new JavaMethod("getActivatedMods", new JavaClass(ArrayList.class, 1),
-						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
-				),
-				new JavaMethod("getColor", Color[].class,
-						new JavaParameter(IsoPlayer.class, "arg0"),
-						new MemberModifier(AccessModifierKey.PUBLIC)
-				),
-				new JavaMethod("doTask", void.class, ImmutableList.of(
-						new JavaParameter(new JavaClass(Map.class, 2), "arg0"),
-						new JavaParameter(Object.class, "arg1")
-				), new MemberModifier(AccessModifierKey.PUBLIC))
+						).build(),
+
+				JavaMethod.Builder.create("IsFinished").withReturnType(Object[].class).build(),
+
+				JavaMethod.Builder.create("update").withReturnType(void.class)
+						.withModifier(new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC))
+						.withParams(new JavaParameter(new JavaClass(ArrayList.class, 1), "arg0"))
+						.build(),
+
+				JavaMethod.Builder.create("getActivatedMods")
+						.withReturnType(new JavaClass(ArrayList.class, 1))
+						.withModifier(new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC))
+						.build(),
+
+				JavaMethod.Builder.create("getColor").withReturnType(Color[].class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(new JavaParameter(IsoPlayer.class, "arg0"))
+						.build(),
+
+				JavaMethod.Builder.create("doTask").withReturnType(void.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(
+								new JavaParameter(new JavaClass(Map.class, 2), "arg0"),
+								new JavaParameter(Object.class, "arg1")
+						).build()
 		);
 		Set<JavaMethod> compiledMethods = JavaCompiler.compileJavaMethods(CompileTest.class, null);
 		Assertions.assertEquals(expectedJavaMethods, compiledMethods);
@@ -136,42 +143,48 @@ class JavaCompilerTest extends DocTest {
 	void shouldCompileDeclaredJavaMethodsFromClassWithDocument() throws DetailParsingException {
 
 		Set<JavaMethod> expectedJavaMethods = Sets.newHashSet(
-				new JavaMethod("begin", int.class,
-						new JavaParameter(Object.class, "param"),
-						new MemberModifier(AccessModifierKey.PUBLIC)
-				),
-				new JavaMethod("DoesInstantly", boolean.class,
-						new JavaParameter(int.class, "number"),
-						new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC)
-				),
-				new JavaMethod("init", String.class,
-						Arrays.asList(
+				JavaMethod.Builder.create("begin").withReturnType(int.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(new JavaParameter(Object.class, "param"))
+						.build(),
+
+				JavaMethod.Builder.create("DoesInstantly").withReturnType(boolean.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PROTECTED, ModifierKey.STATIC))
+						.withParams(new JavaParameter(int.class, "number"))
+						.build(),
+
+				JavaMethod.Builder.create("init").withReturnType(String.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PRIVATE, ModifierKey.STATIC, ModifierKey.FINAL))
+						.withParams(
 								new JavaParameter(String.class, "object"),
 								new JavaParameter(String[].class, "params")
-						),
-						new MemberModifier(AccessModifierKey.PRIVATE, ModifierKey.STATIC, ModifierKey.FINAL)
-				),
-				new JavaMethod("IsFinished", Object[].class, MemberModifier.UNDECLARED
-				),
-				new JavaMethod("update", void.class,
-						new JavaParameter(new JavaClass(ArrayList.class, new JavaClass(String.class)),
-								"params"),
-						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
-				),
-				new JavaMethod("getActivatedMods",
-						new JavaClass(ArrayList.class, new JavaClass(String.class)),
-						new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC)
-				),
-				new JavaMethod("getColor", Color[].class,
-						new JavaParameter(IsoPlayer.class, "player"),
-						new MemberModifier(AccessModifierKey.PUBLIC)
-				),
-				new JavaMethod("doTask", void.class, ImmutableList.of(
-						new JavaParameter(JavaClassUtils.getMap(
-								JavaClassUtils.getMap(JavaClassUtils.CLASS, Object.class), Object.class
-						), "map"),
-						new JavaParameter(Object.class, "obj")
-				), new MemberModifier(AccessModifierKey.PUBLIC))
+						).build(),
+
+				JavaMethod.Builder.create("IsFinished").withReturnType(Object[].class).build(),
+
+				JavaMethod.Builder.create("update").withReturnType(void.class)
+						.withModifier(new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC))
+						.withParams(new JavaParameter(
+								new JavaClass(ArrayList.class, new JavaClass(String.class)), "params")
+						).build(),
+
+				JavaMethod.Builder.create("getActivatedMods")
+						.withReturnType(new JavaClass(ArrayList.class, new JavaClass(String.class)))
+						.withModifier(new MemberModifier(AccessModifierKey.DEFAULT, ModifierKey.STATIC))
+						.build(),
+
+				JavaMethod.Builder.create("getColor").withReturnType(Color[].class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(new JavaParameter(IsoPlayer.class, "player"))
+						.build(),
+
+				JavaMethod.Builder.create("doTask").withReturnType(void.class)
+						.withModifier(new MemberModifier(AccessModifierKey.PUBLIC))
+						.withParams(
+								new JavaParameter(JavaClassUtils.getMap(JavaClassUtils.getMap(
+										JavaClassUtils.CLASS, Object.class), Object.class), "map"),
+								new JavaParameter(Object.class, "obj")
+						).build()
 		);
 		Set<JavaMethod> compiledMethods = JavaCompiler.compileJavaMethods(CompileTest.class, DOCUMENT);
 		Assertions.assertEquals(expectedJavaMethods, compiledMethods);
@@ -247,6 +260,7 @@ class JavaCompilerTest extends DocTest {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static class CompileSyntheticTest {
 
 		public String getNestedField() {

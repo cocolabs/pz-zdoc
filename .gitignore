@@ -4,6 +4,9 @@ local.properties
 # Generated Lua
 /media/
 
+# Temporary files
+serialize.lua
+
 ### IntelliJ ###
 
 # Project file-based format

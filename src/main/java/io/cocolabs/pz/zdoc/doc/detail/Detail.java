@@ -85,7 +85,24 @@ public abstract class Detail<T extends IMember> {
 			 * needs to be in Unix format, otherwise we get a malformed return value
 			 */
 			String packagePath = urlPath.replace('\\', '/');
-			textNode.text(ClassUtils.convertResourcePathToClassName(packagePath));
+			/*
+			 * methods that retrieve class from name have problems finding
+			 * deeply nested classes (depth of 2 or more) for package paths
+			 * that dont use dollar signs ($) to indicate inner classes
+			 */
+			int periodDelimitersFound = 0;
+			char[] cPackagePath = packagePath.toCharArray();
+			for (int i = 0; i < cPackagePath.length; i++)
+			{
+				if (cPackagePath[i] == '.')
+				{
+					periodDelimitersFound += 1;
+					if (periodDelimitersFound >= 2) {
+						cPackagePath[i] = '$';
+					}
+				}
+			}
+			textNode.text(ClassUtils.convertResourcePathToClassName(new String(cPackagePath)));
 		}
 		return element;
 	}

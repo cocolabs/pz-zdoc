@@ -17,22 +17,17 @@
  */
 package io.cocolabs.pz.zdoc.element.lua;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import io.cocolabs.pz.zdoc.element.IMethod;
+import io.cocolabs.pz.zdoc.element.IReturnType;
 import io.cocolabs.pz.zdoc.element.mod.AccessModifierKey;
 import io.cocolabs.pz.zdoc.element.mod.MemberModifier;
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLua;
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaAccess;
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaReturn;
-import io.cocolabs.pz.zdoc.lang.lua.EmmyLuaVarArg;
+import io.cocolabs.pz.zdoc.lang.lua.*;
 import io.cocolabs.pz.zdoc.logger.Logger;
 
 /**
@@ -43,7 +38,7 @@ public class LuaMethod implements IMethod, Annotated {
 	private final @Nullable LuaClass owner;
 
 	private final String name;
-	private final LuaType returnType;
+	private final ReturnType returnType;
 	private final List<LuaParameter> params;
 	private final MemberModifier modifier;
 	private final boolean hasVarArg;
@@ -54,7 +49,7 @@ public class LuaMethod implements IMethod, Annotated {
 
 		this.name = EmmyLua.getSafeLuaName(builder.name);
 		this.owner = builder.owner;
-		this.returnType = builder.returnType != null ? builder.returnType : new LuaType("void");
+		this.returnType = builder.returnType != null ? builder.returnType : new ReturnType("void");
 		this.modifier = builder.modifier != null ? builder.modifier : MemberModifier.UNDECLARED;
 		this.params = Collections.unmodifiableList(builder.params);
 
@@ -70,7 +65,8 @@ public class LuaMethod implements IMethod, Annotated {
 				for (int i = 0, size = params.size() - 1; i < size; i++) {
 					annotations.addAll(params.get(i).getAnnotations());
 				}
-				annotations.add(new EmmyLuaVarArg(params.get(params.size() - 1).getType()));
+				LuaParameter param = params.get(params.size() - 1);
+				annotations.add(new EmmyLuaVarArg(param.getType(), param.getComment()));
 			}
 			else {
 				builder.hasVarArg = false;
@@ -80,6 +76,18 @@ public class LuaMethod implements IMethod, Annotated {
 		else params.forEach(p -> annotations.addAll(p.getAnnotations()));
 
 		annotations.add(new EmmyLuaReturn(returnType));
+		if (builder.overloads != null)
+		{
+			for (LuaMethod overload : builder.overloads)
+			{
+				if (!overload.getName().equals(name))
+				{
+					String format = "Unexpected Lua method overload name '%s' for method '%s'";
+					Logger.error(format, overload.getName(), name);
+				}
+				else annotations.add(new EmmyLuaOverload(overload.params));
+			}
+		}
 		this.annotations = Collections.unmodifiableList(annotations);
 		this.hasVarArg = builder.hasVarArg;
 		this.comment = builder.comment;
@@ -105,6 +113,10 @@ public class LuaMethod implements IMethod, Annotated {
 			// method has variadic argument
 			else sb.append("...");
 		}
+	}
+
+	public @Nullable LuaClass getOwner() {
+		return owner;
 	}
 
 	@Override
@@ -198,7 +210,8 @@ public class LuaMethod implements IMethod, Annotated {
 
 		private @Nullable LuaClass owner;
 		private @Nullable MemberModifier modifier;
-		private @Nullable LuaType returnType;
+		private @Nullable ReturnType returnType;
+		private @Nullable Set<LuaMethod> overloads;
 
 		private List<LuaParameter> params = new ArrayList<>();
 		private boolean hasVarArg = false;
@@ -206,13 +219,14 @@ public class LuaMethod implements IMethod, Annotated {
 
 		private Builder(String name) {
 			this.name = name;
+
 		}
 
 		public static Builder create(String name) {
 			return new Builder(name);
 		}
 
-		public Builder withOwner(LuaClass owner) {
+		public Builder withOwner(@Nullable LuaClass owner) {
 			this.owner = owner;
 			return this;
 		}
@@ -222,8 +236,13 @@ public class LuaMethod implements IMethod, Annotated {
 			return this;
 		}
 
+		public Builder withReturnType(LuaType returnType, String comment) {
+			this.returnType = new ReturnType(returnType, comment);
+			return this;
+		}
+
 		public Builder withReturnType(LuaType returnType) {
-			this.returnType = returnType;
+			this.returnType = new ReturnType(returnType, "");
 			return this;
 		}
 
@@ -242,8 +261,52 @@ public class LuaMethod implements IMethod, Annotated {
 			return this;
 		}
 
+		public Builder withParams(LuaParameter...params) {
+			this.params = new ArrayList<>(Arrays.asList(params));
+			return this;
+		}
+
+		public Builder withOverloads(Set<LuaMethod> overloads) {
+			this.overloads = overloads;
+			return this;
+		}
+
 		public LuaMethod build() {
 			return new LuaMethod(this);
+		}
+	}
+
+	public static class ReturnType extends LuaType implements IReturnType {
+
+		private final String comment;
+
+		public ReturnType(String name, List<LuaType> otherTypes, String comment) {
+			super(name, otherTypes);
+			this.comment = comment;
+		}
+
+		public ReturnType(String name) {
+			super(name);
+			this.comment = "";
+		}
+
+		public ReturnType(LuaType type, String comment) {
+			this(type.name, type.getTypeParameters(), comment);
+		}
+
+		@Override
+		public String getComment() {
+			return comment;
+		}
+	}
+
+	public static class OverloadMethodComparator implements Comparator<LuaMethod> {
+
+		@Override
+		public int compare(LuaMethod o1, LuaMethod o2) {
+
+			int result = Integer.compare(o1.getParams().size(), o2.getParams().size());
+			return result != 0 ? result : (o1.equals(o2) ? 0 : -1);
 		}
 	}
 }

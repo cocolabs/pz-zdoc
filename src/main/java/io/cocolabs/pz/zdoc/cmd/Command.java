@@ -69,7 +69,9 @@ public enum Command {
 		this(name, HelpFormatter.DEFAULT_OPT_PREFIX, options, help);
 	}
 
-	/** Returns command that matches the given name. */
+	/**
+	 * Returns command that matches the given name.
+	 */
 	public static @Nullable Command get(String name) {
 
 		for (Command value : Command.values())

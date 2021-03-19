@@ -223,15 +223,18 @@ class LuaCompilerTest {
 	void shouldCompileValidLuaMethodsFromZomboidJavaDocs() throws CompilerException {
 
 		Set<JavaMethod> javaMethods = ImmutableSet.of(
-				new JavaMethod("getText", java.lang.String.class, ImmutableList.of(
-						new JavaParameter(java.lang.Integer.class, "iParam")), MODIFIER
-				),
-				new JavaMethod("getNumber", java.lang.Integer.class, ImmutableList.of(
-						new JavaParameter(java.lang.Object.class, "oParam")), MODIFIER
-				),
-				new JavaMethod("getObject", java.lang.Object.class, ImmutableList.of(
-						new JavaParameter(java.lang.String.class, "sParam")), MODIFIER
-				)
+				JavaMethod.Builder.create("getText")
+						.withReturnType(java.lang.String.class).withModifier(MODIFIER)
+						.withParams(new JavaParameter(java.lang.Integer.class, "iParam"))
+						.build(),
+				JavaMethod.Builder.create("getNumber")
+						.withReturnType(java.lang.Integer.class).withModifier(MODIFIER)
+						.withParams(new JavaParameter(java.lang.Object.class, "oParam"))
+						.build(),
+				JavaMethod.Builder.create("getObject")
+						.withReturnType(java.lang.Object.class).withModifier(MODIFIER)
+						.withParams(new JavaParameter(java.lang.String.class, "sParam"))
+						.build()
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
 				LuaMethod.Builder.create("getText").withOwner(OWNER_CLASS)
@@ -260,15 +263,18 @@ class LuaCompilerTest {
 	void shouldCompileValidLuaMethodsWithArraysFromZomboidJavaDocs() throws CompilerException {
 
 		Set<JavaMethod> javaMethods = ImmutableSet.of(
-				new JavaMethod("getFloat", java.lang.Float[].class, ImmutableList.of(
-						new JavaParameter(java.lang.Integer[].class, "iParam")), MODIFIER
-				),
-				new JavaMethod("getDouble", java.lang.Double[].class, ImmutableList.of(
-						new JavaParameter(java.lang.Object[].class, "oParam")), MODIFIER
-				),
-				new JavaMethod("getByte", java.lang.Byte[].class, ImmutableList.of(
-						new JavaParameter(java.lang.String[].class, "sParam")), MODIFIER
-				)
+				JavaMethod.Builder.create("getFloat")
+						.withReturnType(java.lang.Float[].class).withModifier(MODIFIER)
+						.withParams(new JavaParameter(java.lang.Integer[].class, "iParam"))
+						.build(),
+				JavaMethod.Builder.create("getDouble")
+						.withReturnType(java.lang.Double[].class).withModifier(MODIFIER)
+						.withParams(new JavaParameter(java.lang.Object[].class, "oParam"))
+						.build(),
+				JavaMethod.Builder.create("getByte")
+						.withReturnType(java.lang.Byte[].class).withModifier(MODIFIER)
+						.withParams(new JavaParameter(java.lang.String[].class, "sParam"))
+						.build()
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
 				LuaMethod.Builder.create("getFloat").withOwner(OWNER_CLASS)
@@ -305,15 +311,18 @@ class LuaCompilerTest {
 	void shouldCompileValidLuaMethodsWithParameterizedTypesFromZomboidJavaDocs() throws CompilerException {
 
 		Set<JavaMethod> javaMethods = ImmutableSet.of(
-				new JavaMethod("getText", JAVA_ARRAY_LIST_OBJECT, ImmutableList.of(
-						new JavaParameter(JAVA_ARRAY_LIST_STRING_OBJECT, "sParam")), MODIFIER
-				),
-				new JavaMethod("getNumber", JAVA_ARRAY_LIST_STRING_OBJECT, ImmutableList.of(
-						new JavaParameter(JAVA_ARRAY_LIST_OBJECT_STRING, "nParam")), MODIFIER
-				),
-				new JavaMethod("getObject", JAVA_ARRAY_LIST_OBJECT_STRING, ImmutableList.of(
-						new JavaParameter(JAVA_ARRAY_LIST_NULL, "oParam")), MODIFIER
-				)
+				JavaMethod.Builder.create("getText")
+						.withReturnType(JAVA_ARRAY_LIST_OBJECT).withModifier(MODIFIER)
+						.withParams(new JavaParameter(JAVA_ARRAY_LIST_STRING_OBJECT, "sParam"))
+						.build(),
+				JavaMethod.Builder.create("getNumber")
+						.withReturnType(JAVA_ARRAY_LIST_STRING_OBJECT).withModifier(MODIFIER)
+						.withParams(new JavaParameter(JAVA_ARRAY_LIST_OBJECT_STRING, "nParam"))
+						.build(),
+				JavaMethod.Builder.create("getObject")
+						.withReturnType(JAVA_ARRAY_LIST_OBJECT_STRING).withModifier(MODIFIER)
+						.withParams(new JavaParameter(JAVA_ARRAY_LIST_NULL, "oParam"))
+						.build()
 		);
 		Set<LuaMethod> expectedMethods = ImmutableSet.of(
 				LuaMethod.Builder.create("getText").withOwner(OWNER_CLASS)
@@ -346,9 +355,10 @@ class LuaCompilerTest {
 						MODIFIER, "this field has a comment")
 		);
 		Set<JavaMethod> methodsWithComment = ImmutableSet.of(
-				new JavaMethod("getText", new JavaClass(java.lang.String.class), ImmutableList.of(),
-						MODIFIER, false, "this method has a comment"
-				)
+				JavaMethod.Builder.create("getText")
+						.withReturnType(java.lang.String.class).withModifier(MODIFIER)
+						.withParams(new JavaParameter(JAVA_ARRAY_LIST_NULL, "oParam"))
+						.withComment("this method has a comment").build()
 		);
 		ZomboidJavaDoc zJavaDoc = new ZomboidJavaDoc(
 				new JavaClass(LuaCompilerTest.class), fieldsWithComment, methodsWithComment
@@ -460,7 +470,7 @@ class LuaCompilerTest {
 		Assertions.assertEquals(luaFields, zLuaDocs.iterator().next().getFields());
 	}
 
-	@Test @Order(13)
+	@Test @Order(14)
 	void shouldFilterGlobalClassTypesFromGlobalTypesWhenCompilingLua() {
 
 		Set<LuaClass> expectedGlobalTypes = Sets.newHashSet(

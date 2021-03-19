@@ -1,8 +1,6 @@
 // changelog.gradle
 apply from: 'https://git.io/JqJiC'
 
-jar.from 'version.txt'
-
 distributions.main.contents {
     it.from ('README.md', 'LICENSE.txt', 'CHANGELOG.md')
     // version.txt is used by version command
@@ -58,18 +56,67 @@ tasks.named('startScripts').configure {
     it.classpath -= configurations.zomboidImplementation
 }
 
+// include version information in jar
+jar.from 'version.txt'
+
+task javadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
 publishing {
-    repositories {
-        maven {
-            name = 'GitHubPackages'
-            url = uri('https://maven.pkg.github.com/cocolabs/pz-zdoc')
-            credentials {
-                username = project.findProperty('ghp.user') ?: System.getenv('GHP_USER')
-                password = project.findProperty('ghp.token') ?: System.getenv('GHP_TOKEN')
+    publications {
+        //noinspection GroovyAssignabilityCheck
+        mavenJava(MavenPublication) {
+            pom {
+                name = 'ZomboidDoc'
+                description = 'ZomboidDoc is a Lua library compiler for Project Zomboid.'
+                url = 'https://github.com/cocolabs/pz-zdoc'
+                scm {
+                    connection = 'scm:git:git://github.com/cocolabs/pz-zdoc.git'
+                    developerConnection = 'scm:git:ssh://github.com:cocolabs/pz-zdoc.git'
+                    url = 'https://github.com/cocolabs/pz-zdoc'
+                }
+                licenses {
+                    license {
+                        name = 'GNU General Public License v3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'yooks'
+                        name = 'Matthew Cain'
+                        email = 'yooksi@zoho.com'
+                    }
+                }
             }
         }
     }
-    publications.register('zdoc', MavenPublication.class) {
-        it.from(project.components.java as SoftwareComponent)
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
     }
+}
+
+task publishToSonatypeAndCloseStagingRepository {
+    dependsOn = [ 'publishToSonatype', 'closeSonatypeStagingRepository' ]
 }

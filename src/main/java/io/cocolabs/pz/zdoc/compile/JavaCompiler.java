@@ -34,6 +34,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.Nullable;
 
 import io.cocolabs.pz.zdoc.Main;
@@ -54,12 +55,16 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 	public static final String GLOBAL_OBJECT_CLASS = "zombie.Lua.LuaManager.GlobalObject";
 	private static final File SERIALIZE_LUA = new File("serialize.lua");
 
+	private final Properties localClassProperties;
 	private final Set<Class<?>> exposedJavaClasses;
 	private final Set<String> excludedClasses;
 
 	public JavaCompiler(Set<String> excludedClasses) throws CompilerException {
 		try {
-			/* serialize.lua file is required by J2SEPlatform when setting up environment,
+			// these properties values will override local class paths
+			localClassProperties = Utils.getProperties("javaclass.properties");
+			/*
+			 * serialize.lua file is required by J2SEPlatform when setting up environment,
 			 * it is searched in project root directory and it will not be available there
 			 * when running from IDE, so we have to make it available for runtime session
 			 */
@@ -78,9 +83,6 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 						throw new IOException("Unable to copy serialize.lua to root directory");
 					}
 				}
-				catch (IOException e) {
-					throw new RuntimeException(e);
-				}
 			}
 			exposedJavaClasses = Collections.unmodifiableSet(getExposedJava());
 			/*
@@ -93,6 +95,9 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 				SERIALIZE_LUA.deleteOnExit();
 			}
 		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		catch (ReflectiveOperationException e) {
 			throw new CompilerException("Error occurred while reading exposed java", e);
 		}
@@ -101,7 +106,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 
 	static List<JavaField> compileJavaFields(Class<?> clazz, @Nullable ZomboidAPIDoc doc) throws DetailParsingException {
 
-		Logger.debug("Start compiling java fields...");
+		Logger.debug("Start compiling java fields for " + clazz.getName());
 		List<JavaField> result = PredicatedList.predicatedList(
 				new ArrayList<>(), PredicateUtils.notNullPredicate()
 		);
@@ -115,51 +120,41 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 				continue;
 			}
 			int typeParamCount = field.getType().getTypeParameters().length;
-			if (typeParamCount > 0)
-			{
-				/* if the field is a parameterized type we are not going to be able
-				 * to determine the exact type due to runtime erasure, so try to
-				 * use the field data from online API page if possible
-				 */
-				Logger.debug("Field has %d type parameters", typeParamCount);
-				JavaClass jField = new JavaClass(field.getType());
-				if (doc != null)
-				{
-					Logger.debug("Searching for field in document %s", doc.getName());
-					JavaField docField = fieldDetail.getEntry(field.getName());
-					if (docField != null)
-					{
-						/* extra care has to be taken to ensure that we are dealing with exactly
-						 * the same object since API documentation is often out of date
-						 */
-						Logger.debug("Found mathing detail field entry with name %s", docField.getName());
-						if (docField.getType().equals(jField, true))
-						{
-							/* matching field was found, use field data pulled from API page
-							 * with written type parameters instead of declared field
-							 */
-							result.add(docField);
-							continue;
-						}
-						else Logger.debug("Detail entry (%s) did not match field", docField.getType());
-					}
-					String format = "Didn't find matching field \"%s\" in document \"%s\"";
-					Logger.detail(String.format(format, field.getName(), doc.getName()));
-				}
-				/* when no matching field or API page was found, construct new JavaField
-				 * with same properties as declared field but make parameterized types null
-				 */
-				MemberModifier modifier = new MemberModifier(field.getModifiers());
-				result.add(new JavaField(jField, field.getName(), modifier));
-			}
-			/* the field is not a parameterized type,
-			 * use declared Field object to construct JavaField instance
+			/*
+			 * if the field is a parameterized type we are not going to be able
+			 * to determine the exact type due to runtime erasure, so try to
+			 * use the field data from online API page if possible
 			 */
-			else
+			Logger.debug("Field has %d type parameters", typeParamCount);
+			JavaClass jField = new JavaClass(field.getType());
+			if (doc != null)
 			{
-				Logger.debug("Constructing field from JavaField instance");
-				result.add(new JavaField(field));
+				Logger.debug("Searching for field in document %s", doc.getName());
+				JavaField docField = fieldDetail.getEntry(field.getName());
+				if (docField != null)
+				{
+					/* extra care has to be taken to ensure that we are dealing with exactly
+					 * the same object since API documentation is often out of date
+					 */
+					Logger.debug("Found mathing detail field entry with name %s", docField.getName());
+					if (docField.getType().equals(jField, true))
+					{
+						/* matching field was found, use field data pulled from API page
+						 * with written type parameters instead of declared field
+						 */
+						result.add(docField);
+						continue;
+					}
+					else Logger.debug("Detail entry (%s) did not match field", docField.getType());
+				}
+				String format = "Didn't find matching field \"%s\" in document \"%s\"";
+				Logger.detail(String.format(format, field.getName(), doc.getName()));
 			}
+			/* when no matching field or API page was found, construct new JavaField
+			 * with same properties as declared field but make parameterized types null
+			 */
+			MemberModifier modifier = new MemberModifier(field.getModifiers());
+			result.add(new JavaField(jField, field.getName(), modifier));
 		}
 		Logger.debug("Finished compiling %d fields", result.size());
 		return result;
@@ -167,7 +162,7 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 
 	static Set<JavaMethod> compileJavaMethods(Class<?> clazz, @Nullable ZomboidAPIDoc doc) throws DetailParsingException {
 
-		Logger.debug("Start compiling java methods...");
+		Logger.debug("Start compiling java methods for " + clazz.getName());
 		Set<JavaMethod> result = PredicatedSet.predicatedSet(
 				new HashSet<>(), PredicateUtils.notNullPredicate()
 		);
@@ -286,15 +281,37 @@ public class JavaCompiler implements ICompiler<ZomboidJavaDoc> {
 				continue;
 			}
 			Logger.info("Compiling exposed class %s...", exposedClassName);
+
 			String classPath = JavaClass.getPathForClass(exposedClass);
+			String localClassPath = (String) localClassProperties.get(classPath);
+			boolean expectMissingApiPage = false;
+
+			// path values defined in properties override class path
+			if (localClassPath != null)
+			{
+				if (Strings.isNotBlank(localClassPath)) {
+					classPath = localClassPath;
+				}
+				else expectMissingApiPage = true;
+			}
 			if (!classPath.isEmpty())
 			{
 				@Nullable ZomboidAPIDoc document = null;
 				try {
-					Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
-					document = ZomboidAPIDoc.getPage(Paths.get(classPath));
-					if (document == null) {
-						Logger.detail(String.format("Unable to find API page for path %s", classPath));
+					// do not try to get zomboid documentation for JDK classes
+					if (!classPath.startsWith("java/"))
+					{
+						Logger.debug(String.format("Getting API page for class \"%s\"", classPath));
+						document = ZomboidAPIDoc.getPage(Paths.get(classPath));
+						if (document == null)
+						{
+							if (!expectMissingApiPage) {
+								Logger.warn(String.format("Unable to find API page for path %s", classPath));
+							}
+						}
+						else if (expectMissingApiPage) {
+							Logger.warn(String.format("Expected to find missing API page for path %s", classPath));
+						}
 					}
 				}
 				catch (IOException e)

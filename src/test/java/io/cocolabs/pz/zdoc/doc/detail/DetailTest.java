@@ -40,7 +40,7 @@ class DetailTest extends DetailTestFixture<DetailTest.TestDetail> {
 	void shouldGetValidParsedDetailObject() {
 
 		String[] entryNames = new String[]{
-				"innerClass", "getData"
+				"innerClass", "deepInnerClass", "getData"
 		};
 		Elements detail = this.detail.getDetail();
 		Assertions.assertEquals(entryNames.length, detail.size());
@@ -60,6 +60,10 @@ class DetailTest extends DetailTestFixture<DetailTest.TestDetail> {
 		qualifiedNames.put(
 				"public Test.InnerClass innerClass",
 				"public zombie.Test.InnerClass innerClass"
+		);
+		qualifiedNames.put(
+				"public Test.InnerClass.DeepInnerClass deepInnerClass",
+				"public zombie.Test.InnerClass$DeepInnerClass deepInnerClass"
 		);
 		qualifiedNames.put(
 				"public float getData(TestData data)",

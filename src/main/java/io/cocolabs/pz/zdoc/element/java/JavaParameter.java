@@ -25,19 +25,28 @@ import io.cocolabs.pz.zdoc.element.SignatureToken;
 public class JavaParameter implements IParameter, SignatureToken {
 
 	private final JavaClass type;
-	private final String name;
+	private final String name, comment;
 
-	public JavaParameter(JavaClass type, String name) {
+	public JavaParameter(JavaClass type, String name, String comment) {
 		this.type = type;
 		this.name = name;
+		this.comment = comment;
+	}
+
+	public JavaParameter(JavaClass type, String name) {
+		this(type, name, "");
+	}
+
+	public JavaParameter(Class<?> type, String name, String comment) {
+		this(new JavaClass(type), name, comment);
 	}
 
 	public JavaParameter(Class<?> type, String name) {
-		this(new JavaClass(type), name);
+		this(type, name, "");
 	}
 
 	public JavaParameter(Parameter parameter) {
-		this(new JavaClass(parameter.getType()), parameter.getName());
+		this(new JavaClass(parameter.getType()), parameter.getName(), "");
 	}
 
 	@Override
@@ -53,6 +62,11 @@ public class JavaParameter implements IParameter, SignatureToken {
 			sType = sType.substring(0, sType.length() - 2);
 		}
 		return (sType + "... " + getName()).trim();
+	}
+
+	@Override
+	public String getComment() {
+		return comment;
 	}
 
 	@Override

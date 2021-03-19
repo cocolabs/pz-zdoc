@@ -55,13 +55,31 @@ public class FieldDetail extends Detail<JavaField> {
 			Element header = blockList.getElementsByTag("h4").first();
 			String name = header != null ? header.text() : "unknown";
 
+			// parse field block comment
+			StringBuilder commentBuilder = new StringBuilder();
+			Elements commentBlocks = blockList.getElementsByClass("block");
+			if (!commentBlocks.isEmpty())
+			{
+				commentBuilder.append(commentBlocks.get(0).wholeText());
+				/*
+				 * normally there should only be one comment block per element
+				 * but check for additional blocks just to be on the safe side
+				 */
+				for (int i = 1; i < commentBlocks.size(); i++) {
+					commentBuilder.append('\n').append(commentBlocks.get(i).text());
+				}
+			}
+			String fieldComment = commentBuilder.toString();
+			if (!fieldComment.isEmpty()) {
+				Logger.debug("Parsed detail comment: \"" + result + "\"");
+			}
 			Signature signature;
 			try {
 				Element eSignature = blockList.getElementsByTag("pre").first();
 				if (eSignature == null) {
 					throw new DetailParsingException("Unable to find field signature for field: " + name);
 				}
-				signature = new Signature(qualifyZomboidClassElements(eSignature));
+				signature = new Signature(qualifyZomboidClassElements(eSignature), fieldComment);
 			}
 			catch (DetailParsingException e)
 			{
@@ -92,7 +110,7 @@ public class FieldDetail extends Detail<JavaField> {
 		final MemberModifier modifier;
 		final String type, name, comment;
 
-		Signature(String signatureText) throws SignatureParsingException {
+		Signature(String signatureText, String detailComment) throws SignatureParsingException {
 			super(signatureText);
 			Logger.debug("Parsing field signature: " + signature);
 
@@ -140,6 +158,7 @@ public class FieldDetail extends Detail<JavaField> {
 			/*
 			 * parse signature comment (optional)
 			 */
+			String sComment = "";
 			if (index < elements.size())
 			{
 				StringBuilder sb = new StringBuilder();
@@ -147,13 +166,20 @@ public class FieldDetail extends Detail<JavaField> {
 					sb.append(elements.get(index)).append(" ");
 				}
 				sb.deleteCharAt(sb.length() - 1);
-				this.comment = sb.toString();
+				sComment = sb.toString();
 			}
-			else this.comment = "";
+			if (detailComment != null && !detailComment.isEmpty()) {
+				sComment += !sComment.isEmpty() ? '\n' + detailComment : detailComment;
+			}
+			this.comment = sComment;
 		}
 
-		private Signature(Element element) throws SignatureParsingException {
-			this(element.text());
+		Signature(String signatureText) throws SignatureParsingException {
+			this(signatureText, "");
+		}
+
+		private Signature(Element element, String comment) throws SignatureParsingException {
+			this(element.text(), comment);
 		}
 	}
 }
