@@ -35,9 +35,6 @@ import org.apache.logging.log4j.util.Strings;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
-
 import io.cocolabs.pz.zdoc.cmd.Command;
 import io.cocolabs.pz.zdoc.cmd.CommandLine;
 import io.cocolabs.pz.zdoc.compile.CompilerException;
