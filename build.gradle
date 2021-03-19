@@ -8,6 +8,9 @@ plugins {
     // https://docs.gradle.org/current/userguide/maven_plugin.html
     id 'maven-publish'
 
+    // https://docs.gradle.org/current/userguide/signing_plugin.html
+    id 'signing'
+
     // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
 
