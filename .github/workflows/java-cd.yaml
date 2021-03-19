@@ -200,7 +200,7 @@ jobs:
           release_name: ${{ steps.read-tag.outputs.name }}
           prerelease: ${{ steps.read-tag.outputs.isPreRelease }}
           body_path: ./release_text.md
-          draft: false
+          draft: true
       # Upload distribution artifact to release
       - name: Upload distribution zip
         uses: actions/upload-release-asset@v1
