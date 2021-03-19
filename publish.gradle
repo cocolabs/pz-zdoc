@@ -119,3 +119,8 @@ nexusPublishing {
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
+}
+
+task publishToSonatypeAndCloseStagingRepository {
+    dependsOn = [ 'publishToSonatype', 'closeSonatypeStagingRepository' ]
+}
