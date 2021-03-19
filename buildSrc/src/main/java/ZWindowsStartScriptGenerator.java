@@ -51,12 +51,13 @@ public class ZWindowsStartScriptGenerator implements ScriptGenerator {
 
 	public ZWindowsStartScriptGenerator() {
 		this.lineSeparator = TextUtil.getWindowsLineSeparator();
-		this.scriptTemplate = readScriptResourceFile("winScriptTemplate.bat");
+		this.scriptTemplate = readScriptResourceFile();
 		this.bindingFactory = StartScriptTemplateBindingFactory.windows();
 	}
 
-	private static String readScriptResourceFile(String filename) {
+	private static String readScriptResourceFile() {
 
+		String filename = "winScriptTemplate.bat";
 		try (InputStream iStream = CL.getResourceAsStream(filename))
 		{
 			if (iStream == null) {

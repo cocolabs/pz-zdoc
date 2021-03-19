@@ -51,12 +51,13 @@ public class ZUnixStartScriptGenerator implements ScriptGenerator {
 
 	public ZUnixStartScriptGenerator() {
 		this.lineSeparator = TextUtil.getUnixLineSeparator();
-		this.scriptTemplate = readScriptResourceFile("unixScriptTemplate.sh");
+		this.scriptTemplate = readScriptResourceFile();
 		this.bindingFactory = StartScriptTemplateBindingFactory.unix();
 	}
 
-	private static String readScriptResourceFile(String filename) {
+	private static String readScriptResourceFile() {
 
+		String filename = "unixScriptTemplate.sh";
 		try (InputStream iStream = CL.getResourceAsStream(filename))
 		{
 			if (iStream == null) {
