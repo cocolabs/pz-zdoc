@@ -78,9 +78,35 @@ artifacts {
 }
 
 publishing {
+    publications {
+        //noinspection GroovyAssignabilityCheck
+        mavenJava(MavenPublication) {
+            pom {
+                name = 'ZomboidDoc'
+                description = 'ZomboidDoc is a Lua library compiler for Project Zomboid.'
+                url = 'https://github.com/cocolabs/pz-zdoc'
+                scm {
+                    connection = 'scm:git:git://github.com/cocolabs/pz-zdoc.git'
+                    developerConnection = 'scm:git:ssh://github.com:cocolabs/pz-zdoc.git'
+                    url = 'https://github.com/cocolabs/pz-zdoc'
+                }
+                licenses {
+                    license {
+                        name = 'GNU General Public License v3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'yooks'
+                        name = 'Matthew Cain'
+                        email = 'yooksi@zoho.com'
+                    }
+                }
             }
         }
     }
+}
 
 signing {
     sign publishing.publications.mavenJava
