@@ -32,7 +32,6 @@ import org.springframework.util.ClassUtils;
 
 import io.cocolabs.pz.zdoc.doc.ZomboidAPIDoc;
 import io.cocolabs.pz.zdoc.element.IMember;
-import io.cocolabs.pz.zdoc.logger.Logger;
 
 public abstract class Detail<T extends IMember> {
 
