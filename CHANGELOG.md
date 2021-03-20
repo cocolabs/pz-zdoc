@@ -14,7 +14,6 @@
 
 - Deeply nested classes excluded from detail [\#76](https://github.com/cocolabs/pz-zdoc/issues/76)
 - Invalid references for user-overridden classes [\#74](https://github.com/cocolabs/pz-zdoc/issues/74)
-- Library sources do not match bytecode [\#66](https://github.com/cocolabs/pz-zdoc/issues/66)
 
 ## [v3.0.1](https://github.com/cocolabs/pz-zdoc/tree/v3.0.1) (2021-02-19)
 
