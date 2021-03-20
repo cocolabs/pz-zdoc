@@ -111,11 +111,13 @@ publishing {
     }
 }
 
-signing {
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign publishing.publications.mavenJava
+if (project.ext.has('signingKey') && project.ext.has('signingPassword'))
+{
+    signing {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications.mavenJava
+    }
 }
-
 nexusPublishing {
     repositories {
         sonatype {
