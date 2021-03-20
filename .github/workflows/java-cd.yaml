@@ -88,7 +88,7 @@ jobs:
   release:
     name: Release project
     runs-on: ubuntu-latest
-    needs: build
+    needs: [ build, generate ]
     steps:
       # Checkout repository
       - uses: actions/checkout@v2
