@@ -1,6 +1,6 @@
 # ZomboidDoc
 
-![Java CD](https://github.com/cocolabs/pz-zdoc/workflows/Java%20CD/badge.svg?branch=master) [![FOSSA Status](https://app.fossa.com/api/projects/custom%2B23026%2Fgithub.com%2Fcocolabs%2Fpz-zdoc.svg?type=shield)](https://app.fossa.com/projects/custom%2B23026%2Fgithub.com%2Fcocolabs%2Fpz-zdoc?ref=badge_shield) [![Maven Central](https://img.shields.io/maven-central/v/io.github.cocolabs/pz-zdoc.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.cocolabs%22%20AND%20a:%22pz-zdoc%22) [![codecov](https://codecov.io/gh/cocolabs/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/cocolabs/pz-zdoc) [![License](https://img.shields.io/github/license/cocolabs/pz-zdoc)](https://www.gnu.org/licenses/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
+![Java CD](https://github.com/cocolabs/pz-zdoc/workflows/Java%20CD/badge.svg?branch=master) [![Maven Central](https://img.shields.io/maven-central/v/io.github.cocolabs/pz-zdoc.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.cocolabs%22%20AND%20a:%22pz-zdoc%22) [![codecov](https://codecov.io/gh/cocolabs/pz-zdoc/branch/master/graph/badge.svg?token=4D4PT2512I)](https://codecov.io/gh/cocolabs/pz-zdoc) [![License](https://img.shields.io/github/license/cocolabs/pz-zdoc)](https://www.gnu.org/licenses/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
 
 ZomboidDoc is an easy-to-use Java command-line application that compiles an annotated Lua library directly from modding API. Powered by [IntelliJ IDEA](https://www.jetbrains.com/idea/) it makes mod development an enjoyable experience by providing everything you need to write an amazing mod right from you IDE.
 
@@ -173,3 +173,5 @@ You can now continue modding with full confidence that everything you need to kn
 ## License
 
 This project is licensed under [GNU General Public License v3.0](https://github.com/cocolabs/pz-zdoc/blob/master/LICENSE.txt).
+
+[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B23026%2Fgithub.com%2Fcocolabs%2Fpz-zdoc.svg?type=small)](https://app.fossa.com/projects/custom%2B23026%2Fgithub.com%2Fcocolabs%2Fpz-zdoc?ref=badge_small)
