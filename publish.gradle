@@ -67,6 +67,10 @@ task javadocJar(type: Jar) {
 task sourcesJar(type: Jar) {
     archiveClassifier.set('sources')
     from sourceSets.main.allSource
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 artifacts {
@@ -77,6 +81,7 @@ publishing {
     publications {
         //noinspection GroovyAssignabilityCheck
         mavenJava(MavenPublication) {
+            from components.java
             pom {
                 name = 'ZomboidDoc'
                 description = 'ZomboidDoc is a Lua library compiler for Project Zomboid.'
