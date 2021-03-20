@@ -118,5 +118,7 @@ nexusPublishing {
 }
 
 task publishToSonatypeAndCloseStagingRepository {
+    description 'Publish all publications to Nexus and close staging repository.'
+    group 'publishing'
     dependsOn = [ 'publishToSonatype', 'closeSonatypeStagingRepository' ]
 }
