@@ -42,13 +42,12 @@ The easiest way to install and use ZomboidDoc is with [ZomboidMod](https://githu
 It is also possible to setup ZomboidDoc with Gradle without using ZomboidMod:
 
 ```groovy
-// Github Packages repository credentials
-project.ext.cocoLabsRepo = 'pz-zdoc'
-apply from: 'https://git.io/JmWv6'
-
+repositories {
+    mavenCentral()
+}
 dependencies {
-    // https://github.com/orgs/cocolabs/packages?repo_name=pz-zdoc
-    implementation 'io.cocolabs:pz-zdoc:3.+'
+    // https://search.maven.org/artifact/io.github.cocolabs/pz-zdoc
+    implementation 'io.github.cocolabs:pz-zdoc:3.+'
 }
 ```
 
