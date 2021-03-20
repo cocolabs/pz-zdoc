@@ -1,0 +1,20 @@
+on:
+  workflow_dispatch:
+
+name: Java publish
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      # Publish to Sonatype repository
+      - uses: burrunan/gradle-cache-action@v1
+        name: Publish to Sonatype
+        with:
+          arguments: publishToSonatypeAndCloseStagingRepository
+          properties: |
+            signingKey=${{ secrets.GPG_SIGNING_KEY }}
+            signingPassword=${{ secrets.GPG_SIGNING_PASSWORD }}
+            sonatypeUsername=${{ secrets.SONATYPE_USERNAME }}
+            sonatypePassword=${{ secrets.SONATYPE_PASSWORD }}
