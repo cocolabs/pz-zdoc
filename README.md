@@ -33,7 +33,19 @@ Because ZomboidDoc reads directly from game code the compiled Lua library is gua
 ### Prerequisites
 
 - Project Zomboid[<sup>?</sup>](#requirements "tested with 41.50-IWBUMS")
-- [JDK 8](https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot)[<sup>?</sup>](#requirements "tested with OpenJDK 1.8.0_282")
+- [JDK 17](https://adoptopenjdk.net/?variant=openjdk17&jvmVariant=hotspot)[<sup>?</sup>](#requirements "tested with OpenJDK 17.0.7+7")
+  
+### Config
+
+**Changing the Gradle JVM to version 17**
+  
+1) Go to File/Settings on the IntelliJ settings.
+2) Navigate to Build, Execution, Deployment/Build Tools/Gradle
+3) Set "Gradle JVM" to JDK 17
+
+**Setting project SDK to version 17**
+1) Go to File/Project Structure/Project
+2) Set "Project SDK" to the same version as your Gradle JDK
 
 ### Gradle
 
